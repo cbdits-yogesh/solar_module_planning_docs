@@ -1,0 +1,1777 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+
+    <style>
+      .monthly-att-dashboard {
+        background: #f5f7fa;
+        padding: 20px;
+        border-radius: 8px;
+        min-height: 600px;
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          "Helvetica Neue", Arial, sans-serif;
+      }
+
+      /* Header Section */
+      .monthly-att-dashboard .dashboard-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 25px;
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        flex-wrap: wrap;
+        gap: 20px;
+      }
+      /* ===== REQUIREMENT 1: KPI Stat Cards - Smaller Size ===== */
+      .monthly-att-dashboard .dashboard-stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+        gap: 10px;
+        margin-bottom: 20px;
+      }
+
+      .monthly-att-dashboard .stat-card {
+        background: white;
+        padding: 8px 12px; /* was 15px 20px */
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        display: flex;
+        flex-direction: column;
+        gap: 4px; /* was 8px */
+        border-left: 4px solid #2490ef;
+        transition:
+          transform 0.2s,
+          box-shadow 0.2s;
+      }
+
+      .monthly-att-dashboard .stat-label {
+        font-size: 10px; /* was 12px */
+        color: #7f8d9a;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      .monthly-att-dashboard .stat-value {
+        font-size: 20px; /* was 28px */
+        font-weight: 700;
+        color: #2490ef;
+      }
+
+      /* ===== REQUIREMENT 2: Attendance Row Layout (Row format instead of column) ===== */
+
+      /* Main attendance item - ROW layout */
+      .monthly-att-dashboard .main-att {
+        padding: 2px 4px;
+        border-radius: 6px;
+        margin-bottom: 5px;
+        background: white;
+      }
+
+      .monthly-att-dashboard .main-child {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 4px;
+        width: 100%;
+      }
+
+      /* Date section - compact left column */
+      .monthly-att-dashboard .main-child1 {
+        width: 55px;
+        min-width: 55px;
+        background-color: rgb(203 203 203);
+        border-radius: 6px;
+        font-weight: bold;
+        font-size: 10px;
+        color: rgb(0, 0, 0);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 4px 2px;
+        text-align: center;
+        flex-shrink: 0;
+      }
+
+      .monthly-att-dashboard .main-child1 p {
+        text-align: center;
+        margin: 0;
+        font-size: 10px;
+        line-height: 1.2;
+      }
+
+      /* Right content section - all inline in one row */
+      .monthly-att-dashboard .main-child2 {
+        flex: 1;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 4px;
+        overflow: hidden;
+      }
+
+      /* Status + indicators row */
+      .monthly-att-dashboard .date-header-row {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 4px;
+        border-bottom: none; /* remove bottom border since now in row */
+        padding: 0;
+        flex-shrink: 0;
+      }
+
+      .monthly-att-dashboard .header-status {
+        display: flex;
+        align-items: center;
+        padding: 0;
+        justify-content: flex-start;
+      }
+
+      .monthly-att-dashboard .status-badge-compact {
+        padding: 2px 6px;
+        border-radius: 3px;
+        font-size: 9px;
+        font-weight: 700;
+        text-align: center;
+        white-space: nowrap;
+        width: auto; /* was 100% - now auto for row layout */
+        min-width: 48px;
+      }
+
+      .monthly-att-dashboard .header-indicators {
+        display: flex;
+        gap: 3px;
+        padding: 0 4px;
+        border-left: 1px solid #d1d5db;
+      }
+
+      /* Times row - inline with status */
+      .monthly-att-dashboard .times-row {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 6px;
+        border-bottom: none; /* remove border in row layout */
+        flex: 1;
+      }
+
+      .monthly-att-dashboard .times-left {
+        display: flex;
+        flex-direction: row; /* was column - now side by side */
+        gap: 6px;
+        padding: 0;
+        border-right: none;
+        align-items: center;
+      }
+
+      .monthly-att-dashboard .time-item-inline {
+        display: flex;
+        align-items: center;
+        gap: 2px;
+        font-size: 9px;
+      }
+
+      .monthly-att-dashboard .time-label-inline {
+        color: #7f8d9a;
+        font-weight: 600;
+        font-size: 8px;
+        text-transform: uppercase;
+        min-width: auto;
+      }
+
+      .monthly-att-dashboard .time-value-inline {
+        color: #36414c;
+        font-weight: 600;
+        font-size: 9px;
+        white-space: nowrap;
+      }
+
+      .monthly-att-dashboard .times-right {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        padding: 0;
+        margin-left: auto;
+      }
+
+      .monthly-att-dashboard .working-hours-compact {
+        background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+        padding: 2px 6px;
+        border-radius: 3px;
+        font-size: 9px;
+        color: #1565c0;
+        font-weight: 600;
+        text-align: center;
+        width: auto; /* was 100% */
+        white-space: nowrap;
+      }
+
+      /* Holiday row inline */
+      .monthly-att-dashboard .main-child2 .header-status {
+        flex: 1;
+      }
+
+      .monthly-att-dashboard .status-badge-compact.holiday {
+        background: linear-gradient(
+          135deg,
+          #ffda6a 0%,
+          #f7971e 60%,
+          #ff5858 100%
+        );
+        color: #593306;
+        width: auto;
+        font-size: 9px;
+        padding: 2px 8px;
+      }
+
+      .monthly-att-dashboard .header-left {
+        flex: 1;
+        min-width: 250px;
+      }
+
+      .monthly-att-dashboard .header-left h3 {
+        margin: 0;
+        color: #36414c;
+        font-size: 24px;
+        font-weight: 600;
+      }
+
+      .monthly-att-dashboard .header-left .month-display {
+        margin: 5px 0 0 0;
+        color: #7f8d9a;
+        font-size: 14px;
+      }
+
+      .monthly-att-dashboard .header-right {
+        display: flex;
+        align-items: center;
+      }
+
+      .monthly-att-dashboard .header-right .controls {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        flex-wrap: wrap;
+      }
+
+      .monthly-att-dashboard .month-picker,
+      .monthly-att-dashboard .employee-filter {
+        padding: 4px 10px;
+        border: 1px solid #d1d5db;
+        border-radius: 4px;
+        font-size: 14px;
+        background: white;
+      }
+
+      .monthly-att-dashboard .month-picker:focus,
+      .monthly-att-dashboard .employee-filter:focus {
+        outline: none;
+        border-color: #2490ef;
+        box-shadow: 0 0 0 3px rgba(36, 144, 239, 0.1);
+      }
+
+      .monthly-att-dashboard .employee-filter option {
+        padding: 8px;
+        background: white;
+        color: #36414c;
+      }
+
+      .monthly-att-dashboard .refresh-btn {
+        padding: 8px 15px;
+        cursor: pointer;
+      }
+
+      .monthly-att-dashboard .refresh-btn:hover {
+        transform: scale(1.02);
+      }
+
+      /* Stats Section */
+      .monthly-att-dashboard .dashboard-stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 15px;
+        margin-bottom: 25px;
+      }
+
+      .monthly-att-dashboard .stat-card {
+        background: white;
+        padding: 15px 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        border-left: 4px solid #2490ef;
+        transition:
+          transform 0.2s,
+          box-shadow 0.2s;
+      }
+
+      .monthly-att-dashboard .stat-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+      }
+
+      .monthly-att-dashboard .stat-label {
+        font-size: 12px;
+        color: #7f8d9a;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      .monthly-att-dashboard .stat-value {
+        font-size: 28px;
+        font-weight: 700;
+        color: #2490ef;
+      }
+
+      /* Loading */
+      .monthly-att-dashboard .loading-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 60px 20px;
+        text-align: center;
+      }
+
+      .monthly-att-dashboard .spinner {
+        border: 4px solid #f3f3f3;
+        border-top: 4px solid #2490ef;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        animation: spin 1s linear infinite;
+        margin-bottom: 15px;
+      }
+
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      .monthly-att-dashboard .loading-container p {
+        color: #7f8d9a;
+        font-size: 14px;
+        margin: 0;
+      }
+
+      /* Dashboard Content */
+      .monthly-att-dashboard .dashboard-content {
+        min-height: 400px;
+        max-height: calc(100vh - 350px);
+        overflow-y: auto;
+      }
+
+      .monthly-att-dashboard .dashboard-content::-webkit-scrollbar {
+        width: 8px;
+      }
+
+      .monthly-att-dashboard .dashboard-content::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 10px;
+      }
+
+      .monthly-att-dashboard .dashboard-content::-webkit-scrollbar-thumb {
+        background: #c0c0c0;
+        border-radius: 10px;
+      }
+
+      .monthly-att-dashboard .dashboard-content::-webkit-scrollbar-thumb:hover {
+        background: #999;
+      }
+
+      /* Employees Container - 3 per row, 2 rows visible */
+      /* ONLY THIS CHANGE - Column to Row */
+      .monthly-att-dashboard .employees-container {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+      }
+
+      .monthly-att-dashboard .employee-card {
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        display: flex;
+        flex-direction: column;
+        width: 100%; /* full width */
+        height: auto; /* auto height */
+      }
+
+      .monthly-att-dashboard .card-body {
+        padding: 10px;
+        height: auto;
+        max-height: 400px; /* scroll after 400px */
+        overflow-y: auto;
+        flex: 1;
+      }
+      /* Employee Card - Fixed size */
+      .monthly-att-dashboard .employee-card {
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        display: flex;
+        flex-direction: column;
+        height: 420px;
+      }
+
+      .monthly-att-dashboard .employee-card:hover {
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+        transform: translateY(-4px);
+      }
+
+      /* Card Header */
+      .monthly-att-dashboard .card-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 12px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 8px;
+        flex-shrink: 0;
+      }
+
+      .monthly-att-dashboard .employee-info {
+        flex: 1;
+        min-width: 120px;
+      }
+
+      .monthly-att-dashboard .employee-info h4 {
+        margin: 0;
+        font-size: 14px;
+        font-weight: 600;
+        color: white;
+        word-break: break-word;
+      }
+
+      .monthly-att-dashboard .employee-info p {
+        margin: 3px 0 0 0;
+        font-size: 11px;
+        opacity: 0.9;
+        color: rgba(255, 255, 255, 0.9);
+      }
+
+      .monthly-att-dashboard .card-actions {
+        display: flex;
+        gap: 6px;
+        flex-wrap: wrap;
+      }
+
+      .monthly-att-dashboard .download-emp-btn {
+        background: rgba(255, 255, 255, 0.2);
+        color: white;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        padding: 5px 10px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 10px;
+        font-weight: 500;
+        transition: all 0.2s;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        white-space: nowrap;
+      }
+
+      .monthly-att-dashboard .download-emp-btn:hover {
+        background: rgba(255, 255, 255, 0.3);
+        border-color: rgba(255, 255, 255, 0.5);
+        transform: scale(1.05);
+      }
+
+      .monthly-att-dashboard .download-emp-btn:active {
+        transform: scale(0.98);
+      }
+
+      /* Card Body - Shows 6 attendance rows, scrollable */
+      .monthly-att-dashboard .card-body {
+        padding: 10px;
+        height: 360px;
+        overflow-y: auto;
+        flex: 1;
+      }
+
+      .monthly-att-dashboard .card-body::-webkit-scrollbar {
+        width: 5px;
+      }
+
+      .monthly-att-dashboard .card-body::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 10px;
+      }
+
+      .monthly-att-dashboard .card-body::-webkit-scrollbar-thumb {
+        background: #c0c0c0;
+        border-radius: 10px;
+      }
+
+      .monthly-att-dashboard .card-body::-webkit-scrollbar-thumb:hover {
+        background: #999;
+      }
+
+      /* Attendance Grid */
+      .monthly-att-dashboard .attendance-grid {
+        display: flex;
+        flex-direction: column;
+        gap: 0;
+      }
+
+      /* Compact Structure */
+      .monthly-att-dashboard .main-att {
+        padding: 1px;
+        border-radius: 8px;
+        margin-bottom: 8px;
+        background: white;
+      }
+
+      .monthly-att-dashboard .main-child {
+        display: flex;
+      }
+
+      .monthly-att-dashboard .main-child1 {
+        width: 28%;
+        background-color: rgb(203 203 203);
+        border-radius: 8px;
+        margin: 3px;
+        font-weight: bold;
+        font-size: 14px;
+        color: rgb(0, 0, 0);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 2px;
+      }
+
+      .monthly-att-dashboard .main-child2 {
+        width: 72%;
+      }
+
+      .monthly-att-dashboard .main-child1 p {
+        text-align: center;
+        margin: 1px;
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          "Helvetica Neue", Arial, sans-serif;
+        line-height: 1.2;
+      }
+
+      /* Border Classes */
+      .monthly-att-dashboard .absents {
+        border-width: 1px 1px 1px 5px;
+        border-style: solid;
+        border-color: red;
+      }
+
+      .monthly-att-dashboard .presents {
+        border-width: 1px 1px 1px 5px;
+        border-style: solid;
+        border-color: green;
+      }
+
+      .monthly-att-dashboard .holidays-week {
+        border-width: 1px 1px 1px 5px;
+        border-style: solid;
+        border-color: #f7971e;
+      }
+
+      .monthly-att-dashboard .halfdays {
+        border-width: 1px 3px 1px 5px;
+        border-style: solid;
+        border-color: gold;
+      }
+
+      .monthly-att-dashboard .lwpays {
+        border-width: 1px 1px 1px 5px;
+        border-style: solid;
+        border-color: grey;
+      }
+
+      .monthly-att-dashboard .piad_leave {
+        border-width: 1px 1px 1px 5px;
+        border-style: solid;
+        border-color: blue;
+      }
+
+      .monthly-att-dashboard .comp_leave {
+        border-width: 1px 1px 1px 5px;
+        border-style: solid;
+        border-color: purple;
+      }
+
+      /* Status Section */
+      .monthly-att-dashboard .date-header-row {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 0;
+        border-bottom: 1px solid #e5e7eb;
+        padding: 3px;
+        align-items: center;
+      }
+
+      .monthly-att-dashboard .header-status {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        padding: 0 8px;
+        flex: 1;
+        justify-content: center;
+      }
+
+      .monthly-att-dashboard .status-badge-compact {
+        padding: 4px 8px;
+        border-radius: 3px;
+        font-size: 10px;
+        font-weight: 700;
+        min-width: 40px;
+        text-align: center;
+        width: 100%;
+      }
+
+      .monthly-att-dashboard .status-badge-compact.present {
+        background: #d4edda;
+        color: #155724;
+      }
+
+      .monthly-att-dashboard .status-badge-compact.absent {
+        background: #e5c6c4;
+        color: #e21a00;
+      }
+
+      .monthly-att-dashboard .status-badge-compact.leave,
+      .monthly-att-dashboard .status-badge-compact.lwp_type {
+        background: #fdeeed;
+        color: #141414;
+      }
+
+      .monthly-att-dashboard .status-badge-compact.paid_type {
+        background: #c6ebf5;
+        color: blue;
+      }
+
+      .monthly-att-dashboard .status-badge-compact.coff_type {
+        background: #f0bff0;
+        color: purple;
+      }
+
+      .monthly-att-dashboard .status-badge-compact.halfday {
+        background: #000000;
+        color: gold;
+      }
+
+      .monthly-att-dashboard .status-badge-compact.holiday {
+        background: linear-gradient(
+          135deg,
+          #ffda6a 0%,
+          #f7971e 60%,
+          #ff5858 100%
+        );
+        color: #593306;
+      }
+
+      /* Indicators */
+      .monthly-att-dashboard .header-indicators {
+        display: flex;
+        gap: 4px;
+        padding: 0 6px;
+        border-left: 1px solid #d1d5db;
+      }
+
+      .monthly-att-dashboard .indicator-dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        display: inline-block;
+      }
+
+      .monthly-att-dashboard .indicator-dot.late {
+        background: #dc3545;
+      }
+
+      .monthly-att-dashboard .indicator-dot.early {
+        background: #17a2b8;
+      }
+
+      /* Times Row */
+      .monthly-att-dashboard .times-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0;
+        border-bottom: 1px solid #e5e7eb;
+      }
+
+      .monthly-att-dashboard .times-left {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        padding: 3px;
+        border-right: 1px solid #e5e7eb;
+      }
+
+      .monthly-att-dashboard .time-item-inline {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 9px;
+      }
+
+      .monthly-att-dashboard .time-label-inline {
+        color: #7f8d9a;
+        font-weight: 600;
+        font-size: 8px;
+        text-transform: uppercase;
+        min-width: 28px;
+      }
+
+      .monthly-att-dashboard .time-value-inline {
+        color: #36414c;
+        font-weight: 600;
+        font-size: 9px;
+      }
+
+      .monthly-att-dashboard .times-right {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 3px;
+      }
+
+      .monthly-att-dashboard .working-hours-compact {
+        background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+        padding: 6px 8px;
+        border-radius: 3px;
+        font-size: 10px;
+        color: #1565c0;
+        font-weight: 600;
+        text-align: center;
+        width: 100%;
+      }
+
+      /* Request/Leave Section */
+      .monthly-att-dashboard .request-leave-section {
+        padding: 5px;
+      }
+
+      .monthly-att-dashboard .request-info-compact {
+        background: #f0f8ff;
+        border-left: 2px solid #17a2b8;
+        padding: 4px 6px;
+        border-radius: 3px;
+        font-size: 9px;
+        margin-bottom: 4px;
+      }
+
+      .monthly-att-dashboard .request-info-compact:last-child {
+        margin-bottom: 0;
+      }
+
+      .monthly-att-dashboard .request-info-compact-title {
+        font-weight: 600;
+        color: #0c5460;
+        margin-bottom: 2px;
+        font-size: 9px;
+      }
+
+      .monthly-att-dashboard .request-info-compact-content {
+        color: #0c5460;
+        font-size: 8px;
+        line-height: 1.3;
+        word-break: break-word;
+        white-space: normal;
+      }
+
+      /* Error */
+      .monthly-att-dashboard .error-container {
+        padding: 40px 20px;
+        text-align: center;
+      }
+
+      .monthly-att-dashboard .alert {
+        padding: 16px 20px;
+        border-radius: 6px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        justify-content: center;
+        font-size: 14px;
+        flex-wrap: wrap;
+      }
+
+      .monthly-att-dashboard .alert-danger {
+        background: #f8d7da;
+        color: #721c24;
+        border: 1px solid #f5c6cb;
+      }
+
+      .monthly-att-dashboard .alert i {
+        font-size: 18px;
+        flex-shrink: 0;
+      }
+
+      /* No Data Message */
+      .monthly-att-dashboard .no-data-message {
+        padding: 60px 20px;
+        text-align: center;
+        color: #7f8d9a;
+        font-size: 14px;
+      }
+
+      .monthly-att-dashboard .no-data-message i {
+        font-size: 48px;
+        opacity: 0.3;
+        display: block;
+        margin-bottom: 15px;
+      }
+
+      /* Responsive Design */
+      @media (max-width: 1400px) {
+        .monthly-att-dashboard .employees-container {
+          grid-template-columns: repeat(3, 1fr);
+        }
+      }
+
+      @media (max-width: 900px) {
+        .monthly-att-dashboard .employees-container {
+          grid-template-columns: 1fr;
+        }
+
+        .monthly-att-dashboard .employee-card {
+          height: auto;
+        }
+
+        .monthly-att-dashboard .card-body {
+          height: auto;
+          max-height: 400px;
+        }
+      }
+
+      @media (max-width: 768px) {
+        .monthly-att-dashboard {
+          padding: 15px;
+        }
+
+        .monthly-att-dashboard .dashboard-header {
+          flex-direction: column;
+          gap: 15px;
+          align-items: stretch;
+        }
+
+        .monthly-att-dashboard .header-right .controls {
+          flex-direction: column;
+          width: 100%;
+        }
+
+        .monthly-att-dashboard .month-picker,
+        .monthly-att-dashboard .employee-filter {
+          width: 100%;
+        }
+
+        .monthly-att-dashboard .dashboard-stats {
+          grid-template-columns: repeat(2, 1fr);
+        }
+
+        .monthly-att-dashboard .main-child1 {
+          font-size: 12px;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .monthly-att-dashboard {
+          padding: 10px;
+        }
+      }
+      /* ===== REQUIREMENT 1: KPI Stat Cards - Smaller Size ===== */
+      .monthly-att-dashboard .dashboard-stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+        gap: 10px;
+        margin-bottom: 20px;
+      }
+
+      .monthly-att-dashboard .stat-card {
+        background: white;
+        padding: 8px 12px; /* was 15px 20px */
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        display: flex;
+        flex-direction: column;
+        gap: 4px; /* was 8px */
+        border-left: 4px solid #2490ef;
+        transition:
+          transform 0.2s,
+          box-shadow 0.2s;
+      }
+
+      .monthly-att-dashboard .stat-label {
+        font-size: 10px; /* was 12px */
+        color: #7f8d9a;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      .monthly-att-dashboard .stat-value {
+        font-size: 20px; /* was 28px */
+        font-weight: 700;
+        color: #2490ef;
+      }
+
+      /* ===== REQUIREMENT 2: Attendance Row Layout (Row format instead of column) ===== */
+
+      /* Main attendance item - ROW layout */
+      .monthly-att-dashboard .main-att {
+        padding: 2px 4px;
+        border-radius: 6px;
+        margin-bottom: 5px;
+        background: white;
+      }
+
+      .monthly-att-dashboard .main-child {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 4px;
+        width: 100%;
+      }
+
+      /* Date section - compact left column */
+      .monthly-att-dashboard .main-child1 {
+        width: 55px;
+        min-width: 55px;
+        background-color: rgb(203 203 203);
+        border-radius: 6px;
+        font-weight: bold;
+        font-size: 10px;
+        color: rgb(0, 0, 0);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 4px 2px;
+        text-align: center;
+        flex-shrink: 0;
+      }
+
+      .monthly-att-dashboard .main-child1 p {
+        text-align: center;
+        margin: 0;
+        font-size: 10px;
+        line-height: 1.2;
+      }
+
+      /* Right content section - all inline in one row */
+      .monthly-att-dashboard .main-child2 {
+        flex: 1;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 4px;
+        overflow: hidden;
+      }
+
+      /* Status + indicators row */
+      .monthly-att-dashboard .date-header-row {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 4px;
+        border-bottom: none; /* remove bottom border since now in row */
+        padding: 0;
+        flex-shrink: 0;
+      }
+
+      .monthly-att-dashboard .header-status {
+        display: flex;
+        align-items: center;
+        padding: 0;
+        justify-content: flex-start;
+      }
+
+      .monthly-att-dashboard .status-badge-compact {
+        padding: 2px 6px;
+        border-radius: 3px;
+        font-size: 9px;
+        font-weight: 700;
+        text-align: center;
+        white-space: nowrap;
+        width: auto; /* was 100% - now auto for row layout */
+        min-width: 48px;
+      }
+
+      .monthly-att-dashboard .header-indicators {
+        display: flex;
+        gap: 3px;
+        padding: 0 4px;
+        border-left: 1px solid #d1d5db;
+      }
+
+      /* Times row - inline with status */
+      .monthly-att-dashboard .times-row {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 6px;
+        border-bottom: none; /* remove border in row layout */
+        flex: 1;
+      }
+
+      .monthly-att-dashboard .times-left {
+        display: flex;
+        flex-direction: row; /* was column - now side by side */
+        gap: 6px;
+        padding: 0;
+        border-right: none;
+        align-items: center;
+      }
+
+      .monthly-att-dashboard .time-item-inline {
+        display: flex;
+        align-items: center;
+        gap: 2px;
+        font-size: 9px;
+      }
+
+      .monthly-att-dashboard .time-label-inline {
+        color: #7f8d9a;
+        font-weight: 600;
+        font-size: 8px;
+        text-transform: uppercase;
+        min-width: auto;
+      }
+
+      .monthly-att-dashboard .time-value-inline {
+        color: #36414c;
+        font-weight: 600;
+        font-size: 9px;
+        white-space: nowrap;
+      }
+
+      .monthly-att-dashboard .times-right {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        padding: 0;
+        margin-left: auto;
+      }
+
+      .monthly-att-dashboard .working-hours-compact {
+        background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+        padding: 2px 6px;
+        border-radius: 3px;
+        font-size: 9px;
+        color: #1565c0;
+        font-weight: 600;
+        text-align: center;
+        width: auto; /* was 100% */
+        white-space: nowrap;
+      }
+
+      /* Holiday row inline */
+      .monthly-att-dashboard .main-child2 .header-status {
+        flex: 1;
+      }
+
+      .monthly-att-dashboard .status-badge-compact.holiday {
+        background: linear-gradient(
+          135deg,
+          #ffda6a 0%,
+          #f7971e 60%,
+          #ff5858 100%
+        );
+        color: #593306;
+        width: auto;
+        font-size: 9px;
+        padding: 2px 8px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="monthly-att-dashboard">
+      <div class="dashboard-header">
+        <div class="header-left">
+          <h3>Monthly Attendance Report</h3>
+          <p class="month-display"></p>
+          <button class="btn btn-success btn-sm download-all-btn">
+            <i class="fa fa-download"></i> Download All
+          </button>
+        </div>
+        <div class="header-right">
+          <div class="controls">
+            <select class="form-control employee-filter" style="width: 250px">
+              <option value="">All Employees</option>
+            </select>
+            <input
+              type="month"
+              class="form-control month-picker"
+              style="width: 200px"
+            />
+            <button class="btn btn-primary btn-sm refresh-btn">
+              <i class="fa fa-refresh"></i> Refresh
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="dashboard-stats">
+        <div class="stat-card">
+          <span class="stat-label">Total Employees</span>
+          <span class="stat-value employee-count">0</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-label">Total Present</span>
+          <span class="stat-value present-count" style="color: #28a745">0</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-label">Total Absent</span>
+          <span class="stat-value absent-count" style="color: #dc3545">0</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-label">Total On Leave</span>
+          <span class="stat-value leave-count" style="color: #17a2b8">0</span>
+        </div>
+      </div>
+
+      <div class="loading-container" style="display: none">
+        <div class="spinner"></div>
+        <p>Loading attendance data...</p>
+      </div>
+
+      <div class="dashboard-content">
+        <div class="employees-container">
+          <!-- Employee cards will be inserted here -->
+        </div>
+      </div>
+
+      <div class="error-container" style="display: none">
+        <div class="alert alert-danger">
+          <i class="fa fa-exclamation-circle"></i>
+          <span>Failed to load attendance data. Please try again.</span>
+        </div>
+      </div>
+    </div>
+  </body>
+
+  <script>
+    function stripHtml(html) {
+      let tmp = document.createElement("div");
+      tmp.innerHTML = html;
+      return tmp.textContent || tmp.innerText || "";
+    }
+
+    let widget = root_element.querySelector(".monthly-att-dashboard");
+    let allAttendanceData = [];
+    let currentMonth = new Date().getMonth() + 1;
+    let currentYear = new Date().getFullYear();
+    let selectedEmployee = "";
+
+    function initDashboard() {
+      let monthPicker = widget.querySelector(".month-picker");
+      let employeeFilter = widget.querySelector(".employee-filter");
+      let today = new Date();
+      let currentMonthValue =
+        today.getFullYear() +
+        "-" +
+        String(today.getMonth() + 1).padStart(2, "0");
+      monthPicker.value = currentMonthValue;
+
+      currentMonth = today.getMonth() + 1;
+      currentYear = today.getFullYear();
+
+      loadEmployeeFilter();
+
+      monthPicker.addEventListener("change", function () {
+        let selectedDate = this.value.split("-");
+        currentYear = parseInt(selectedDate[0]);
+        currentMonth = parseInt(selectedDate[1]);
+        loadAttendanceData();
+      });
+
+      employeeFilter.addEventListener("change", function () {
+        selectedEmployee = this.value;
+        loadAttendanceData();
+      });
+
+      widget
+        .querySelector(".refresh-btn")
+        .addEventListener("click", function () {
+          loadAttendanceData();
+        });
+    }
+    // Add download all button handler
+    widget
+      .querySelector(".download-all-btn")
+      .addEventListener("click", function () {
+        frappe.show_alert(
+          {
+            message: "Generating report for all employees...",
+            indicator: "blue",
+          },
+          3,
+        );
+
+        window.open(
+          frappe.urllib.get_full_url(
+            `/api/method/manoj.custom_dash_and_report.attendance_dash.download_all_employees_attendance_excel?month=${currentMonth}&year=${currentYear}`,
+          ),
+          "_blank",
+        );
+
+        setTimeout(function () {
+          frappe.show_alert(
+            {
+              message: "Download started",
+              indicator: "green",
+            },
+            3,
+          );
+        }, 500);
+      });
+
+    function loadEmployeeFilter() {
+      let employeeFilter = widget.querySelector(".employee-filter");
+      frappe.call({
+        method:
+          "manoj.custom_dash_and_report.attendance_dash.get_all_employees",
+        callback: function (r) {
+          if (r.message) {
+            let currentValue = employeeFilter.value;
+            while (employeeFilter.options.length > 1) {
+              employeeFilter.remove(1);
+            }
+            r.message.forEach(function (emp) {
+              let option = document.createElement("option");
+              option.value = emp.name;
+              option.innerText = emp.name + " - " + emp.employee_name;
+              employeeFilter.appendChild(option);
+            });
+            employeeFilter.value = currentValue;
+          }
+        },
+        error: function (err) {
+          console.error("Error loading employees:", err);
+        },
+      });
+    }
+
+    function loadAttendanceData() {
+      let loading = widget.querySelector(".loading-container");
+      let content = widget.querySelector(".dashboard-content");
+      let error = widget.querySelector(".error-container");
+
+      loading.style.display = "flex";
+      content.style.display = "none";
+      error.style.display = "none";
+
+      frappe.call({
+        method:
+          "manoj.custom_dash_and_report.attendance_dash.get_monthly_attendance_data",
+        args: {
+          month: currentMonth,
+          year: currentYear,
+          employee: selectedEmployee || null,
+        },
+        callback: function (r) {
+          loading.style.display = "none";
+
+          if (r.message && r.message.data && r.message.data.length > 0) {
+            allAttendanceData = r.message;
+            content.style.display = "block";
+            updateHeaderDate();
+            calculateStatsFromData(r.message);
+            renderEmployeeCards();
+          } else {
+            content.style.display = "block";
+            let container = widget.querySelector(".employees-container");
+            container.innerHTML =
+              '<div class="no-data-message"><i class="fa fa-inbox"></i><p>No attendance data found for this month.</p></div>';
+          }
+        },
+        error: function (err) {
+          loading.style.display = "none";
+          error.style.display = "block";
+          console.error("Error loading attendance:", err);
+        },
+      });
+    }
+
+    function updateHeaderDate() {
+      let monthNames = [
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December",
+      ];
+      let dateDisplay = widget.querySelector(".month-display");
+      dateDisplay.innerText = monthNames[currentMonth - 1] + " " + currentYear;
+    }
+
+    function calculateStatsFromData(responseData) {
+      let stats = {
+        employees: responseData.data.length,
+        present: 0,
+        absent: 0,
+        leave: 0,
+      };
+      responseData.data.forEach(function (emp) {
+        emp.records.forEach(function (record) {
+          if (record.status === "Present" || record.status === "Half Day") {
+            stats.present++;
+          } else if (record.status === "Absent") {
+            stats.absent++;
+          } else if (record.status === "On Leave") {
+            stats.leave++;
+          }
+        });
+      });
+      widget.querySelector(".employee-count").innerText = stats.employees;
+      widget.querySelector(".present-count").innerText = stats.present;
+      widget.querySelector(".absent-count").innerText = stats.absent;
+      widget.querySelector(".leave-count").innerText = stats.leave;
+    }
+
+    function renderEmployeeCards() {
+      let container = widget.querySelector(".employees-container");
+      container.innerHTML = "";
+      if (allAttendanceData && allAttendanceData.data) {
+        allAttendanceData.data.forEach(function (empData) {
+          let card = createEmployeeCard(empData);
+          container.appendChild(card);
+        });
+      }
+    }
+
+    function getStatusClass(status) {
+      const map = {
+        Present: "present",
+        Absent: "absent",
+        "On Leave": "leave",
+        "Half Day": "halfday",
+        "Work from Home": "wfh",
+      };
+      return map[status] || "";
+    }
+
+    function createEmployeeCard(empData) {
+      let card = document.createElement("div");
+      card.className = "employee-card";
+
+      let header = document.createElement("div");
+      header.className = "card-header";
+      let infoDiv = document.createElement("div");
+      infoDiv.className = "employee-info";
+      let nameH4 = document.createElement("h4");
+      nameH4.innerText = empData.employee_name || "N/A";
+      infoDiv.appendChild(nameH4);
+      let codeP = document.createElement("p");
+      codeP.innerText = "ID: " + empData.employee;
+      infoDiv.appendChild(codeP);
+
+      let actionsDiv = document.createElement("div");
+      actionsDiv.className = "card-actions";
+      let downloadBtn = document.createElement("button");
+      downloadBtn.className = "download-emp-btn";
+      downloadBtn.innerHTML =
+        '<i class="fa fa-download"></i> <span>Download</span>';
+      downloadBtn.addEventListener("click", function () {
+        downloadEmployeeData(empData);
+      });
+      actionsDiv.appendChild(downloadBtn);
+      header.appendChild(infoDiv);
+      header.appendChild(actionsDiv);
+
+      let body = document.createElement("div");
+      body.className = "card-body";
+
+      let grid = document.createElement("div");
+      grid.className = "attendance-grid";
+
+      let attendanceByDate = {};
+      empData.records.forEach(function (record) {
+        attendanceByDate[record.attendance_date] = record;
+      });
+      let empHolidays = empData.holidays || {};
+      let firstDay = new Date(currentYear, currentMonth - 1, 1);
+      let lastDay = new Date(currentYear, currentMonth, 0);
+
+      let monthNames = [
+        "JAN",
+        "FEB",
+        "MAR",
+        "APR",
+        "MAY",
+        "JUN",
+        "JUL",
+        "AUG",
+        "SEP",
+        "OCT",
+        "NOV",
+        "DEC",
+      ];
+      let dayNames = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
+
+      for (let day = 1; day <= lastDay.getDate(); day++) {
+        let date = new Date(currentYear, currentMonth - 1, day);
+        let dateStr =
+          date.getFullYear() +
+          "-" +
+          String(date.getMonth() + 1).padStart(2, "0") +
+          "-" +
+          String(day).padStart(2, "0");
+
+        if (!attendanceByDate[dateStr] && !empHolidays[dateStr]) {
+          continue;
+        }
+
+        let mainAtt = document.createElement("div");
+        mainAtt.className = "main-att";
+
+        let mainChild = document.createElement("div");
+        mainChild.className = "main-child";
+
+        // LEFT SECTION - DATE (30%)
+        let mainChild1 = document.createElement("div");
+        mainChild1.className = "main-child1";
+        let dateP = document.createElement("p");
+        dateP.style.whiteSpace = "nowrap";
+        dateP.innerHTML =
+          date.getDate() +
+          " " +
+          monthNames[date.getMonth()] +
+          "<br>" +
+          dayNames[date.getDay()];
+        mainChild1.appendChild(dateP);
+        mainChild.appendChild(mainChild1);
+
+        // RIGHT SECTION - CONTENT (70%)
+        let mainChild2 = document.createElement("div");
+        mainChild2.className = "main-child2";
+
+        if (attendanceByDate[dateStr]) {
+          let record = attendanceByDate[dateStr];
+
+          if (record.status === "Present") {
+            mainAtt.classList.add("presents");
+          } else if (record.status === "Absent") {
+            mainAtt.classList.add("absents");
+          } else if (record.status === "Half Day") {
+            mainAtt.classList.add("halfdays");
+          } else if (record.status === "On Leave") {
+            mainAtt.classList.add("lwpays");
+          }
+
+          // STATUS ROW
+          let dateHeaderRow = document.createElement("div");
+          dateHeaderRow.className = "date-header-row";
+
+          let headerStatus = document.createElement("div");
+          headerStatus.className = "header-status";
+          let statusBadge = document.createElement("div");
+          statusBadge.className =
+            "status-badge-compact " + getStatusClass(record.status);
+          statusBadge.innerText = record.status;
+          headerStatus.appendChild(statusBadge);
+          dateHeaderRow.appendChild(headerStatus);
+
+          if (record.late_entry || record.early_exit) {
+            let headerIndicators = document.createElement("div");
+            headerIndicators.className = "header-indicators";
+            if (record.late_entry) {
+              let lateIndicator = document.createElement("div");
+              lateIndicator.className = "indicator-dot late";
+              lateIndicator.title = "Late Entry";
+              headerIndicators.appendChild(lateIndicator);
+            }
+            if (record.early_exit) {
+              let earlyIndicator = document.createElement("div");
+              earlyIndicator.className = "indicator-dot early";
+              earlyIndicator.title = "Early Exit";
+              headerIndicators.appendChild(earlyIndicator);
+            }
+            dateHeaderRow.appendChild(headerIndicators);
+          }
+
+          mainChild2.appendChild(dateHeaderRow);
+
+          // TIMES ROW
+          if (record.in_time || record.out_time) {
+            let timesRow = document.createElement("div");
+            timesRow.className = "times-row";
+
+            let timesLeft = document.createElement("div");
+            timesLeft.className = "times-left";
+
+            if (record.in_time) {
+              let inItem = document.createElement("div");
+              inItem.className = "time-item-inline";
+              inItem.innerHTML =
+                '<span class="time-label-inline">IN:</span><span class="time-value-inline">' +
+                record.in_time +
+                "</span>";
+              timesLeft.appendChild(inItem);
+            }
+
+            if (record.out_time) {
+              let outItem = document.createElement("div");
+              outItem.className = "time-item-inline";
+              outItem.innerHTML =
+                '<span class="time-label-inline">OUT:</span><span class="time-value-inline">' +
+                record.out_time +
+                "</span>";
+              timesLeft.appendChild(outItem);
+            }
+
+            timesRow.appendChild(timesLeft);
+
+            if (record.working_hours) {
+              let timesRight = document.createElement("div");
+              timesRight.className = "times-right";
+              let whDiv = document.createElement("div");
+              whDiv.className = "working-hours-compact";
+              whDiv.innerText = "Hrs: " + record.working_hours;
+              timesRight.appendChild(whDiv);
+              timesRow.appendChild(timesRight);
+            }
+
+            mainChild2.appendChild(timesRow);
+          }
+
+          mainChild.appendChild(mainChild2);
+          mainAtt.appendChild(mainChild);
+
+          if (record.attendance_request || record.leave_application) {
+            let requestLeaveSection = document.createElement("div");
+            requestLeaveSection.className = "request-leave-section";
+
+            if (record.attendance_request) {
+              let arDiv = document.createElement("div");
+              arDiv.className = "request-info-compact";
+              arDiv.innerHTML =
+                '<div class="request-info-compact-title">📋 ' +
+                record.attendance_request +
+                "</div>" +
+                '<div class="request-info-compact-content">' +
+                (record.attendance_request_explanation ||
+                  record.attendance_request_reason ||
+                  "") +
+                "</div>";
+              requestLeaveSection.appendChild(arDiv);
+            }
+
+            if (record.leave_application) {
+              let laDiv = document.createElement("div");
+              laDiv.className = "request-info-compact";
+              laDiv.innerHTML =
+                '<div class="request-info-compact-title">📅 ' +
+                record.leave_application +
+                "</div>" +
+                '<div class="request-info-compact-content">' +
+                (record.leave_application_description ||
+                  record.leave_application_reason ||
+                  "") +
+                "</div>";
+              requestLeaveSection.appendChild(laDiv);
+            }
+
+            mainAtt.appendChild(requestLeaveSection);
+          }
+        } else if (empHolidays[dateStr]) {
+          let holidayInfo = empHolidays[dateStr];
+          let isWeeklyOff = holidayInfo.is_weekly_off;
+          let description = stripHtml(holidayInfo.description);
+
+          mainAtt.classList.add("holidays-week");
+          mainChild2.style.display = "flex";
+
+          let headerStatus = document.createElement("div");
+          headerStatus.className = "header-status";
+          let statusBadge = document.createElement("div");
+          statusBadge.className = "status-badge-compact holiday";
+          statusBadge.style.padding = "12px";
+          statusBadge.innerText =
+            (isWeeklyOff ? "WO - " : "HL - ") + description;
+          headerStatus.appendChild(statusBadge);
+          mainChild2.appendChild(headerStatus);
+
+          mainChild.appendChild(mainChild2);
+          mainAtt.appendChild(mainChild);
+        }
+
+        grid.appendChild(mainAtt);
+      }
+
+      body.appendChild(grid);
+      card.appendChild(header);
+      card.appendChild(body);
+      return card;
+    }
+
+    function downloadEmployeeData(empData) {
+      if (!empData.records || empData.records.length === 0) {
+        frappe.msgprint("No data available to download");
+        return;
+      }
+
+      // Show loading message
+      frappe.show_alert(
+        {
+          message: "Generating Excel file...",
+          indicator: "blue",
+        },
+        2,
+      );
+
+      // Call server-side method to generate Excel
+      window.open(
+        frappe.urllib.get_full_url(
+          `/api/method/manoj.custom_dash_and_report.attendance_dash.download_employee_attendance_excel?employee=${encodeURIComponent(empData.employee)}&month=${currentMonth}&year=${currentYear}`,
+        ),
+        "_blank",
+      );
+
+      setTimeout(function () {
+        frappe.show_alert(
+          {
+            message: "Excel download started",
+            indicator: "green",
+          },
+          3,
+        );
+      }, 500);
+    }
+
+    // Fallback CSV download function
+    function downloadEmployeeDataCSV(empData) {
+      let firstDay = new Date(currentYear, currentMonth - 1, 1);
+      let lastDay = new Date(currentYear, currentMonth, 0);
+      let monthNames = [
+        "JANUARY",
+        "FEBRUARY",
+        "MARCH",
+        "APRIL",
+        "MAY",
+        "JUNE",
+        "JULY",
+        "AUGUST",
+        "SEPTEMBER",
+        "OCTOBER",
+        "NOVEMBER",
+        "DECEMBER",
+      ];
+
+      let attendanceByDate = {};
+      empData.records.forEach(function (record) {
+        attendanceByDate[record.attendance_date] = record;
+      });
+
+      let empHolidays = empData.holidays || {};
+      let csv_lines = [];
+
+      // Title
+      let titleRow = [
+        "Attendance - " + monthNames[currentMonth - 1] + " " + currentYear,
+      ];
+      for (let i = 0; i < lastDay.getDate() + 1; i++) {
+        titleRow.push("");
+      }
+      csv_lines.push(titleRow.map((v) => '"' + v + '"').join(","));
+
+      // Employee and dates
+      let dateRow = [
+        empData.employee_name + " - (" + empData.employee + ")",
+        "Date",
+      ];
+      for (let day = 1; day <= lastDay.getDate(); day++) {
+        let date = new Date(currentYear, currentMonth - 1, day);
+        let dateStr =
+          date.getFullYear() +
+          "-" +
+          String(date.getMonth() + 1).padStart(2, "0") +
+          "-" +
+          String(day).padStart(2, "0");
+        dateRow.push(dateStr);
+      }
+      csv_lines.push(dateRow.map((v) => '"' + v + '"').join(","));
+
+      // Status
+      let statusRow = ["", "Status"];
+      for (let day = 1; day <= lastDay.getDate(); day++) {
+        let date = new Date(currentYear, currentMonth - 1, day);
+        let dateStr =
+          date.getFullYear() +
+          "-" +
+          String(date.getMonth() + 1).padStart(2, "0") +
+          "-" +
+          String(day).padStart(2, "0");
+
+        if (attendanceByDate[dateStr]) {
+          statusRow.push(attendanceByDate[dateStr].status);
+        } else if (empHolidays[dateStr]) {
+          let holidayInfo = empHolidays[dateStr];
+          statusRow.push(holidayInfo.is_weekly_off ? "Week Off" : "Holiday");
+        } else {
+          statusRow.push("");
+        }
+      }
+      csv_lines.push(statusRow.map((v) => '"' + v + '"').join(","));
+
+      let csv_content = csv_lines.join("\n");
+      let filename =
+        "Monthly-attendance-report_" +
+        empData.employee +
+        "_" +
+        monthNames[currentMonth - 1] +
+        "_" +
+        currentYear +
+        ".csv";
+
+      let blob = new Blob([csv_content], { type: "text/csv;charset=utf-8;" });
+      let link = document.createElement("a");
+      let url = URL.createObjectURL(blob);
+
+      link.setAttribute("href", url);
+      link.setAttribute("download", filename);
+      link.style.visibility = "hidden";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      frappe.show_alert(
+        {
+          message: "Report downloaded as CSV",
+          indicator: "orange",
+        },
+        3,
+      );
+    }
+
+    initDashboard();
+    loadAttendanceData();
+  </script>
+</html>

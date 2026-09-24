@@ -1,0 +1,3328 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+
+    <style>
+      #dcx-root {
+        --dcx-bg: #f7f8fa;
+        --dcx-surface: #fff;
+        --dcx-border: #e4e7ec;
+        --dcx-border-soft: #f1f5f9;
+        --dcx-text: #0f172a;
+        --dcx-muted: #94a3b8;
+        --dcx-muted2: #64748b;
+        --dcx-teal: #0d9488;
+        --dcx-teal-dark: #0f766e;
+        --dcx-teal-bg: #f0fdfa;
+        --dcx-mono: "DM Mono", "Courier New", monospace;
+        font-family:
+          "Inter",
+          -apple-system,
+          BlinkMacSystemFont,
+          sans-serif;
+        background: var(--dcx-bg);
+        color: var(--dcx-text);
+        position: relative;
+        min-height: 100vh;
+      }
+      #dcx-root *,
+      #dcx-root *::before,
+      #dcx-root *::after {
+        box-sizing: border-box;
+      }
+      #dcx-root button {
+        font-family: inherit;
+        cursor: pointer;
+      }
+      #dcx-root input,
+      #dcx-root select {
+        font-family: inherit;
+      }
+
+      .dcx-tabbar {
+        display: flex;
+        gap: 4px;
+        background: #fff;
+        border: 1px solid var(--dcx-border);
+        border-radius: 12px;
+        padding: 4px;
+        margin-bottom: 20px;
+        width: fit-content;
+      }
+      .dcx-tabbtn {
+        padding: 8px 18px;
+        border: none;
+        background: transparent;
+        border-radius: 8px;
+        font-size: 13px;
+        font-weight: 600;
+        color: #64748b;
+        transition: all 0.15s;
+      }
+      .dcx-tabbtn:hover {
+        color: #1e293b;
+      }
+      .dcx-tabbtn.active {
+        background: #0f172a;
+        color: #fff;
+      }
+
+      .dcx-panel {
+        display: none;
+        flex-direction: column;
+        gap: 24px;
+      }
+      .dcx-panel.active {
+        display: flex;
+      }
+
+      .dcx-page-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 12px;
+        background: #fff;
+        border: 1px solid var(--dcx-border);
+        border-radius: 14px;
+        padding: 20px 24px;
+      }
+      .dcx-page-title {
+        font-size: 19px;
+        font-weight: 800;
+        color: #0f172a;
+        margin: 0 0 4px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .dcx-page-sub {
+        font-size: 12px;
+        color: var(--dcx-muted2);
+        margin: 0;
+      }
+      .dcx-head-actions {
+        display: flex;
+        gap: 8px;
+      }
+      .dcx-icon-btn {
+        width: 36px;
+        height: 36px;
+        border-radius: 9px;
+        border: 1px solid var(--dcx-border);
+        background: #fff;
+        color: #475569;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.15s;
+      }
+      .dcx-icon-btn:hover {
+        background: #f1f5f9;
+        border-color: #cbd5e1;
+      }
+      .dcx-icon-btn.spin svg {
+        animation: dcx-spin 0.7s linear;
+      }
+      @keyframes dcx-spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      .dcx-filters {
+        background: #fff;
+        border: 1px solid var(--dcx-border);
+        border-radius: 14px;
+        padding: 16px 20px;
+        display: none;
+        flex-direction: column;
+        gap: 14px;
+      }
+      .dcx-filters.open {
+        display: flex;
+      }
+      .dcx-filters-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+      }
+      .dcx-filter-item {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        min-width: 150px;
+      }
+      .dcx-filter-item label {
+        font-size: 10px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: var(--dcx-muted2);
+      }
+      .dcx-filters input,
+      .dcx-filters select {
+        padding: 8px 10px;
+        border: 1px solid var(--dcx-border);
+        border-radius: 8px;
+        font-size: 12.5px;
+        color: #334155;
+        background: #fff;
+        outline: none;
+      }
+      .dcx-filters input:focus,
+      .dcx-filters select:focus {
+        border-color: var(--dcx-teal);
+      }
+      .dcx-filter-actions {
+        display: flex;
+        gap: 8px;
+      }
+      .dcx-btn-primary {
+        background: var(--dcx-teal-dark);
+        color: #fff;
+        border: none;
+        padding: 8px 18px;
+        border-radius: 8px;
+        font-size: 12.5px;
+        font-weight: 700;
+      }
+      .dcx-btn-primary:hover {
+        background: #115e59;
+      }
+      .dcx-btn-ghost {
+        background: #fff;
+        color: #64748b;
+        border: 1px solid var(--dcx-border);
+        padding: 8px 18px;
+        border-radius: 8px;
+        font-size: 12.5px;
+        font-weight: 600;
+      }
+      .dcx-btn-ghost:hover {
+        border-color: #cbd5e1;
+      }
+
+      .dcx-section-label {
+        display: flex;
+        align-items: baseline;
+        gap: 10px;
+        margin-bottom: 2px;
+      }
+      .dcx-section-label span.dcx-st {
+        font-size: 10px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        color: var(--dcx-muted);
+      }
+      .dcx-section-label span.dcx-sh {
+        font-size: 11px;
+        color: var(--dcx-muted);
+      }
+
+      .dcx-kpi-grid {
+        display: grid;
+        gap: 12px;
+      }
+      .dcx-kpi-grid.n7 {
+        grid-template-columns: repeat(7, 1fr);
+      }
+      .dcx-kpi-grid.n5 {
+        grid-template-columns: repeat(5, 1fr);
+      }
+      .dcx-kpi {
+        background: #fff;
+        border: 1px solid var(--dcx-border);
+        border-left: 3px solid var(--dcx-border);
+        border-radius: 12px;
+        padding: 14px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        text-align: left;
+        transition: all 0.15s;
+      }
+      .dcx-kpi.clickable-kpi {
+        cursor: pointer;
+      }
+      .dcx-kpi.clickable-kpi:hover {
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+        transform: translateY(-1px);
+      }
+      .dcx-kpi-top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .dcx-kpi-label {
+        font-size: 9.5px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--dcx-muted);
+      }
+      .dcx-kpi-icon {
+        width: 26px;
+        height: 26px;
+        border-radius: 8px;
+        font-size: 13px;
+        line-height: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+      }
+      .dcx-kpi-value {
+        font-size: 23px;
+        font-weight: 800;
+        font-family: var(--dcx-mono);
+        color: #0f172a;
+        letter-spacing: -0.3px;
+      }
+
+      .dcx-card {
+        background: #fff;
+        border: 1px solid var(--dcx-border);
+        border-radius: 14px;
+        padding: 20px;
+      }
+      .dcx-card-title {
+        font-size: 10px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        color: var(--dcx-muted);
+        margin: 0 0 14px;
+      }
+      .dcx-grid2 {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+      }
+
+      .dcx-pipeline {
+        display: flex;
+        flex-wrap: wrap;
+        row-gap: 10px;
+        align-items: center;
+      }
+      .dcx-stage {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 6px;
+        padding: 14px 18px;
+        background: #fff;
+        border: 1px solid var(--dcx-border);
+        border-top: 3px solid var(--dcx-border);
+        border-radius: 12px;
+        min-width: 104px;
+        transition: all 0.15s;
+      }
+      .dcx-stage:hover {
+        border-color: #cbd5e1;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      }
+      .dcx-stage-label {
+        font-size: 9px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--dcx-muted);
+      }
+      .dcx-stage-count {
+        font-size: 24px;
+        font-weight: 800;
+        font-family: var(--dcx-mono);
+        color: #0f172a;
+      }
+      .dcx-stage-dash {
+        width: 22px;
+        height: 2px;
+        border-radius: 2px;
+      }
+      .dcx-arrow {
+        margin: 0 4px;
+        color: #cbd5e1;
+      }
+      .dcx-pipeline-foot {
+        margin-top: 14px;
+        padding-top: 14px;
+        border-top: 1px solid var(--dcx-border-soft);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .dcx-foot-label {
+        font-size: 10px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--dcx-muted);
+      }
+      .dcx-foot-value {
+        font-size: 20px;
+        font-weight: 800;
+        color: var(--dcx-teal-dark);
+        font-family: var(--dcx-mono);
+        margin-top: 3px;
+      }
+      .dcx-linklike {
+        background: none;
+        border: none;
+        color: var(--dcx-teal-dark);
+        font-size: 12px;
+        font-weight: 600;
+      }
+      .dcx-linklike:hover {
+        text-decoration: underline;
+      }
+
+      .dcx-chip-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-bottom: 14px;
+      }
+      .dcx-chip {
+        padding: 7px 16px;
+        border: 1px solid var(--dcx-border);
+        background: #fff;
+        border-radius: 8px;
+        font-size: 12px;
+        font-weight: 600;
+        color: #475569;
+      }
+      .dcx-chip:hover {
+        border-color: #cbd5e1;
+      }
+      .dcx-chip.active {
+        background: #0f172a;
+        color: #fff;
+        border-color: #0f172a;
+      }
+
+      .dcx-strip {
+        background: #fff;
+        border: 1px solid var(--dcx-border);
+        border-radius: 14px;
+        padding: 16px 22px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 12px;
+      }
+      .dcx-strip-title {
+        font-size: 14px;
+        font-weight: 700;
+        color: #1e293b;
+        margin: 0;
+      }
+      .dcx-strip-sub {
+        font-size: 12px;
+        color: var(--dcx-muted2);
+        margin: 2px 0 0;
+      }
+      .dcx-pill {
+        padding: 9px 18px;
+        border-radius: 9px;
+        font-size: 12.5px;
+        font-weight: 700;
+        border: 1px solid transparent;
+        white-space: nowrap;
+      }
+      .dcx-pill.teal {
+        background: var(--dcx-teal-bg);
+        color: var(--dcx-teal-dark);
+        border-color: #ccfbf1;
+      }
+      .dcx-pill.teal:hover {
+        background: #ccfbf1;
+      }
+      .dcx-pill.amber {
+        background: #fffbeb;
+        color: #b45309;
+        border-color: #fde68a;
+      }
+      .dcx-pill.amber:hover {
+        background: #fef3c7;
+      }
+      .dcx-pill.red {
+        background: #fef2f2;
+        color: #b91c1c;
+        border-color: #fee2e2;
+      }
+      .dcx-pill.red:hover {
+        background: #fee2e2;
+      }
+
+      .dcx-chart-shell {
+        min-height: 230px;
+      }
+      .dcx-hbar-row {
+        display: flex;
+        align-items: flex-start;
+        gap: 14px;
+        cursor: pointer;
+        transition: transform 0.15s;
+      }
+      .dcx-hbar-row:hover {
+        transform: translateX(3px);
+      }
+      .dcx-hbar-label {
+        width: 150px;
+        text-align: right;
+        padding-top: 9px;
+        font-size: 11.5px;
+        font-weight: 700;
+        color: #334155;
+        flex-shrink: 0;
+      }
+      .dcx-hbar-track {
+        flex: 1;
+        background: #f1f5f9;
+        border-radius: 8px;
+        height: 34px;
+        position: relative;
+        overflow: hidden;
+      }
+      .dcx-hbar-fill {
+        height: 100%;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        padding-left: 12px;
+        transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+      .dcx-hbar-fill span {
+        color: #fff;
+        font-weight: 800;
+        font-size: 13px;
+        font-family: var(--dcx-mono);
+      }
+
+      .dcx-canvas-wrap {
+        position: relative;
+        height: 230px;
+      }
+
+      .dcx-stack {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      .dcx-modal-overlay {
+        position: fixed;
+        inset: 0;
+        z-index: 999999;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        padding: 16px;
+        background: rgba(15, 23, 42, 0.45);
+        backdrop-filter: blur(3px);
+      }
+      .dcx-modal-overlay.open {
+        display: flex;
+      }
+      .dcx-modal-box {
+        background: #fff;
+        border-radius: 16px;
+        width: 100%;
+        max-width: 1320px;
+        max-height: 90vh;
+        display: flex;
+        flex-direction: column;
+        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
+      }
+      .dcx-modal-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        padding: 16px 24px;
+        border-bottom: 1px solid var(--dcx-border-soft);
+      }
+      .dcx-modal-title {
+        font-size: 14px;
+        font-weight: 700;
+        color: #0f172a;
+        margin: 0;
+      }
+      .dcx-modal-count {
+        font-size: 11px;
+        color: var(--dcx-muted);
+        margin: 2px 0 0;
+        font-family: var(--dcx-mono);
+      }
+      .dcx-modal-actions {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .dcx-search {
+        position: relative;
+      }
+      .dcx-search input {
+        padding: 7px 10px 7px 28px;
+        font-size: 12px;
+        border: 1px solid var(--dcx-border);
+        border-radius: 8px;
+        width: 190px;
+        outline: none;
+      }
+      .dcx-search input:focus {
+        border-color: var(--dcx-teal);
+      }
+      .dcx-search svg {
+        position: absolute;
+        left: 9px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--dcx-muted);
+      }
+      .dcx-modal-close {
+        width: 30px;
+        height: 30px;
+        border-radius: 8px;
+        border: none;
+        background: transparent;
+        color: var(--dcx-muted);
+      }
+      .dcx-modal-close:hover {
+        background: #f1f5f9;
+        color: #334155;
+      }
+      .dcx-modal-body {
+        overflow: auto;
+        flex: 1;
+      }
+      .dcx-table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      .dcx-table thead th {
+        position: sticky;
+        top: 0;
+        background: #fafafa;
+        text-align: left;
+        padding: 9px 12px;
+        font-size: 11.5px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        color: var(--dcx-muted);
+        white-space: nowrap;
+        border-bottom: 1px solid var(--dcx-border-soft);
+      }
+      .dcx-table tbody td {
+        padding: 09px 12px;
+        font-size: 11.5px;
+        color: #334155;
+        white-space: nowrap;
+        border-bottom: 1px solid #fafafa;
+      }
+      .dcx-table tbody tr:hover {
+        background: #f8f9fa;
+      }
+      .dcx-empty td {
+        text-align: center;
+        padding: 60px 0;
+        color: var(--dcx-muted);
+      }
+
+      .dcx-mono {
+        font-family: var(--dcx-mono);
+      }
+      .dcx-cell-date {
+        color: #64748b;
+        font-size: 12px;
+      }
+      .dcx-cell-currency {
+        color: #047857;
+        font-weight: 700;
+        font-size: 12px;
+      }
+      .dcx-cell-link {
+        color: #0f766e;
+        font-weight: 700;
+        font-size: 12px;
+        text-decoration: none;
+      }
+      .dcx-cell-link:hover {
+        text-decoration: underline;
+      }
+      .dcx-badge {
+        font-size: 11px;
+        font-weight: 700;
+        padding: 2px 9px;
+        border-radius: 7px;
+        display: inline-block;
+        background: #f1f5f9;
+        color: #475569;
+      }
+      .dcx-delay-badge {
+        font-size: 11.5px;
+        font-weight: 700;
+        padding: 3px 9px;
+        border-radius: 7px;
+        font-family: var(--dcx-mono);
+        display: inline-block;
+      }
+      .dcx-delay-ok {
+        color: #047857;
+        background: #ecfdf5;
+      }
+      .dcx-delay-warn {
+        color: #b45309;
+        background: #fffbeb;
+      }
+      .dcx-delay-bad {
+        color: #b91c1c;
+        background: #fef2f2;
+      }
+      .dcx-progress {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        min-width: 90px;
+      }
+      .dcx-progress-track {
+        flex: 1;
+        background: #f1f5f9;
+        border-radius: 999px;
+        height: 5px;
+      }
+      .dcx-progress-fill {
+        height: 100%;
+        border-radius: 999px;
+      }
+
+      .dcx-loading {
+        display: none;
+        position: absolute;
+        inset: 0;
+        background: rgba(255, 255, 255, 0.85);
+        z-index: 9999;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        gap: 12px;
+        border-radius: 14px;
+      }
+      .dcx-loading.active {
+        display: flex;
+      }
+      .dcx-spinner {
+        width: 34px;
+        height: 34px;
+        border: 4px solid #e5e7eb;
+        border-top-color: var(--dcx-teal);
+        border-radius: 50%;
+        animation: dcx-spin 0.7s linear infinite;
+      }
+
+      @media (max-width: 1200px) {
+        .dcx-kpi-grid.n7 {
+          grid-template-columns: repeat(4, 1fr);
+        }
+        .dcx-kpi-grid.n5 {
+          grid-template-columns: repeat(3, 1fr);
+        }
+        .dcx-grid2 {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      .dcx-section-label {
+        display: flex;
+        align-items: baseline;
+        gap: 10px;
+        margin-bottom: 2px;
+      }
+      .dcx-collapse-btn {
+        background: none;
+        border: 1px solid var(--dcx-border);
+        border-radius: 7px;
+        padding: 5px 12px;
+        font-size: 11px;
+        font-weight: 700;
+        color: var(--dcx-muted2);
+      }
+      .dcx-collapse-btn:hover {
+        border-color: #cbd5e1;
+        color: #334155;
+      }
+      #dcx-reports-collapsible.dcx-collapsed {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="dcx-root">
+      <div class="dcx-tabbar" id="dcx-tabbar">
+        <button class="dcx-tabbtn active" data-tab="crm">CRM Pipeline</button>
+        <button class="dcx-tabbtn" data-tab="purchase">Purchase Orders</button>
+        <button class="dcx-tabbtn" data-tab="stores">
+          Stores &amp; Inventory
+        </button>
+      </div>
+
+      <!-- ═══════════════════════════ CRM PANEL ═══════════════════════════ -->
+      <div class="dcx-panel active" data-panel="crm">
+        <div class="dcx-page-head">
+          <div>
+            <h1 class="dcx-page-title">📊 Director Dashboard</h1>
+            <p class="dcx-page-sub">Complete business pipeline overview</p>
+          </div>
+          <div class="dcx-head-actions">
+            <button class="dcx-icon-btn" id="dcx-filter-toggle" title="Filters">
+              <svg
+                width="15"
+                height="15"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.5"
+              >
+                <line x1="4" y1="21" x2="4" y2="14" />
+                <line x1="4" y1="10" x2="4" y2="3" />
+                <line x1="12" y1="21" x2="12" y2="12" />
+                <line x1="12" y1="8" x2="12" y2="3" />
+                <line x1="20" y1="21" x2="20" y2="16" />
+                <line x1="20" y1="12" x2="20" y2="3" />
+              </svg>
+            </button>
+            <button class="dcx-icon-btn" id="dcx-refresh-crm" title="Refresh">
+              <svg
+                width="15"
+                height="15"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.5"
+              >
+                <path d="M21 2v6h-6" />
+                <path d="M3 12a9 9 0 0 1 15-6.7L21 8" />
+                <path d="M3 22v-6h6" />
+                <path d="M21 12a9 9 0 0 1-15 6.7L3 16" />
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <div class="dcx-filters" id="dcx-filters">
+          <div class="dcx-filters-row">
+            <div class="dcx-filter-item">
+              <label>From Date</label><input type="date" id="dcx-from-date" />
+            </div>
+            <div class="dcx-filter-item">
+              <label>To Date</label><input type="date" id="dcx-to-date" />
+            </div>
+            <div class="dcx-filter-item">
+              <label>Stage</label>
+              <select id="dcx-stage-filter">
+                <option value="">All Stages</option>
+                <option value="lead">Lead</option>
+                <option value="survey">Site Survey</option>
+                <option value="proposal">Proposal</option>
+                <option value="order">Sales Order</option>
+                <option value="project">Project</option>
+                <option value="payment">Payment</option>
+              </select>
+            </div>
+            <div class="dcx-filter-item">
+              <label>Employee</label
+              ><select id="dcx-employee-filter">
+                <option value="">All Employees</option>
+              </select>
+            </div>
+            <div class="dcx-filter-item">
+              <label>TAT Status</label>
+              <select id="dcx-tat-filter">
+                <option value="">All</option>
+                <option value="on-time">On Time</option>
+                <option value="delayed">Delayed</option>
+                <option value="overdue">Overdue (&gt;14d)</option>
+              </select>
+            </div>
+          </div>
+          <div class="dcx-filter-actions">
+            <button class="dcx-btn-primary" id="dcx-apply-filters">
+              Apply Filters
+            </button>
+            <button class="dcx-btn-ghost" id="dcx-clear-filters">Clear</button>
+          </div>
+        </div>
+
+        <section>
+          <div class="dcx-section-label">
+            <span class="dcx-st">Today's Snapshot</span
+            ><span class="dcx-sh" id="dcx-today-label"></span>
+          </div>
+          <div
+            class="dcx-kpi-grid n7"
+            id="dcx-snap-kpis"
+            style="margin-top: 10px"
+          ></div>
+        </section>
+
+        <section>
+          <div class="dcx-section-label">
+            <span class="dcx-st">Pipeline Overview</span
+            ><span class="dcx-sh">Click any stage to explore records</span>
+          </div>
+          <div class="dcx-card" style="margin-top: 10px">
+            <div class="dcx-pipeline" id="dcx-pipeline"></div>
+            <div class="dcx-pipeline-foot">
+              <div>
+                <div class="dcx-foot-label">Total Advance Collected</div>
+                <div class="dcx-foot-value" id="dcx-total-advance">₹0</div>
+              </div>
+              <button class="dcx-linklike" id="dcx-view-breakdown">
+                View breakdown →
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <div class="dcx-section-label" style="justify-content: space-between">
+            <div>
+              <span class="dcx-st">Reports &amp; Charts</span>
+              <span class="dcx-sh">Click a bar to view specific records</span>
+            </div>
+            <button class="dcx-collapse-btn" id="dcx-reports-collapse-btn">
+              Collapse ▲
+            </button>
+          </div>
+          <div id="dcx-reports-collapsible">
+            <div
+              class="dcx-chip-row"
+              id="dcx-report-chips"
+              style="margin-top: 10px"
+            >
+              <button class="dcx-chip active" data-chart="lead_funnel">
+                Revenue Pipeline
+              </button>
+              <button class="dcx-chip" data-chart="monthly_leads">
+                Monthly Leads
+              </button>
+              <button class="dcx-chip" data-chart="tat_analysis">
+                TAT Analysis
+              </button>
+              <button class="dcx-chip" data-chart="stage_delay">
+                Overdue Stages
+              </button>
+              <button class="dcx-chip" data-chart="revenue_chart">
+                Revenue
+              </button>
+              <button class="dcx-chip" data-chart="installation_status">
+                Installation
+              </button>
+              <button class="dcx-chip" data-chart="sync_status">
+                Sync Status
+              </button>
+              <button class="dcx-chip" data-chart="project_timeline">
+                Project Timeline
+              </button>
+            </div>
+            <div class="dcx-card">
+              <h3 class="dcx-card-title" id="dcx-report-title">
+                Revenue Pipeline
+              </h3>
+              <div class="dcx-chart-shell" id="dcx-report-chart-area"></div>
+            </div>
+          </div>
+        </section>
+
+        <div class="dcx-strip">
+          <div>
+            <h3 class="dcx-strip-title">Overdue Leads</h3>
+            <p class="dcx-strip-sub" id="dcx-overdue-sub">
+              Leads that have crossed their expiry date.
+            </p>
+          </div>
+          <button class="dcx-pill red" id="dcx-view-overdue">
+            ⚠ View Delayed Leads
+          </button>
+        </div>
+      </div>
+
+      <!-- ═══════════════════════════ PURCHASE PANEL ═══════════════════════════ -->
+      <div class="dcx-panel" data-panel="purchase">
+        <div class="dcx-page-head">
+          <div>
+            <h1 class="dcx-page-title">🛒 Purchase Order Tracker</h1>
+            <p class="dcx-page-sub">
+              Vendor delays &amp; monthly spend compliance
+            </p>
+          </div>
+          <div class="dcx-head-actions">
+            <button class="dcx-icon-btn" id="dcx-refresh-po" title="Refresh">
+              <svg
+                width="15"
+                height="15"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.5"
+              >
+                <path d="M21 2v6h-6" />
+                <path d="M3 12a9 9 0 0 1 15-6.7L21 8" />
+                <path d="M3 22v-6h6" />
+                <path d="M21 12a9 9 0 0 1-15 6.7L3 16" />
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <div class="dcx-kpi-grid n5" id="dcx-po-kpis"></div>
+
+        <div class="dcx-grid2">
+          <div class="dcx-card">
+            <h3 class="dcx-card-title">PO Status Breakdown</h3>
+            <div class="dcx-canvas-wrap">
+              <canvas id="dcx-po-status-chart"></canvas>
+            </div>
+          </div>
+          <div class="dcx-card">
+            <h3 class="dcx-card-title">Monthly PO Value (₹ Lakhs)</h3>
+            <div class="dcx-canvas-wrap">
+              <canvas id="dcx-po-value-chart"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <div class="dcx-strip">
+          <div>
+            <h3 class="dcx-strip-title">Purchase Orders Tracking</h3>
+            <p class="dcx-strip-sub">
+              All POs with vendor, delay, and value details
+            </p>
+          </div>
+          <button class="dcx-pill teal" id="dcx-view-po-table">
+            🛒 View PO Table
+          </button>
+        </div>
+      </div>
+
+      <!-- ═══════════════════════════ STORES PANEL ═══════════════════════════ -->
+      <div class="dcx-panel" data-panel="stores">
+        <div class="dcx-page-head">
+          <div>
+            <h1 class="dcx-page-title">🏭 Stores &amp; Inventory Tracker</h1>
+            <p class="dcx-page-sub">
+              Stock health, kitting delays &amp; dispatch compliance
+            </p>
+          </div>
+          <div class="dcx-head-actions">
+            <button
+              class="dcx-icon-btn"
+              id="dcx-refresh-stores"
+              title="Refresh"
+            >
+              <svg
+                width="15"
+                height="15"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.5"
+              >
+                <path d="M21 2v6h-6" />
+                <path d="M3 12a9 9 0 0 1 15-6.7L21 8" />
+                <path d="M3 22v-6h6" />
+                <path d="M21 12a9 9 0 0 1-15 6.7L3 16" />
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <div class="dcx-kpi-grid n5" id="dcx-store-kpis"></div>
+
+        <div class="dcx-grid2">
+          <div class="dcx-card">
+            <h3 class="dcx-card-title">Stock Health by Category</h3>
+            <div class="dcx-canvas-wrap">
+              <canvas id="dcx-stock-chart"></canvas>
+            </div>
+          </div>
+          <div class="dcx-card">
+            <h3 class="dcx-card-title">Delayed Materials — Days Over Target</h3>
+            <div class="dcx-canvas-wrap">
+              <canvas id="dcx-kitting-chart"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <div class="dcx-stack">
+          <div class="dcx-strip">
+            <div>
+              <h3 class="dcx-strip-title">Item-wise Stock Level</h3>
+              <p class="dcx-strip-sub">
+                All items, reorder levels and current status
+              </p>
+            </div>
+            <button class="dcx-pill teal" id="dcx-view-stock-table">
+              📦 View Stock Table
+            </button>
+          </div>
+          <div class="dcx-strip">
+            <div>
+              <h3 class="dcx-strip-title">Stores Kitting Tracker</h3>
+              <p class="dcx-strip-sub">
+                Material requests, dispatch targets and delays
+              </p>
+            </div>
+            <button class="dcx-pill amber" id="dcx-view-kitting-table">
+              🏗 View Kitting Table
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══════════════════════════ MODAL ═══════════════════════════ -->
+      <div class="dcx-modal-overlay" id="dcx-modal-overlay">
+        <div class="dcx-modal-box">
+          <div class="dcx-modal-head">
+            <div>
+              <h3 class="dcx-modal-title" id="dcx-modal-title"></h3>
+              <p class="dcx-modal-count" id="dcx-modal-count"></p>
+            </div>
+            <div class="dcx-modal-actions">
+              <div class="dcx-search">
+                <svg
+                  width="12"
+                  height="12"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.5"
+                >
+                  <circle cx="11" cy="11" r="8" />
+                  <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                </svg>
+                <input
+                  type="text"
+                  id="dcx-modal-search"
+                  placeholder="Search..."
+                />
+              </div>
+              <button class="dcx-modal-close" id="dcx-modal-close">
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.5"
+                >
+                  <line x1="18" y1="6" x2="6" y2="18" />
+                  <line x1="6" y1="6" x2="18" y2="18" />
+                </svg>
+              </button>
+            </div>
+          </div>
+          <div class="dcx-modal-body">
+            <table class="dcx-table">
+              <thead>
+                <tr id="dcx-modal-head-row"></tr>
+              </thead>
+              <tbody id="dcx-modal-body-rows"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="dcx-loading" id="dcx-loading">
+        <div class="dcx-spinner"></div>
+        <p style="color: #0f766e; font-weight: 700; margin: 0; font-size: 12px">
+          Loading…
+        </p>
+      </div>
+    </div>
+  </body>
+
+  <script>
+    (function () {
+      "use strict";
+
+      var ROOT =
+        typeof root_element !== "undefined" && root_element
+          ? root_element
+          : document.getElementById("dcx-root");
+      if (!ROOT) return;
+      function $(sel) {
+        return ROOT.querySelector(sel);
+      }
+      function $$(sel) {
+        return ROOT.querySelectorAll(sel);
+      }
+
+      var dashboardData = {
+        leads: [],
+        proposals: [],
+        orders: [],
+        projects: [],
+        payments: [],
+      };
+      var currentFilters = {};
+      var delayedData = { po: [], stores: [], stockItems: [], dispatches: [] };
+      var _charts = {};
+
+      function fmt(n) {
+        if (!n) return "0";
+        return parseFloat(n).toLocaleString("en-IN", {
+          maximumFractionDigits: 0,
+        });
+      }
+      function fmtDate(d) {
+        if (!d) return "—";
+        return new Date(d).toLocaleDateString("en-IN", {
+          day: "2-digit",
+          month: "short",
+          year: "numeric",
+        });
+      }
+      function calcDelay(exp) {
+        if (!exp) return 0;
+        var d = new Date(exp),
+          t = new Date();
+        t.setHours(0, 0, 0, 0);
+        d.setHours(0, 0, 0, 0);
+        return Math.max(0, Math.floor((t - d) / 86400000));
+      }
+      function addSLA(dateStr, days) {
+        if (!dateStr) return null;
+        var d = new Date(dateStr);
+        d.setDate(d.getDate() + days);
+        return d.toISOString().split("T")[0];
+      }
+      function todayStr() {
+        return new Date().toLocaleDateString("en-IN", {
+          day: "2-digit",
+          month: "short",
+          year: "numeric",
+        });
+      }
+      function showLoading() {
+        $("#dcx-loading").classList.add("active");
+      }
+      function hideLoading() {
+        $("#dcx-loading").classList.remove("active");
+      }
+      function esc(v) {
+        var d = document.createElement("div");
+        d.innerText = v === undefined || v === null ? "" : String(v);
+        return d.innerHTML;
+      }
+      function getUserFullName(email) {
+        if (!email) return "—";
+        var fullName = email;
+        if (typeof frappe !== "undefined" && frappe.user)
+          fullName = frappe.user.full_name(email) || email;
+        if (fullName === email && email.indexOf("@") !== -1) {
+          fullName = email
+            .split("@")[0]
+            .replace(/\./g, " ")
+            .replace(/\b\w/g, function (l) {
+              return l.toUpperCase();
+            });
+        }
+        return fullName;
+      }
+
+      function makeKpi(id, label, icon, colorHex, onClick) {
+        var c = colorHex || "#94A3B8";
+        var card = document.createElement(onClick ? "button" : "div");
+        card.className = "dcx-kpi clickable-kpi";
+        card.style.borderLeftColor = c;
+        card.innerHTML =
+          '<div class="dcx-kpi-top"><span class="dcx-kpi-label">' +
+          esc(label) +
+          "</span>" +
+          '<span class="dcx-kpi-icon" style="background:' +
+          c +
+          "22;color:" +
+          c +
+          ';">' +
+          (icon || "") +
+          "</span></div>" +
+          '<span class="dcx-kpi-value" id="' +
+          id +
+          '">0</span>';
+        if (onClick) card.addEventListener("click", onClick);
+        return card;
+      }
+
+      $$(".dcx-tabbtn").forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          $$(".dcx-tabbtn").forEach(function (b) {
+            b.classList.remove("active");
+          });
+          btn.classList.add("active");
+          var tab = btn.getAttribute("data-tab");
+          $$(".dcx-panel").forEach(function (p) {
+            p.classList.toggle("active", p.getAttribute("data-panel") === tab);
+          });
+        });
+      });
+
+      $("#dcx-filter-toggle").addEventListener("click", function () {
+        $("#dcx-filters").classList.toggle("open");
+      });
+
+      var modalOverlay = $("#dcx-modal-overlay");
+      var modalTitle = $("#dcx-modal-title");
+      var modalCount = $("#dcx-modal-count");
+      var modalSearch = $("#dcx-modal-search");
+      var modalHeadRow = $("#dcx-modal-head-row");
+      var modalBodyRows = $("#dcx-modal-body-rows");
+      var currentModal = null;
+
+      function renderCell(row, col) {
+        var val = row[col.k];
+        if (val === undefined || val === null || val === "")
+          return '<span style="color:#cbd5e1;">—</span>';
+        if (col.u)
+          return (
+            '<span style="color:#334155;font-weight:600;">' +
+            esc(getUserFullName(val)) +
+            "</span>"
+          );
+        if (col.d)
+          return (
+            '<span class="dcx-cell-date dcx-mono">' +
+            esc(fmtDate(val)) +
+            "</span>"
+          );
+        if (col.c)
+          return (
+            '<span class="dcx-cell-currency dcx-mono">₹' +
+            esc(fmt(val)) +
+            "</span>"
+          );
+        if (col.route)
+          return (
+            '<a href="/app/' +
+            col.route +
+            "/" +
+            encodeURIComponent(val) +
+            '" target="_blank" class="dcx-cell-link dcx-mono">' +
+            esc(val) +
+            "</a>"
+          );
+        if (col.badgeStyle)
+          return '<span class="dcx-badge">' + esc(val) + "</span>";
+        if (col.redBadge) {
+          var d = Number(val);
+          if (!d || d <= 0)
+            return '<span class="dcx-delay-badge dcx-delay-ok">On Time</span>';
+          if (d <= 7)
+            return (
+              '<span class="dcx-delay-badge dcx-delay-warn">+' + d + "d</span>"
+            );
+          return (
+            '<span class="dcx-delay-badge dcx-delay-bad">+' +
+            d +
+            "d late</span>"
+          );
+        }
+        if (col.progress) {
+          var p = Number(val) || 0;
+          var c = p >= 80 ? "#16A34A" : p >= 40 ? "#D97706" : "#DC2626";
+          return (
+            '<div class="dcx-progress"><div class="dcx-progress-track"><div class="dcx-progress-fill" style="width:' +
+            p +
+            "%;background:" +
+            c +
+            ';"></div></div><span style="font-size:12px;font-weight:700;color:' +
+            c +
+            ';font-family:var(--dcx-mono);">' +
+            p +
+            "%</span></div>"
+          );
+        }
+        return "<span>" + esc(val) + "</span>";
+      }
+
+      function renderModalTable() {
+        var q = (modalSearch.value || "").toLowerCase();
+        var records = currentModal.records;
+        var filtered = !q
+          ? records
+          : records.filter(function (r) {
+              return Object.keys(r).some(function (k) {
+                return String(r[k]).toLowerCase().indexOf(q) !== -1;
+              });
+            });
+        modalCount.textContent = filtered.length + " records";
+        modalHeadRow.innerHTML = currentModal.columns
+          .map(function (c) {
+            return "<th>" + esc(c.l) + "</th>";
+          })
+          .join("");
+        if (!filtered.length) {
+          modalBodyRows.innerHTML =
+            '<tr class="dcx-empty"><td colspan="' +
+            currentModal.columns.length +
+            '">No records found</td></tr>';
+          return;
+        }
+        modalBodyRows.innerHTML = filtered
+          .map(function (r) {
+            return (
+              "<tr>" +
+              currentModal.columns
+                .map(function (c) {
+                  return "<td>" + renderCell(r, c) + "</td>";
+                })
+                .join("") +
+              "</tr>"
+            );
+          })
+          .join("");
+      }
+
+      function openRecordModal(title, records, columns) {
+        currentModal = {
+          title: title,
+          records: records || [],
+          columns: columns,
+        };
+        modalTitle.textContent = title;
+        modalSearch.value = "";
+        renderModalTable();
+        modalOverlay.classList.add("open");
+      }
+      function closeModal() {
+        modalOverlay.classList.remove("open");
+        currentModal = null;
+      }
+      $("#dcx-modal-close").addEventListener("click", closeModal);
+      modalOverlay.addEventListener("click", function (e) {
+        if (e.target === modalOverlay) closeModal();
+      });
+      modalSearch.addEventListener("input", function () {
+        if (currentModal) renderModalTable();
+      });
+
+      function leadCols() {
+        return [
+          { k: "name", l: "ID", route: "lead" },
+          { k: "lead_name", l: "Lead Name" },
+          { k: "mobile_no", l: "Mobile" },
+          { k: "territory", l: "Site" },
+          { k: "creation_date", l: "Date", d: true },
+          { k: "computed_expiry", l: "SLA Expiry", d: true },
+          { k: "delay_days", l: "TAT Delay", redBadge: true },
+          { k: "surveyed_by", l: "Assigned To", u: true },
+          { k: "status", l: "Status", badgeStyle: true },
+        ];
+      }
+      function proposalCols() {
+        return [
+          { k: "name", l: "ID", route: "quotation" },
+          { k: "customer_name", l: "Customer" },
+          { k: "transaction_date", l: "Date", d: true },
+          { k: "computed_expiry", l: "SLA Expiry", d: true },
+          { k: "delay_days", l: "TAT Delay", redBadge: true },
+          { k: "grand_total", l: "Amount", c: true },
+          { k: "emp", l: "Assigned To", u: true },
+          { k: "status", l: "Status", badgeStyle: true },
+        ];
+      }
+      function orderCols() {
+        return [
+          { k: "name", l: "ID", route: "sales-order" },
+          { k: "customer", l: "Customer" },
+          { k: "transaction_date", l: "Date", d: true },
+          { k: "computed_expiry", l: "SLA Expiry", d: true },
+          { k: "delay_days", l: "TAT Delay", redBadge: true },
+          { k: "grand_total", l: "Amount", c: true },
+          { k: "pay_pct", l: "Advance Recd", progress: true },
+          { k: "emp", l: "Assigned To", u: true },
+          { k: "status", l: "Status", badgeStyle: true },
+        ];
+      }
+      function projectCols() {
+        return [
+          { k: "name", l: "ID", route: "project" },
+          { k: "project_name", l: "Project" },
+          { k: "p_start_date", l: "Start Date", d: true },
+          { k: "expected_end_date", l: "Target End", d: true },
+          { k: "p_end_date", l: "Actual End", d: true },
+          { k: "delay_days", l: "TAT Delay", redBadge: true },
+          { k: "percent_complete", l: "Progress", progress: true },
+          { k: "emp", l: "Assigned To", u: true },
+          { k: "status", l: "Status", badgeStyle: true },
+        ];
+      }
+      function paymentCols() {
+        return [
+          { k: "name", l: "Order ID", route: "sales-order" },
+          { k: "customer", l: "Customer" },
+          { k: "advance", l: "Advance Received", c: true },
+          { k: "total", l: "Total Amount", c: true },
+          { k: "pay_pct", l: "Payment Progress", progress: true },
+          { k: "emp", l: "Assigned To", u: true },
+        ];
+      }
+
+      function renderHBarChart(container, stages, onSegClick) {
+        if (!stages || !stages.length) {
+          container.innerHTML =
+            '<div style="text-align:center;padding:48px;color:#94a3b8;font-size:13px;">No data available for this period.</div>';
+          return;
+        }
+        var maxVal = Math.max.apply(
+          null,
+          stages
+            .map(function (s) {
+              return s.count;
+            })
+            .concat([1]),
+        );
+        var html =
+          '<div style="display:flex;flex-direction:column;gap:14px;padding:6px 0;">';
+        stages.forEach(function (s, i) {
+          var pct = Math.max(2, Math.round((s.count / maxVal) * 100));
+          var valStr = s.isCurrency ? "₹" + fmt(s.count) : String(s.count);
+          var color = s.color || "#0D9488";
+          html +=
+            '<div class="dcx-hbar-row" data-idx="' +
+            i +
+            '">' +
+            '<div class="dcx-hbar-label">' +
+            esc(s.label) +
+            "</div>" +
+            '<div style="flex:1;"><div class="dcx-hbar-track"><div class="dcx-hbar-fill" style="width:' +
+            pct +
+            "%;background:" +
+            color +
+            ';"><span>' +
+            esc(valStr) +
+            "</span></div></div></div>" +
+            "</div>";
+        });
+        html += "</div>";
+        container.innerHTML = html;
+        if (onSegClick) {
+          container
+            .querySelectorAll(".dcx-hbar-row")
+            .forEach(function (row, i) {
+              row.addEventListener("click", function () {
+                onSegClick(stages[i].label, i);
+              });
+            });
+        }
+      }
+
+      var reportsCollapseBtn = $("#dcx-reports-collapse-btn");
+      if (reportsCollapseBtn) {
+        reportsCollapseBtn.addEventListener("click", function () {
+          var box = $("#dcx-reports-collapsible");
+          var collapsed = box.classList.toggle("dcx-collapsed");
+          reportsCollapseBtn.textContent = collapsed
+            ? "Expand ▼"
+            : "Collapse ▲";
+        });
+      }
+
+      var REPORT_TITLES = {
+        lead_funnel: "Sales Funnel Breakdown",
+        monthly_leads: "Monthly Leads",
+        tat_analysis: "TAT Analysis (2-Day Lead SLA)",
+        stage_delay: "Stage Delays (Dynamic SLA)",
+        revenue_chart: "Revenue by Mode",
+        installation_status: "Installation Status",
+        sync_status: "Sync Status",
+        project_timeline: "Project Timeline",
+      };
+
+      function renderReportChart(key) {
+        $("#dcx-report-title").textContent = REPORT_TITLES[key] || key;
+        var area = $("#dcx-report-chart-area");
+        var d = dashboardData;
+
+        if (key === "lead_funnel") {
+          renderHBarChart(
+            area,
+            [
+              { label: "Leads", count: d.leads.length, color: "#0D9488" },
+              {
+                label: "Proposals",
+                count: d.proposals.length,
+                color: "#7C3AED",
+              },
+              {
+                label: "Sales Orders",
+                count: d.orders.length,
+                color: "#16A34A",
+              },
+              { label: "Projects", count: d.projects.length, color: "#D97706" },
+              { label: "Payments", count: d.payments.length, color: "#DC2626" },
+            ],
+            function (label) {
+              var m = {
+                Leads: "lead",
+                Proposals: "proposal",
+                "Sales Orders": "order",
+                Projects: "project",
+                Payments: "payment",
+              };
+              handleWfClick(m[label]);
+            },
+          );
+        } else if (key === "monthly_leads") {
+          var monthly = {};
+          d.leads.forEach(function (l) {
+            var m = l.creation ? l.creation.substring(0, 7) : "Unknown";
+            monthly[m] = (monthly[m] || 0) + 1;
+          });
+          var palette = [
+            "#0D9488",
+            "#7C3AED",
+            "#D97706",
+            "#16A34A",
+            "#DC2626",
+            "#0891B2",
+            "#DB2777",
+          ];
+          var stages = Object.keys(monthly)
+            .sort()
+            .map(function (m, i) {
+              return {
+                label: m.replace("-", " "),
+                count: monthly[m],
+                color: palette[i % palette.length],
+                _key: m,
+              };
+            });
+          renderHBarChart(area, stages, function (label, idx) {
+            openRecordModal(
+              "Leads in " + label,
+              d.leads.filter(function (l) {
+                return l.creation && l.creation.indexOf(stages[idx]._key) === 0;
+              }),
+              leadCols(),
+            );
+          });
+        } else if (key === "tat_analysis") {
+          var onTime = d.leads.filter(function (l) {
+            return calcDelay(addSLA(l.creation_date || l.creation, 2)) === 0;
+          });
+          var delayedM = d.leads.filter(function (l) {
+            var dd = calcDelay(addSLA(l.creation_date || l.creation, 2));
+            return dd > 0 && dd <= 14;
+          });
+          var overdueM = d.leads.filter(function (l) {
+            return calcDelay(addSLA(l.creation_date || l.creation, 2)) > 14;
+          });
+          renderHBarChart(
+            area,
+            [
+              {
+                label: "On Time (≤7d)",
+                count: onTime.length,
+                color: "#16A34A",
+              },
+              {
+                label: "Delayed (8–14d)",
+                count: delayedM.length,
+                color: "#D97706",
+              },
+              {
+                label: "Overdue (>14d)",
+                count: overdueM.length,
+                color: "#DC2626",
+              },
+            ],
+            function (label, idx) {
+              var recs = idx === 0 ? onTime : idx === 1 ? delayedM : overdueM;
+              openRecordModal(label + " Leads", recs, leadCols());
+            },
+          );
+        } else if (key === "stage_delay") {
+          var leadOD = d.leads.filter(function (l) {
+            return calcDelay(addSLA(l.creation_date || l.creation, 2)) > 0;
+          });
+          var propOD = d.proposals.filter(function (p) {
+            return (
+              calcDelay(addSLA(p.transaction_date, 3)) > 0 &&
+              ["Open", "Draft"].indexOf(p.status) !== -1
+            );
+          });
+          var orderOD = d.orders.filter(function (o) {
+            return (
+              calcDelay(addSLA(o.transaction_date, 5)) > 0 &&
+              o.status !== "Completed"
+            );
+          });
+          var projOD = d.projects.filter(function (p) {
+            return calcDelay(addSLA(p.creation, 5)) > 0 && !p.p_end_date;
+          });
+          renderHBarChart(
+            area,
+            [
+              {
+                label: "Lead Overdue (>2d)",
+                count: leadOD.length,
+                color: "#DC2626",
+              },
+              {
+                label: "Proposal Overdue (>3d)",
+                count: propOD.length,
+                color: "#D97706",
+              },
+              {
+                label: "Order Overdue (>5d)",
+                count: orderOD.length,
+                color: "#7C3AED",
+              },
+              {
+                label: "Project Overdue (>5d)",
+                count: projOD.length,
+                color: "#0D9488",
+              },
+            ],
+            function (label, idx) {
+              var recs = [leadOD, propOD, orderOD, projOD][idx];
+              openRecordModal(
+                label,
+                recs,
+                [leadCols(), proposalCols(), orderCols(), projectCols()][idx],
+              );
+            },
+          );
+        } else if (key === "revenue_chart") {
+          var byMode = {};
+          d.payments.forEach(function (p) {
+            var m = p.mode_of_payment || "Other";
+            byMode[m] = (byMode[m] || 0) + (parseFloat(p.paid_amount) || 0);
+          });
+          var palette2 = [
+            "#16A34A",
+            "#0D9488",
+            "#7C3AED",
+            "#D97706",
+            "#DC2626",
+            "#0891B2",
+          ];
+          var keys = Object.keys(byMode).sort(function (a, b) {
+            return byMode[b] - byMode[a];
+          });
+          renderHBarChart(
+            area,
+            keys.map(function (m, i) {
+              return {
+                label: m,
+                count: Math.round(byMode[m]),
+                color: palette2[i % palette2.length],
+                isCurrency: true,
+              };
+            }),
+            function (label) {
+              openRecordModal(
+                "Payments — " + label,
+                d.payments.filter(function (p) {
+                  return p.mode_of_payment === label;
+                }),
+                paymentCols(),
+              );
+            },
+          );
+        } else if (key === "installation_status") {
+          var byStatus = {};
+          d.projects.forEach(function (p) {
+            var s = p.status || "Unknown";
+            byStatus[s] = (byStatus[s] || 0) + 1;
+          });
+          var colorMap = {
+            Completed: "#16A34A",
+            "In Progress": "#D97706",
+            Open: "#0D9488",
+            "On Hold": "#94A3B8",
+            Cancelled: "#DC2626",
+          };
+          renderHBarChart(
+            area,
+            Object.keys(byStatus).map(function (s) {
+              return {
+                label: s,
+                count: byStatus[s],
+                color: colorMap[s] || "#7C3AED",
+              };
+            }),
+            function (label) {
+              openRecordModal(
+                label + " Projects",
+                d.projects.filter(function (p) {
+                  return p.status === label;
+                }),
+                projectCols(),
+              );
+            },
+          );
+        } else if (key === "sync_status") {
+          var comp = d.projects.filter(function (p) {
+            return p.p_end_date;
+          });
+          var prog = d.projects.filter(function (p) {
+            return p.p_start_date && !p.p_end_date;
+          });
+          var pend = d.projects.filter(function (p) {
+            return !p.p_start_date;
+          });
+          renderHBarChart(
+            area,
+            [
+              { label: "Completed", count: comp.length, color: "#16A34A" },
+              { label: "In Progress", count: prog.length, color: "#0D9488" },
+              { label: "Pending", count: pend.length, color: "#D97706" },
+            ],
+            function (label, idx) {
+              var recs = [comp, prog, pend][idx];
+              openRecordModal(label + " Projects", recs, projectCols());
+            },
+          );
+        } else if (key === "project_timeline") {
+          renderHBarChart(
+            area,
+            [
+              { label: "Total Leads", count: d.leads.length, color: "#0D9488" },
+              {
+                label: "Total Proposals",
+                count: d.proposals.length,
+                color: "#7C3AED",
+              },
+              {
+                label: "Total Orders",
+                count: d.orders.length,
+                color: "#16A34A",
+              },
+              {
+                label: "Total Projects",
+                count: d.projects.length,
+                color: "#D97706",
+              },
+              {
+                label: "Payments Recv.",
+                count: d.payments.length,
+                color: "#DC2626",
+              },
+            ],
+            function (label, idx) {
+              handleWfClick(
+                ["lead", "proposal", "order", "project", "payment"][idx],
+              );
+            },
+          );
+        }
+      }
+
+      $$("#dcx-report-chips .dcx-chip").forEach(function (chip) {
+        chip.addEventListener("click", function () {
+          $$("#dcx-report-chips .dcx-chip").forEach(function (c) {
+            c.classList.remove("active");
+          });
+          chip.classList.add("active");
+          renderReportChart(chip.getAttribute("data-chart"));
+        });
+      });
+
+      function handleWfClick(stage) {
+        var d = dashboardData;
+        if (stage === "payment")
+          openRecordModal(
+            "Payment Tracking (Advances vs Total)",
+            d.orders,
+            paymentCols(),
+          );
+        else if (stage === "survey")
+          openRecordModal(
+            "Site Survey Pipeline",
+            d.leads.filter(function (l) {
+              return ["Replied", "Converted", "Open"].indexOf(l.status) !== -1;
+            }),
+            leadCols(),
+          );
+        else if (stage === "proposal")
+          openRecordModal("Proposals Pipeline", d.proposals, proposalCols());
+        else if (stage === "order")
+          openRecordModal("Sales Orders Pipeline", d.orders, orderCols());
+        else if (stage === "project")
+          openRecordModal("Projects Pipeline", d.projects, projectCols());
+        else if (stage === "lead") {
+          if (!d.leads.length && typeof frappe !== "undefined") {
+            frappe.show_alert(
+              {
+                message: "No data found for current filters.",
+                indicator: "orange",
+              },
+              3,
+            );
+            return;
+          }
+          openRecordModal("Leads Pipeline", d.leads, leadCols());
+        }
+      }
+
+      function setDefaultDates() {
+        var today = new Date();
+        $("#dcx-from-date").value = "";
+        $("#dcx-to-date").value = "";
+        currentFilters.from_date = null;
+        currentFilters.to_date = null;
+        $("#dcx-today-label").textContent = today.toLocaleDateString("en-IN", {
+          day: "2-digit",
+          month: "short",
+          year: "numeric",
+        });
+      }
+
+      function loadTodaySnapshot() {
+        var today = new Date().toISOString().split("T")[0];
+        frappe.call({
+          method: "frappe.client.get_count",
+          args: {
+            doctype: "Lead",
+            filters: [["creation", ">=", today + " 00:00:00"]],
+          },
+          callback: function (r) {
+            $("#dcx-snap-leads").textContent = r.message || 0;
+          },
+        });
+        frappe.call({
+          method: "frappe.client.get_count",
+          args: {
+            doctype: "Quotation",
+            filters: [
+              ["transaction_date", "=", today],
+              ["docstatus", "!=", 2],
+            ],
+          },
+          callback: function (r) {
+            $("#dcx-snap-proposals").textContent = r.message || 0;
+          },
+        });
+        frappe.call({
+          method: "frappe.client.get_count",
+          args: {
+            doctype: "Delivery Note",
+            filters: [
+              ["posting_date", "=", today],
+              ["docstatus", "=", 1],
+            ],
+          },
+          callback: function (r) {
+            $("#dcx-snap-dispatch").textContent = r.message || 0;
+          },
+        });
+        frappe.call({
+          method: "frappe.client.get_count",
+          args: {
+            doctype: "Project",
+            filters: [["actual_start_date", "=", today]],
+          },
+          callback: function (r) {
+            $("#dcx-snap-install").textContent = r.message || 0;
+          },
+        });
+        frappe.call({
+          method: "frappe.client.get_list",
+          args: {
+            doctype: "Payment Entry",
+            fields: ["paid_amount"],
+            filters: [
+              ["posting_date", "=", today],
+              ["payment_type", "=", "Receive"],
+              ["docstatus", "=", 1],
+            ],
+            limit_page_length: 500,
+          },
+          callback: function (r) {
+            var t = (r.message || []).reduce(function (s, p) {
+              return s + (parseFloat(p.paid_amount) || 0);
+            }, 0);
+            $("#dcx-snap-payment").textContent = "₹" + fmt(t);
+          },
+        });
+        frappe.call({
+          method: "frappe.client.get_count",
+          args: {
+            doctype: "Site Survey",
+            filters: [["survey_date", "=", today]],
+          },
+          callback: function (r) {
+            $("#dcx-snap-survey").textContent = r.message || 0;
+          },
+          error: function () {
+            $("#dcx-snap-survey").textContent = "0";
+          },
+        });
+        frappe.call({
+          method: "frappe.client.get_count",
+          args: {
+            doctype: "Liaisoning And Synchronization",
+            filters: [["creation", ">=", today + " 00:00:00"]],
+          },
+          callback: function (r) {
+            $("#dcx-snap-sync").textContent = r.message || 0;
+          },
+          error: function () {
+            $("#dcx-snap-sync").textContent = "0";
+          },
+        });
+      }
+
+      function loadDirectorData() {
+        showLoading();
+        var from = currentFilters.from_date,
+          to = currentFilters.to_date;
+        var fLeads = {},
+          fQuotes = { docstatus: ["!=", 2] },
+          fOrders = { docstatus: 1 },
+          fProjects = {},
+          fPayments = { docstatus: 1, payment_type: "Receive" };
+        if (from && to) {
+          fLeads.creation = ["between", [from + " 00:00:00", to + " 23:59:59"]];
+          fQuotes.transaction_date = ["between", [from, to]];
+          fOrders.transaction_date = ["between", [from, to]];
+          fProjects.creation = [
+            "between",
+            [from + " 00:00:00", to + " 23:59:59"],
+          ];
+          fPayments.posting_date = ["between", [from, to]];
+        }
+
+        var pLeads = new Promise(function (res) {
+          frappe.call({
+            method: "frappe.client.get_list",
+            args: {
+              doctype: "Lead",
+              fields: [
+                "name",
+                "lead_name",
+                "mobile_no",
+                "creation",
+                "creation_date",
+                "status",
+                "lead_owner",
+                "surveyed_by",
+                "territory",
+                "sla_due_date",
+                "remark_delay_log",
+              ],
+              filters: fLeads,
+              limit_page_length: 1000,
+            },
+            callback: function (r) {
+              res(r.message || []);
+            },
+            error: function () {
+              res([]);
+            },
+          });
+        });
+        var pQuotes = new Promise(function (res) {
+          frappe.call({
+            method: "frappe.client.get_list",
+            args: {
+              doctype: "Quotation",
+              fields: [
+                "name",
+                "customer_name",
+                "transaction_date",
+                "status",
+                "grand_total",
+                "owner",
+              ],
+              filters: fQuotes,
+              limit_page_length: 1000,
+            },
+            callback: function (r) {
+              res(r.message || []);
+            },
+            error: function () {
+              res([]);
+            },
+          });
+        });
+        var pOrders = new Promise(function (res) {
+          frappe.call({
+            method: "frappe.client.get_list",
+            args: {
+              doctype: "Sales Order",
+              fields: [
+                "name",
+                "customer",
+                "transaction_date",
+                "grand_total",
+                "advance_paid",
+                "status",
+                "owner",
+              ],
+              filters: fOrders,
+              limit_page_length: 1000,
+            },
+            callback: function (r) {
+              res(r.message || []);
+            },
+            error: function () {
+              res([]);
+            },
+          });
+        });
+        var pProjects = new Promise(function (res) {
+          frappe.call({
+            method: "frappe.client.get_list",
+            args: {
+              doctype: "Project",
+              fields: [
+                "name",
+                "project_name",
+                "status",
+                "expected_start_date",
+                "expected_end_date",
+                "p_start_date",
+                "p_end_date",
+                "percent_complete",
+                "owner",
+              ],
+              filters: fProjects,
+              limit_page_length: 1000,
+            },
+            callback: function (r) {
+              res(r.message || []);
+            },
+            error: function () {
+              res([]);
+            },
+          });
+        });
+        var pPayments = new Promise(function (res) {
+          frappe.call({
+            method: "frappe.client.get_list",
+            args: {
+              doctype: "Payment Entry",
+              fields: [
+                "name",
+                "party",
+                "posting_date",
+                "paid_amount",
+                "mode_of_payment",
+              ],
+              filters: fPayments,
+              limit_page_length: 1000,
+            },
+            callback: function (r) {
+              res(r.message || []);
+            },
+            error: function () {
+              res([]);
+            },
+          });
+        });
+
+        Promise.all([pLeads, pQuotes, pOrders, pProjects, pPayments])
+          .then(function (results) {
+            var rawLeads = results[0],
+              rawProposals = results[1],
+              rawOrders = results[2],
+              rawProjects = results[3],
+              rawPayments = results[4];
+            var allEmployees = {};
+
+            var leads = rawLeads.map(function (r) {
+              r.computed_expiry = addSLA(r.creation_date || r.creation, 2);
+              r.delay_days = calcDelay(r.computed_expiry);
+              r.emp = r.surveyed_by || r.lead_owner;
+              if (r.emp) allEmployees[r.emp] = true;
+              return r;
+            });
+            var proposals = rawProposals.map(function (r) {
+              r.computed_expiry = addSLA(r.transaction_date, 3);
+              r.delay_days = calcDelay(r.computed_expiry);
+              r.emp = r.owner;
+              if (r.emp) allEmployees[r.emp] = true;
+              return r;
+            });
+            var orders = rawOrders.map(function (r) {
+              r.computed_expiry = addSLA(r.transaction_date, 5);
+              r.delay_days = calcDelay(r.computed_expiry);
+              r.emp = r.owner;
+              r.advance = parseFloat(r.advance_paid) || 0;
+              r.total = parseFloat(r.grand_total) || 0;
+              r.pay_pct =
+                r.total > 0 ? Math.round((r.advance / r.total) * 100) : 0;
+              if (r.emp) allEmployees[r.emp] = true;
+              return r;
+            });
+            var projects = rawProjects.map(function (r) {
+              r.computed_expiry = addSLA(r.creation, 5);
+              r.delay_days = calcDelay(r.computed_expiry);
+              r.emp = r.owner;
+              if (r.emp) allEmployees[r.emp] = true;
+              return r;
+            });
+
+            var empSelect = $("#dcx-employee-filter");
+            var currentEmp = empSelect.value;
+            var empKeys = Object.keys(allEmployees).sort();
+            empSelect.innerHTML =
+              '<option value="">All Employees</option>' +
+              empKeys
+                .map(function (e) {
+                  return (
+                    '<option value="' +
+                    esc(e) +
+                    '">' +
+                    esc(getUserFullName(e)) +
+                    "</option>"
+                  );
+                })
+                .join("");
+            if (allEmployees[currentEmp]) empSelect.value = currentEmp;
+
+            var fStage = $("#dcx-stage-filter")
+              ? $("#dcx-stage-filter").value
+              : "";
+            var fEmp = empSelect.value;
+            var fTat = $("#dcx-tat-filter") ? $("#dcx-tat-filter").value : "";
+
+            function applyFilters(arr) {
+              return arr.filter(function (r) {
+                var match = true;
+                if (fEmp && r.emp !== fEmp) match = false;
+                if (fTat === "on-time" && r.delay_days > 0) match = false;
+                if (fTat === "delayed" && r.delay_days <= 0) match = false;
+                if (fTat === "overdue" && r.delay_days <= 14) match = false;
+                return match;
+              });
+            }
+
+            dashboardData = {
+              leads:
+                fStage === "" || fStage === "lead" || fStage === "survey"
+                  ? applyFilters(leads)
+                  : [],
+              proposals:
+                fStage === "" || fStage === "proposal"
+                  ? applyFilters(proposals)
+                  : [],
+              orders:
+                fStage === "" || fStage === "order" || fStage === "payment"
+                  ? applyFilters(orders)
+                  : [],
+              projects:
+                fStage === "" || fStage === "project"
+                  ? applyFilters(projects)
+                  : [],
+              payments: rawPayments,
+            };
+
+            renderPipeline();
+            var totalAdvances = dashboardData.orders.reduce(function (sum, o) {
+              return sum + o.advance;
+            }, 0);
+            $("#dcx-total-advance").textContent = "₹" + fmt(totalAdvances);
+
+            var overdueLeads = dashboardData.leads.filter(function (l) {
+              return l.delay_days > 0;
+            });
+            $("#dcx-overdue-sub").textContent =
+              overdueLeads.length + " leads have crossed their SLA";
+
+            renderReportChart(
+              $$("#dcx-report-chips .dcx-chip.active")[0]
+                ? $$("#dcx-report-chips .dcx-chip.active")[0].getAttribute(
+                    "data-chart",
+                  )
+                : "lead_funnel",
+            );
+
+            hideLoading();
+          })
+          .catch(function (e) {
+            console.error(e);
+            hideLoading();
+          });
+      }
+
+      function renderPipeline() {
+        var wrap = $("#dcx-pipeline");
+        wrap.innerHTML = "";
+        var surveyLeads = dashboardData.leads.filter(function (l) {
+          return ["Replied", "Converted", "Open"].indexOf(l.status) !== -1;
+        });
+        var stages = [
+          {
+            label: "Lead",
+            count: dashboardData.leads.length,
+            color: "#0D9488",
+            stage: "lead",
+          },
+          {
+            label: "Survey",
+            count: surveyLeads.length,
+            color: "#0891B2",
+            stage: "survey",
+          },
+          {
+            label: "Proposal",
+            count: dashboardData.proposals.length,
+            color: "#7C3AED",
+            stage: "proposal",
+          },
+          {
+            label: "Sales Order",
+            count: dashboardData.orders.length,
+            color: "#D97706",
+            stage: "order",
+          },
+          {
+            label: "Project",
+            count: dashboardData.projects.length,
+            color: "#16A34A",
+            stage: "project",
+          },
+        ];
+        stages.forEach(function (s, i) {
+          var box = document.createElement("button");
+          box.className = "dcx-stage";
+          box.style.borderTopColor = s.color;
+          box.style.borderTopWidth = "3px";
+          box.innerHTML =
+            '<span class="dcx-stage-label">' +
+            esc(s.label) +
+            '</span><span class="dcx-stage-count">' +
+            s.count +
+            '</span><span class="dcx-stage-dash" style="background:' +
+            s.color +
+            ';"></span>';
+          box.addEventListener("click", function () {
+            handleWfClick(s.stage);
+          });
+          wrap.appendChild(box);
+          if (i < stages.length - 1) {
+            var arrow = document.createElement("span");
+            arrow.className = "dcx-arrow";
+            arrow.innerHTML =
+              '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>';
+            wrap.appendChild(arrow);
+          }
+        });
+        $("#dcx-view-breakdown").onclick = function () {
+          openRecordModal(
+            "Payment Tracking — Advance vs Total",
+            dashboardData.orders,
+            paymentCols(),
+          );
+        };
+      }
+
+      function renderSnapKpis() {
+        var wrap = $("#dcx-snap-kpis");
+        wrap.innerHTML = "";
+        wrap.appendChild(
+          makeKpi("dcx-snap-leads", "Leads", "🔥", "#0D9488", function () {
+            snapClick("lead");
+          }),
+        );
+        wrap.appendChild(
+          makeKpi(
+            "dcx-snap-proposals",
+            "Proposals",
+            "📄",
+            "#7C3AED",
+            function () {
+              snapClick("proposal");
+            },
+          ),
+        );
+        wrap.appendChild(
+          makeKpi("dcx-snap-survey", "Surveys", "📍", "#0891B2", function () {
+            snapClick("survey");
+          }),
+        );
+        wrap.appendChild(
+          makeKpi(
+            "dcx-snap-dispatch",
+            "Dispatch",
+            "📦",
+            "#2563EB",
+            function () {
+              snapClick("dispatch");
+            },
+          ),
+        );
+        wrap.appendChild(
+          makeKpi(
+            "dcx-snap-install",
+            "Installation",
+            "🔧",
+            "#D97706",
+            function () {
+              snapClick("installation");
+            },
+          ),
+        );
+        wrap.appendChild(
+          makeKpi("dcx-snap-sync", "Sync", "⚡", "#DB2777", function () {
+            snapClick("sync");
+          }),
+        );
+        wrap.appendChild(
+          makeKpi(
+            "dcx-snap-payment",
+            "₹ Received",
+            "💰",
+            "#16A34A",
+            function () {
+              snapClick("payment");
+            },
+          ),
+        );
+      }
+
+      function snapClick(snapType) {
+        var today = new Date().toISOString().split("T")[0];
+        showLoading();
+        var doctype, fields, filters, title, columns;
+        if (snapType === "lead") {
+          doctype = "Lead";
+          title = "Today's Leads";
+          fields = [
+            "name",
+            "lead_name",
+            "surveyed_by",
+            "status",
+            "creation_date",
+            "mobile_no",
+          ];
+          filters = [["creation", ">=", today + " 00:00:00"]];
+          columns = leadCols();
+        } else if (snapType === "proposal") {
+          doctype = "Quotation";
+          title = "Today's Proposals";
+          fields = [
+            "name",
+            "customer_name",
+            "transaction_date",
+            "grand_total",
+            "status",
+          ];
+          filters = [
+            ["transaction_date", "=", today],
+            ["docstatus", "!=", 2],
+          ];
+          columns = proposalCols();
+        } else if (snapType === "survey") {
+          doctype = "Site Survey";
+          title = "Today's Surveys";
+          fields = ["name", "survey_date", "status"];
+          filters = [["survey_date", "=", today]];
+          columns = [
+            { k: "name", l: "ID", route: "site-survey" },
+            { k: "survey_date", l: "Date", d: true },
+            { k: "status", l: "Status", badgeStyle: true },
+          ];
+        } else if (snapType === "dispatch") {
+          doctype = "Delivery Note";
+          title = "Today's Dispatches";
+          fields = [
+            "name",
+            "customer",
+            "posting_date",
+            "status",
+            "grand_total",
+          ];
+          filters = [
+            ["posting_date", "=", today],
+            ["docstatus", "=", 1],
+          ];
+          columns = [
+            { k: "name", l: "ID", route: "delivery-note" },
+            { k: "customer", l: "Customer" },
+            { k: "posting_date", l: "Date", d: true },
+            { k: "status", l: "Status", badgeStyle: true },
+          ];
+        } else if (snapType === "installation") {
+          doctype = "Project";
+          title = "Today's Installations";
+          fields = [
+            "name",
+            "project_name",
+            "status",
+            "expected_start_date",
+            "expected_end_date",
+            "p_start_date",
+            "p_end_date",
+            "percent_complete",
+          ];
+          filters = [["p_start_date", "=", today]];
+          columns = projectCols();
+        } else if (snapType === "sync") {
+          doctype = "Liaisoning And Synchronization";
+          title = "Today's Syncs";
+          fields = ["name", "creation"];
+          filters = [["creation", ">=", today + " 00:00:00"]];
+          columns = [
+            { k: "name", l: "ID", route: "liaisoning-and-synchronization" },
+            { k: "creation", l: "Date", d: true },
+          ];
+        } else if (snapType === "payment") {
+          doctype = "Payment Entry";
+          title = "Today's Received Payments";
+          fields = [
+            "name",
+            "party",
+            "posting_date",
+            "paid_amount",
+            "mode_of_payment",
+          ];
+          filters = [
+            ["posting_date", "=", today],
+            ["payment_type", "=", "Receive"],
+            ["docstatus", "=", 1],
+          ];
+          columns = paymentCols();
+        }
+        frappe.call({
+          method: "frappe.client.get_list",
+          args: {
+            doctype: doctype,
+            fields: fields,
+            filters: filters,
+            limit_page_length: 500,
+          },
+          callback: function (r) {
+            hideLoading();
+            openRecordModal(title, r.message || [], columns);
+          },
+          error: function () {
+            hideLoading();
+            if (typeof frappe !== "undefined")
+              frappe.show_alert({
+                message: "Failed to fetch records",
+                indicator: "red",
+              });
+          },
+        });
+      }
+
+      $("#dcx-view-overdue").addEventListener("click", function () {
+        var filtered = dashboardData.leads
+          .map(function (r) {
+            r.display_reason = r.remark_delay_log
+              ? r.remark_delay_log
+              : "No reason logged.";
+            return r;
+          })
+          .filter(function (r) {
+            return r.delay_days > 0;
+          });
+        var ge = $("#dcx-employee-filter").value,
+          gt = $("#dcx-tat-filter").value;
+        if (ge)
+          filtered = filtered.filter(function (r) {
+            return r.emp === ge;
+          });
+        if (gt === "on-time") filtered = [];
+        else if (gt === "overdue")
+          filtered = filtered.filter(function (r) {
+            return r.delay_days > 14;
+          });
+        filtered.sort(function (a, b) {
+          return b.delay_days - a.delay_days;
+        });
+        openRecordModal("Delayed Leads (Past SLA)", filtered, [
+          { k: "name", l: "Lead ID", route: "lead" },
+          { k: "lead_name", l: "Customer" },
+          { k: "mobile_no", l: "Mobile" },
+          { k: "territory", l: "Site" },
+          { k: "status", l: "Stage", badgeStyle: true },
+          { k: "creation_date", l: "Start Date", d: true },
+          { k: "computed_expiry", l: "Expiry Date", d: true },
+          { k: "delay_days", l: "Days Delayed", redBadge: true },
+          { k: "display_reason", l: "Reason" },
+          { k: "emp", l: "Assigned To", u: true },
+        ]);
+      });
+
+      $("#dcx-apply-filters").addEventListener("click", function () {
+        currentFilters.from_date = $("#dcx-from-date").value;
+        currentFilters.to_date = $("#dcx-to-date").value;
+        loadDirectorData();
+        if (typeof frappe !== "undefined")
+          frappe.show_alert(
+            { message: "Filters applied", indicator: "green" },
+            2,
+          );
+      });
+      $("#dcx-stage-filter").addEventListener("change", loadDirectorData);
+      $("#dcx-employee-filter").addEventListener("change", loadDirectorData);
+      $("#dcx-tat-filter").addEventListener("change", loadDirectorData);
+      $("#dcx-clear-filters").addEventListener("click", function () {
+        $("#dcx-tat-filter").value = "";
+        $("#dcx-employee-filter").value = "";
+        $("#dcx-stage-filter").value = "";
+        setDefaultDates();
+        loadDirectorData();
+      });
+      $("#dcx-refresh-crm").addEventListener("click", function () {
+        loadDirectorData();
+        loadTodaySnapshot();
+      });
+
+      function renderPurchaseKpis() {
+        var wrap = $("#dcx-po-kpis");
+        wrap.innerHTML = "";
+        wrap.appendChild(
+          makeKpi("dcx-kpi-open-pos", "Open POs", "🛒", "#0D9488", function () {
+            poTileClick("open");
+          }),
+        );
+        wrap.appendChild(
+          makeKpi(
+            "dcx-kpi-delayed-pos",
+            "Delayed POs",
+            "⚠️",
+            "#D97706",
+            function () {
+              poTileClick("delayed");
+            },
+          ),
+        );
+        wrap.appendChild(
+          makeKpi(
+            "dcx-kpi-critical-pos",
+            "Critical (>7d)",
+            "🚨",
+            "#DC2626",
+            function () {
+              poTileClick("critical");
+            },
+          ),
+        );
+        wrap.appendChild(
+          makeKpi(
+            "dcx-kpi-ontime-pos",
+            "Delivered On Time",
+            "✅",
+            "#16A34A",
+            function () {
+              poTileClick("ontime");
+            },
+          ),
+        );
+        wrap.appendChild(
+          makeKpi(
+            "dcx-kpi-po-value",
+            "PO Value (MTD)",
+            "💰",
+            "#2563EB",
+            function () {
+              poTileClick("value");
+            },
+          ),
+        );
+      }
+      function renderStoresKpis() {
+        var wrap = $("#dcx-store-kpis");
+        wrap.innerHTML = "";
+        wrap.appendChild(
+          makeKpi(
+            "dcx-kpi-low-stock",
+            "Low Stock Items",
+            "📉",
+            "#DC2626",
+            function () {
+              storeTileClick("low");
+            },
+          ),
+        );
+        wrap.appendChild(
+          makeKpi(
+            "dcx-kpi-kitting-delayed",
+            "Delayed Materials",
+            "📦",
+            "#D97706",
+            function () {
+              storeTileClick("kitting");
+            },
+          ),
+        );
+        wrap.appendChild(
+          makeKpi(
+            "dcx-kpi-total-skus",
+            "Total SKUs",
+            "🔢",
+            "#2563EB",
+            function () {
+              storeTileClick("skus");
+            },
+          ),
+        );
+        wrap.appendChild(
+          makeKpi(
+            "dcx-kpi-stock-health",
+            "Stock Health",
+            "💚",
+            "#16A34A",
+            function () {
+              storeTileClick("health");
+            },
+          ),
+        );
+        wrap.appendChild(
+          makeKpi(
+            "dcx-kpi-dispatched-mtd",
+            "Dispatched MTD",
+            "🚚",
+            "#0891B2",
+            function () {
+              storeTileClick("dispatched");
+            },
+          ),
+        );
+      }
+      renderPurchaseKpis();
+      renderStoresKpis();
+
+      function poTileClick(snap) {
+        var activePos = delayedData.po.filter(function (p) {
+          return p.status !== "Completed" && p.status !== "Cancelled";
+        });
+        var data = [],
+          title = "";
+        if (snap === "open") {
+          data = activePos;
+          title = "Open Purchase Orders";
+        } else if (snap === "delayed") {
+          data = activePos.filter(function (p) {
+            return p.delay > 0;
+          });
+          title = "Delayed Purchase Orders";
+        } else if (snap === "critical") {
+          data = activePos.filter(function (p) {
+            return p.delay > 7;
+          });
+          title = "Critical Purchase Orders (>7d)";
+        } else if (snap === "ontime") {
+          data = delayedData.po.filter(function (p) {
+            return p.is_completed === true;
+          });
+          title = "Delivered Purchase Orders";
+        } else if (snap === "value") {
+          var mtd = new Date().toISOString().substring(0, 7);
+          data = delayedData.po.filter(function (p) {
+            return p.order_date && p.order_date.indexOf(mtd) === 0;
+          });
+          title = "MTD Purchase Orders";
+        }
+        openRecordModal(title, data, [
+          { k: "po", l: "PO Number", route: "purchase-order" },
+          { k: "vendor", l: "Vendor" },
+          { k: "order_date", l: "Order Date", d: true },
+          { k: "expected", l: "Expected", d: true },
+          { k: "delay", l: "Days Delayed", redBadge: true },
+          { k: "received_pct", l: "Received", progress: true },
+          { k: "value", l: "Value", c: true },
+          { k: "status", l: "Status", badgeStyle: true },
+        ]);
+      }
+      $("#dcx-view-po-table").addEventListener("click", function () {
+        openRecordModal("Purchase Orders Tracking", delayedData.po, [
+          { k: "po", l: "PO Number", route: "purchase-order" },
+          { k: "vendor", l: "Vendor" },
+          { k: "order_date", l: "Order Date", d: true },
+          { k: "expected", l: "Expected", d: true },
+          { k: "delay", l: "Days Delayed", redBadge: true },
+          { k: "received_pct", l: "Received", progress: true },
+          { k: "value", l: "Value", c: true },
+          { k: "status", l: "Status", badgeStyle: true },
+        ]);
+      });
+
+      function storeTileClick(snap) {
+        if (snap === "kitting") {
+          openRecordModal(
+            "Delayed Materials",
+            delayedData.stores.filter(function (s) {
+              return s.delay > 0;
+            }),
+            [
+              { k: "id", l: "Kit ID", route: "material-request" },
+              { k: "project", l: "Project / Site" },
+              { k: "material", l: "Materials" },
+              { k: "request", l: "Request Date", d: true },
+              { k: "target", l: "Target Dispatch", d: true },
+              { k: "delay", l: "Days Delayed", redBadge: true },
+              { k: "reason", l: "Status", badgeStyle: true },
+              { k: "incharge", l: "In-charge", u: true },
+            ],
+          );
+        } else if (snap === "dispatched") {
+          openRecordModal(
+            "Dispatched This Month (MTD)",
+            delayedData.dispatches,
+            [
+              { k: "id", l: "Delivery Note", route: "delivery-note" },
+              { k: "customer", l: "Customer" },
+              { k: "date", l: "Date", d: true },
+              { k: "amount", l: "Amount", c: true },
+              { k: "status", l: "Status", badgeStyle: true },
+            ],
+          );
+        } else {
+          var data = [],
+            title = "";
+          if (snap === "low") {
+            data = delayedData.stockItems.filter(function (s) {
+              return s.status === "Low Stock";
+            });
+            title = "Low Stock Items";
+          } else if (snap === "skus") {
+            data = delayedData.stockItems;
+            title = "All Items";
+          } else if (snap === "health") {
+            data = delayedData.stockItems.filter(function (s) {
+              return s.status === "In Stock";
+            });
+            title = "In Stock Items";
+          }
+          if (title)
+            openRecordModal(title, data, [
+              { k: "code", l: "Item Code", route: "item" },
+              { k: "name", l: "Item Name" },
+              { k: "cat", l: "Category", badgeStyle: true },
+              { k: "qty", l: "Current Stock" },
+              { k: "reorder", l: "Reorder Level" },
+              { k: "status", l: "Status", badgeStyle: true },
+            ]);
+        }
+      }
+      $("#dcx-view-stock-table").addEventListener("click", function () {
+        openRecordModal("Item-wise Stock Level", delayedData.stockItems, [
+          { k: "code", l: "Item Code", route: "item" },
+          { k: "name", l: "Item Name" },
+          { k: "cat", l: "Category", badgeStyle: true },
+          { k: "qty", l: "Current Stock" },
+          { k: "reorder", l: "Reorder Level" },
+          { k: "status", l: "Status", badgeStyle: true },
+        ]);
+      });
+      $("#dcx-view-kitting-table").addEventListener("click", function () {
+        openRecordModal("Stores Kitting Tracker", delayedData.stores, [
+          { k: "id", l: "Kit ID", route: "material-request" },
+          { k: "project", l: "Project / Site" },
+          { k: "material", l: "Materials" },
+          { k: "request", l: "Request Date", d: true },
+          { k: "target", l: "Target Dispatch", d: true },
+          { k: "delay", l: "Days Delayed", redBadge: true },
+          { k: "reason", l: "Status", badgeStyle: true },
+          { k: "incharge", l: "In-charge", u: true },
+        ]);
+      });
+      $("#dcx-refresh-po").addEventListener("click", loadPurchaseAndStoresData);
+      $("#dcx-refresh-stores").addEventListener(
+        "click",
+        loadPurchaseAndStoresData,
+      );
+
+      function loadPurchaseAndStoresData() {
+        showLoading();
+        var today = new Date();
+        today.setHours(0, 0, 0, 0);
+        var mtdPrefix = today.toISOString().substring(0, 7);
+        var firstDay = new Date(today.getFullYear(), today.getMonth(), 1)
+          .toISOString()
+          .split("T")[0];
+        var lastDay = new Date(today.getFullYear(), today.getMonth() + 1, 0)
+          .toISOString()
+          .split("T")[0];
+
+        var pPOs = new Promise(function (res) {
+          frappe.call({
+            method: "frappe.client.get_list",
+            args: {
+              doctype: "Purchase Order",
+              fields: [
+                "name",
+                "supplier",
+                "transaction_date",
+                "schedule_date",
+                "grand_total",
+                "status",
+                "per_received",
+              ],
+              filters: { docstatus: 1 },
+              limit_page_length: 1000,
+            },
+            callback: function (r) {
+              res(r.message || []);
+            },
+            error: function () {
+              res([]);
+            },
+          });
+        });
+        var pItems = new Promise(function (res) {
+          frappe.call({
+            method: "frappe.client.get_list",
+            args: {
+              doctype: "Item",
+              fields: ["name", "item_name", "item_group"],
+              filters: { disabled: 0, is_stock_item: 1 },
+              limit_page_length: 2000,
+            },
+            callback: function (r) {
+              res(r.message || []);
+            },
+            error: function () {
+              res([]);
+            },
+          });
+        });
+        var pBins = new Promise(function (res) {
+          frappe.call({
+            method: "frappe.client.get_list",
+            args: {
+              doctype: "Bin",
+              fields: ["item_code", "actual_qty"],
+              limit_page_length: 5000,
+            },
+            callback: function (r) {
+              res(r.message || []);
+            },
+            error: function () {
+              res([]);
+            },
+          });
+        });
+        var pMRs = new Promise(function (res) {
+          frappe.call({
+            method: "frappe.client.get_list",
+            args: {
+              doctype: "Material Request",
+              fields: [
+                "name",
+                "transaction_date",
+                "schedule_date",
+                "status",
+                "owner",
+              ],
+              filters: {
+                docstatus: 1,
+                material_request_type: "Material Transfer",
+              },
+              limit_page_length: 1000,
+            },
+            callback: function (r) {
+              res(r.message || []);
+            },
+            error: function () {
+              res([]);
+            },
+          });
+        });
+        var pMRItems = new Promise(function (res) {
+          frappe.call({
+            method: "get_mr_items",
+            callback: function (r) {
+              res(r.message || []);
+            },
+            error: function () {
+              res([]);
+            },
+          });
+        });
+        var pDNs = new Promise(function (res) {
+          frappe.call({
+            method: "frappe.client.get_list",
+            args: {
+              doctype: "Delivery Note",
+              fields: [
+                "name",
+                "customer",
+                "posting_date",
+                "grand_total",
+                "status",
+              ],
+              filters: [
+                ["posting_date", "between", [firstDay, lastDay]],
+                ["docstatus", "=", 1],
+              ],
+              limit_page_length: 1000,
+            },
+            callback: function (r) {
+              res(r.message || []);
+            },
+            error: function () {
+              res([]);
+            },
+          });
+        });
+
+        Promise.all([pPOs, pItems, pBins, pMRs, pDNs, pMRItems])
+          .then(function (results) {
+            var pos = results[0],
+              items = results[1],
+              bins = results[2],
+              mrs = results[3],
+              dnsList = results[4],
+              mrItems = results[5];
+            var mrItemMap = {};
+            mrItems.forEach(function (it) {
+              if (!mrItemMap[it.parent]) mrItemMap[it.parent] = [];
+              mrItemMap[it.parent].push(it.item_code + " (" + it.qty + ")");
+            });
+
+            var poValueMTD = 0,
+              delayedPoCount = 0,
+              criticalPoCount = 0,
+              ontimePoCount = 0;
+            delayedData.po = pos.map(function (p) {
+              var delay = 0;
+              var isCompleted =
+                p.status === "Completed" || p.per_received >= 100;
+              if (!isCompleted && p.status !== "Cancelled")
+                delay = calcDelay(p.schedule_date);
+              if (
+                p.transaction_date &&
+                p.transaction_date.indexOf(mtdPrefix) === 0
+              )
+                poValueMTD += parseFloat(p.grand_total) || 0;
+              if (isCompleted) ontimePoCount++;
+              else if (p.status !== "Cancelled" && delay > 0) {
+                delayedPoCount++;
+                if (delay > 7) criticalPoCount++;
+              }
+              return {
+                po: p.name,
+                vendor: p.supplier,
+                order_date: p.transaction_date,
+                expected: p.schedule_date,
+                delay: delay,
+                value: p.grand_total,
+                status: p.status,
+                is_completed: isCompleted,
+                received_pct: Math.round(p.per_received || 0),
+              };
+            });
+
+            var openPos = delayedData.po.filter(function (p) {
+              return p.status !== "Completed" && p.status !== "Cancelled";
+            });
+            $("#dcx-kpi-open-pos").textContent = openPos.length;
+            $("#dcx-kpi-delayed-pos").textContent = delayedPoCount;
+            $("#dcx-kpi-critical-pos").textContent = criticalPoCount;
+            $("#dcx-kpi-ontime-pos").textContent = ontimePoCount;
+            $("#dcx-kpi-po-value").textContent =
+              "₹" + (poValueMTD / 100000).toFixed(2) + "L";
+
+            var stockMap = {};
+            bins.forEach(function (b) {
+              stockMap[b.item_code] =
+                (stockMap[b.item_code] || 0) + (parseFloat(b.actual_qty) || 0);
+            });
+            var lowStockCount = 0;
+            delayedData.stockItems = items.map(function (i) {
+              var qty = stockMap[i.name] || 0;
+              var reorder = 0;
+              var isLow = qty <= reorder;
+              if (isLow) lowStockCount++;
+              return {
+                code: i.name,
+                name: i.item_name,
+                cat: i.item_group,
+                reorder: reorder,
+                qty: qty,
+                status: isLow ? "Low Stock" : "In Stock",
+              };
+            });
+
+            var delayedKitCount = 0;
+            delayedData.stores = mrs.map(function (m) {
+              var delay =
+                m.status !== "Completed" && m.status !== "Cancelled"
+                  ? calcDelay(m.schedule_date)
+                  : 0;
+              if (delay > 0) delayedKitCount++;
+              var itemList = mrItemMap[m.name] || [];
+              return {
+                id: m.name,
+                project: "—",
+                material: itemList.length
+                  ? itemList.slice(0, 2).join(", ") +
+                    (itemList.length > 2
+                      ? " +" + (itemList.length - 2) + " more"
+                      : "")
+                  : "—",
+                request: m.transaction_date,
+                target: m.schedule_date,
+                delay: delay,
+                reason: m.status,
+                incharge: m.owner,
+              };
+            });
+
+            delayedData.dispatches = dnsList.map(function (d) {
+              return {
+                id: d.name,
+                customer: d.customer,
+                date: d.posting_date,
+                amount: d.grand_total,
+                status: d.status,
+              };
+            });
+
+            var totalSkus = delayedData.stockItems.length;
+            $("#dcx-kpi-low-stock").textContent = lowStockCount;
+            $("#dcx-kpi-kitting-delayed").textContent = delayedKitCount;
+            $("#dcx-kpi-total-skus").textContent = totalSkus;
+            $("#dcx-kpi-stock-health").textContent =
+              (totalSkus > 0
+                ? Math.round(((totalSkus - lowStockCount) / totalSkus) * 100)
+                : 0) + "%";
+            $("#dcx-kpi-dispatched-mtd").textContent =
+              delayedData.dispatches.length;
+
+            if (typeof Chart !== "undefined") {
+              renderPurchaseCharts(delayedData.po);
+              renderStoresCharts(delayedData.stockItems, delayedData.stores);
+            }
+            hideLoading();
+          })
+          .catch(function (e) {
+            console.error(e);
+            hideLoading();
+          });
+      }
+
+      function renderPurchaseCharts(poData) {
+        if (!poData || !poData.length) return;
+        var d0 = 0,
+          d1 = 0,
+          d2 = 0,
+          d3 = 0;
+        poData
+          .filter(function (p) {
+            return p.status !== "Completed" && p.status !== "Cancelled";
+          })
+          .forEach(function (p) {
+            if (p.delay <= 0) d0++;
+            else if (p.delay <= 3) d1++;
+            else if (p.delay <= 7) d2++;
+            else d3++;
+          });
+        var ctx1 = $("#dcx-po-status-chart");
+        if (ctx1) {
+          if (_charts.po_status) _charts.po_status.destroy();
+          _charts.po_status = new Chart(ctx1, {
+            type: "doughnut",
+            data: {
+              labels: ["On Time", "1–3d Late", "4–7d Late", ">7d Late"],
+              datasets: [
+                {
+                  data: [d0, d1, d2, d3],
+                  backgroundColor: ["#16A34A", "#D97706", "#F97316", "#DC2626"],
+                  borderWidth: 2,
+                  borderColor: "#fff",
+                  hoverOffset: 6,
+                },
+              ],
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              cutout: "65%",
+              plugins: {
+                legend: {
+                  position: "bottom",
+                  labels: { font: { size: 11 }, color: "#475569" },
+                },
+              },
+            },
+          });
+        }
+        var mValue = {};
+        poData.forEach(function (p) {
+          if (p.order_date) {
+            var m = p.order_date.substring(0, 7);
+            mValue[m] = (mValue[m] || 0) + (parseFloat(p.value) || 0) / 100000;
+          }
+        });
+        var mKeys = Object.keys(mValue).sort().slice(-6);
+        var ctx2 = $("#dcx-po-value-chart");
+        if (ctx2) {
+          if (_charts.po_value) _charts.po_value.destroy();
+          _charts.po_value = new Chart(ctx2, {
+            type: "line",
+            data: {
+              labels: mKeys,
+              datasets: [
+                {
+                  label: "PO Value (₹L)",
+                  data: mKeys.map(function (k) {
+                    return mValue[k].toFixed(2);
+                  }),
+                  borderColor: "#0D9488",
+                  backgroundColor: "rgba(13,148,136,0.1)",
+                  fill: true,
+                  tension: 0.4,
+                  pointRadius: 5,
+                  borderWidth: 2.5,
+                },
+              ],
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              plugins: { legend: { display: false } },
+              scales: {
+                x: { ticks: { color: "#94A3B8" }, grid: { display: false } },
+                y: { ticks: { color: "#94A3B8" }, grid: { color: "#F1F5F9" } },
+              },
+            },
+          });
+        }
+      }
+
+      function renderStoresCharts(stockData, storeData) {
+        var catMap = {};
+        stockData.forEach(function (s) {
+          if (!catMap[s.cat]) catMap[s.cat] = { ok: 0, low: 0 };
+          if (s.status === "Low Stock") catMap[s.cat].low++;
+          else catMap[s.cat].ok++;
+        });
+        var cKeys = Object.keys(catMap).filter(function (k) {
+          return k;
+        });
+        var ctx3 = $("#dcx-stock-chart");
+        if (ctx3 && cKeys.length) {
+          if (_charts.stock) _charts.stock.destroy();
+          _charts.stock = new Chart(ctx3, {
+            type: "bar",
+            data: {
+              labels: cKeys,
+              datasets: [
+                {
+                  label: "In Stock",
+                  data: cKeys.map(function (k) {
+                    return catMap[k].ok;
+                  }),
+                  backgroundColor: "#16A34A",
+                  borderRadius: 4,
+                },
+                {
+                  label: "Low Stock",
+                  data: cKeys.map(function (k) {
+                    return catMap[k].low;
+                  }),
+                  backgroundColor: "#DC2626",
+                  borderRadius: 4,
+                },
+              ],
+            },
+            options: {
+              indexAxis: "y",
+              responsive: true,
+              maintainAspectRatio: false,
+              scales: {
+                x: {
+                  stacked: true,
+                  ticks: { color: "#94A3B8" },
+                  grid: { color: "#F1F5F9" },
+                },
+                y: {
+                  stacked: true,
+                  ticks: { color: "#475569" },
+                  grid: { display: false },
+                },
+              },
+              plugins: {
+                legend: { position: "top", labels: { color: "#475569" } },
+              },
+            },
+          });
+        }
+        var ctx4 = $("#dcx-kitting-chart");
+        if (ctx4 && storeData) {
+          var delayed = storeData
+            .filter(function (s) {
+              return s.delay > 0;
+            })
+            .sort(function (a, b) {
+              return b.delay - a.delay;
+            })
+            .slice(0, 7);
+          if (_charts.kitting) _charts.kitting.destroy();
+          _charts.kitting = new Chart(ctx4, {
+            type: "bar",
+            data: {
+              labels: delayed.map(function (s) {
+                return s.id;
+              }),
+              datasets: [
+                {
+                  label: "Days Delayed",
+                  data: delayed.map(function (s) {
+                    return s.delay;
+                  }),
+                  backgroundColor: delayed.map(function (s) {
+                    return s.delay > 10
+                      ? "#DC2626"
+                      : s.delay > 5
+                        ? "#F97316"
+                        : "#F59E0B";
+                  }),
+                  borderRadius: 5,
+                },
+              ],
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              plugins: { legend: { display: false } },
+              scales: {
+                y: { ticks: { color: "#94A3B8" }, grid: { color: "#F1F5F9" } },
+                x: { ticks: { color: "#475569" }, grid: { display: false } },
+              },
+            },
+          });
+        }
+      }
+
+      function boot() {
+        renderSnapKpis();
+        setDefaultDates();
+        loadTodaySnapshot();
+        loadDirectorData();
+
+        if (typeof frappe !== "undefined" && frappe.require) {
+          frappe.require(
+            "https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js",
+            function () {
+              Chart.defaults.color = "#475569";
+              setTimeout(loadPurchaseAndStoresData, 200);
+            },
+          );
+        } else if (typeof Chart !== "undefined") {
+          setTimeout(loadPurchaseAndStoresData, 200);
+        }
+      }
+
+      setTimeout(boot, 0);
+    })();
+  </script>
+</html>

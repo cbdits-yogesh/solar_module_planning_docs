@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+
+    <style>
+      #crm-action-hub {
+        --crm-bg: #f8fafc;
+        --crm-surface: #ffffff;
+        --crm-text: #1e293b;
+        --crm-border: #e2e8f0;
+        --crm-gradient: linear-gradient(135deg, #2563eb 0%, #3b82f6 100%);
+        --crm-hero-bg: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+        --crm-soft-btn: #f1f5f9;
+        --crm-soft-btn-hover: #cbd5e1;
+        font-family: Inter, "Helvetica Neue", Arial, sans-serif;
+        color: var(--crm-text);
+      }
+
+      #crm-action-hub * {
+        box-sizing: border-box;
+      }
+
+      /* Light Header Design */
+      #crm-action-hub .crm-hero {
+        background: var(--crm-hero-bg);
+        border: 1px solid var(--crm-border);
+        border-radius: 8px;
+        padding: 16px 20px;
+        margin-bottom: 16px;
+      }
+      #crm-action-hub .crm-label {
+        display: inline-block;
+        background: #cbd5e1;
+        color: #0f172a;
+        padding: 4px 10px;
+        border-radius: 4px;
+        font-size: 11px;
+        text-transform: uppercase;
+        font-weight: 700;
+        margin-bottom: 8px;
+      }
+      #crm-action-hub .crm-hero h2 {
+        margin: 0 0 4px;
+        font-size: 20px;
+        font-weight: 600;
+        color: #0f172a;
+      }
+      #crm-action-hub .crm-hero p {
+        margin: 0;
+        color: #475569;
+        font-size: 13px;
+      }
+
+      /* Grid Layout */
+      #crm-action-hub .crm-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 12px;
+      }
+
+      #crm-action-hub .crm-card {
+        background: var(--crm-surface);
+        border: 1px solid var(--crm-border);
+        border-radius: 8px;
+        padding: 10px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+      }
+
+      /* The Main Button (Summary Tag) */
+      #crm-action-hub summary.crm-main-btn {
+        width: 100%;
+        border: none;
+        border-radius: 6px;
+        background: var(--crm-gradient);
+        color: #fff;
+        padding: 10px 14px;
+        font-size: 14px;
+        font-weight: 500;
+        cursor: pointer;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        list-style: none;
+        outline: none;
+      }
+
+      /* Hides default arrow for Safari/Chrome */
+      #crm-action-hub summary.crm-main-btn::-webkit-details-marker {
+        display: none;
+      }
+
+      /* Our Custom Arrow */
+      #crm-action-hub summary.crm-main-btn::after {
+        content: "▼";
+        font-size: 10px;
+        transition: transform 0.2s ease;
+      }
+      #crm-action-hub details[open] summary.crm-main-btn::after {
+        transform: rotate(180deg);
+      }
+
+      /* Sub Actions Container */
+      #crm-action-hub .crm-sub-actions {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+        margin-top: 10px;
+      }
+
+      /* The Links (Sub Buttons) */
+      #crm-action-hub a.crm-sub-btn {
+        display: block;
+        text-align: center;
+        text-decoration: none;
+        border: 1px solid var(--crm-border);
+        border-radius: 6px;
+        background: var(--crm-soft-btn);
+        color: var(--crm-text);
+        padding: 8px;
+        font-size: 12px;
+        font-weight: 500;
+        transition: background 0.2s ease;
+      }
+
+      #crm-action-hub a.crm-sub-btn:hover {
+        background: var(--crm-soft-btn-hover);
+        color: #0f172a;
+        border-color: #94a3b8;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="crm-action-hub">
+      <div class="crm-hero">
+        <h2>CRM & Operations Hub</h2>
+        <p>Select a module below to view lists or create a new entry.</p>
+      </div>
+      <div class="crm-grid">
+        <details class="crm-card" data-role="Lead Manager">
+          <summary class="crm-main-btn">Lead</summary>
+          <div class="crm-sub-actions">
+            <a href="/app/lead" class="crm-sub-btn">View List</a>
+            <a href="/app/lead/new" class="crm-sub-btn">+ New Form</a>
+          </div>
+        </details>
+
+        <details class="crm-card" data-role="Site Survey Manager">
+          <summary class="crm-main-btn">Site Survey</summary>
+          <div class="crm-sub-actions">
+            <a href="/app/site-survey" class="crm-sub-btn">View List</a>
+            <a href="/app/site-survey/new" class="crm-sub-btn">+ New Form</a>
+          </div>
+        </details>
+
+        <details class="crm-card" data-role="Proposal Manager">
+          <summary class="crm-main-btn">Proposal</summary>
+          <div class="crm-sub-actions">
+            <a href="/app/quotation" class="crm-sub-btn">View List</a>
+            <a href="/app/quotation/new" class="crm-sub-btn">+ New Form</a>
+          </div>
+        </details>
+
+        <details class="crm-card" data-role="Accounts User">
+          <summary class="crm-main-btn">Sales Order / Payment</summary>
+          <div class="crm-sub-actions">
+            <a href="/app/sales-order" class="crm-sub-btn">View List</a>
+            <a href="/app/sales-order/new" class="crm-sub-btn">+ New Form</a>
+          </div>
+        </details>
+
+        <details class="crm-card" data-role="Projects User">
+          <summary class="crm-main-btn">Project</summary>
+          <div class="crm-sub-actions">
+            <a href="/app/project" class="crm-sub-btn">View List</a>
+            <a href="/app/project/new" class="crm-sub-btn">+ New Form</a>
+          </div>
+        </details>
+
+        <details class="crm-card" data-role="Sync Admin">
+          <summary class="crm-main-btn">Synchronizations</summary>
+          <div class="crm-sub-actions">
+            <a href="/app/liaisoning-and-synchronization" class="crm-sub-btn"
+              >View List</a
+            >
+            <a
+              href="/app/liaisoning-and-synchronization/new"
+              class="crm-sub-btn"
+              >+ New Form</a
+            >
+          </div>
+        </details>
+
+        <details class="crm-card" data-role="O&M User">
+          <summary class="crm-main-btn">O&M</summary>
+          <div class="crm-sub-actions">
+            <a href="/app/o-m" class="crm-sub-btn">View List</a>
+            <a href="/app/o-m/new" class="crm-sub-btn">+ New Form</a>
+          </div>
+        </details>
+      </div>
+    </div>
+  </body>
+
+  <script>
+    // This loop waits for ERPNext to fully load the user data into the browser
+    const checkRoles = setInterval(() => {
+      // Verify that the Frappe framework and the User profile are ready
+      if (typeof frappe !== "undefined" && frappe.user) {
+        clearInterval(checkRoles); // Stop checking once loaded
+
+        // Find every card in our HTML that has a data-role assigned to it
+        const cards = document.querySelectorAll(".crm-card[data-role]");
+
+        cards.forEach((card) => {
+          // Look at the role required by the HTML (e.g., "Lead Manager")
+          const requiredRole = card.getAttribute("data-role");
+
+          // Check if the current user has that role, or if they are an Admin
+          const isSystemManager = frappe.user.has_role("System Manager");
+          const hasSpecificRole = frappe.user.has_role(requiredRole);
+
+          // If the employee does NOT have the role (and isn't an admin), hide the button!
+          if (!hasSpecificRole && !isSystemManager) {
+            card.style.display = "none";
+          }
+        });
+      }
+    }, 300); // Check the page every 300 milliseconds
+  </script>
+</html>

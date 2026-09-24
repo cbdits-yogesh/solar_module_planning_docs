@@ -1,0 +1,2160 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+
+    <style>
+      /* ── RESET & CORE DEFINITIONS ───────────────── */
+      .ess-wrap * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      .ess-wrap a {
+        text-decoration: none;
+      }
+
+      .ess-wrap {
+        --bg: #f0f2f7;
+        --surface: #ffffff;
+        --sidebar-bg: #0d1b2a;
+        --accent: #3b6ef6;
+        --accent2: #6f49ff;
+        --success: #22c55e;
+        --danger: #ef4444;
+        --warn: #f59e0b;
+        --text: #1a202c;
+        --muted: #64748b;
+        --border: #e2e8f0;
+        --radius: 14px;
+        --shadow: 0 2px 16px rgba(0, 0, 0, 0.07);
+        --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.12);
+
+        font-family: "DM Sans", sans-serif;
+        background: var(--bg);
+        display: flex;
+        min-height: 100vh;
+        color: var(--text);
+      }
+
+      /* ── SIDEBAR FRAME ──────────────────────────── */
+      .ess-sidebar {
+        width: 260px;
+        min-width: 260px;
+        background: var(--sidebar-bg);
+        display: flex;
+        flex-direction: column;
+        padding: 20px 0;
+        position: sticky;
+        top: 0;
+        height: 100vh;
+        overflow-y: auto;
+        transition:
+          transform 0.3s ease,
+          width 0.3s ease,
+          min-width 0.3s ease;
+        z-index: 100;
+      }
+
+      .sidebar-header-action {
+        padding: 0 16px 10px;
+        text-align: right;
+      }
+
+      .sidebar-collapse-btn {
+        background: transparent;
+        border: none;
+        color: rgba(255, 255, 255, 0.45);
+        cursor: pointer;
+        padding: 6px;
+        border-radius: 6px;
+        transition: all 0.2s;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .sidebar-collapse-btn:hover {
+        background: rgba(255, 255, 255, 0.08);
+        color: #fff;
+      }
+
+      .sidebar-profile {
+        padding: 0 20px 24px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      .avatar-ring {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--accent), var(--accent2));
+        padding: 2px;
+        flex-shrink: 0;
+      }
+      .avatar-inner {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        background: var(--sidebar-bg);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        font-family: "Syne", sans-serif;
+        font-size: 15px;
+        font-weight: 700;
+      }
+      .profile-text {
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+        min-width: 0;
+      }
+      .profile-name {
+        display: block;
+        color: #fff;
+        font-family: "Syne", sans-serif;
+        font-size: 14px;
+        font-weight: 700;
+        line-height: 1.25;
+        word-wrap: break-word; /* Wraps text dynamically */
+      }
+      .profile-role {
+        display: block;
+        color: rgba(255, 255, 255, 0.55);
+        font-size: 11.5px;
+        margin-top: 5px;
+        line-height: 1.35;
+        word-wrap: break-word; /* Wraps position descriptions */
+      }
+
+      .sidebar-nav {
+        padding: 18px 12px;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+      }
+      .nav-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px 14px;
+        border-radius: 10px;
+        color: rgba(255, 255, 255, 0.6);
+        font-size: 14px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s;
+        white-space: nowrap;
+      }
+      .nav-item:hover {
+        background: rgba(255, 255, 255, 0.06);
+        color: #fff;
+      }
+      .nav-item.active {
+        background: linear-gradient(135deg, var(--accent), #5f7bff);
+        color: #fff;
+        box-shadow: 0 4px 14px rgba(59, 110, 246, 0.35);
+      }
+      .nav-icon {
+        font-size: 16px;
+        width: 20px;
+        text-align: center;
+      }
+
+      .sidebar-footer {
+        padding: 14px 20px 0;
+        color: rgba(255, 255, 255, 0.2);
+        font-size: 10px;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        border-top: 1px solid rgba(255, 255, 255, 0.06);
+        text-align: center;
+      }
+
+      /* Desktop Collapse Rules Triggered by JS */
+      .ess-sidebar.collapsed {
+        width: 80px;
+        min-width: 80px;
+      }
+      .ess-sidebar.collapsed .profile-text,
+      .ess-sidebar.collapsed .nav-label {
+        display: none;
+      }
+      .ess-sidebar.collapsed .sidebar-header-action {
+        text-align: center !important;
+      }
+      .ess-sidebar.collapsed .sidebar-profile {
+        padding: 0 10px 24px;
+        justify-content: center;
+      }
+      .ess-sidebar.collapsed .avatar-ring {
+        margin: 0 auto;
+      }
+      .ess-sidebar.collapsed .nav-item {
+        justify-content: center;
+        padding: 14px 0;
+      }
+      .ess-sidebar.collapsed .sidebar-collapse-btn svg {
+        transform: rotate(180deg);
+      }
+
+      /* ── MAIN CONTAINER LAYOUT ──────────────────── */
+      .ess-main {
+        flex: 1;
+        min-width: 0;
+        display: flex;
+        flex-direction: column;
+      }
+
+      /* ── HEADER NAVIGATION TOPBAR ───────────────── */
+      .ess-topbar {
+        background: var(--surface);
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 28px;
+        height: 64px;
+        position: sticky;
+        top: 0;
+        z-index: 90;
+      }
+      .topbar-left {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+      }
+      /* =========================================================
+   FIXED: CRISP & BOLD TOPBAR GREETING
+========================================================= */
+      .topbar-greeting {
+        font-family: "Syne", sans-serif;
+        font-size: 18px; /* Increased from 14px for better visibility */
+        font-weight: 600; /* Gives the "Good morning/evening" part an explicit weight */
+        color: var(
+          --text
+        ); /* Uses the core dark text color instead of --muted to fix blurriness */
+        letter-spacing: -0.3px;
+        -webkit-font-smoothing: antialiased; /* Sharpens text rendering on modern browsers */
+        -moz-osx-font-smoothing: grayscale;
+      }
+
+      .topbar-greeting strong {
+        color: var(
+          --accent
+        ); /* Changes the user's name to your accent blue for a premium look */
+        font-weight: 800; /* Extra bold emphasis on the name */
+      }
+
+      .sidebar-toggle {
+        display: none;
+        flex-direction: column;
+        gap: 5px;
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 4px;
+      }
+      .sidebar-toggle span {
+        display: block;
+        width: 22px;
+        height: 2px;
+        background: var(--text);
+        border-radius: 2px;
+      }
+      .topbar-right {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+      }
+
+      /* NOTIFICATION SUB-SYSTEM */
+      .notif-wrap {
+        position: relative;
+      }
+      .notif-btn {
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        position: relative;
+        transition: all 0.2s;
+        color: var(--muted);
+      }
+      .notif-btn:hover {
+        background: var(--accent);
+        color: #fff;
+        border-color: var(--accent);
+      }
+      .notif-btn svg {
+        width: 18px;
+        height: 18px;
+      }
+      .notif-badge {
+        position: absolute;
+        top: -5px;
+        right: -5px;
+        background: var(--danger);
+        color: #fff;
+        font-size: 9px;
+        font-weight: 700;
+        min-width: 17px;
+        height: 17px;
+        border-radius: 99px;
+        padding: 0 4px;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        border: 2px solid var(--surface);
+      }
+      .notif-badge.visible {
+        display: flex;
+      }
+
+      .notif-panel {
+        position: absolute;
+        right: 0;
+        top: calc(100% + 10px);
+        width: 350px;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow-lg);
+        display: none;
+        flex-direction: column;
+        overflow: hidden;
+        z-index: 200;
+      }
+      .notif-panel.open {
+        display: flex;
+      }
+      .notif-panel-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 14px 16px;
+        border-bottom: 1px solid var(--border);
+        font-size: 13px;
+        font-weight: 600;
+      }
+      .notif-count {
+        color: var(--accent);
+        font-size: 11px;
+        font-weight: 500;
+      }
+      .notif-panel-list {
+        list-style: none;
+        max-height: 400px;
+        overflow-y: auto;
+      }
+
+      /* Notification Group Sections Styling Separators */
+      .notif-group-header {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 16px;
+        font-size: 10.5px;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+        border-bottom: 1px solid var(--border);
+        position: sticky;
+        top: 0;
+        z-index: 2;
+      }
+      .notif-group-icon {
+        font-size: 13px;
+      }
+      .notif-group-system {
+        color: #1e3a8a;
+        background: #eff6ff;
+      }
+      .notif-group-birthday {
+        color: #9d174d;
+        background: #fce7f3;
+      }
+      .notif-group-anniversary {
+        color: #5b21b6;
+        background: #ede9fe;
+      }
+
+      .notif-item {
+        padding: 12px 16px;
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        border-left: 3px solid transparent;
+        transition: background 0.15s;
+      }
+      .notif-item:hover {
+        background: var(--bg);
+      }
+      .notif-type-system {
+        border-left-color: var(--accent);
+      }
+      .notif-type-birthday {
+        border-left-color: #ec4899;
+      }
+      .notif-type-anniversary {
+        border-left-color: #8b5cf6;
+      }
+      .notif-item-body {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+        flex: 1;
+      }
+      .notif-item-text {
+        font-size: 12.5px;
+        line-height: 1.45;
+        color: var(--text);
+      }
+      .notif-empty {
+        padding: 24px 16px;
+        text-align: center;
+        color: var(--muted);
+        font-size: 13px;
+        list-style: none;
+      }
+      .notif-panel-footer {
+        padding: 10px 16px;
+        text-align: right;
+        font-size: 12px;
+        border-top: 1px solid var(--border);
+      }
+      .notif-panel-footer a {
+        color: var(--accent);
+        font-weight: 500;
+      }
+
+      /* ── INTERIOR PADDING CONTROLLERS ───────────── */
+      .ess-content {
+        padding: 28px;
+        flex: 1;
+        min-width: 0;
+      }
+      .ess-section {
+        display: none;
+      }
+      .ess-section.active-section {
+        display: block;
+        animation: fadeUp 0.35s ease both;
+      }
+
+      @keyframes fadeUp {
+        from {
+          opacity: 0;
+          transform: translateY(12px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .section-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 20px;
+        flex-wrap: wrap;
+        gap: 15px;
+      }
+      .section-head h2 {
+        font-family: "Syne", sans-serif;
+        font-size: 22px;
+        font-weight: 700;
+      }
+      .section-date {
+        font-size: 13px;
+        color: var(--muted);
+      }
+      .section-hint {
+        font-size: 12px;
+        color: var(--muted);
+        font-style: italic;
+      }
+
+      .section-action {
+        background: var(--accent);
+        color: #fff;
+        border: none;
+        font-size: 12.5px;
+        font-weight: 600;
+        padding: 10px 18px;
+        border-radius: 8px;
+        transition: all 0.2s;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .section-action:hover {
+        background: #2456d0;
+        transform: translateY(-1px);
+      }
+
+      /* ── OPERATIONS METRIC CARDS ────────────────── */
+      .ops-kpi-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+        gap: 16px;
+      }
+      .s-stat-card {
+        background: var(--surface);
+        border-radius: var(--radius);
+        padding: 22px;
+        border-left: 5px solid var(--accent);
+        box-shadow: var(--shadow);
+        cursor: pointer;
+        transition:
+          transform 0.2s,
+          box-shadow 0.2s;
+      }
+      .s-stat-card:hover {
+        transform: translateY(-3px);
+        box-shadow: var(--shadow-lg);
+      }
+      .s-stat-title {
+        display: block;
+        font-size: 11px;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+        color: var(--accent);
+        font-weight: 700;
+      }
+      .s-stat-value {
+        display: block;
+        margin-top: 10px;
+        font-size: 34px;
+        font-weight: 700;
+        font-family: "Syne", sans-serif;
+      }
+      .s-stat-tat {
+        display: block;
+        margin-top: 6px;
+        color: var(--danger);
+        font-size: 12px;
+      }
+
+      /* ── INTERIOR LAYOUT BLOCKS ─────────────────── */
+      .overview-main-row {
+        display: flex;
+        gap: 20px;
+        align-items: flex-start;
+      }
+      .ov-plan-card,
+      .ov-queue-card,
+      .ov-perf-card,
+      .ov-activity-card {
+        background: var(--surface);
+        border-radius: var(--radius);
+        padding: 22px;
+        box-shadow: var(--shadow);
+      }
+      .ov-plan-card {
+        width: 300px;
+        flex-shrink: 0;
+      }
+      .ov-queue-card {
+        flex: 1;
+        min-width: 0;
+      }
+
+      .ov-card-title {
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.8px;
+        color: #2b3674;
+        margin-bottom: 16px;
+        text-transform: uppercase;
+      }
+      .blue-text {
+        color: var(--accent);
+      }
+      .green-text {
+        color: var(--success);
+      }
+
+      .plan-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background: #f8faff;
+        border-radius: 10px;
+        padding: 12px 14px;
+        margin-bottom: 8px;
+      }
+      .plan-item:last-child {
+        margin-bottom: 0;
+      }
+      .plan-item-label {
+        font-size: 13px;
+        font-weight: 500;
+      }
+      .plan-item-count {
+        font-family: "Syne", sans-serif;
+        font-size: 18px;
+        font-weight: 700;
+        color: var(--accent);
+      }
+
+      /* Fix table squishing rules */
+      .ov-table-wrap {
+        overflow-x: auto;
+        padding-bottom: 6px;
+      }
+      .ov-table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      .ov-table th,
+      .ov-table td {
+        text-align: left;
+        padding: 12px 14px;
+        font-size: 13px;
+        border-bottom: 1px solid #edf2f7;
+        white-space: nowrap; /* Forces layout tracking across clean boundaries */
+      }
+      .ov-table th {
+        color: var(--muted);
+        font-size: 11px;
+        text-transform: uppercase;
+        padding-bottom: 10px;
+      }
+      .ov-table td .doc-ref {
+        font-size: 11px;
+        color: var(--muted);
+        margin-top: 3px;
+      }
+
+      .overview-bottom-row {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 20px;
+      }
+      .ov-perf-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 14px;
+      }
+      .ov-perf-item {
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 18px;
+        text-align: center;
+      }
+      .ov-perf-label {
+        font-size: 12px;
+        color: var(--muted);
+      }
+      .ov-perf-value {
+        margin-top: 8px;
+        font-size: 30px;
+        font-weight: 700;
+        font-family: "Syne", sans-serif;
+      }
+      .timeline-item {
+        padding: 12px 0;
+        border-bottom: 1px solid #edf2f7;
+      }
+      .timeline-item:last-child {
+        border-bottom: none;
+      }
+      .timeline-title {
+        font-size: 13px;
+        font-weight: 700;
+      }
+      .timeline-meta {
+        margin-top: 3px;
+        color: var(--muted);
+        font-size: 12px;
+      }
+      .ov-loading,
+      .ops-kpi-loading {
+        color: var(--muted);
+        font-size: 13px;
+        padding: 10px 0;
+      }
+
+      /* ── ESS ATTENDANCE SUBSECTION VIEW ─────────── */
+      .att-filter-bar {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 20px;
+        flex-wrap: wrap;
+      }
+      .att-filter-bar select {
+        padding: 8px 14px;
+        border: 1.5px solid var(--border);
+        border-radius: 8px;
+        background: var(--surface);
+        font-family: "DM Sans", sans-serif;
+        font-size: 13px;
+        font-weight: 500;
+        color: var(--text);
+        cursor: pointer;
+        outline: none;
+        transition: border-color 0.2s;
+      }
+      .att-filter-bar select:focus {
+        border-color: var(--accent);
+      }
+      .att-summary {
+        margin-left: auto;
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+
+      .att-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        padding: 5px 12px;
+        border-radius: 99px;
+        font-size: 12px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.18s;
+        user-select: none;
+        opacity: 0.65;
+        border: 2px solid transparent;
+      }
+      .att-chip:hover {
+        opacity: 1;
+        transform: translateY(-1px);
+      }
+      .att-chip.active {
+        opacity: 1;
+        border-color: currentColor;
+        transform: translateY(-1px);
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.12);
+      }
+      .att-chip.present {
+        background: #dcfce7;
+        color: #166534;
+      }
+      .att-chip.absent {
+        background: #fee2e2;
+        color: #991b1b;
+      }
+      .att-chip.halfday {
+        background: #fef9c3;
+        color: #854d0e;
+      }
+      .att-chip.wfh {
+        background: #dbeafe;
+        color: #1e40af;
+      }
+      .att-chip.onleave {
+        background: #f3e8ff;
+        color: #6b21a8;
+      }
+
+      .att-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+        gap: 12px;
+      }
+      .att-card {
+        background: var(--surface);
+        border-radius: 12px;
+        padding: 16px;
+        text-align: center;
+        box-shadow: var(--shadow);
+        border-top: 3px solid var(--border);
+        transition:
+          transform 0.2s,
+          opacity 0.2s;
+      }
+      .att-card:hover {
+        transform: translateY(-2px);
+      }
+      .att-card.present {
+        border-color: var(--success);
+        background: #f0fdf4;
+      }
+      .att-card.absent {
+        border-color: var(--danger);
+        background: #fff5f5;
+      }
+      .att-card.halfday {
+        border-color: var(--warn);
+        background: #fffbeb;
+      }
+      .att-card.wfh {
+        border-color: #3b82f6;
+        background: #eff6ff;
+      }
+      .att-card.onleave {
+        border-color: #a855f7;
+        background: #faf5ff;
+      }
+      .att-card.dimmed {
+        opacity: 0.3;
+        transform: scale(0.97);
+      }
+      .att-date {
+        font-size: 11px;
+        color: var(--muted);
+        margin-bottom: 6px;
+        font-weight: 500;
+      }
+      .att-day {
+        font-family: "Syne", sans-serif;
+        font-size: 13px;
+        font-weight: 700;
+        margin-bottom: 12px;
+      }
+      .att-badge {
+        display: inline-block;
+        padding: 4px 10px;
+        border-radius: 6px;
+        font-size: 10.5px;
+        font-weight: 600;
+        text-transform: uppercase;
+      }
+      .att-badge.present {
+        background: #dcfce7;
+        color: #166534;
+      }
+      .att-badge.absent {
+        background: #fee2e2;
+        color: #991b1b;
+      }
+      .att-badge.halfday {
+        background: #fef9c3;
+        color: #854d0e;
+      }
+      .att-badge.wfh {
+        background: #dbeafe;
+        color: #1e40af;
+      }
+      .att-badge.onleave {
+        background: #f3e8ff;
+        color: #6b21a8;
+      }
+
+      /* ── LEAVE CARD STRUCTURES ──────────────────── */
+      .leave-cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+        gap: 18px;
+      }
+      .leave-card {
+        background: var(--surface);
+        border-radius: var(--radius);
+        padding: 24px;
+        box-shadow: var(--shadow);
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+        transition:
+          transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1),
+          box-shadow 0.25s;
+        opacity: 0;
+        transform: translateY(20px);
+        animation: leaveCardIn 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+      }
+      @keyframes leaveCardIn {
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .leave-card:hover {
+        transform: translateY(-4px) scale(1.015);
+        box-shadow: var(--shadow-lg);
+      }
+
+      .leave-card-apply {
+        position: absolute;
+        inset: 0;
+        background: rgba(59, 110, 246, 0.9);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        font-weight: 700;
+        font-size: 14px;
+        opacity: 0;
+        transition: opacity 0.22s;
+        border-radius: var(--radius);
+      }
+      .leave-card:hover .leave-card-apply {
+        opacity: 1;
+      }
+
+      .leave-type-name {
+        font-family: "Syne", sans-serif;
+        font-size: 16px;
+        font-weight: 700;
+        margin-bottom: 14px;
+      }
+      .leave-bar-track {
+        background: var(--bg);
+        border-radius: 99px;
+        height: 8px;
+        overflow: hidden;
+        margin-bottom: 12px;
+      }
+      .leave-bar-fill {
+        height: 100%;
+        border-radius: 99px;
+        background: linear-gradient(90deg, var(--accent), var(--accent2));
+        transition: width 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+        width: 0;
+      }
+      .leave-stats {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 12px;
+      }
+      .leave-stat {
+        text-align: center;
+      }
+      .leave-stat-val {
+        font-family: "Syne", sans-serif;
+        font-size: 20px;
+        font-weight: 700;
+      }
+      .leave-stat-val.available {
+        color: var(--accent);
+      }
+      .leave-stat-val.used {
+        color: var(--warn);
+      }
+      .leave-stat-val.total {
+        color: var(--muted);
+      }
+      .leave-stat-label {
+        font-size: 10px;
+        color: var(--muted);
+        margin-top: 2px;
+        letter-spacing: 0.3px;
+      }
+
+      /* ── PAYSLIPS SUMMARY ELEMENTS ──────────────── */
+      .payslip-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 14px;
+      }
+      .payslip-card {
+        background: var(--surface);
+        border-radius: var(--radius);
+        padding: 24px;
+        box-shadow: var(--shadow);
+        text-align: center;
+        border-bottom: 3px solid var(--accent);
+        transition: transform 0.2s;
+        cursor: pointer;
+      }
+      .payslip-card:hover {
+        transform: translateY(-3px);
+        box-shadow: var(--shadow-lg);
+      }
+      .payslip-icon {
+        font-size: 24px;
+        margin-bottom: 12px;
+      }
+      .payslip-month {
+        font-family: "Syne", sans-serif;
+        font-size: 15px;
+        font-weight: 700;
+        margin-bottom: 4px;
+      }
+      .payslip-year {
+        font-size: 11px;
+        color: var(--muted);
+        margin-bottom: 14px;
+      }
+      .payslip-net {
+        font-family: "Syne", sans-serif;
+        font-size: 20px;
+        font-weight: 800;
+        color: var(--accent);
+      }
+      .payslip-label {
+        font-size: 10px;
+        color: var(--muted);
+        margin-top: 2px;
+        letter-spacing: 0.5px;
+      }
+
+      /* ── HOLIDAYS ELEMENT BLOCK MULTIMAPS ────────── */
+      .holiday-remaining-badge {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .holiday-remaining-pill {
+        background: linear-gradient(135deg, var(--accent), var(--accent2));
+        color: #fff;
+        padding: 6px 16px;
+        border-radius: 99px;
+        font-size: 13px;
+        font-weight: 700;
+      }
+      .holiday-year-label {
+        font-size: 12px;
+        color: var(--muted);
+      }
+      .holiday-list {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      .holiday-card {
+        background: var(--surface);
+        border-radius: 12px;
+        padding: 16px 20px;
+        display: flex;
+        align-items: center;
+        gap: 18px;
+        box-shadow: var(--shadow);
+      }
+      .holiday-date-box {
+        background: linear-gradient(135deg, var(--accent), var(--accent2));
+        color: #fff;
+        border-radius: 10px;
+        padding: 10px 14px;
+        text-align: center;
+        flex-shrink: 0;
+        min-width: 58px;
+      }
+      .holiday-day {
+        font-family: "Syne", sans-serif;
+        font-size: 20px;
+        font-weight: 800;
+      }
+      .holiday-mon {
+        font-size: 11px;
+        letter-spacing: 0.5px;
+        opacity: 0.85;
+      }
+      .holiday-desc {
+        font-weight: 600;
+        font-size: 14px;
+      }
+      .holiday-dow {
+        font-size: 12px;
+        color: var(--muted);
+        margin-top: 3px;
+      }
+
+      /* ── RESPONSIVE RESPONSIVENESS ENGINE ────────── */
+      @media (max-width: 1200px) {
+        .overview-main-row {
+          flex-direction: column;
+        }
+        .ov-plan-card {
+          width: 100%;
+        }
+        .overview-bottom-row {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      @media (max-width: 768px) {
+        .ess-sidebar {
+          position: fixed;
+          left: 0;
+          top: 0;
+          bottom: 0;
+          transform: translateX(-100%);
+          box-shadow: 4px 0 24px rgba(0, 0, 0, 0.2);
+        }
+        .ess-sidebar.open {
+          transform: translateX(0);
+        }
+        .sidebar-collapse-btn {
+          display: none;
+        }
+
+        .sidebar-toggle {
+          display: flex;
+        }
+        .ess-content {
+          padding: 16px;
+        }
+
+        .ops-kpi-grid {
+          grid-template-columns: 1fr;
+        }
+        .ov-perf-grid {
+          grid-template-columns: 1fr;
+        }
+        .att-grid,
+        .leave-cards,
+        .payslip-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .topbar-greeting {
+          display: none;
+        }
+        .notif-panel {
+          width: 300px;
+        }
+
+        .att-summary {
+          margin-left: 0;
+          margin-top: 10px;
+          width: 100%;
+        }
+        .overview-actions {
+          width: 100%;
+          justify-content: flex-start;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Syne:wght=600;700;800&family=DM+Sans:wght=300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
+
+    <div class="ess-wrap">
+      <aside class="ess-sidebar" id="essSidebar">
+        <div class="sidebar-header-action">
+          <button id="sidebarCollapseBtn" class="sidebar-collapse-btn">
+            <svg
+              viewBox="0 0 24 24"
+              width="18"
+              height="18"
+              stroke="currentColor"
+              stroke-width="2"
+              fill="none"
+            >
+              <path d="M15 18l-6-6 6-6" />
+            </svg>
+          </button>
+        </div>
+
+        <div class="sidebar-profile">
+          <div class="avatar-ring">
+            <div class="avatar-inner" id="sidebarAvatar">--</div>
+          </div>
+          <div class="profile-text">
+            <span class="profile-name" id="sidebarName">Loading…</span>
+            <span class="profile-role" id="sidebarRole">—</span>
+          </div>
+        </div>
+
+        <nav class="sidebar-nav">
+          <a class="nav-item active" data-section="overview">
+            <span class="nav-icon">⬡</span>
+            <span class="nav-label">Overview</span>
+          </a>
+          <a class="nav-item" data-section="attendance">
+            <span class="nav-icon">◈</span>
+            <span class="nav-label">Attendance</span>
+          </a>
+          <a class="nav-item" data-section="leave">
+            <span class="nav-icon">◉</span> <span class="nav-label">Leave</span>
+          </a>
+          <a class="nav-item" data-section="payslip">
+            <span class="nav-icon">◪</span>
+            <span class="nav-label">Payslips</span>
+          </a>
+          <a class="nav-item" data-section="holiday">
+            <span class="nav-icon">◬</span>
+            <span class="nav-label">Holidays</span>
+          </a>
+        </nav>
+        <div class="sidebar-footer">
+          <span class="nav-label">Employee Self Service</span>
+        </div>
+      </aside>
+
+      <main class="ess-main">
+        <header class="ess-topbar">
+          <div class="topbar-left">
+            <button class="sidebar-toggle" id="sidebarMobileToggle">
+              <span></span><span></span><span></span>
+            </button>
+            <div class="topbar-greeting">
+              <span id="greetingText">Good morning</span>,&nbsp;<strong
+                id="greetingName"
+                >—</strong
+              >
+            </div>
+          </div>
+
+          <div class="topbar-right">
+            <div class="notif-wrap" id="notifWrap">
+              <button class="notif-btn" id="notifBtn">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+                  <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+                </svg>
+                <span class="notif-badge" id="notifBadge">0</span>
+              </button>
+              <div class="notif-panel" id="notifPanel">
+                <div class="notif-panel-header">
+                  <span>Notifications</span>
+                  <span class="notif-count" id="notifCount">0 unread</span>
+                </div>
+                <ul class="notif-panel-list" id="notifList"></ul>
+                <div class="notif-panel-footer">
+                  <a href="/app/notification-log">View all →</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </header>
+
+        <div class="ess-content">
+          <section id="overview" class="ess-section active-section">
+            <div class="section-head">
+              <div>
+                <h2>Overview</h2>
+                <span class="section-date" id="todayDate"></span>
+              </div>
+
+              <div class="overview-actions">
+                <button
+                  id="action-btn-2"
+                  class="section-action secondary-action"
+                  style="display: none"
+                ></button>
+                <button
+                  id="action-btn-1"
+                  class="section-action primary-action"
+                  style="display: none"
+                ></button>
+              </div>
+            </div>
+
+            <div
+              class="section-head"
+              style="margin-top: 10px"
+              id="workKpiHeadWrap"
+            >
+              <h2>My Work KPIs</h2>
+              <span class="section-hint">This month's performance</span>
+            </div>
+            <div class="ops-kpi-grid" id="ops-kpi-container"></div>
+
+            <div class="overview-main-row" style="margin-top: 20px">
+              <div class="ov-plan-card">
+                <div class="ov-card-title">TODAY'S ACTION ITEMS</div>
+                <div id="plan-list-container">
+                  <div class="ov-loading">Loading…</div>
+                </div>
+              </div>
+              <div class="ov-queue-card">
+                <div class="ov-card-title blue-text">MY PENDING QUEUE</div>
+                <div class="ov-table-wrap">
+                  <table class="ov-table">
+                    <thead>
+                      <tr>
+                        <th>Action Required</th>
+                        <th>Client &amp; Reference</th>
+                        <th>Target Date</th>
+                        <th>TAT Delay</th>
+                      </tr>
+                    </thead>
+                    <tbody id="task-list-body">
+                      <tr>
+                        <td colspan="4">Loading…</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+            <div class="overview-bottom-row" style="margin-top: 20px">
+              <div class="ov-perf-card">
+                <div class="ov-card-title">PERFORMANCE (THIS MONTH)</div>
+                <div class="ov-perf-grid">
+                  <div class="ov-perf-item">
+                    <div class="ov-perf-label" id="perf-label-1">—</div>
+                    <div class="ov-perf-value" id="perf-value-1">0</div>
+                  </div>
+                  <div class="ov-perf-item">
+                    <div class="ov-perf-label" id="perf-label-2">—</div>
+                    <div class="ov-perf-value" id="perf-value-2">0</div>
+                  </div>
+                  <div class="ov-perf-item">
+                    <div class="ov-perf-label" id="perf-label-3">—</div>
+                    <div class="ov-perf-value green-text" id="perf-value-3">
+                      0
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="ov-activity-card">
+                <div class="ov-card-title">RECENT ACTIVITY</div>
+                <div class="ov-timeline" id="activity-timeline">
+                  <div class="ov-loading">Loading…</div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section id="attendance" class="ess-section">
+            <div class="section-head">
+              <h2>My Attendance</h2>
+              <a
+                class="section-action primary-action"
+                id="qa-att-correction"
+                href="#"
+                >+ Request Correction</a
+              >
+            </div>
+            <div class="att-filter-bar">
+              <select id="attMonth">
+                <option value="0">January</option>
+                <option value="1">February</option>
+                <option value="2">March</option>
+                <option value="3">April</option>
+                <option value="4">May</option>
+                <option value="5">June</option>
+                <option value="6">July</option>
+                <option value="7">August</option>
+                <option value="8">September</option>
+                <option value="9">October</option>
+                <option value="10">November</option>
+                <option value="11">December</option>
+              </select>
+              <select id="attYear"></select>
+              <div class="att-summary" id="attSummary"></div>
+            </div>
+            <div class="att-grid" id="attendanceGrid"></div>
+          </section>
+
+          <section id="leave" class="ess-section">
+            <div class="section-head">
+              <h2>Leave Balances</h2>
+              <span class="section-hint"
+                >Click a card to apply for that leave</span
+              >
+            </div>
+            <div class="leave-cards" id="leaveCards"></div>
+          </section>
+
+          <section id="payslip" class="ess-section">
+            <div class="section-head">
+              <h2>Payslips</h2>
+              <a class="section-action primary-action" href="/app/salary-slip"
+                >View All</a
+              >
+            </div>
+            <div class="payslip-grid" id="payslipGrid"></div>
+          </section>
+
+          <section id="holiday" class="ess-section">
+            <div class="section-head">
+              <h2>Upcoming Holidays</h2>
+              <div class="holiday-remaining-badge" id="holidayRemaining"></div>
+            </div>
+            <div class="holiday-list" id="holidayList"></div>
+          </section>
+        </div>
+      </main>
+    </div>
+  </body>
+
+  <script>
+    /* =========================================================
+   ESS COMBINED DASHBOARD — JAVASCRIPT
+   Supports:
+   • Drill-down on every KPI card (frappe.set_route)
+   • Attendance multi-month filtering from historical database
+   • Notification Panel with explicit section grouping headers
+   • Sidebar responsive collapse/expand toggles
+========================================================= */
+
+    window.MY_ROOT = root_element;
+
+    /* ── HELPERS ─────────────────────────────── */
+    function $(id) {
+      return window.MY_ROOT.querySelector("#" + id);
+    }
+    function $$(sel) {
+      return window.MY_ROOT.querySelectorAll(sel);
+    }
+
+    function initials(name) {
+      return (name || "")
+        .split(" ")
+        .filter(Boolean)
+        .slice(0, 2)
+        .map(function (w) {
+          return w[0].toUpperCase();
+        })
+        .join("");
+    }
+
+    function formatDate(dateStr) {
+      var d = new Date(dateStr);
+      if (isNaN(d)) return dateStr || "-";
+      return d.toLocaleDateString("en-IN", {
+        day: "2-digit",
+        month: "short",
+        year: "numeric",
+      });
+    }
+
+    function dayName(dateStr) {
+      var d = new Date(dateStr);
+      if (isNaN(d)) return "";
+      return d.toLocaleDateString("en-IN", { weekday: "short" });
+    }
+
+    function rupee(n) {
+      return "₹" + Number(n || 0).toLocaleString("en-IN");
+    }
+
+    function statusClass(status) {
+      var map = {
+        present: "present",
+        absent: "absent",
+        "half day": "halfday",
+        wfh: "wfh",
+        "work from home": "wfh",
+        "on leave": "onleave",
+        leave: "onleave",
+      };
+      return map[(status || "").toLowerCase()] || "absent";
+    }
+
+    function drillDown(doctype, filters) {
+      if (typeof frappe !== "undefined" && frappe.set_route) {
+        var routeFilters = {};
+        if (filters) {
+          Object.keys(filters).forEach(function (k) {
+            routeFilters[k] = filters[k];
+          });
+        }
+        frappe.set_route("List", doctype, routeFilters);
+      }
+    }
+
+    /* ── GLOBAL STATE ────────────────────────── */
+    var ALL_ATTENDANCE = [];
+    var CURRENT_EMP_ID = "";
+    var ACTIVE_STATUS_FILTER = null;
+
+    /* ── GREETING ────────────────────────────── */
+    (function setGreeting() {
+      var h = new Date().getHours();
+      var greet =
+        h < 12 ? "Good morning" : h < 17 ? "Good afternoon" : "Good evening";
+      if ($("greetingText")) $("greetingText").innerText = greet;
+      if ($("todayDate"))
+        $("todayDate").innerText = new Date().toLocaleDateString("en-IN", {
+          weekday: "long",
+          day: "numeric",
+          month: "long",
+          year: "numeric",
+        });
+    })();
+
+    /* ── ATTENDANCE YEAR DROPDOWN ────────────── */
+    (function initAttFilter() {
+      var now = new Date();
+      if ($("attMonth")) $("attMonth").value = now.getMonth();
+      var yearSel = $("attYear");
+      if (yearSel) {
+        for (var y = now.getFullYear() - 1; y <= now.getFullYear() + 1; y++) {
+          var opt = document.createElement("option");
+          opt.value = y;
+          opt.text = y;
+          if (y === now.getFullYear()) opt.selected = true;
+          yearSel.appendChild(opt);
+        }
+        $("attMonth").onchange = function () {
+          ACTIVE_STATUS_FILTER = null;
+          filterAttendance();
+        };
+        $("attYear").onchange = function () {
+          ACTIVE_STATUS_FILTER = null;
+          filterAttendance();
+        };
+      }
+    })();
+
+    /* ── SIDEBAR NAVIGATION & TOGGLES ────────── */
+    $$(".nav-item").forEach(function (item) {
+      item.addEventListener("click", function () {
+        var target = this.dataset.section;
+        $$(".nav-item").forEach(function (n) {
+          n.classList.remove("active");
+        });
+        this.classList.add("active");
+        $$(".ess-section").forEach(function (s) {
+          s.classList.remove("active-section");
+        });
+        var sectionEl = window.MY_ROOT.querySelector("#" + target);
+        if (sectionEl) sectionEl.classList.add("active-section");
+        var sidebar = window.MY_ROOT.querySelector("#essSidebar");
+        if (sidebar) sidebar.classList.remove("open");
+      });
+    });
+
+    if ($("sidebarMobileToggle")) {
+      $("sidebarMobileToggle").addEventListener("click", function () {
+        var sidebar = $("essSidebar");
+        if (sidebar) sidebar.classList.toggle("open");
+      });
+    }
+
+    if ($("sidebarCollapseBtn")) {
+      $("sidebarCollapseBtn").addEventListener("click", function () {
+        var sidebar = $("essSidebar");
+        if (sidebar) sidebar.classList.toggle("collapsed");
+      });
+    }
+
+    /* ── NOTIFICATION BELL ───────────────────── */
+    if ($("notifBtn")) {
+      $("notifBtn").addEventListener("click", function (e) {
+        e.stopPropagation();
+        var p = $("notifPanel");
+        if (p) p.classList.toggle("open");
+      });
+    }
+    document.addEventListener("click", function () {
+      var p = window.MY_ROOT ? $("notifPanel") : null;
+      if (p) p.classList.remove("open");
+    });
+    var panelEl = window.MY_ROOT ? $("notifPanel") : null;
+    if (panelEl)
+      panelEl.addEventListener("click", function (e) {
+        e.stopPropagation();
+      });
+
+    /* ── NOTIFICATIONS WITH SECTION SEPARATORS ── */
+    function renderNotifications(notifications) {
+      var list = $("notifList");
+      var badge = $("notifBadge");
+      var count = $("notifCount");
+      var n = notifications || [];
+      if (!list) return;
+      list.innerHTML = "";
+
+      if (!n.length) {
+        list.innerHTML = '<li class="notif-empty">All caught up! 🎉</li>';
+        if (badge) badge.classList.remove("visible");
+        if (count) count.innerText = "0 unread";
+        return;
+      }
+
+      // Categories definitions map
+      var sections = [
+        { key: "birthday", title: "Birthdays", icon: "🎂" },
+        { key: "anniversary", title: "Work Anniversaries", icon: "🎉" },
+        { key: "system", title: "Pending Tasks", icon: "📋" },
+      ];
+
+      sections.forEach(function (sec) {
+        var groupItems = n.filter(function (item) {
+          return item.type === sec.key;
+        });
+        if (!groupItems.length) return;
+
+        // Create Section Header Element
+        var headerLi = document.createElement("li");
+        headerLi.className = "notif-group-header notif-group-" + sec.key;
+        headerLi.innerHTML =
+          '<span class="notif-group-icon">' + sec.icon + "</span> " + sec.title;
+        list.appendChild(headerLi);
+
+        // Loop through individual data blocks in group
+        groupItems.forEach(function (item) {
+          var li = document.createElement("li");
+          li.className = "notif-item notif-type-" + sec.key;
+          li.innerHTML =
+            '<div class="notif-item-body">' +
+            '<span class="notif-item-text">' +
+            (item.subject || item.message || "") +
+            "</span>" +
+            "</div>";
+          list.appendChild(li);
+        });
+      });
+
+      if (badge) {
+        badge.innerText = n.length;
+        badge.classList.add("visible");
+      }
+      if (count) count.innerText = n.length + " unread";
+    }
+
+    /* ── WORK KPI (Operations) ───────────────── */
+    function renderOpsKpis(kpis) {
+      var container = $("ops-kpi-container");
+      if (!container) return;
+      if (!kpis || !kpis.length) {
+        container.innerHTML = '<div class="ov-loading">No KPI data</div>';
+        return;
+      }
+      var html = "";
+      kpis.forEach(function (k) {
+        html +=
+          '<div class="s-stat-card" ' +
+          'data-route="' +
+          (k.route || "") +
+          '" ' +
+          "data-filter='" +
+          JSON.stringify(k.filter || {}) +
+          "'>" +
+          '<span class="s-stat-title">' +
+          (k.title || "-") +
+          "</span>" +
+          '<span class="s-stat-value">' +
+          (k.count || 0) +
+          "</span>" +
+          '<span class="s-stat-tat">Avg TAT: ' +
+          (k.tat || 0) +
+          " Days</span>" +
+          "</div>";
+      });
+      container.innerHTML = html;
+
+      container.querySelectorAll(".s-stat-card").forEach(function (card) {
+        card.addEventListener("click", function () {
+          var route = this.dataset.route;
+          var filter = {};
+          try {
+            filter = JSON.parse(this.dataset.filter);
+          } catch (e) {}
+          if (route) drillDown(route, filter);
+        });
+      });
+    }
+
+    /* ── ACTION ITEMS ────────────────────────── */
+    function renderPlans(plans) {
+      var container = $("plan-list-container");
+      if (!container) return;
+      if (!plans || !plans.length) {
+        container.innerHTML = '<div class="ov-loading">No action items</div>';
+        return;
+      }
+      var html = "";
+      plans.forEach(function (p) {
+        html +=
+          '<div class="plan-item" ' +
+          'style="cursor:pointer" ' +
+          'data-route="' +
+          (p.route || "") +
+          '" ' +
+          "data-filter='" +
+          JSON.stringify(p.filter || {}) +
+          "'>" +
+          '<span class="plan-item-label">' +
+          (p.title || "-") +
+          "</span>" +
+          '<span class="plan-item-count">' +
+          (p.count || 0) +
+          "</span>" +
+          "</div>";
+      });
+      container.innerHTML = html;
+      container.querySelectorAll(".plan-item").forEach(function (el) {
+        el.addEventListener("click", function () {
+          var route = this.dataset.route;
+          var filter = {};
+          try {
+            filter = JSON.parse(this.dataset.filter);
+          } catch (e) {}
+          if (route) drillDown(route, filter);
+        });
+      });
+    }
+
+    /* ── PENDING QUEUE ───────────────────────── */
+    function renderTasks(tasks) {
+      var body = $("task-list-body");
+      if (!body) return;
+      if (!tasks || !tasks.length) {
+        body.innerHTML =
+          '<tr><td colspan="4" style="color:var(--muted)">No pending tasks</td></tr>';
+        return;
+      }
+      var html = "";
+      tasks.forEach(function (t) {
+        html +=
+          '<tr style="cursor:pointer" onclick="' +
+          "if(typeof frappe!=='undefined'){frappe.set_route('Form','" +
+          (t.doctype || "") +
+          "','" +
+          (t.ref || "") +
+          "');}" +
+          '">' +
+          "<td>" +
+          (t.type || "-") +
+          "</td>" +
+          "<td>" +
+          '<div style="font-weight:600">' +
+          (t.client || "-") +
+          "</div>" +
+          '<div class="doc-ref">' +
+          (t.ref || "-") +
+          "</div>" +
+          "</td>" +
+          "<td>" +
+          formatDate(t.date) +
+          "</td>" +
+          "<td>" +
+          '<span style="' +
+          (t.tat > 0 ? "color:var(--danger);font-weight:700" : "") +
+          '">' +
+          (t.tat || 0) +
+          "</span>" +
+          "</td>" +
+          "</tr>";
+      });
+      body.innerHTML = html;
+    }
+
+    /* ── PERFORMANCE ─────────────────────────── */
+    function renderPerformance(p) {
+      if (!p) return;
+      if ($("perf-label-1")) $("perf-label-1").innerText = p.label1 || "-";
+      if ($("perf-label-2")) $("perf-label-2").innerText = p.label2 || "-";
+      if ($("perf-label-3")) $("perf-label-3").innerText = p.label3 || "-";
+      if ($("perf-value-1")) $("perf-value-1").innerText = p.value1 || 0;
+      if ($("perf-value-2")) $("perf-value-2").innerText = p.value2 || 0;
+      if ($("perf-value-3")) $("perf-value-3").innerText = p.value3 || 0;
+    }
+
+    /* ── RECENT ACTIVITY ─────────────────────── */
+    function renderActivities(list) {
+      var container = $("activity-timeline");
+      if (!container) return;
+      if (!list || !list.length) {
+        container.innerHTML =
+          '<div class="ov-loading">No recent activity</div>';
+        return;
+      }
+      var html = "";
+      list.forEach(function (a) {
+        var dt = a.ref_doctype || "";
+        var dn = a.docname || "-";
+        var url = dt
+          ? "/app/" +
+            dt.toLowerCase().replace(/ /g, "-") +
+            "/" +
+            encodeURIComponent(dn)
+          : "#";
+        html +=
+          '<div class="timeline-item" onclick="location.href=\'' +
+          url +
+          '\'" style="cursor:pointer">' +
+          '<div class="timeline-title">' +
+          (dt || "-") +
+          "</div>" +
+          '<div class="timeline-meta">' +
+          dn +
+          "</div>" +
+          "</div>";
+      });
+      container.innerHTML = html;
+    }
+
+    /* ── ATTENDANCE ──────────────────────────── */
+    function renderAttendance(attendanceData) {
+      var records =
+        (attendanceData || {}).records || (attendanceData || {}).logs || [];
+      ALL_ATTENDANCE = records;
+      var now = new Date();
+      var mDropdown = $("attMonth");
+      if (mDropdown) mDropdown.value = now.getMonth();
+      ACTIVE_STATUS_FILTER = null;
+      filterAttendance();
+    }
+
+    function filterAttendance() {
+      if (!$("attMonth") || !$("attYear")) return;
+      var month = parseInt($("attMonth").value);
+      var year = parseInt($("attYear").value);
+
+      var filtered = ALL_ATTENDANCE.filter(function (a) {
+        var d = new Date(a.date);
+        return d.getMonth() === month && d.getFullYear() === year;
+      });
+      renderAttendanceGrid(filtered);
+    }
+
+    function renderAttendanceGrid(records) {
+      var grid = $("attendanceGrid");
+      var summary = $("attSummary");
+      if (!grid || !summary) return;
+      grid.innerHTML = "";
+
+      var counts = { present: 0, absent: 0, halfday: 0, wfh: 0, onleave: 0 };
+      records.forEach(function (a) {
+        var c = statusClass(a.status);
+        if (counts[c] !== undefined) counts[c]++;
+      });
+
+      summary.innerHTML = "";
+      var chipDefs = [
+        { key: "present", icon: "✓", label: "Present" },
+        { key: "absent", icon: "✗", label: "Absent" },
+        { key: "halfday", icon: "◑", label: "Half Day" },
+        { key: "wfh", icon: "⌂", label: "WFH" },
+        { key: "onleave", icon: "🏖", label: "On Leave" },
+      ];
+      chipDefs.forEach(function (def) {
+        if (!counts[def.key]) return;
+        var chip = document.createElement("span");
+        chip.className =
+          "att-chip " +
+          def.key +
+          (ACTIVE_STATUS_FILTER === def.key ? " active" : "");
+        chip.innerHTML = def.icon + " " + counts[def.key] + " " + def.label;
+        chip.dataset.filter = def.key;
+        chip.addEventListener("click", function () {
+          ACTIVE_STATUS_FILTER =
+            ACTIVE_STATUS_FILTER === def.key ? null : def.key;
+          applyCardFilter();
+          $$(".att-chip").forEach(function (c) {
+            c.classList.toggle(
+              "active",
+              c.dataset.filter === ACTIVE_STATUS_FILTER,
+            );
+          });
+        });
+        summary.appendChild(chip);
+      });
+
+      if (!records.length) {
+        grid.innerHTML =
+          '<div style="color:var(--muted);font-size:14px;padding:20px 0">No attendance data found for this month.</div>';
+        return;
+      }
+
+      var sorted = records.slice().sort(function (a, b) {
+        return new Date(a.date) - new Date(b.date);
+      });
+      sorted.forEach(function (a) {
+        var cls = statusClass(a.status);
+        var card = document.createElement("div");
+        card.className = "att-card " + cls;
+        card.dataset.status = cls;
+        card.style.cursor = "pointer";
+        card.addEventListener("click", function () {
+          drillDown("Attendance", {
+            employee: CURRENT_EMP_ID,
+            attendance_date: a.date,
+          });
+        });
+        card.innerHTML =
+          '<div class="att-date">' +
+          formatDate(a.date) +
+          "</div>" +
+          '<div class="att-day">' +
+          dayName(a.date) +
+          "</div>" +
+          '<span class="att-badge ' +
+          cls +
+          '">' +
+          (a.status || "—") +
+          "</span>";
+        grid.appendChild(card);
+      });
+
+      applyCardFilter();
+    }
+
+    function applyCardFilter() {
+      $$(".att-card").forEach(function (card) {
+        if (
+          !ACTIVE_STATUS_FILTER ||
+          card.dataset.status === ACTIVE_STATUS_FILTER
+        ) {
+          card.classList.remove("dimmed");
+        } else {
+          card.classList.add("dimmed");
+        }
+      });
+    }
+
+    /* ── LEAVE ───────────────────────────────── */
+    function renderLeave(leaves) {
+      var container = $("leaveCards");
+      if (!container) return;
+      container.innerHTML = "";
+
+      (leaves || []).forEach(function (l) {
+        var available = l.unused_leaves || l.available || 0;
+        var total = l.total_leaves || l.total || 0;
+        var used = Math.max(total - available, 0);
+        var pct = total > 0 ? Math.min((available / total) * 100, 100) : 0;
+        var typeName = l.leave_type || l.type || "-";
+        var applyUrl =
+          "/app/leave-application/new-leave-application?employee=" +
+          encodeURIComponent(CURRENT_EMP_ID) +
+          "&leave_type=" +
+          encodeURIComponent(typeName);
+
+        var card = document.createElement("div");
+        card.className = "leave-card";
+        card.innerHTML =
+          '<div class="leave-card-apply">+ Apply for ' +
+          typeName +
+          "</div>" +
+          '<div class="leave-type-name">' +
+          typeName +
+          "</div>" +
+          '<div class="leave-bar-track">' +
+          '<div class="leave-bar-fill" data-pct="' +
+          pct +
+          '"></div>' +
+          "</div>" +
+          '<div class="leave-stats">' +
+          '<div class="leave-stat">' +
+          '<div class="leave-stat-val available">' +
+          available +
+          "</div>" +
+          '<div class="leave-stat-label">AVAILABLE</div>' +
+          "</div>" +
+          '<div class="leave-stat">' +
+          '<div class="leave-stat-val used">' +
+          used +
+          "</div>" +
+          '<div class="leave-stat-label">USED</div>' +
+          "</div>" +
+          '<div class="leave-stat">' +
+          '<div class="leave-stat-val total">' +
+          total +
+          "</div>" +
+          '<div class="leave-stat-label">TOTAL</div>' +
+          "</div>" +
+          "</div>";
+
+        card.onclick = function () {
+          location.href = applyUrl;
+        };
+        container.appendChild(card);
+      });
+
+      requestAnimationFrame(function () {
+        requestAnimationFrame(function () {
+          container.querySelectorAll(".leave-bar-fill").forEach(function (bar) {
+            bar.style.width = (bar.dataset.pct || 0) + "%";
+          });
+        });
+      });
+    }
+
+    /* ── PAYSLIPS ────────────────────────────── */
+    function renderPayslips(payslips) {
+      var grid = $("payslipGrid");
+      if (!grid) return;
+      grid.innerHTML = "";
+      if (!payslips || !payslips.length) {
+        grid.innerHTML =
+          '<div style="color:var(--muted);font-size:14px;padding: 10px 0;">No payslips found.</div>';
+        return;
+      }
+      payslips.forEach(function (p) {
+        var url = "/app/salary-slip/" + encodeURIComponent(p.name || "");
+        var card = document.createElement("div");
+        card.className = "payslip-card";
+        card.onclick = function () {
+          location.href = url;
+        };
+        card.innerHTML =
+          '<div class="payslip-icon">📄</div>' +
+          '<div class="payslip-month">' +
+          (p.month || "-") +
+          "</div>" +
+          '<div class="payslip-year">' +
+          (p.year || "-") +
+          "</div>" +
+          '<div class="payslip-net">' +
+          rupee(p.amount || p.net_pay || 0) +
+          "</div>" +
+          '<div class="payslip-label">NET PAY</div>';
+        grid.appendChild(card);
+      });
+    }
+
+    /* ── HOLIDAYS ────────────────────────────── */
+    function renderHolidays(holidays) {
+      var container = $("holidayList");
+      var badge = $("holidayRemaining");
+      if (!container || !badge) return;
+      container.innerHTML = "";
+
+      var today = new Date();
+      today.setHours(0, 0, 0, 0);
+      var upcoming = (holidays || []).filter(function (h) {
+        var d = new Date(h.holiday_date);
+        d.setHours(0, 0, 0, 0);
+        return d >= today;
+      });
+
+      badge.innerHTML =
+        '<span class="holiday-remaining-pill">' +
+        upcoming.length +
+        " remaining</span>" +
+        '<span class="holiday-year-label">in ' +
+        new Date().getFullYear() +
+        "</span>";
+
+      if (!upcoming.length) {
+        container.innerHTML =
+          '<div style="color:var(--muted);font-size:14px;padding:20px 0">No upcoming holidays.</div>';
+        return;
+      }
+
+      upcoming.forEach(function (h) {
+        var d = new Date(h.holiday_date);
+        var day = isNaN(d) ? "—" : d.getDate();
+        var mon = isNaN(d)
+          ? ""
+          : d.toLocaleDateString("en-IN", { month: "short" }).toUpperCase();
+        var dow = isNaN(d)
+          ? ""
+          : d.toLocaleDateString("en-IN", { weekday: "long" });
+        var diff = Math.ceil((d - today) / (1000 * 60 * 60 * 24));
+        var soon =
+          diff <= 7
+            ? '<span class="att-chip present" style="font-size:10px;padding:2px 8px;margin-left:auto;">In ' +
+              diff +
+              " day" +
+              (diff === 1 ? "" : "s") +
+              "</span>"
+            : "";
+
+        var card = document.createElement("div");
+        card.className = "holiday-card";
+        card.innerHTML =
+          '<div class="holiday-date-box">' +
+          '<div class="holiday-day">' +
+          day +
+          "</div>" +
+          '<div class="holiday-mon">' +
+          mon +
+          "</div>" +
+          "</div>" +
+          '<div style="flex:1">' +
+          '<div class="holiday-desc">' +
+          (h.description || "-") +
+          "</div>" +
+          '<div class="holiday-dow">' +
+          dow +
+          "</div>" +
+          "</div>" +
+          soon;
+        container.appendChild(card);
+      });
+    }
+
+    /* ── PROFILE ─────────────────────────────── */
+    function renderProfile(emp) {
+      if (!emp) return;
+      var name = emp.employee_name || emp.full_name || "User";
+      var init = initials(name);
+      if ($("sidebarAvatar")) $("sidebarAvatar").innerText = init;
+      if ($("topbarAvatar")) $("topbarAvatar").innerText = init;
+      if ($("sidebarName")) $("sidebarName").innerText = name;
+      if ($("sidebarRole"))
+        $("sidebarRole").innerText = emp.designation || emp.role || "";
+
+      if ($("greetingName")) $("greetingName").innerText = name.split(" ")[0];
+    }
+
+    /* ── ACTIONS (Dynamic Buttons) ───────────── */
+    function renderActions(actions) {
+      if (!actions) return;
+      var btn1 = $("action-btn-1");
+      var btn2 = $("action-btn-2");
+
+      if (btn1 && actions.btn1_label) {
+        btn1.style.display = "inline-flex";
+        btn1.innerText = actions.btn1_label;
+        btn1.onclick = function () {
+          if (actions.btn1_type === "new_doc") {
+            if (typeof frappe !== "undefined")
+              frappe.new_doc(actions.btn1_target);
+          } else if (actions.btn1_type === "list_route") {
+            drillDown(actions.btn1_target, actions.btn1_filter || {});
+          }
+        };
+      }
+
+      if (btn2 && actions.btn2_visible) {
+        btn2.style.display = "inline-flex";
+        btn2.innerText = actions.btn2_label;
+        btn2.onclick = function () {
+          if (actions.btn2_type === "new_doc") {
+            if (typeof frappe !== "undefined")
+              frappe.new_doc(actions.btn2_target);
+          } else if (actions.btn2_type === "list_route") {
+            drillDown(actions.btn2_target, actions.btn2_filter || {});
+          }
+        };
+      }
+    }
+
+    /* ── MAIN API CALL ───────────────────────── */
+    if (typeof frappe !== "undefined") {
+      frappe.call({
+        method: "user",
+        callback: function (r) {
+          if (!r || !r.message) return;
+          var d = r.message;
+
+          CURRENT_EMP_ID =
+            (d.employee || {}).employee_id || (d.employee || {}).name || "";
+
+          renderProfile(d.employee || {});
+
+          if (d.role && $("sidebarRole")) {
+            $("sidebarRole").innerText = d.role;
+          }
+
+          renderOpsKpis(d.kpi || []);
+          renderPlans(d.plan || []);
+          renderTasks(d.tasks || []);
+          renderPerformance(d.performance || {});
+          renderActivities(d.activities || []);
+          renderActions(d.actions || {});
+
+          renderAttendance(d.attendance || {});
+          renderLeave(d.leaves || d.leave_balances || []);
+          renderPayslips(d.payslips || []);
+          renderHolidays(d.holidays || []);
+          renderNotifications(d.notifications || []);
+
+          if ($("qa-att-correction") && CURRENT_EMP_ID) {
+            $("qa-att-correction").href =
+              "/app/attendance-request/new-attendance-request?employee=" +
+              encodeURIComponent(CURRENT_EMP_ID);
+          }
+        },
+      });
+    }
+  </script>
+</html>

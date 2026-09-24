@@ -1,0 +1,1170 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+
+    <style>
+      .pv-wrap {
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", "Inter", sans-serif;
+        width: 100%;
+        color: #1f2937;
+        padding: 6px 0 10px;
+      }
+
+      /* section head */
+      .pv-sec-head,
+      .pv-snap-hdr {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 14px;
+      }
+
+      .pv-sec-title-wrap,
+      .pv-snap-hdr-left {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .pv-sec-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: #4f6ef7;
+        box-shadow: 0 0 0 4px rgba(79, 110, 247, 0.12);
+      }
+
+      .pv-sec-title,
+      .pv-snap-hdr-title {
+        margin: 0;
+        font-size: 15px;
+        font-weight: 700;
+        color: #1e2433;
+      }
+
+      .pv-date-pill {
+        padding: 6px 12px;
+        border-radius: 999px;
+        background: #f8fafc;
+        border: 1px solid #e5e7eb;
+        color: #667085;
+        font-size: 12px;
+        font-weight: 600;
+      }
+
+      /* GLOBAL SEARCH BAR */
+      .pv-global-search-row {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 16px;
+      }
+
+      .pv-global-search-input {
+        flex: 1;
+        max-width: 520px;
+        padding: 11px 16px;
+        border: 1px solid #dbe1ea;
+        border-radius: 10px;
+        font-size: 13px;
+        background: #fbfcfe;
+        outline: none;
+      }
+
+      .pv-global-search-input:focus {
+        border-color: #4f6ef7;
+        box-shadow: 0 0 0 3px rgba(79, 110, 247, 0.12);
+        background: #fff;
+      }
+
+      .pv-global-search-btn {
+        padding: 11px 20px;
+        border: none;
+        border-radius: 10px;
+        background: #4f6ef7;
+        color: #fff;
+        font-size: 13px;
+        font-weight: 700;
+        cursor: pointer;
+        white-space: nowrap;
+      }
+
+      .pv-global-search-btn:hover {
+        background: #3d5ce0;
+      }
+
+      /* KPI */
+      .pv-kpi-section {
+        background: #ffffff;
+        border: 1px solid #e7eaf1;
+        border-radius: 14px;
+        padding: 18px 18px 16px;
+        box-shadow:
+          0 1px 2px rgba(16, 24, 40, 0.04),
+          0 6px 18px rgba(16, 24, 40, 0.04);
+        margin-bottom: 14px;
+      }
+
+      .pv-kpi-grid {
+        display: grid;
+        grid-template-columns: repeat(7, minmax(0, 1fr));
+        gap: 10px;
+      }
+
+      .pv-kpi-card {
+        background: #fbfcfe;
+        border: 1px solid #e8ecf3;
+        border-radius: 12px;
+        padding: 14px 12px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        cursor: pointer;
+        transition: all 0.18s ease;
+        min-width: 0;
+      }
+
+      .pv-kpi-card:hover {
+        transform: translateY(-2px);
+        background: #ffffff;
+        box-shadow: 0 8px 20px rgba(15, 23, 42, 0.07);
+        border-color: #d8deea;
+      }
+
+      .pv-kpi-icon {
+        width: 42px;
+        height: 42px;
+        min-width: 42px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 20px;
+      }
+
+      .ic-blue {
+        background: #e8eeff;
+      }
+      .ic-red {
+        background: #feeceb;
+      }
+      .ic-cyan {
+        background: #e8f6fb;
+      }
+      .ic-amber {
+        background: #fff4df;
+      }
+      .ic-pink {
+        background: #fdebf4;
+      }
+      .ic-gold {
+        background: #fff6d8;
+      }
+      .ic-green {
+        background: #e9f8ef;
+      }
+
+      .pv-kpi-body {
+        min-width: 0;
+        flex: 1;
+      }
+
+      .pv-kpi-value {
+        font-size: 23px;
+        line-height: 1;
+        font-weight: 800;
+        color: #1e2433;
+        margin-bottom: 4px;
+        font-variant-numeric: tabular-nums;
+      }
+
+      /* FIX: full KPI name visible, no truncation */
+      .pv-kpi-label {
+        font-size: 10.5px;
+        text-transform: uppercase;
+        letter-spacing: 0.3px;
+        color: #6b7280;
+        font-weight: 700;
+        white-space: normal;
+        overflow: visible;
+        text-overflow: clip;
+        line-height: 1.3;
+      }
+
+      .pv-danger {
+        color: #dc2626;
+      }
+      .pv-warn {
+        color: #d97706;
+      }
+      .pv-success {
+        color: #16a34a;
+      }
+
+      /* pipeline */
+      .pv-snap-wrap {
+        position: relative;
+      }
+
+      .pv-snap-section {
+        background: #ffffff;
+        border: 1px solid #e7eaf1;
+        border-radius: 14px;
+        padding: 18px;
+        box-shadow:
+          0 1px 2px rgba(16, 24, 40, 0.04),
+          0 6px 18px rgba(16, 24, 40, 0.04);
+      }
+
+      .pv-tiles-row {
+        display: flex;
+        gap: 8px;
+        flex-wrap: nowrap;
+        overflow: hidden;
+      }
+
+      .pv-tile {
+        flex: 1 1 0;
+        min-width: 0;
+        background: #fbfcfe;
+        border: 1px solid #e8ecf3;
+        border-radius: 12px;
+        padding: 14px 6px 12px;
+        text-align: center;
+        transition: all 0.18s ease;
+        cursor: pointer;
+      }
+
+      .pv-tile:hover {
+        transform: translateY(-2px);
+        background: #ffffff;
+        box-shadow: 0 8px 20px rgba(15, 23, 42, 0.06);
+      }
+
+      .pv-tile[data-snap="lead"] {
+        border-top: 3px solid #4f6ef7;
+      }
+      .pv-tile[data-snap="survey"] {
+        border-top: 3px solid #7c3aed;
+      }
+      .pv-tile[data-snap="proposal"] {
+        border-top: 3px solid #0891b2;
+      }
+      .pv-tile[data-snap="order"] {
+        border-top: 3px solid #059669;
+      }
+      .pv-tile[data-snap="dispatch"] {
+        border-top: 3px solid #d97706;
+      }
+      .pv-tile[data-snap="installation"] {
+        border-top: 3px solid #dc2626;
+      }
+      .pv-tile[data-snap="sync"] {
+        border-top: 3px solid #0284c7;
+      }
+      .pv-tile[data-snap="finance"] {
+        border-top: 3px solid #16a34a;
+      }
+
+      .pv-tile-finance {
+        flex: 1.2 1 0;
+      }
+
+      .pv-tile-icon {
+        width: 36px;
+        height: 36px;
+        margin: 0 auto 8px;
+        border-radius: 9px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+      }
+
+      .lead-bg {
+        background: #e8eeff;
+      }
+      .survey-bg {
+        background: #f1eafe;
+      }
+      .proposal-bg {
+        background: #e4f7fb;
+      }
+      .order-bg {
+        background: #e7f8f0;
+      }
+      .dispatch-bg {
+        background: #fff3df;
+      }
+      .install-bg {
+        background: #fdeaea;
+      }
+      .sync-bg {
+        background: #e8f4fb;
+      }
+      .finance-bg {
+        background: #e9f8ef;
+        color: #15803d;
+        font-weight: 800;
+      }
+
+      .pv-tile-count {
+        font-size: 22px;
+        line-height: 1;
+        font-weight: 800;
+        color: #1e2433;
+        margin-bottom: 5px;
+        font-variant-numeric: tabular-nums;
+      }
+
+      .pv-amt {
+        font-size: 15px;
+      }
+
+      .pv-tile-label {
+        font-size: 10px;
+        text-transform: uppercase;
+        letter-spacing: 0.45px;
+        color: #6b7280;
+        font-weight: 700;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      /* loading */
+      .pv-loading {
+        display: none;
+        position: absolute;
+        inset: 0;
+        background: rgba(255, 255, 255, 0.82);
+        border-radius: 14px;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        gap: 10px;
+        z-index: 15;
+      }
+
+      .pv-loading.active {
+        display: flex;
+      }
+
+      .pv-spinner {
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        border: 3px solid #e5e7eb;
+        border-top-color: #4f6ef7;
+        animation: pvspin 0.8s linear infinite;
+      }
+
+      @keyframes pvspin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      .pv-loading-text {
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.4px;
+        color: #6b7280;
+        text-transform: uppercase;
+      }
+
+      /* modal */
+      .pv-modal-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(15, 23, 42, 0.48);
+        z-index: 999999;
+        padding: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        backdrop-filter: blur(3px);
+      }
+
+      .pv-modal-box {
+        width: 98%;
+        max-width: 1280px;
+        max-height: 88vh;
+        overflow: hidden;
+        background: #ffffff;
+        border-radius: 16px;
+        box-shadow: 0 24px 60px rgba(15, 23, 42, 0.18);
+        display: flex;
+        flex-direction: column;
+      }
+
+      .pv-modal-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 18px 22px;
+        border-bottom: 1px solid #e5e7eb;
+        background: #fafbfd;
+      }
+
+      .pv-modal-title {
+        margin: 0;
+        font-size: 16px;
+        font-weight: 700;
+        color: #1e2433;
+      }
+
+      .pv-modal-close {
+        border: none;
+        background: #eef2f7;
+        color: #64748b;
+        width: 34px;
+        height: 34px;
+        border-radius: 8px;
+        font-size: 15px;
+        cursor: pointer;
+      }
+
+      .pv-modal-close:hover {
+        background: #fee2e2;
+        color: #dc2626;
+      }
+
+      .pv-modal-body {
+        padding: 20px 22px;
+        overflow: auto;
+        flex: 1;
+      }
+
+      /* common modal ui */
+      .pv-search {
+        width: 100%;
+        max-width: 360px;
+        padding: 10px 14px;
+        border: 1px solid #dbe1ea;
+        border-radius: 10px;
+        font-size: 13px;
+        background: #fbfcfe;
+        outline: none;
+        margin-bottom: 16px;
+      }
+
+      .pv-search:focus {
+        border-color: #4f6ef7;
+        box-shadow: 0 0 0 3px rgba(79, 110, 247, 0.12);
+        background: #fff;
+      }
+
+      .pv-mini-title {
+        margin: 0 0 10px;
+        font-size: 12px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.4px;
+        color: #6b7280;
+      }
+
+      .pv-list {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .pv-list-item {
+        border: 1px solid #e7eaf1;
+        background: #fbfcfe;
+        border-radius: 10px;
+        padding: 12px 14px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        cursor: pointer;
+      }
+
+      .pv-list-item:hover {
+        background: #fff;
+        border-color: #d6dce8;
+      }
+
+      .pv-list-name {
+        font-size: 13px;
+        font-weight: 700;
+        color: #1f2937;
+      }
+
+      .pv-list-meta {
+        font-size: 11px;
+        color: #6b7280;
+      }
+
+      .pv-badge {
+        display: inline-flex;
+        align-items: center;
+        padding: 4px 9px;
+        border-radius: 999px;
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.35px;
+        text-transform: uppercase;
+        white-space: nowrap;
+      }
+
+      .pv-info {
+        background: #e8f0ff;
+        color: #2957d3;
+      }
+      .pv-success-b {
+        background: #e8f7ee;
+        color: #15803d;
+      }
+      .pv-warn-b {
+        background: #fff3df;
+        color: #b45309;
+      }
+      .pv-danger-b {
+        background: #fdeaea;
+        color: #b91c1c;
+      }
+
+      .pv-stage-line {
+        display: flex;
+        align-items: center;
+        gap: 0;
+        overflow-x: auto;
+        padding: 4px 0 10px;
+        margin-bottom: 18px;
+      }
+
+      .pv-stage-node {
+        min-width: 92px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        flex-shrink: 0;
+      }
+
+      .pv-stage-dot {
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        border: 2px solid #cfd8e3;
+        background: #eef2f7;
+        color: #64748b;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+      }
+
+      .pv-stage-dot.done {
+        background: #e8f7ee;
+        border-color: #86d2a2;
+        color: #15803d;
+      }
+
+      .pv-stage-dot.active {
+        background: #e8f0ff;
+        border-color: #8fb0ff;
+        color: #2957d3;
+      }
+
+      .pv-stage-text {
+        font-size: 10px;
+        font-weight: 700;
+        color: #667085;
+        margin-top: 6px;
+        text-align: center;
+        text-transform: uppercase;
+      }
+
+      .pv-stage-bar {
+        width: 28px;
+        height: 2px;
+        background: #dbe2ea;
+        margin-top: -16px;
+        flex-shrink: 0;
+      }
+
+      .pv-stage-bar.done {
+        background: #86d2a2;
+      }
+
+      .pv-grid-3 {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 12px;
+      }
+
+      .pv-card {
+        border: 1px solid #e7eaf1;
+        border-radius: 12px;
+        background: #ffffff;
+        padding: 14px;
+      }
+
+      .pv-card-title {
+        margin: 0 0 10px;
+        font-size: 12px;
+        font-weight: 700;
+        color: #2957d3;
+        text-transform: uppercase;
+        letter-spacing: 0.35px;
+      }
+
+      .pv-field {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 6px 0;
+        border-bottom: 1px solid #f1f4f8;
+        font-size: 12px;
+      }
+
+      .pv-field:last-child {
+        border-bottom: none;
+      }
+
+      .pv-field-k {
+        color: #6b7280;
+        font-weight: 600;
+      }
+
+      .pv-field-v {
+        color: #1f2937;
+        font-weight: 700;
+        text-align: right;
+        word-break: break-word;
+      }
+
+      .pv-table-wrap {
+        overflow: auto;
+        border: 1px solid #e7eaf1;
+        border-radius: 12px;
+      }
+
+      .pv-table {
+        width: 100%;
+        min-width: 1050px;
+        border-collapse: collapse;
+        background: #fff;
+      }
+
+      .pv-table th {
+        background: #fafbfd;
+        color: #667085;
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 0.35px;
+        font-weight: 700;
+        padding: 12px;
+        border-bottom: 1px solid #e7eaf1;
+        white-space: nowrap;
+        position: sticky;
+        top: 0;
+      }
+
+      .pv-table td {
+        padding: 12px;
+        border-bottom: 1px solid #f1f4f8;
+        font-size: 12px;
+        color: #1f2937;
+        white-space: nowrap;
+        vertical-align: top;
+      }
+
+      .pv-table tr:hover td {
+        background: #fbfcfe;
+      }
+
+      .pv-link {
+        color: #2957d3;
+        font-weight: 700;
+        cursor: pointer;
+        text-decoration: none;
+      }
+
+      .pv-link:hover {
+        text-decoration: underline;
+      }
+
+      .pv-muted {
+        color: #6b7280;
+      }
+
+      .pv-empty {
+        text-align: center;
+        padding: 34px;
+        color: #98a2b3;
+        font-weight: 600;
+        font-size: 13px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="pv-wrap">
+      <!-- KPI SECTION -->
+      <div class="pv-kpi-section">
+        <div class="pv-sec-head">
+          <div class="pv-sec-title-wrap">
+            <span class="pv-sec-dot"></span>
+            <h3 class="pv-sec-title">Business KPIs</h3>
+          </div>
+        </div>
+
+        <!-- GLOBAL SEARCH -->
+        <div class="pv-global-search-row">
+          <input
+            type="text"
+            class="pv-global-search-input"
+            id="pv-global-search"
+            placeholder="🔍 Search by Customer ID, Sales Order ID or Customer Name and press Enter..."
+          />
+          <button
+            class="pv-global-search-btn"
+            onclick="window.pvGlobalSearch()"
+          >
+            Search
+          </button>
+        </div>
+
+        <div class="pv-kpi-grid">
+          <div class="pv-kpi-card" onclick="window.pvOpenKpi('customers')">
+            <div class="pv-kpi-icon ic-blue">👥</div>
+            <div class="pv-kpi-body">
+              <div class="pv-kpi-value" id="pv-kpi-customers">0</div>
+              <div class="pv-kpi-label">Total Customers</div>
+            </div>
+          </div>
+
+          <div class="pv-kpi-card" onclick="window.pvOpenKpi('installation')">
+            <div class="pv-kpi-icon ic-red">🔧</div>
+            <div class="pv-kpi-body">
+              <div class="pv-kpi-value" id="pv-kpi-installation">0</div>
+              <div class="pv-kpi-label">Total Installation</div>
+            </div>
+          </div>
+
+          <div class="pv-kpi-card" onclick="window.pvOpenKpi('sync')">
+            <div class="pv-kpi-icon ic-cyan">🔄</div>
+            <div class="pv-kpi-body">
+              <div class="pv-kpi-value" id="pv-kpi-sync">0</div>
+              <div class="pv-kpi-label">Total Synchronization</div>
+            </div>
+          </div>
+
+          <div class="pv-kpi-card" onclick="window.pvOpenKpi('dispatch')">
+            <div class="pv-kpi-icon ic-amber">📦</div>
+            <div class="pv-kpi-body">
+              <div class="pv-kpi-value" id="pv-kpi-dispatch">0</div>
+              <div class="pv-kpi-label">Total Dispatch</div>
+            </div>
+          </div>
+
+          <div class="pv-kpi-card" onclick="window.pvOpenKpi('payments')">
+            <div class="pv-kpi-icon ic-pink">💳</div>
+            <div class="pv-kpi-body">
+              <div class="pv-kpi-value pv-danger" id="pv-kpi-payments">0</div>
+              <div class="pv-kpi-label">Pending Payments</div>
+            </div>
+          </div>
+
+          <div class="pv-kpi-card" onclick="window.pvOpenKpi('progress')">
+            <div class="pv-kpi-icon ic-gold">⚡</div>
+            <div class="pv-kpi-body">
+              <div class="pv-kpi-value pv-warn" id="pv-kpi-progress">0</div>
+              <div class="pv-kpi-label">Projects in Progress</div>
+            </div>
+          </div>
+
+          <div class="pv-kpi-card" onclick="window.pvOpenKpi('completed')">
+            <div class="pv-kpi-icon ic-green">✅</div>
+            <div class="pv-kpi-body">
+              <div class="pv-kpi-value pv-success" id="pv-kpi-completed">0</div>
+              <div class="pv-kpi-label">Completed Projects</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TODAY PIPELINE -->
+      <div class="pv-snap-wrap">
+        <div class="pv-snap-section">
+          <div class="pv-snap-hdr">
+            <div class="pv-snap-hdr-left">
+              <span class="pv-sec-dot"></span>
+              <h3 class="pv-snap-hdr-title">Today's Pipeline</h3>
+            </div>
+            <div class="pv-date-pill">
+              📅 <span id="pv-today-date-label"></span>
+            </div>
+          </div>
+
+          <div class="pv-tiles-row">
+            <div class="pv-tile" data-snap="lead">
+              <div class="pv-tile-icon lead-bg">🔥</div>
+              <div class="pv-tile-count" id="pv-snap-lead-count">0</div>
+              <div class="pv-tile-label">Lead</div>
+            </div>
+
+            <div class="pv-tile" data-snap="survey">
+              <div class="pv-tile-icon survey-bg">📍</div>
+              <div class="pv-tile-count" id="pv-snap-survey-count">0</div>
+              <div class="pv-tile-label">Survey</div>
+            </div>
+
+            <div class="pv-tile" data-snap="proposal">
+              <div class="pv-tile-icon proposal-bg">📄</div>
+              <div class="pv-tile-count" id="pv-snap-proposal-count">0</div>
+              <div class="pv-tile-label">Proposal</div>
+            </div>
+
+            <div class="pv-tile" data-snap="order">
+              <div class="pv-tile-icon order-bg">🛒</div>
+              <div class="pv-tile-count" id="pv-snap-order-count">0</div>
+              <div class="pv-tile-label">Sales Order</div>
+            </div>
+
+            <div class="pv-tile" data-snap="dispatch">
+              <div class="pv-tile-icon dispatch-bg">📦</div>
+              <div class="pv-tile-count" id="pv-snap-dispatch-count">0</div>
+              <div class="pv-tile-label">Dispatch</div>
+            </div>
+
+            <div class="pv-tile" data-snap="installation">
+              <div class="pv-tile-icon install-bg">🔧</div>
+              <div class="pv-tile-count" id="pv-snap-install-count">0</div>
+              <div class="pv-tile-label">Installation</div>
+            </div>
+
+            <div class="pv-tile" data-snap="sync">
+              <div class="pv-tile-icon sync-bg">🔄</div>
+              <div class="pv-tile-count" id="pv-snap-sync-count">0</div>
+              <div class="pv-tile-label">Sync</div>
+            </div>
+
+            <div class="pv-tile pv-tile-finance" data-snap="finance">
+              <div class="pv-tile-icon finance-bg">₹</div>
+              <div class="pv-tile-count pv-amt" id="pv-snap-finance-amount">
+                ₹0
+              </div>
+              <div class="pv-tile-label">Finance</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="pv-loading" id="pv-loading-dash">
+          <div class="pv-spinner"></div>
+          <div class="pv-loading-text">Loading...</div>
+        </div>
+      </div>
+
+      <!-- MODAL -->
+      <div class="pv-modal-overlay" id="pv-modal-overlay" style="display: none">
+        <div class="pv-modal-box" id="pv-modal-box">
+          <div class="pv-modal-header">
+            <h3 class="pv-modal-title" id="pv-modal-title">Details</h3>
+            <button class="pv-modal-close" onclick="window.pvCloseModal()">
+              ✕
+            </button>
+          </div>
+          <div class="pv-modal-body" id="pv-modal-body"></div>
+        </div>
+      </div>
+    </div>
+  </body>
+
+  <script>
+    /* =====================================================
+   REPLACE ONLY THIS FUNCTION in your JS file
+   Fix: safe Lead fields + timeout fallback so
+        "Loading..." never gets stuck forever
+   ===================================================== */
+
+    window.pvLoadCustomerJourney = function (leadId, searchText) {
+      var result = window.pvQ("#pv-customer-result");
+      if (!result) return;
+      result.innerHTML =
+        '<div class="pv-empty">Loading customer journey...</div>';
+
+      var filters = [];
+      if (leadId) filters = [["name", "=", leadId]];
+      else filters = [["lead_name", "like", "%" + searchText + "%"]];
+
+      frappe.call({
+        method: "frappe.client.get_list",
+        args: {
+          doctype: "Lead",
+          /* SAFE fields only — removed lead_owner, next_contact_date
+         which may not exist in every ERPNext setup             */
+          fields: [
+            "name",
+            "lead_name",
+            "mobile_no",
+            "status",
+            "creation",
+            "solar_capacity",
+            "source",
+            "territory",
+            "email_id",
+          ],
+          filters: filters,
+          limit_page_length: 1,
+        },
+        callback: function (r) {
+          var lead = (r.message || [])[0];
+          if (!lead) {
+            result.innerHTML =
+              '<div class="pv-empty">No customer found for "' +
+              (searchText || leadId) +
+              '".</div>';
+            return;
+          }
+
+          var cust = lead.lead_name || lead.name;
+
+          var data = {
+            lead: lead,
+            survey: null,
+            quotations: [],
+            orders: [],
+            dispatches: [],
+            installations: [],
+            syncs: [],
+            payments: [],
+          };
+
+          var total = 7;
+          var pending = total;
+          var rendered = false;
+
+          function done() {
+            pending--;
+            if (pending <= 0 && !rendered) {
+              rendered = true;
+              window.pvRenderCustomerJourney(data);
+              var projId =
+                data.orders.length && data.orders[0].project
+                  ? data.orders[0].project
+                  : "";
+              if (projId) window.pvLoadProjectExtra(projId);
+            }
+          }
+
+          /* Safety timeout — if any call silently fails and done()
+         never reaches 0, render after 8 seconds with whatever
+         data arrived so far                                    */
+          setTimeout(function () {
+            if (!rendered) {
+              rendered = true;
+              window.pvRenderCustomerJourney(data);
+              var projId =
+                data.orders.length && data.orders[0].project
+                  ? data.orders[0].project
+                  : "";
+              if (projId) window.pvLoadProjectExtra(projId);
+            }
+          }, 8000);
+
+          /* 1. Site Survey */
+          frappe.call({
+            method: "frappe.client.get_list",
+            args: {
+              doctype: "Site Survey",
+              fields: [
+                "name",
+                "survey_date",
+                "completed_date",
+                "surveyed_by",
+                "status",
+                "plant_category",
+                "site_type",
+                "location",
+                "capacity",
+                "lead_name",
+              ],
+              filters: [["lead_name", "=", cust]],
+              limit_page_length: 5,
+            },
+            callback: function (rr) {
+              data.survey = (rr.message || [])[0] || null;
+              done();
+            },
+            error: function () {
+              done();
+            },
+          });
+
+          /* 2. Quotation */
+          frappe.call({
+            method: "frappe.client.get_list",
+            args: {
+              doctype: "Quotation",
+              fields: [
+                "name",
+                "transaction_date",
+                "valid_till",
+                "grand_total",
+                "status",
+                "customer_name",
+              ],
+              filters: [
+                ["customer_name", "like", "%" + cust + "%"],
+                ["docstatus", "!=", 2],
+              ],
+              limit_page_length: 20,
+            },
+            callback: function (rr) {
+              data.quotations = rr.message || [];
+              done();
+            },
+            error: function () {
+              done();
+            },
+          });
+
+          /* 3. Sales Order */
+          frappe.call({
+            method: "frappe.client.get_list",
+            args: {
+              doctype: "Sales Order",
+              fields: [
+                "name",
+                "transaction_date",
+                "delivery_date",
+                "grand_total",
+                "per_billed",
+                "status",
+                "project",
+                "advance_paid",
+                "customer_name",
+                "plant_category",
+                "order_type",
+              ],
+              filters: [
+                ["customer_name", "like", "%" + cust + "%"],
+                ["docstatus", "!=", 2],
+              ],
+              limit_page_length: 10,
+            },
+            callback: function (rr) {
+              data.orders = rr.message || [];
+              done();
+            },
+            error: function () {
+              done();
+            },
+          });
+
+          /* 4. Delivery Note */
+          frappe.call({
+            method: "frappe.client.get_list",
+            args: {
+              doctype: "Delivery Note",
+              fields: [
+                "name",
+                "posting_date",
+                "status",
+                "vehicle_no",
+                "transporter_name",
+                "grand_total",
+              ],
+              filters: [
+                ["customer_name", "like", "%" + cust + "%"],
+                ["docstatus", "=", 1],
+              ],
+              limit_page_length: 10,
+            },
+            callback: function (rr) {
+              data.dispatches = rr.message || [];
+              done();
+            },
+            error: function () {
+              done();
+            },
+          });
+
+          /* 5. Installation Note */
+          frappe.call({
+            method: "frappe.client.get_list",
+            args: {
+              doctype: "Installation Note",
+              fields: ["name", "inst_date", "status"],
+              filters: [
+                ["customer_name", "like", "%" + cust + "%"],
+                ["docstatus", "!=", 2],
+              ],
+              limit_page_length: 10,
+            },
+            callback: function (rr) {
+              data.installations = rr.message || [];
+              done();
+            },
+            error: function () {
+              done();
+            },
+          });
+
+          /* 6. Liaisoning And Synchronization */
+          frappe.call({
+            method: "frappe.client.get_list",
+            args: {
+              doctype: "Liaisoning And Synchronization",
+              fields: [
+                "name",
+                "posting_date",
+                "synchronization_don_dt",
+                "subsidy_received_dt",
+                "liaisoning_status",
+              ],
+              filters: [["customer_name", "like", "%" + cust + "%"]],
+              limit_page_length: 10,
+            },
+            callback: function (rr) {
+              data.syncs = rr.message || [];
+              done();
+            },
+            error: function () {
+              done();
+            },
+          });
+
+          /* 7. Payment Entry */
+          frappe.call({
+            method: "frappe.client.get_list",
+            args: {
+              doctype: "Payment Entry",
+              fields: [
+                "name",
+                "posting_date",
+                "paid_amount",
+                "mode_of_payment",
+                "payment_type",
+              ],
+              filters: [
+                ["party_name", "like", "%" + cust + "%"],
+                ["docstatus", "=", 1],
+              ],
+              limit_page_length: 20,
+            },
+            callback: function (rr) {
+              data.payments = rr.message || [];
+              done();
+            },
+            error: function () {
+              done();
+            },
+          });
+        },
+        error: function () {
+          result.innerHTML =
+            '<div class="pv-empty">Error fetching customer. Please try again.</div>';
+        },
+      });
+    };
+  </script>
+</html>

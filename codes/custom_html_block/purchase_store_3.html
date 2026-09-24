@@ -1,0 +1,2471 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap");
+
+      :root {
+        --cc-bg: #eef3f9;
+        --cc-surface: rgba(255, 255, 255, 0.94);
+        --cc-surface-2: rgba(248, 250, 252, 0.96);
+        --cc-border: rgba(148, 163, 184, 0.16);
+        --cc-text: #0f172a;
+        --cc-muted: #64748b;
+        --cc-primary: #2563eb;
+        --cc-success: #16a34a;
+        --cc-warning: #f59e0b;
+        --cc-danger: #ef4444;
+        --cc-shadow: 0 10px 28px rgba(15, 23, 42, 0.07);
+        --cc-shadow-hover: 0 18px 40px rgba(15, 23, 42, 0.12);
+        --cc-radius: 18px;
+      }
+
+      body,
+      .desk-page,
+      .page-container {
+        background:
+          radial-gradient(
+            circle at top left,
+            rgba(37, 99, 235, 0.08),
+            transparent 24%
+          ),
+          radial-gradient(
+            circle at top right,
+            rgba(16, 185, 129, 0.06),
+            transparent 20%
+          ),
+          linear-gradient(180deg, #f4f7fb 0%, #eaf0f7 100%) !important;
+        color: var(--cc-text);
+      }
+
+      .cc-wrapper * {
+        box-sizing: border-box;
+        font-family: "Inter", sans-serif;
+      }
+
+      .cc-wrapper {
+        display: flex;
+        background:
+          radial-gradient(
+            circle at top left,
+            rgba(37, 99, 235, 0.08),
+            transparent 28%
+          ),
+          radial-gradient(
+            circle at top right,
+            rgba(16, 185, 129, 0.06),
+            transparent 24%
+          ),
+          linear-gradient(180deg, #f7fbff 0%, #eef4fb 100%);
+        border-radius: 18px;
+        overflow: hidden;
+        border: 1px solid #d9e2f0;
+        min-height: 900px;
+        box-shadow: 0 18px 40px rgba(15, 23, 42, 0.08);
+      }
+
+      .cc-main {
+        flex: 1;
+        padding: 22px;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+      }
+
+      .cc-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 4px 2px 10px;
+      }
+
+      .cc-title h1 {
+        margin: 0;
+        font-size: 23px;
+        font-weight: 800;
+        color: #0f172a;
+        letter-spacing: -0.03em;
+      }
+
+      .cc-title p {
+        margin: 4px 0 0 0;
+        font-size: 13px;
+        color: #6b7280;
+      }
+
+      .cc-wrapper .btn-cc,
+      .cc-wrapper .cc-btn,
+      .cc-wrapper .cc-toolbar-btn {
+        padding: 9px 16px;
+        font-size: 13px;
+        font-weight: 700;
+        border-radius: 12px !important;
+        cursor: pointer;
+        border: 1px solid rgba(148, 163, 184, 0.2) !important;
+        background: linear-gradient(180deg, #ffffff, #f8fafc) !important;
+        color: #334155 !important;
+        box-shadow: 0 4px 12px rgba(15, 23, 42, 0.05) !important;
+        transition: all 0.2s ease;
+      }
+
+      .cc-wrapper .btn-cc:hover,
+      .cc-wrapper .cc-toolbar-btn:hover {
+        transform: translateY(-1px);
+        border-color: #93c5fd !important;
+        box-shadow: 0 10px 22px rgba(15, 23, 42, 0.1) !important;
+      }
+
+      .cc-nav-buttons {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 16px;
+        background: rgba(255, 255, 255, 0.9);
+        border: 1px solid #dce6f4;
+        border-radius: 14px;
+        padding: 16px 20px;
+        box-shadow: 0 10px 24px rgba(15, 23, 42, 0.05);
+      }
+
+      .cc-nav-group {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        flex: 1;
+        min-width: 280px;
+      }
+
+      .cc-nav-group-row {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+
+      .cc-nav-group-label {
+        font-size: 10px;
+        font-weight: 900;
+        color: #64748b;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+      }
+
+      .cc-nav-btn {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        padding: 10px 14px;
+        min-height: 40px;
+        background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+        border: 1px solid rgba(148, 163, 184, 0.2);
+        border-radius: 14px;
+        font-size: 11px;
+        font-weight: 800;
+        color: #1f2937;
+        cursor: pointer;
+        box-shadow: 0 5px 12px rgba(15, 23, 42, 0.06);
+        transition: all 0.18s ease;
+        position: relative;
+        overflow: hidden;
+        pointer-events: auto;
+      }
+
+      .cc-nav-btn::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 4px;
+        height: 100%;
+        background: linear-gradient(180deg, #2563eb, #22c55e);
+        opacity: 0.95;
+      }
+
+      .cc-nav-btn:hover {
+        transform: translateY(-2px);
+        background: linear-gradient(180deg, #eff6ff 0%, #dbeafe 100%);
+        border-color: rgba(37, 99, 235, 0.22);
+        color: #1d4ed8;
+        box-shadow: 0 12px 24px rgba(37, 99, 235, 0.14);
+      }
+
+      .cc-nav-divider {
+        width: 1px;
+        background: linear-gradient(180deg, #e2e8f0, #cbd5e1);
+        align-self: stretch;
+        min-height: 40px;
+      }
+
+      .cc-kpi-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+        gap: 14px;
+      }
+
+      .cc-kpi-card {
+        padding: 18px 16px 16px;
+        border-radius: 20px;
+        background: linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0.98),
+          rgba(247, 250, 255, 0.92)
+        );
+        border: 1px solid rgba(148, 163, 184, 0.16);
+        cursor: pointer;
+        box-shadow: var(--cc-shadow);
+        transition: all 0.22s ease;
+        position: relative;
+        overflow: hidden;
+        pointer-events: auto;
+      }
+
+      .cc-kpi-card::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 4px;
+        background: linear-gradient(90deg, #2563eb, #22c55e, #f59e0b);
+        opacity: 0.95;
+      }
+
+      .cc-kpi-card:hover {
+        transform: translateY(-3px);
+        box-shadow: var(--cc-shadow-hover);
+      }
+
+      .kpi-icon {
+        display: none;
+      }
+
+      .cc-kpi-val,
+      .cc-kpi-value {
+        font-size: 22px;
+        font-weight: 900;
+        color: #0f172a;
+        margin: 0 0 4px 0;
+        letter-spacing: -0.03em;
+      }
+
+      .cc-kpi-label {
+        font-size: 11px;
+        font-weight: 800;
+        color: #475569;
+        line-height: 1.3;
+      }
+
+      .cc-data-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 16px;
+      }
+
+      .cc-panel {
+        background: var(--cc-surface);
+        border: 1px solid var(--cc-border);
+        border-radius: 18px;
+        padding: 14px;
+        box-shadow: var(--cc-shadow);
+        display: flex;
+        flex-direction: column;
+      }
+
+      .panel-header {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 12px;
+        align-items: center;
+      }
+
+      .panel-title,
+      .cc-section-title,
+      .m-section-title {
+        font-size: 13px;
+        font-weight: 900;
+        color: #0f172a;
+        line-height: 1.2;
+        letter-spacing: -0.02em;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .panel-title::before,
+      .cc-section-title::before,
+      .m-section-title::before {
+        content: "";
+        width: 4px;
+        height: 13px;
+        border-radius: 999px;
+        background: linear-gradient(180deg, #2563eb, #22c55e);
+        display: inline-block;
+        margin-right: 6px;
+        flex-shrink: 0;
+      }
+
+      .panel-link,
+      .lnk-blue {
+        font-size: 11px;
+        color: #2563eb;
+        cursor: pointer;
+        text-decoration: none;
+        font-weight: 700;
+      }
+
+      .panel-link:hover,
+      .lnk-blue:hover {
+        color: #1d4ed8;
+        text-decoration: underline;
+      }
+
+      .cc-table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+        font-size: 12px;
+        overflow: hidden;
+        border-radius: 12px;
+      }
+
+      .cc-table thead th,
+      .cc-table th {
+        padding: 10px 12px;
+        background: linear-gradient(135deg, #0f172a, #334155);
+        color: #fff;
+        font-size: 11px;
+        font-weight: 700;
+        text-align: left;
+        white-space: nowrap;
+        border-bottom: none;
+        letter-spacing: 0.03em;
+      }
+
+      .cc-table tbody td,
+      .cc-table td {
+        padding: 10px 12px;
+        border-bottom: 1px solid rgba(226, 232, 240, 0.85);
+        color: #334155;
+        vertical-align: middle;
+        background: #fff;
+        font-weight: 500;
+        font-size: 12px;
+      }
+
+      .cc-table tr {
+        cursor: pointer;
+      }
+
+      .cc-table tbody tr:hover td,
+      .cc-table tr:hover td {
+        background: #f8fbff;
+      }
+
+      .badge,
+      .cc-badge {
+        display: inline-block;
+        padding: 3px 9px;
+        border-radius: 999px;
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.01em;
+        white-space: nowrap;
+      }
+
+      .badge-red,
+      .pill-red {
+        background: #fee2e2;
+        color: #dc2626;
+      }
+      .badge-green,
+      .pill-green {
+        background: #dcfce7;
+        color: #15803d;
+      }
+      .badge-yellow,
+      .pill-orange {
+        background: #fef3c7;
+        color: #b45309;
+      }
+      .badge-blue,
+      .pill-blue {
+        background: #dbeafe;
+        color: #2563eb;
+      }
+
+      .cat-tag,
+      .cat-pill {
+        padding: 2px 7px;
+        border-radius: 999px;
+        font-size: 10px;
+        font-weight: 700;
+        background: #eef2ff;
+        color: #4338ca;
+        border: 1px solid rgba(99, 102, 241, 0.14);
+      }
+
+      .cc-modal-backdrop {
+        position: fixed;
+        inset: 0;
+        background: rgba(15, 23, 42, 0.55);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 99999;
+        padding: 12px;
+        box-sizing: border-box;
+      }
+
+      .cc-modal-backdrop.is-open {
+        display: flex;
+      }
+
+      .cc-modal {
+        width: min(1360px, 98vw);
+        height: min(92vh, 920px);
+        background: rgba(255, 255, 255, 0.98);
+        border-radius: 18px;
+        overflow: hidden;
+        box-shadow: 0 30px 70px rgba(0, 0, 0, 0.28);
+        display: flex;
+        flex-direction: column;
+        box-sizing: border-box;
+      }
+
+      .cc-modal-header {
+        flex: 0 0 auto;
+        padding: 14px 18px;
+        border-bottom: 1px solid #e2e8f0;
+        background: linear-gradient(135deg, #1e293b, #334155);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+        border-radius: 18px 18px 0 0;
+      }
+
+      .cc-modal-header h3 {
+        margin: 0;
+        font-size: 16px;
+        font-weight: 800;
+        color: #fff;
+      }
+
+      .cc-modal-header p {
+        margin: 4px 0 0 0;
+        font-size: 12px;
+        color: #94a3b8;
+      }
+
+      .cc-modal-actions {
+        display: flex;
+        gap: 8px;
+        flex-shrink: 0;
+      }
+
+      .cc-modal-actions button {
+        padding: 8px 14px;
+        font-size: 12px;
+        font-weight: 600;
+        border-radius: 8px;
+        cursor: pointer;
+        border: none;
+      }
+
+      .cc-modal-actions .btn-export {
+        background: #334155;
+        color: #fff;
+        border: 1px solid #475569;
+      }
+
+      .cc-modal-actions .btn-close {
+        background: #ef4444;
+        color: #fff;
+      }
+
+      .cc-modal-body {
+        flex: 1 1 auto;
+        min-height: 0;
+        overflow-y: auto;
+        padding: 16px 18px 18px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      .cc-section-block {
+        display: none;
+      }
+
+      .cc-modal-search-bar {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        flex-wrap: wrap;
+        margin-bottom: 4px;
+      }
+
+      .cc-modal-search-bar input,
+      .cc-modal-search-bar select {
+        padding: 9px 12px;
+        border: 1px solid #d6dde8;
+        border-radius: 10px;
+        font-size: 12px;
+        background: #fff;
+        color: #0f172a;
+        outline: none;
+        min-width: 180px;
+        box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.03);
+      }
+
+      .cc-modal-new-btn {
+        padding: 9px 16px;
+        background: linear-gradient(135deg, #2563eb, #1d4ed8);
+        color: #fff;
+        border: none;
+        border-radius: 10px;
+        font-size: 12px;
+        font-weight: 700;
+        cursor: pointer;
+        box-shadow: 0 6px 16px rgba(37, 99, 235, 0.28);
+      }
+
+      .cc-modal-table-wrap {
+        overflow-x: auto;
+        border-radius: 12px;
+        box-shadow: 0 2px 12px rgba(15, 23, 42, 0.06);
+      }
+
+      .cc-analytics-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr 200px;
+        gap: 16px;
+      }
+
+      .action-stack {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .btn-action {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 11px 12px;
+        border-radius: 12px;
+        border: 1px solid #d8e2ee;
+        background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+        color: #0f172a;
+        font-weight: 700;
+        font-size: 12px;
+        cursor: pointer;
+        box-shadow: 0 4px 10px rgba(15, 23, 42, 0.05);
+        transition: all 0.18s ease;
+      }
+
+      .btn-action:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 24px rgba(15, 23, 42, 0.1);
+      }
+
+      .css-donut {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        background: conic-gradient(
+          #3b82f6 0% 38%,
+          #10b981 38% 66%,
+          #f59e0b 66% 88%,
+          #ef4444 88% 100%
+        );
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto;
+        box-shadow: 0 10px 20px rgba(15, 23, 42, 0.08);
+      }
+
+      .donut-inner {
+        width: 70px;
+        height: 70px;
+        background: #ffffff;
+        border-radius: 50%;
+        box-shadow: inset 0 1px 4px rgba(15, 23, 42, 0.08);
+      }
+
+      .cc-inv-kpi-row {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 12px;
+        margin-bottom: 16px;
+      }
+
+      .cc-inv-kpi-tile {
+        border-radius: 14px;
+        padding: 14px;
+        cursor: pointer;
+        text-align: center;
+        transition: transform 0.18s;
+      }
+
+      .cc-inv-kpi-tile:hover {
+        transform: translateY(-2px);
+      }
+
+      .cc-inv-kpi-tile .tile-val {
+        font-size: 20px;
+        font-weight: 800;
+        margin: 6px 0 2px;
+      }
+
+      .cc-inv-kpi-tile .tile-lbl {
+        font-size: 10px;
+        font-weight: 600;
+        color: #64748b;
+      }
+
+      .cc-inv-kpi-tile .tile-icon {
+        font-size: 18px;
+      }
+
+      .cc-bottom-tiles {
+        display: flex;
+        gap: 12px;
+        margin-top: 14px;
+      }
+
+      .cc-bottom-tile {
+        flex: 1;
+        border-radius: 14px;
+        padding: 14px;
+        text-align: center;
+      }
+
+      .cc-bottom-tile .bt-lbl {
+        font-size: 11px;
+        font-weight: 700;
+        color: #64748b;
+        margin-bottom: 6px;
+      }
+
+      .cc-bottom-tile .bt-val {
+        font-size: 22px;
+        font-weight: 800;
+      }
+
+      .cc-stock-tiles {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+        margin-top: 12px;
+      }
+
+      .cc-stock-tile {
+        border-radius: 14px;
+        padding: 16px;
+        text-align: center;
+        cursor: pointer;
+        transition: transform 0.18s;
+      }
+
+      .cc-stock-tile:hover {
+        transform: translateY(-2px);
+      }
+
+      .cc-stock-tile .st-val {
+        font-size: 26px;
+        font-weight: 800;
+        margin-bottom: 6px;
+      }
+
+      .cc-stock-tile .st-lbl {
+        font-size: 11px;
+        font-weight: 700;
+        color: #64748b;
+      }
+
+      .cc-table-scroll-wrap {
+        max-height: 220px;
+        overflow-y: auto;
+        overflow-x: hidden;
+        border-radius: 8px;
+        scrollbar-width: thin;
+        scrollbar-color: #cbd5e1 transparent;
+      }
+
+      .cc-table-scroll-wrap::-webkit-scrollbar {
+        width: 5px;
+      }
+
+      .cc-table-scroll-wrap::-webkit-scrollbar-track {
+        background: transparent;
+      }
+
+      .cc-table-scroll-wrap::-webkit-scrollbar-thumb {
+        background: #cbd5e1;
+        border-radius: 4px;
+      }
+
+      .cc-table-scroll-wrap .cc-table thead th {
+        position: sticky;
+        top: 0;
+        background: #f8fafc;
+        z-index: 1;
+      }
+
+      .cc-table tbody tr:hover {
+        background: #eff6ff;
+        cursor: pointer;
+      }
+
+      #inv-kpi-dispatching {
+        font-size: 20px;
+        font-weight: 800;
+      }
+
+      .cc-nav-btn {
+        pointer-events: auto;
+      }
+
+      .cc-kpi-card {
+        pointer-events: auto;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="cc-wrapper" id="command-center-root">
+      <main class="cc-main">
+        <div class="cc-header">
+          <div class="cc-title">
+            <h1>Store &amp; Purchase Dashboard</h1>
+            <p>Real-time overview of your store and purchase operations</p>
+          </div>
+          <div class="cc-controls" style="display: flex; gap: 8px">
+            <button class="btn-cc" id="cc-date">Loading...</button>
+          </div>
+        </div>
+
+        <div class="cc-nav-buttons">
+          <div class="cc-nav-group">
+            <span class="cc-nav-group-label">Store</span>
+            <div class="cc-nav-group-row">
+              <button
+                class="cc-nav-btn"
+                onclick="window.ccOpenListModal('Item', 'Inventory Master')"
+              >
+                📦 Inventory Master
+              </button>
+              <button
+                class="cc-nav-btn"
+                onclick="
+                  window.ccOpenListModal('Purchase Receipt', 'Goods Received')
+                "
+              >
+                📥 Goods Received
+              </button>
+              <button
+                class="cc-nav-btn"
+                onclick="
+                  window.ccOpenListModal('Stock Entry', 'Stock Movement')
+                "
+              >
+                🔄 Stock Movement
+              </button>
+              <button
+                class="cc-nav-btn"
+                onclick="
+                  window.ccOpenListModal('Item', 'Low Stock Alerts', true)
+                "
+              >
+                ⚠️ Low Stock Alerts
+              </button>
+              <button
+                class="cc-nav-btn"
+                onclick="
+                  window.ccOpenListModal('Delivery Note', 'Material Dispatch')
+                "
+              >
+                📤 Material Dispatch
+              </button>
+            </div>
+          </div>
+          <div class="cc-nav-divider"></div>
+          <div class="cc-nav-group">
+            <span class="cc-nav-group-label">Purchase</span>
+            <div class="cc-nav-group-row">
+              <button
+                class="cc-nav-btn"
+                onclick="
+                  window.ccOpenListModal('Material Request', 'Purchase Request')
+                "
+              >
+                📋 Purchase Request
+              </button>
+              <button
+                class="cc-nav-btn"
+                onclick="
+                  window.ccOpenListModal('Purchase Order', 'Purchase Orders')
+                "
+              >
+                📄 Purchase Orders
+              </button>
+              <button
+                class="cc-nav-btn"
+                onclick="window.ccOpenListModal('Supplier', 'Supplier')"
+              >
+                🏢 Supplier
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="cc-kpi-grid">
+          <div
+            class="cc-kpi-card"
+            onclick="window.ccOpenListModal('Item', 'Inventory Master')"
+          >
+            <p class="cc-kpi-val" id="kpi-items">--</p>
+            <p class="cc-kpi-label">Total Items</p>
+          </div>
+          <div
+            class="cc-kpi-card"
+            onclick="
+              window.ccOpenListModal('Purchase Receipt', 'Goods Received')
+            "
+          >
+            <p class="cc-kpi-val" id="kpi-stock-val">--</p>
+            <p class="cc-kpi-label">Current Stock Value</p>
+          </div>
+          <div
+            class="cc-kpi-card"
+            onclick="
+              window.ccOpenListModal('Purchase Order', 'Purchase Orders')
+            "
+          >
+            <p class="cc-kpi-val" id="kpi-res-val">--</p>
+            <p class="cc-kpi-label">Reserved (Projects)</p>
+          </div>
+          <div
+            class="cc-kpi-card"
+            onclick="window.ccOpenListModal('Stock Entry', 'Stock Movement')"
+          >
+            <p class="cc-kpi-val" id="kpi-avail-val">--</p>
+            <p class="cc-kpi-label">Available Stock</p>
+          </div>
+          <div
+            class="cc-kpi-card"
+            onclick="window.ccOpenListModal('Item', 'Low Stock Alerts', true)"
+          >
+            <p class="cc-kpi-val" id="kpi-low-stock">--</p>
+            <p class="cc-kpi-label">Low Stock Items</p>
+          </div>
+          <div
+            class="cc-kpi-card"
+            onclick="
+              window.ccOpenListModal('Delivery Note', 'Material Dispatch')
+            "
+          >
+            <p class="cc-kpi-val" id="kpi-dispatch">--</p>
+            <p class="cc-kpi-label">Pending Dispatch</p>
+          </div>
+          <div
+            class="cc-kpi-card"
+            onclick="
+              window.ccOpenListModal('Purchase Order', 'Purchase Orders')
+            "
+          >
+            <p class="cc-kpi-val" id="kpi-grn">--</p>
+            <p class="cc-kpi-label">Pending GRN (POs)</p>
+          </div>
+        </div>
+
+        <div class="cc-data-grid">
+          <div class="cc-panel">
+            <div class="panel-header">
+              <div class="panel-title">📋 My Tasks</div>
+              <span
+                class="panel-link"
+                onclick="window.ccOpenListModal('Task', 'My Tasks')"
+                >View All &gt;</span
+              >
+            </div>
+            <table class="cc-table">
+              <thead>
+                <tr>
+                  <th>Task</th>
+                  <th>Priority</th>
+                  <th>Due</th>
+                </tr>
+              </thead>
+              <tbody id="tbl-tasks">
+                <tr>
+                  <td
+                    colspan="3"
+                    style="text-align: center; color: #94a3b8; padding: 14px"
+                  >
+                    Loading...
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="cc-panel">
+            <div class="panel-header">
+              <div class="panel-title">🏗️ Project-wise Material</div>
+              <span
+                class="panel-link"
+                onclick="
+                  window.ccOpenListModal('Project', 'Project-wise Material')
+                "
+                >View All &gt;</span
+              >
+            </div>
+            <table class="cc-table">
+              <thead>
+                <tr>
+                  <th>Project</th>
+                  <th>Pending</th>
+                  <th>Dispatched</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="tbl-projects">
+                <tr>
+                  <td
+                    colspan="4"
+                    style="text-align: center; color: #94a3b8; padding: 14px"
+                  >
+                    Loading...
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="cc-panel">
+            <div class="panel-header">
+              <div class="panel-title">⚠️ Low Stock Alerts</div>
+              <span
+                class="panel-link"
+                onclick="
+                  window.ccOpenListModal('Item', 'Low Stock Alerts', true)
+                "
+                >View All &gt;</span
+              >
+            </div>
+            <table class="cc-table">
+              <thead>
+                <tr>
+                  <th>Item</th>
+                  <th>Avail</th>
+                  <th>Min</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="tbl-low-stock">
+                <tr>
+                  <td
+                    colspan="4"
+                    style="text-align: center; color: #94a3b8; padding: 14px"
+                  >
+                    Loading...
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="cc-data-grid" style="grid-template-columns: 1fr 1fr">
+          <div class="cc-panel">
+            <div class="panel-header">
+              <div class="panel-title">🚚 Today's Dispatches</div>
+              <span
+                class="panel-link"
+                onclick="
+                  window.ccOpenListModal('Delivery Note', 'Material Dispatch')
+                "
+                >View All &gt;</span
+              >
+            </div>
+            <table class="cc-table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Project</th>
+                  <th>Items</th>
+                  <th>Qty</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="tbl-dispatches">
+                <tr>
+                  <td
+                    colspan="5"
+                    style="text-align: center; color: #94a3b8; padding: 14px"
+                  >
+                    Loading...
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="cc-panel">
+            <div class="panel-header">
+              <div class="panel-title">📥 Recent GRNs</div>
+              <span
+                class="panel-link"
+                onclick="
+                  window.ccOpenListModal('Purchase Receipt', 'Goods Received')
+                "
+                >View All &gt;</span
+              >
+            </div>
+            <table class="cc-table">
+              <thead>
+                <tr>
+                  <th>GRN ID</th>
+                  <th>Supplier</th>
+                  <th>Item</th>
+                  <th>Qty</th>
+                </tr>
+              </thead>
+              <tbody id="tbl-grns">
+                <tr>
+                  <td
+                    colspan="4"
+                    style="text-align: center; color: #94a3b8; padding: 14px"
+                  >
+                    Loading...
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="cc-analytics-grid">
+          <div class="cc-panel" style="align-items: center">
+            <div class="panel-title" style="margin-bottom: 16px">
+              Stock Summary
+            </div>
+            <div class="css-donut"><div class="donut-inner"></div></div>
+          </div>
+          <div class="cc-panel">
+            <div class="panel-title" style="margin-bottom: 16px">
+              Purchase Summary (Month)
+            </div>
+            <div
+              style="
+                display: flex;
+                justify-content: space-between;
+                text-align: center;
+              "
+            >
+              <div>
+                <p style="margin: 0; font-size: 11px; color: #64748b">
+                  Total PO Value
+                </p>
+                <h3
+                  style="margin: 5px 0; color: #0f172a; font-size: 18px"
+                  id="kpi-po-total"
+                >
+                  --
+                </h3>
+              </div>
+              <div>
+                <p style="margin: 0; font-size: 11px; color: #64748b">
+                  Received Value
+                </p>
+                <h3
+                  style="margin: 5px 0; color: #059669; font-size: 18px"
+                  id="kpi-po-received"
+                >
+                  --
+                </h3>
+              </div>
+            </div>
+          </div>
+          <div class="cc-panel action-stack" style="grid-column: span 2">
+            <div class="panel-title" style="margin-bottom: 10px">
+              Quick Actions
+            </div>
+            <div
+              style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px"
+            >
+              <button
+                class="btn-action"
+                onclick="
+                  window.ccOpenListModal('Material Request', 'Purchase Request')
+                "
+              >
+                <span style="color: #2563eb">+</span> New Purchase Request
+              </button>
+              <button
+                class="btn-action"
+                onclick="
+                  window.ccOpenListModal('Purchase Order', 'Purchase Orders')
+                "
+              >
+                <span style="color: #059669">+</span> New Purchase Order
+              </button>
+              <button
+                class="btn-action"
+                onclick="
+                  window.ccOpenListModal('Purchase Receipt', 'Goods Received')
+                "
+              >
+                <span style="color: #7c3aed">📦</span> New GRN / Receipt
+              </button>
+              <button
+                class="btn-action"
+                onclick="
+                  window.ccOpenListModal('Stock Entry', 'Stock Movement')
+                "
+              >
+                <span style="color: #ea580c">🔄</span> Stock Movement
+              </button>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      <div class="cc-modal-backdrop" id="cc-modal-backdrop">
+        <div class="cc-modal">
+          <div class="cc-modal-header">
+            <div>
+              <h3 id="cc-modal-title">List</h3>
+              <p id="cc-modal-subtitle">Data table</p>
+            </div>
+            <div class="cc-modal-actions">
+              <button class="btn-export" onclick="window.ccExportCSV()">
+                Export CSV
+              </button>
+              <button class="btn-close" onclick="window.ccCloseModal()">
+                ✕ Close
+              </button>
+            </div>
+          </div>
+          <div class="cc-modal-body">
+            <div id="sec-generic" class="cc-section-block">
+              <div class="cc-modal-search-bar">
+                <input
+                  type="text"
+                  id="cc-modal-search"
+                  placeholder="🔍 Search..."
+                  oninput="window.ccFilterModalTable()"
+                />
+              </div>
+              <div class="cc-modal-table-wrap">
+                <table class="cc-table" style="width: 100%">
+                  <thead id="cc-modal-thead"></thead>
+                  <tbody id="cc-modal-tbody"></tbody>
+                </table>
+              </div>
+            </div>
+
+            <div id="sec-inventory" class="cc-section-block">
+              <div class="cc-inv-kpi-row">
+                <div
+                  class="cc-inv-kpi-tile"
+                  style="
+                    background: linear-gradient(135deg, #eff6ff, #dbeafe);
+                    border: 1px solid #bfdbfe;
+                  "
+                >
+                  <div class="tile-icon">📦</div>
+                  <div
+                    id="inv-kpi-stock"
+                    class="tile-val"
+                    style="color: #1d4ed8"
+                  >
+                    --
+                  </div>
+                  <div class="tile-lbl">Total Stock Value</div>
+                </div>
+                <div
+                  class="cc-inv-kpi-tile"
+                  style="
+                    background: linear-gradient(135deg, #ecfdf5, #d1fae5);
+                    border: 1px solid #6ee7b7;
+                  "
+                >
+                  <div class="tile-icon">🚚</div>
+                  <div
+                    id="inv-kpi-dispatching"
+                    class="tile-val"
+                    style="color: #065f46"
+                  >
+                    --
+                  </div>
+                  <div class="tile-lbl">Dispatching Projects</div>
+                </div>
+                <div
+                  class="cc-inv-kpi-tile"
+                  style="
+                    background: linear-gradient(135deg, #fef2f2, #fee2e2);
+                    border: 1px solid #fca5a5;
+                  "
+                >
+                  <div class="tile-icon">⚠️</div>
+                  <div id="inv-kpi-oos" class="tile-val" style="color: #991b1b">
+                    --
+                  </div>
+                  <div class="tile-lbl">Low / Out of Stock</div>
+                </div>
+                <div
+                  class="cc-inv-kpi-tile"
+                  style="
+                    background: linear-gradient(135deg, #fff7ed, #ffedd5);
+                    border: 1px solid #fed7aa;
+                  "
+                >
+                  <div class="tile-icon">⏳</div>
+                  <div
+                    id="inv-kpi-pending"
+                    class="tile-val"
+                    style="color: #9a3412"
+                  >
+                    --
+                  </div>
+                  <div class="tile-lbl">Pending Dispatch</div>
+                </div>
+              </div>
+              <div class="cc-modal-search-bar">
+                <input
+                  type="text"
+                  id="inv-search-input"
+                  placeholder="🔍 Search items..."
+                  oninput="window.ccInventoryCatFilter()"
+                />
+                <select
+                  id="inv-cat-select"
+                  onchange="window.ccInventoryCatFilter()"
+                >
+                  <option value="">All Categories</option>
+                </select>
+                <button
+                  class="cc-modal-new-btn"
+                  onclick="frappe.set_route('Form', 'Item', 'new')"
+                >
+                  + New Entry
+                </button>
+              </div>
+              <div class="cc-modal-table-wrap">
+                <table class="cc-table" style="width: 100%">
+                  <thead>
+                    <tr>
+                      <th>Item Code</th>
+                      <th>Item Name</th>
+                      <th>Category</th>
+                      <th>Unit</th>
+                      <th>Opening Stock</th>
+                      <th>Reserved</th>
+                      <th>Available</th>
+                    </tr>
+                  </thead>
+                  <tbody id="inv-tbody"></tbody>
+                </table>
+              </div>
+              <div class="cc-bottom-tiles">
+                <div
+                  class="cc-bottom-tile"
+                  style="
+                    background: linear-gradient(135deg, #eff6ff, #dbeafe);
+                    border: 1px solid #bfdbfe;
+                  "
+                >
+                  <div class="bt-lbl">Total Stock Value</div>
+                  <div
+                    id="inv-total-tile"
+                    class="bt-val"
+                    style="color: #1d4ed8"
+                  >
+                    --
+                  </div>
+                </div>
+                <div
+                  class="cc-bottom-tile"
+                  style="
+                    background: linear-gradient(135deg, #f5f3ff, #ede9fe);
+                    border: 1px solid #c4b5fd;
+                  "
+                >
+                  <div class="bt-lbl">Reserved Stock</div>
+                  <div
+                    id="inv-reserved-tile"
+                    class="bt-val"
+                    style="color: #6d28d9"
+                  >
+                    --
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div id="sec-grn" class="cc-section-block">
+              <div class="cc-modal-search-bar">
+                <input
+                  type="text"
+                  id="grn-search"
+                  placeholder="🔍 Search GRN..."
+                  oninput="window.ccFilterSection('grn-tbody', 'grn-search')"
+                />
+                <button
+                  class="cc-modal-new-btn"
+                  onclick="frappe.set_route('Form', 'Purchase Receipt', 'new')"
+                >
+                  + New GRN Entry
+                </button>
+              </div>
+              <div class="cc-modal-table-wrap">
+                <table class="cc-table" style="width: 100%">
+                  <thead>
+                    <tr>
+                      <th>GRN No</th>
+                      <th>Supplier</th>
+                      <th>Date</th>
+                      <th>Amount</th>
+                      <th>Status</th>
+                    </tr>
+                  </thead>
+                  <tbody id="grn-tbody"></tbody>
+                </table>
+              </div>
+              <div
+                style="
+                  font-size: 13px;
+                  font-weight: 800;
+                  color: #0f172a;
+                  margin: 16px 0 10px;
+                  border-left: 4px solid #2563eb;
+                  padding-left: 10px;
+                "
+              >
+                📦 Project Material Tracking
+              </div>
+              <div class="cc-modal-table-wrap">
+                <table class="cc-table" style="width: 100%">
+                  <thead>
+                    <tr>
+                      <th>PO No</th>
+                      <th>Vendor</th>
+                      <th>Item</th>
+                      <th>Ordered Qty</th>
+                      <th>Received Qty</th>
+                      <th>Pending</th>
+                      <th>Amount</th>
+                      <th>Status</th>
+                    </tr>
+                  </thead>
+                  <tbody id="proj-track-tbody"></tbody>
+                </table>
+              </div>
+            </div>
+
+            <div id="sec-stock" class="cc-section-block">
+              <div class="cc-modal-search-bar">
+                <input
+                  type="text"
+                  id="stock-search"
+                  placeholder="🔍 Search stock entries..."
+                  oninput="
+                    window.ccFilterSection('stock-tbody', 'stock-search')
+                  "
+                />
+              </div>
+              <div class="cc-modal-table-wrap">
+                <table class="cc-table" style="width: 100%">
+                  <thead>
+                    <tr>
+                      <th>Date</th>
+                      <th>Entry No</th>
+                      <th>Type</th>
+                      <th>Qty In</th>
+                      <th>Qty Out</th>
+                      <th>Warehouse</th>
+                      <th>Status</th>
+                    </tr>
+                  </thead>
+                  <tbody id="stock-tbody"></tbody>
+                </table>
+              </div>
+              <div class="cc-stock-tiles">
+                <div
+                  class="cc-stock-tile"
+                  style="
+                    background: linear-gradient(135deg, #ecfdf5, #d1fae5);
+                    border: 1px solid #6ee7b7;
+                  "
+                >
+                  <div
+                    id="stock-tile-received"
+                    class="st-val"
+                    style="color: #065f46"
+                  >
+                    --
+                  </div>
+                  <div class="st-lbl">Stock Received</div>
+                </div>
+                <div
+                  class="cc-stock-tile"
+                  style="
+                    background: linear-gradient(135deg, #eff6ff, #dbeafe);
+                    border: 1px solid #bfdbfe;
+                  "
+                >
+                  <div
+                    id="stock-tile-delivered"
+                    class="st-val"
+                    style="color: #1d4ed8"
+                  >
+                    --
+                  </div>
+                  <div class="st-lbl">Delivered</div>
+                </div>
+                <div
+                  class="cc-stock-tile"
+                  style="
+                    background: linear-gradient(135deg, #fef2f2, #fee2e2);
+                    border: 1px solid #fca5a5;
+                  "
+                >
+                  <div
+                    id="stock-tile-delayed"
+                    class="st-val"
+                    style="color: #991b1b"
+                  >
+                    --
+                  </div>
+                  <div class="st-lbl">Delayed (Drafts)</div>
+                </div>
+              </div>
+            </div>
+
+            <div id="sec-dispatch" class="cc-section-block">
+              <div class="cc-modal-search-bar">
+                <input
+                  type="text"
+                  id="dispatch-search"
+                  placeholder="🔍 Search dispatch..."
+                  oninput="
+                    window.ccFilterSection('dispatch-tbody', 'dispatch-search')
+                  "
+                />
+                <button
+                  class="cc-modal-new-btn"
+                  onclick="frappe.set_route('Form', 'Delivery Note', 'new')"
+                >
+                  + New Dispatch
+                </button>
+              </div>
+              <div class="cc-modal-table-wrap">
+                <table class="cc-table" style="width: 100%">
+                  <thead>
+                    <tr>
+                      <th>Dispatch ID</th>
+                      <th>Customer</th>
+                      <th>Project</th>
+                      <th>Date</th>
+                      <th>Qty</th>
+                      <th>Status</th>
+                    </tr>
+                  </thead>
+                  <tbody id="dispatch-tbody"></tbody>
+                </table>
+              </div>
+            </div>
+
+            <div id="sec-pr" class="cc-section-block">
+              <div class="cc-modal-table-wrap">
+                <table class="cc-table" style="width: 100%">
+                  <thead>
+                    <tr>
+                      <th>Request No</th>
+                      <th>Type</th>
+                      <th>Date</th>
+                      <th>Required By</th>
+                      <th>TAT</th>
+                      <th>Status</th>
+                    </tr>
+                  </thead>
+                  <tbody id="pr-tbody"></tbody>
+                </table>
+              </div>
+            </div>
+
+            <div id="sec-po" class="cc-section-block">
+              <div class="cc-modal-table-wrap">
+                <table class="cc-table" style="width: 100%">
+                  <thead>
+                    <tr>
+                      <th>PO No</th>
+                      <th>Supplier</th>
+                      <th>Date</th>
+                      <th>Required By</th>
+                      <th>Amount</th>
+                      <th>% Received</th>
+                      <th>TAT</th>
+                      <th>Status</th>
+                    </tr>
+                  </thead>
+                  <tbody id="po-tbody"></tbody>
+                </table>
+              </div>
+            </div>
+
+            <div id="sec-supplier" class="cc-section-block">
+              <div class="cc-modal-search-bar">
+                <input
+                  type="text"
+                  id="sup-search"
+                  placeholder="🔍 Search supplier..."
+                  oninput="window.ccFilterSection('sup-tbody', 'sup-search')"
+                />
+                <button
+                  style="
+                    padding: 9px 16px;
+                    background: #334155;
+                    color: #fff;
+                    border: none;
+                    border-radius: 10px;
+                    font-size: 12px;
+                    font-weight: 600;
+                    cursor: pointer;
+                  "
+                  onclick="window.ccExportCSV()"
+                >
+                  Export CSV
+                </button>
+              </div>
+              <div class="cc-modal-table-wrap">
+                <table class="cc-table" style="width: 100%">
+                  <thead>
+                    <tr>
+                      <th>Supplier Code</th>
+                      <th>Supplier Name</th>
+                      <th>Group</th>
+                      <th>Country</th>
+                    </tr>
+                  </thead>
+                  <tbody id="sup-tbody"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+
+  <script>
+    window.MY_ROOT = root_element;
+
+    function ccQ(sel) {
+      return window.MY_ROOT.querySelector(sel);
+    }
+    function ccQA(sel) {
+      return window.MY_ROOT.querySelectorAll(sel);
+    }
+    function ccSafe(v) {
+      return v === null || v === undefined || v === "" ? "--" : v;
+    }
+    function ccNum(v) {
+      var n = parseFloat(v || 0);
+      return isNaN(n) ? 0 : n;
+    }
+
+    function ccMoney(n) {
+      var num = ccNum(n);
+      if (num >= 10000000) return "₹" + (num / 10000000).toFixed(2) + " Cr";
+      if (num >= 100000) return "₹" + (num / 100000).toFixed(2) + " L";
+      if (num >= 1000) return "₹" + (num / 1000).toFixed(1) + "K";
+      return "₹" + Math.round(num).toLocaleString("en-IN");
+    }
+
+    function ccBadge(text) {
+      var colors = {
+        High: "background:#FEE2E2;color:#991B1B;",
+        Medium: "background:#FFF3E0;color:#92400E;",
+        Low: "background:#DCFCE7;color:#166534;",
+        "Out of Stock": "background:#FEE2E2;color:#991B1B;",
+        "Low Stock": "background:#FFF3E0;color:#92400E;",
+        Draft: "background:#F1F5F9;color:#475569;",
+        "To Bill": "background:#FEF9C3;color:#854D0E;",
+        "Invoice Pending": "background:#FEF9C3;color:#854D0E;",
+        Submitted: "background:#DCFCE7;color:#166534;",
+        Completed: "background:#DBEAFE;color:#1E40AF;",
+        Open: "background:#DBEAFE;color:#1E40AF;",
+        Cancelled: "background:#FEE2E2;color:#991B1B;",
+        Ordered: "background:#DCFCE7;color:#166534;",
+        "On Track": "background:#DCFCE7;color:#166634;",
+        Working: "background:#DBEAFE;color:#1E40AF;",
+        "Pending Review": "background:#FEF9C3;color:#854D0E;",
+        Overdue: "background:#FEE2E2;color:#991B1B;",
+        Partial: "background:#FEF3C7;color:#B45309;",
+      };
+      var style = colors[text] || "background:#F1F5F9;color:#475569;";
+      return (
+        "<span style='display:inline-block;padding:2px 9px;border-radius:10px;font-size:11px;font-weight:600;" +
+        style +
+        "'>" +
+        ccSafe(text) +
+        "</span>"
+      );
+    }
+
+    function ccTAT(start, end) {
+      if (
+        !end ||
+        end === "--" ||
+        end === "-" ||
+        end === "None" ||
+        end === "null"
+      )
+        return "--";
+      var endD = new Date(end);
+      if (isNaN(endD.getTime()))
+        return "<span style='font-size:10px;color:#F59E0B;font-weight:600;background:#FEF9C3;padding:2px 6px;border-radius:6px;border:1px solid #FDE68A;'>⚠ No due date</span>";
+      var today = new Date();
+      today.setHours(0, 0, 0, 0);
+      endD.setHours(0, 0, 0, 0);
+      var diff = Math.ceil((endD - today) / 86400000);
+      if (diff < 0)
+        return "<span style='color:#DC2626;font-weight:700;'>Overdue</span>";
+      if (diff === 0)
+        return "<span style='color:#EA580C;font-weight:700;'>Due Today</span>";
+      if (diff <= 3)
+        return (
+          "<span style='color:#D97706;font-weight:700;'>" +
+          diff +
+          "d left</span>"
+        );
+      return diff + "d left";
+    }
+
+    function ccDispatchStatus(status) {
+      if (!status) return ccBadge("Draft");
+      if (status === "To Bill" || status === "To Deliver and Bill")
+        return ccBadge("Invoice Pending");
+      return ccBadge(status);
+    }
+
+    window.ccOpenDoc = function (doctype, name) {
+      if (frappe && name) frappe.set_route("Form", doctype, name);
+    };
+
+    window.ccCloseModal = function () {
+      var b = ccQ("#cc-modal-backdrop");
+      if (b) b.classList.remove("is-open");
+      document.body.style.overflow = "auto";
+    };
+
+    window.ccExportCSV = function () {
+      var tbody =
+        ccQ("#cc-modal-tbody") ||
+        ccQ("#inv-tbody") ||
+        ccQ("#dispatch-tbody") ||
+        ccQ("#grn-tbody") ||
+        ccQ("#po-tbody") ||
+        ccQ("#sup-tbody");
+      if (!tbody) return;
+      var rows = tbody.querySelectorAll("tr");
+      var csv = [];
+      for (var i = 0; i < rows.length; i++) {
+        var cells = rows[i].querySelectorAll("td,th");
+        var row = [];
+        for (var j = 0; j < cells.length; j++)
+          row.push('"' + cells[j].textContent.trim().replace(/"/g, '""') + '"');
+        csv.push(row.join(","));
+      }
+      var blob = new Blob([csv.join("\n")], { type: "text/csv" });
+      var url = URL.createObjectURL(blob);
+      var a = document.createElement("a");
+      a.href = url;
+      a.download = "export.csv";
+      a.click();
+      URL.revokeObjectURL(url);
+    };
+
+    window.ccOpenListModal = function (doctype, title, lowStockMode) {
+      var backdrop = ccQ("#cc-modal-backdrop");
+      if (!backdrop) return;
+      var titleEl = ccQ("#cc-modal-title");
+      var subEl = ccQ("#cc-modal-subtitle");
+      if (titleEl) titleEl.textContent = title || doctype;
+      if (subEl) subEl.textContent = doctype;
+
+      var secs = ccQA(".cc-section-block");
+      for (var i = 0; i < secs.length; i++) secs[i].style.display = "none";
+
+      if (lowStockMode) {
+        var secGen = ccQ("#sec-generic");
+        if (secGen) secGen.style.display = "block";
+        ccLoadLowStockModal();
+      } else {
+        var secMap = {
+          Item: "sec-inventory",
+          "Purchase Receipt": "sec-grn",
+          "Stock Entry": "sec-stock",
+          "Delivery Note": "sec-dispatch",
+          "Material Request": "sec-pr",
+          "Purchase Order": "sec-po",
+          Supplier: "sec-supplier",
+          Project: "sec-generic",
+          Task: "sec-generic",
+        };
+        var secId = secMap[doctype] || "sec-generic";
+        var sec = ccQ("#" + secId);
+        if (sec) sec.style.display = "block";
+
+        if (secId === "sec-inventory") ccLoadInventoryModal();
+        else if (secId === "sec-dispatch") ccLoadDispatchModal();
+        else if (secId === "sec-grn") ccLoadGRNModal();
+        else if (secId === "sec-stock") ccLoadStockModal();
+        else if (secId === "sec-pr") ccLoadPRModal();
+        else if (secId === "sec-po") ccLoadPOModal();
+        else if (secId === "sec-supplier") ccLoadSupplierModal();
+        else ccLoadGenericModal(doctype);
+      }
+
+      backdrop.classList.add("is-open");
+      document.body.style.overflow = "hidden";
+    };
+
+    window.fetchCommandCenterData = function () {
+      var dateEl = ccQ("#cc-date");
+      if (dateEl)
+        dateEl.textContent = new Date().toLocaleDateString("en-IN", {
+          day: "2-digit",
+          month: "short",
+          year: "numeric",
+        });
+      frappe.call({
+        method: "purchase_store3",
+        args: { block: "summary" },
+        callback: function (r) {
+          if (!r || !r.message) return;
+          var d = r.message;
+          ccRenderKPIs(d.kpis || {});
+          ccRenderTasks(d.tasks || []);
+          ccRenderProjects(d.projects || []);
+          ccRenderLowStockWidget(d.low_stocklist || []);
+          ccRenderDispatchWidget(d.dispatches || []);
+          ccRenderGRNWidget(d.grns || []);
+          ccRenderPurchaseSummary(d.purchase_summary || []);
+        },
+      });
+    };
+
+    function ccRenderKPIs(k) {
+      var s = function (id, val) {
+        var el = ccQ(id);
+        if (el) el.textContent = val;
+      };
+      s("#kpi-items", k.total_items || "--");
+      s("#kpi-dispatch", k.pending_dispatch || "--");
+      s("#kpi-grn", k.pending_grn || "--");
+      s("#kpi-low-stock", k.low_stock || "--");
+
+      var sv = ccQ("#kpi-stock-val");
+      if (sv)
+        sv.textContent = k.stock_value > 0 ? ccMoney(k.stock_value) : "--";
+
+      var rv = ccQ("#kpi-res-val");
+      if (rv)
+        rv.textContent =
+          k.reserved_value > 0 ? Math.round(k.reserved_value) : "--";
+
+      var av = ccQ("#kpi-avail-val");
+      if (av)
+        av.textContent =
+          k.available_value > 0 ? Math.round(k.available_value) : "--";
+
+      var invStock = ccQ("#inv-kpi-stock");
+      if (invStock)
+        invStock.textContent =
+          k.stock_value > 0 ? ccMoney(k.stock_value) : "--";
+
+      var invDispatch = ccQ("#inv-kpi-dispatching");
+      if (invDispatch)
+        invDispatch.textContent =
+          k.dispatching_projects > 0 ? k.dispatching_projects : "--";
+
+      var invOos = ccQ("#inv-kpi-oos");
+      if (invOos) invOos.textContent = k.low_stock || "--";
+
+      var invPend = ccQ("#inv-kpi-pending");
+      if (invPend) invPend.textContent = k.pending_dispatch || "--";
+
+      var invTile = ccQ("#inv-total-tile");
+      if (invTile)
+        invTile.textContent = k.stock_value > 0 ? ccMoney(k.stock_value) : "--";
+
+      var invRes = ccQ("#inv-reserved-tile");
+      if (invRes)
+        invRes.textContent =
+          k.reserved_value > 0 ? Math.round(k.reserved_value) : "--";
+    }
+
+    function ccRenderTasks(tasks) {
+      var tbody = ccQ("#tbl-tasks");
+      if (!tbody) return;
+      if (!tasks.length) {
+        tbody.innerHTML =
+          "<tr><td colspan='3' style='text-align:center;color:#94A3B8;padding:14px;'>No open tasks</td></tr>";
+        return;
+      }
+      var html = "";
+      for (var i = 0; i < tasks.length && i < 8; i++) {
+        var t = tasks[i];
+        var subj = t.subject || t.name || "--";
+        if (subj.length > 28) subj = subj.substring(0, 26) + "..";
+        var dueVal = t.due || "";
+        var dueDisplay =
+          dueVal && dueVal !== "--"
+            ? dueVal === "Due Today"
+              ? "<span style='color:#EA580C;font-weight:700;'>Due Today</span>"
+              : dueVal === "Due Tomorrow"
+                ? "<span style='color:#D97706;font-weight:700;'>Due Tomorrow</span>"
+                : dueVal === "Overdue"
+                  ? "<span style='color:#DC2626;font-weight:700;'>Overdue</span>"
+                  : ccTAT(null, dueVal)
+            : "<span style='font-size:10px;color:#F59E0B;font-weight:600;background:#FEF9C3;padding:2px 6px;border-radius:6px;border:1px solid #FDE68A;'>⚠ No due date</span>";
+        html +=
+          "<tr onclick=\"window.ccOpenDoc('Task','" +
+          t.name +
+          "')\" style='cursor:pointer;'><td style='font-size:12px;' title='" +
+          (t.subject || "") +
+          "'>" +
+          subj +
+          "</td><td>" +
+          ccBadge(t.priority) +
+          "</td><td style='font-size:11px;'>" +
+          dueDisplay +
+          "</td></tr>";
+      }
+      tbody.innerHTML = html;
+    }
+
+    function ccRenderProjects(projects) {
+      var tbody = ccQ("#tbl-projects");
+      if (!tbody) return;
+      if (!projects.length) {
+        tbody.innerHTML =
+          "<tr><td colspan='4' style='text-align:center;color:#94A3B8;padding:14px;'>No active projects</td></tr>";
+        return;
+      }
+      var html = "";
+      for (var i = 0; i < projects.length && i < 8; i++) {
+        var p = projects[i];
+        var pname = p.project_name || p.name || "--";
+        if (pname.length > 20) pname = pname.substring(0, 18) + "..";
+        var htmlStatus = p.status || "Open";
+        html +=
+          "<tr onclick=\"window.ccOpenDoc('Project','" +
+          p.name +
+          "')\" style='cursor:pointer;'><td style='font-size:12px;' title='" +
+          (p.project_name || p.name || "") +
+          "'>" +
+          pname +
+          "</td><td style='font-size:12px;text-align:center;'>" +
+          ccSafe(p.pending) +
+          "</td><td style='font-size:12px;text-align:center;'>" +
+          ccSafe(p.dispatched) +
+          "</td><td>" +
+          ccBadge(htmlStatus) +
+          "</td></tr>";
+      }
+      tbody.innerHTML = html;
+    }
+
+    function ccRenderLowStockWidget(items) {
+      var tbody = ccQ("#tbl-low-stock");
+      if (!tbody) return;
+      var kpiEl = ccQ("#kpi-low-stock");
+      if (kpiEl) kpiEl.textContent = items.length || "--";
+      if (!items.length) {
+        tbody.innerHTML =
+          "<tr><td colspan='4' style='text-align:center;color:#94A3B8;padding:14px;'>No low stock items</td></tr>";
+        return;
+      }
+      var html = "";
+      for (var i = 0; i < items.length && i < 10; i++) {
+        var it = items[i];
+        var avail = ccNum(it.avail);
+        var minQ = ccNum(it.min);
+        var pct =
+          minQ > 0 ? Math.min(100, Math.round((avail / minQ) * 100)) : 0;
+        var barColor = avail <= 0 ? "#EF4444" : "#F97316";
+        var iname = it.item_name || it.name || "--";
+        if (iname.length > 20) iname = iname.substring(0, 18) + "..";
+        var barHtml =
+          "<div style='display:inline-flex;align-items:center;gap:5px;'><div style='width:40px;height:5px;background:#E2E8F0;border-radius:3px;overflow:hidden;'><div style='width:" +
+          pct +
+          "%;height:5px;background:" +
+          barColor +
+          ";border-radius:3px;'></div></div><span style='font-size:11px;'>" +
+          Math.round(avail) +
+          "</span></div>";
+        html +=
+          "<tr onclick=\"window.ccOpenDoc('Item','" +
+          it.name +
+          "')\" style='cursor:pointer;'><td style='font-size:12px;' title='" +
+          (it.item_name || "") +
+          "'>" +
+          iname +
+          "</td><td>" +
+          barHtml +
+          "</td><td style='font-size:11px;color:#64748B;text-align:center;'>" +
+          Math.round(minQ) +
+          "</td><td>" +
+          ccBadge(it.status) +
+          "</td></tr>";
+      }
+      tbody.innerHTML = html;
+    }
+
+    function ccRenderDispatchWidget(dispatches) {
+      var tbody = ccQ("#tbl-dispatches");
+      if (!tbody) return;
+      if (!dispatches.length) {
+        tbody.innerHTML =
+          "<tr><td colspan='5' style='text-align:center;color:#94A3B8;padding:14px;'>No dispatches</td></tr>";
+        return;
+      }
+      var html = "";
+      for (var i = 0; i < dispatches.length && i < 8; i++) {
+        var dn = dispatches[i];
+        html +=
+          "<tr onclick=\"window.ccOpenDoc('Delivery Note','" +
+          dn.name +
+          "')\" style='cursor:pointer;'><td style='font-size:12px;color:#2563EB;'>" +
+          ccSafe(dn.name) +
+          "</td><td style='font-size:12px;'>" +
+          ccSafe(dn.project || dn.customer) +
+          "</td><td style='font-size:12px;'>" +
+          ccSafe(dn.item_name || dn.items || dn.item_summary || dn.name) +
+          "</td><td style='font-size:12px;text-align:center;'>" +
+          ccSafe(dn.total_qty) +
+          "</td><td>" +
+          ccDispatchStatus(dn.status) +
+          "</td></tr>";
+      }
+      tbody.innerHTML = html;
+    }
+
+    function ccRenderGRNWidget(grns) {
+      var tbody = ccQ("#tbl-grns");
+      if (!tbody) return;
+      if (!grns.length) {
+        tbody.innerHTML =
+          "<tr><td colspan='4' style='text-align:center;color:#94A3B8;padding:14px;'>No GRN records</td></tr>";
+        return;
+      }
+      var html = "";
+      for (var i = 0; i < grns.length && i < 8; i++) {
+        var g = grns[i];
+        html +=
+          "<tr onclick=\"window.ccOpenDoc('Purchase Receipt','" +
+          g.name +
+          "')\" style='cursor:pointer;'><td style='font-size:12px;color:#2563EB;'>" +
+          ccSafe(g.name) +
+          "</td><td style='font-size:12px;'>" +
+          ccSafe(g.supplier) +
+          "</td><td style='font-size:12px;'>" +
+          ccSafe(g.posting_date) +
+          "</td><td style='font-size:12px;'>" +
+          (g.grand_total ? ccMoney(g.grand_total) : "--") +
+          "</td></tr>";
+      }
+      tbody.innerHTML = html;
+    }
+
+    function ccRenderPurchaseSummary(summary) {
+      var totEl = ccQ("#kpi-po-total");
+      var recEl = ccQ("#kpi-po-received");
+      if (!summary || !summary.length) {
+        if (totEl) totEl.textContent = "--";
+        if (recEl) recEl.textContent = "--";
+        return;
+      }
+      var latest = summary[0];
+      if (totEl)
+        totEl.textContent =
+          latest.total_amount || latest.total_amount === 0
+            ? ccMoney(latest.total_amount)
+            : "--";
+      if (recEl)
+        recEl.textContent =
+          latest.received_amount || latest.received_amount === 0
+            ? ccMoney(latest.received_amount)
+            : "--";
+    }
+
+    window.ccLoadInventoryModal = function () {
+      frappe.call({
+        method: "purchase_store3",
+        args: { block: "inventory" },
+        callback: function (r) {
+          var rows = r && r.message ? r.message : [];
+          var sel = ccQ("#inv-cat-select");
+          if (sel) {
+            var cats = {};
+            for (var i = 0; i < rows.length; i++) {
+              if (rows[i].item_group) cats[rows[i].item_group] = 1;
+            }
+            var opts = "<option value=''>All Categories</option>";
+            for (var c in cats)
+              opts += "<option value='" + c + "'>" + c + "</option>";
+            sel.innerHTML = opts;
+          }
+          window._ccInvAll = rows || [];
+          window.ccInventoryCatFilter();
+        },
+      });
+    };
+
+    window.ccInventoryCatFilter = function () {
+      var searchEl = ccQ("#inv-search-input");
+      var catEl = ccQ("#inv-cat-select");
+      var s = (searchEl ? searchEl.value : "").toLowerCase();
+      var cat = catEl ? catEl.value : "";
+      var rows = window._ccInvAll || [];
+      var tbody = ccQ("#inv-tbody");
+      if (!tbody) return;
+
+      var html = "";
+      for (var i = 0; i < rows.length; i++) {
+        var d = rows[i];
+        var match = true;
+        if (
+          s &&
+          (d.name || "").toLowerCase().indexOf(s) < 0 &&
+          (d.item_name || "").toLowerCase().indexOf(s) < 0 &&
+          (d.item_group || "").toLowerCase().indexOf(s) < 0
+        )
+          match = false;
+        if (cat && d.item_group !== cat) match = false;
+        if (!match) continue;
+
+        html +=
+          "<tr onclick=\"window.ccOpenDoc('Item','" +
+          d.name +
+          "')\" style='cursor:pointer;'>" +
+          "<td style='font-size:12px;color:#2563EB;'>" +
+          ccSafe(d.name) +
+          "</td>" +
+          "<td style='font-size:12px;'>" +
+          ccSafe(d.item_name) +
+          "</td>" +
+          "<td style='font-size:12px;'>" +
+          ccSafe(d.item_group) +
+          "</td>" +
+          "<td style='font-size:12px;'>" +
+          ccSafe(d.stock_uom) +
+          "</td>" +
+          "<td style='font-size:12px;text-align:center;'>" +
+          ccSafe(d.opening_stock) +
+          "</td>" +
+          "<td style='font-size:12px;text-align:center;'>" +
+          ccSafe(d.reserved_qty) +
+          "</td>" +
+          "<td style='font-size:12px;text-align:center;'>" +
+          ccSafe(d.available_qty) +
+          "</td>" +
+          "</tr>";
+      }
+
+      if (!html)
+        html =
+          "<tr><td colspan='7' style='text-align:center;color:#94A3B8;padding:14px;'>No items</td></tr>";
+      tbody.innerHTML = html;
+    };
+
+    window.ccLoadLowStockModal = function () {
+      frappe.call({
+        method: "purchase_store3",
+        args: { block: "low_stock" },
+        callback: function (r) {
+          var items = r && r.message ? r.message : [];
+          var thead = ccQ("#cc-modal-thead");
+          var tbody = ccQ("#cc-modal-tbody");
+          if (!thead || !tbody) return;
+          thead.innerHTML =
+            "<tr><th>Item Code</th><th>Item Name</th><th>Avail</th><th>Category</th><th>Unit</th><th>Out of Stock</th><th>Safety Stock</th></tr>";
+          var html = "";
+          for (var i = 0; i < items.length; i++) {
+            var it = items[i];
+            html +=
+              "<tr onclick=\"window.ccOpenDoc('Item','" +
+              it.name +
+              "')\" style='cursor:pointer;'><td style='font-size:12px;color:#2563EB;'>" +
+              ccSafe(it.name) +
+              "</td><td style='font-size:12px;'>" +
+              ccSafe(it.item_name) +
+              "</td><td style='font-size:12px;text-align:center;font-weight:700;'>" +
+              Math.round(ccNum(it.avail)) +
+              "</td><td style='font-size:12px;'>" +
+              ccSafe(it.item_group) +
+              "</td><td style='font-size:12px;'>" +
+              ccSafe(it.stock_uom) +
+              "</td><td style='font-size:12px;text-align:center;font-weight:700;color:" +
+              (ccNum(it.avail) <= 0 ? "#DC2626" : "#16A34A") +
+              ";'>" +
+              (ccNum(it.avail) <= 0 ? "Yes" : "No") +
+              "</td><td style='font-size:12px;text-align:center;'>" +
+              Math.round(ccNum(it.min)) +
+              "</td></tr>";
+          }
+          if (!html)
+            html =
+              "<tr><td colspan='7' style='text-align:center;color:#94A3B8;padding:14px;'>No items found</td></tr>";
+          tbody.innerHTML = html;
+        },
+      });
+    };
+
+    window.ccLoadGRNModal = function () {
+      frappe.call({
+        method: "purchase_store3",
+        args: { block: "grns" },
+        callback: function (r) {
+          var rows = r && r.message ? r.message : [];
+          var tbody = ccQ("#grn-tbody");
+          var projTbody = ccQ("#proj-track-tbody");
+          if (tbody) {
+            var html = "";
+            for (var i = 0; i < rows.length; i++) {
+              var g = rows[i];
+              html +=
+                "<tr onclick=\"window.ccOpenDoc('Purchase Receipt','" +
+                g.name +
+                "')\" style='cursor:pointer;'><td style='font-size:12px;color:#2563EB;'>" +
+                ccSafe(g.name) +
+                "</td><td style='font-size:12px;'>" +
+                ccSafe(g.supplier) +
+                "</td><td style='font-size:12px;'>" +
+                ccSafe(g.posting_date) +
+                "</td><td style='font-size:12px;'>" +
+                (g.grand_total ? ccMoney(g.grand_total) : "--") +
+                "</td><td>" +
+                ccBadge(g.status) +
+                "</td></tr>";
+            }
+            if (!html)
+              html =
+                "<tr><td colspan='5' style='text-align:center;color:#94A3B8;padding:14px;'>No GRNs</td></tr>";
+            tbody.innerHTML = html;
+          }
+          if (projTbody) {
+            projTbody.innerHTML =
+              "<tr><td colspan='8' style='text-align:center;color:#94A3B8;padding:14px;'>No project material tracking data</td></tr>";
+          }
+        },
+      });
+    };
+
+    window.ccLoadDispatchModal = function () {
+      frappe.call({
+        method: "purchase_store3",
+        args: { block: "dispatches" },
+        callback: function (r) {
+          var rows = r && r.message ? r.message : [];
+          var tbody = ccQ("#dispatch-tbody");
+          if (!tbody) return;
+          if (!rows.length) {
+            tbody.innerHTML =
+              "<tr><td colspan='6' style='text-align:center;color:#94A3B8;padding:14px;'>No dispatches</td></tr>";
+            return;
+          }
+          var html = "";
+          for (var i = 0; i < rows.length; i++) {
+            var dn = rows[i];
+            html +=
+              "<tr onclick=\"window.ccOpenDoc('Delivery Note','" +
+              dn.name +
+              "')\" style='cursor:pointer;'><td style='font-size:12px;color:#2563EB;'>" +
+              ccSafe(dn.name) +
+              "</td><td style='font-size:12px;'>" +
+              ccSafe(dn.customer) +
+              "</td><td style='font-size:12px;'>" +
+              ccSafe(dn.project) +
+              "</td><td style='font-size:12px;'>" +
+              ccSafe(dn.posting_date) +
+              "</td><td style='font-size:12px;text-align:center;'>" +
+              ccSafe(dn.total_qty) +
+              "</td><td>" +
+              ccDispatchStatus(dn.status) +
+              "</td></tr>";
+          }
+          tbody.innerHTML = html;
+        },
+      });
+    };
+
+    window.ccLoadPRModal = function () {
+      var tbody = ccQ("#pr-tbody");
+      if (tbody)
+        tbody.innerHTML =
+          "<tr><td colspan='6' style='text-align:center;color:#94A3B8;padding:14px;'>No request data</td></tr>";
+    };
+
+    window.ccLoadPOModal = function () {
+      frappe.call({
+        method: "purchase_store3",
+        args: { block: "purchase_orders" },
+        callback: function (r) {
+          var rows = r && r.message ? r.message : [];
+          var tbody = ccQ("#po-tbody");
+          if (!tbody) return;
+          if (!rows.length) {
+            tbody.innerHTML =
+              "<tr><td colspan='8' style='text-align:center;color:#94A3B8;padding:14px;'>No orders</td></tr>";
+            return;
+          }
+          var html = "";
+          for (var i = 0; i < rows.length; i++) {
+            var po = rows[i];
+            html +=
+              "<tr onclick=\"window.ccOpenDoc('Purchase Order','" +
+              po.name +
+              "')\" style='cursor:pointer;'><td style='font-size:12px;color:#2563EB;'>" +
+              ccSafe(po.name) +
+              "</td><td style='font-size:12px;'>" +
+              ccSafe(po.supplier) +
+              "</td><td style='font-size:12px;'>" +
+              ccSafe(po.transaction_date) +
+              "</td><td style='font-size:12px;'>" +
+              ccSafe(po.schedule_date) +
+              "</td><td style='font-size:12px;'>" +
+              (po.grand_total ? ccMoney(po.grand_total) : "--") +
+              "</td><td style='font-size:12px;text-align:center;'>" +
+              Math.round(ccNum(po.per_received)) +
+              "</td><td style='font-size:12px;'>" +
+              ccTAT(po.transaction_date, po.schedule_date) +
+              "</td><td>" +
+              ccBadge(po.status) +
+              "</td></tr>";
+          }
+          tbody.innerHTML = html;
+        },
+      });
+    };
+
+    window.ccLoadSupplierModal = function () {
+      frappe.call({
+        method: "frappe.client.get_list",
+        args: {
+          doctype: "Supplier",
+          filters: { disabled: 0 },
+          fields: ["name", "supplier_name", "supplier_group", "country"],
+          limit_page_length: 100,
+          order_by: "supplier_name asc",
+        },
+        callback: function (r) {
+          var rows = r && r.message ? r.message : [];
+          var tbody = ccQ("#sup-tbody");
+          if (!tbody) return;
+          if (!rows.length) {
+            tbody.innerHTML =
+              "<tr><td colspan='4' style='text-align:center;color:#94A3B8;padding:14px;'>No suppliers</td></tr>";
+            return;
+          }
+          var html = "";
+          for (var i = 0; i < rows.length; i++) {
+            var s = rows[i];
+            html +=
+              "<tr onclick=\"window.ccOpenDoc('Supplier','" +
+              s.name +
+              "')\" style='cursor:pointer;'><td style='font-size:12px;color:#2563EB;'>" +
+              ccSafe(s.name) +
+              "</td><td style='font-size:12px;'>" +
+              ccSafe(s.supplier_name) +
+              "</td><td style='font-size:12px;'>" +
+              ccSafe(s.supplier_group) +
+              "</td><td style='font-size:12px;'>" +
+              ccSafe(s.country) +
+              "</td></tr>";
+          }
+          tbody.innerHTML = html;
+        },
+      });
+    };
+
+    window.ccLoadStockModal = function () {
+      frappe.call({
+        method: "purchase_store3",
+        args: { block: "stock" },
+        callback: function (r) {
+          var rows = r && r.message ? r.message : [];
+          var tbody = ccQ("#stock-tbody");
+          var received = 0,
+            delivered = 0,
+            delayed = 0;
+          if (!tbody) return;
+          if (!rows.length) {
+            tbody.innerHTML =
+              "<tr><td colspan='7' style='text-align:center;color:#94A3B8;padding:14px;'>No entries</td></tr>";
+          } else {
+            var html = "";
+            for (var i = 0; i < rows.length; i++) {
+              var se = rows[i];
+              if (se.type === "Material Receipt") received++;
+              if (se.type === "Material Issue") delivered++;
+              if (se.docstatus === 0) delayed++;
+              html +=
+                "<tr onclick=\"window.ccOpenDoc('Stock Entry','" +
+                se.name +
+                "')\" style='cursor:pointer;'><td style='font-size:12px;'>" +
+                ccSafe(se.posting_date) +
+                "</td><td style='font-size:12px;color:#2563EB;'>" +
+                ccSafe(se.name) +
+                "</td><td style='font-size:12px;'>" +
+                ccSafe(se.type) +
+                "</td><td style='font-size:12px;text-align:center;'>" +
+                ccSafe(se.qty_in) +
+                "</td><td style='font-size:12px;text-align:center;'>" +
+                ccSafe(se.qty_out) +
+                "</td><td style='font-size:12px;'>" +
+                ccSafe(se.warehouse) +
+                "</td><td>" +
+                ccBadge(se.status) +
+                "</td></tr>";
+            }
+            tbody.innerHTML = html;
+          }
+          var sr = ccQ("#stock-tile-received");
+          if (sr) sr.textContent = received;
+          var sd = ccQ("#stock-tile-delivered");
+          if (sd) sd.textContent = delivered;
+          var sl = ccQ("#stock-tile-delayed");
+          if (sl) sl.textContent = delayed;
+        },
+      });
+    };
+
+    window.ccLoadGenericModal = function (doctype) {
+      var thead = ccQ("#cc-modal-thead");
+      var tbody = ccQ("#cc-modal-tbody");
+      if (!thead || !tbody) return;
+      var fields = ["name", "modified"];
+      var headers = "<tr><th>Name</th><th>Modified</th></tr>";
+
+      if (doctype === "Task") {
+        fields = [
+          "name",
+          "subject",
+          "priority",
+          "status",
+          "exp_end_date",
+          "project",
+        ];
+        headers =
+          "<tr><th>Task ID</th><th>Subject</th><th>Priority</th><th>Status</th><th>Due</th><th>Project</th></tr>";
+      } else if (doctype === "Project") {
+        fields = ["name", "project_name", "status", "expected_end_date"];
+        headers =
+          "<tr><th>Project ID</th><th>Name</th><th>Status</th><th>End Date</th></tr>";
+      }
+
+      thead.innerHTML = headers;
+      tbody.innerHTML =
+        "<tr><td colspan='6' style='text-align:center;color:#94A3B8;padding:14px;'>Loading...</td></tr>";
+
+      frappe.call({
+        method: "frappe.client.get_list",
+        args: {
+          doctype: doctype,
+          fields: fields,
+          limit_page_length: 50,
+          order_by: "modified desc",
+        },
+        callback: function (r) {
+          var data = r && r.message ? r.message : [];
+          if (!data.length) {
+            tbody.innerHTML =
+              "<tr><td colspan='6' style='text-align:center;color:#94A3B8;padding:14px;'>No data</td></tr>";
+            return;
+          }
+          var html = "";
+          for (var i = 0; i < data.length; i++) {
+            var d = data[i];
+            if (doctype === "Task") {
+              html +=
+                "<tr onclick=\"window.ccOpenDoc('Task','" +
+                d.name +
+                "')\" style='cursor:pointer;'><td style='font-size:12px;color:#2563EB;'>" +
+                ccSafe(d.name) +
+                "</td><td style='font-size:12px;'>" +
+                ccSafe(d.subject) +
+                "</td><td>" +
+                ccBadge(d.priority) +
+                "</td><td>" +
+                ccBadge(d.status) +
+                "</td><td style='font-size:12px;'>" +
+                ccTAT(null, d.exp_end_date) +
+                "</td><td style='font-size:12px;'>" +
+                ccSafe(d.project) +
+                "</td></tr>";
+            } else if (doctype === "Project") {
+              html +=
+                "<tr onclick=\"window.ccOpenDoc('Project','" +
+                d.name +
+                "')\" style='cursor:pointer;'><td style='font-size:12px;color:#2563EB;'>" +
+                ccSafe(d.name) +
+                "</td><td style='font-size:12px;'>" +
+                ccSafe(d.project_name) +
+                "</td><td>" +
+                ccBadge(d.status) +
+                "</td><td style='font-size:12px;'>" +
+                ccSafe(d.expected_end_date) +
+                "</td></tr>";
+            } else {
+              html +=
+                "<tr><td style='font-size:12px;color:#2563EB;'>" +
+                ccSafe(d.name) +
+                "</td><td style='font-size:12px;'>" +
+                ccSafe(d.modified) +
+                "</td></tr>";
+            }
+          }
+          tbody.innerHTML = html;
+        },
+      });
+    };
+
+    window.ccFilterModalTable = function () {
+      var el = ccQ("#cc-modal-search");
+      var val = el ? el.value.toLowerCase() : "";
+      var rows = ccQA("#cc-modal-tbody tr");
+      for (var i = 0; i < rows.length; i++)
+        rows[i].style.display =
+          !val || rows[i].textContent.toLowerCase().indexOf(val) > -1
+            ? ""
+            : "none";
+    };
+
+    window.ccFilterSection = function (tbodyId, inputId) {
+      var el = ccQ("#" + inputId);
+      var val = el ? el.value.toLowerCase() : "";
+      var rows = ccQA("#" + tbodyId + " tr");
+      for (var i = 0; i < rows.length; i++)
+        rows[i].style.display =
+          !val || rows[i].textContent.toLowerCase().indexOf(val) > -1
+            ? ""
+            : "none";
+    };
+
+    window.fetchCommandCenterData();
+    setInterval(function () {
+      window.fetchCommandCenterData();
+    }, 300000);
+  </script>
+</html>

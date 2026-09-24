@@ -1,0 +1,842 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+
+    <style>
+      /* ── Container ────────────────────────────────────────────── */
+      .s-dashboard-container {
+        background-color: #f8f9fc;
+        padding: 25px;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      }
+
+      /* ── Header ───────────────────────────────────────────────── */
+      .s-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+      }
+
+      .s-profile {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+      }
+
+      .s-profile img {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        border: 2px solid #4e73df;
+        object-fit: cover;
+      }
+
+      .s-profile h2 {
+        margin: 0;
+        font-size: 22px;
+        color: #1a3353;
+      }
+
+      .s-profile p {
+        margin: 0;
+        font-size: 14px;
+        color: #858796;
+      }
+
+      .s-header-actions {
+        display: flex;
+        gap: 8px;
+      }
+
+      /* ── KPI Cards (Dynamic & Compact) ────────────────────────── */
+      .s-stats-grid {
+        display: grid;
+        /* Auto-fit ensures 3, 4, or 5 cards distribute beautifully */
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 15px;
+        margin-bottom: 30px;
+      }
+
+      .s-stat-card {
+        background: #fff;
+        padding: 15px;
+        border-radius: 12px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        border-left: 5px solid #4e73df;
+        cursor: pointer;
+        transition:
+          box-shadow 0.2s,
+          transform 0.1s;
+      }
+
+      .s-stat-card:hover {
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+        transform: translateY(-2px);
+      }
+
+      .s-stat-title {
+        font-size: 11px;
+        font-weight: bold;
+        color: #4e73df;
+        text-transform: uppercase;
+        display: block;
+      }
+
+      .s-stat-value {
+        font-size: 24px;
+        font-weight: bold;
+        color: #5a5c69;
+        display: block;
+        margin-top: 4px;
+      }
+
+      .s-stat-tat {
+        font-size: 11px;
+        font-weight: 600;
+        color: #e74a3b;
+        margin-top: 6px;
+        display: block;
+      }
+
+      /* ── Main two-column layout ───────────────────────────────── */
+      .dashboard-main-section {
+        display: flex;
+        gap: 20px;
+        align-items: flex-start;
+        margin-top: 20px;
+      }
+
+      /* ── Left: Today's Plan ───────────────────────────────────── */
+      .plan-section {
+        flex: 0 0 280px; /* Slightly wider to fit longer titles */
+        background: #fff;
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      }
+
+      .section-title {
+        font-weight: bold;
+        font-size: 14px;
+        color: #1a3353;
+        margin-bottom: 15px;
+        text-transform: uppercase;
+      }
+
+      .blue-text {
+        color: #4e73df;
+      }
+
+      .plan-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: #f8faff;
+        padding: 12px 15px;
+        border-radius: 8px;
+        margin-bottom: 10px;
+        font-size: 13px;
+      }
+
+      .plan-item-label {
+        color: #2b3674;
+        font-weight: 500;
+      }
+
+      .plan-meta {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+        font-weight: bold;
+      }
+
+      .plan-view-link {
+        font-size: 12px;
+        color: #4e73df;
+        font-weight: 600;
+        text-decoration: none;
+        cursor: pointer;
+        background: #eaeffa;
+        padding: 4px 8px;
+        border-radius: 4px;
+      }
+
+      .plan-view-link:hover {
+        background: #dbe4f7;
+      }
+
+      /* ── Right: Queue + Panels ────────────────────────────────── */
+      .tasks-section {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        min-width: 0;
+      }
+
+      /* ── Task Queue ───────────────────────────────────────────── */
+      .task-scroll-container {
+        background: #fff;
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        max-height: 350px;
+        overflow-y: auto;
+      }
+
+      .section-header-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
+      }
+
+      .view-all-link {
+        font-size: 12px;
+        color: #4e73df;
+        text-decoration: none;
+        font-weight: 600;
+        cursor: pointer;
+      }
+
+      .view-all-link:hover {
+        text-decoration: underline;
+      }
+
+      .s-table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+
+      .s-table th {
+        position: sticky;
+        top: -20px;
+        background: #fff;
+        text-align: left;
+        padding: 10px 12px;
+        font-size: 12px;
+        color: #858796;
+        border-bottom: 2px solid #e3e6f0;
+        z-index: 1;
+      }
+
+      .s-table td {
+        padding: 12px 12px;
+        border-bottom: 1px solid #f1f3f9;
+        font-size: 13px;
+        color: #5a5c69;
+        vertical-align: middle;
+      }
+
+      .s-table tr:hover td {
+        background-color: #f8faff;
+      }
+
+      /* TAT priority colours */
+      .p-high {
+        color: #e74a3b;
+        font-weight: bold;
+        background: #fdeceb;
+        padding: 2px 6px;
+        border-radius: 4px;
+      }
+      .p-medium {
+        color: #f6c23e;
+        font-weight: bold;
+        background: #fef7e6;
+        padding: 2px 6px;
+        border-radius: 4px;
+      }
+      .p-low {
+        color: #1cc88a;
+        font-weight: bold;
+        background: #e8f9f3;
+        padding: 2px 6px;
+        border-radius: 4px;
+      }
+
+      /* ── Shared section card ──────────────────────────────────── */
+      .section-container {
+        background: #fff;
+        border-radius: 12px;
+        padding: 20px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+      }
+
+      .section-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-weight: bold;
+        font-size: 13px;
+        color: #1a3353;
+        margin-bottom: 15px;
+      }
+
+      /* ── Performance Grid ─────────────────────────────────────── */
+      .performance-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 15px;
+      }
+
+      .perf-card {
+        background: #fcfcfc;
+        border: 1px solid #f1f3f9;
+        padding: 15px;
+        border-radius: 10px;
+        text-align: center;
+      }
+
+      .perf-label {
+        font-size: 11px;
+        color: #858796;
+        margin-bottom: 8px;
+        text-transform: uppercase;
+        font-weight: 600;
+      }
+
+      .perf-value {
+        font-size: 24px;
+        font-weight: bold;
+        color: #2b3674;
+      }
+
+      .green-text {
+        color: #1cc88a;
+      }
+
+      /* ── Activity Timeline ────────────────────────────────────── */
+      .timeline {
+        position: relative;
+        padding-left: 30px;
+        margin-top: 10px;
+      }
+
+      .timeline-item {
+        position: relative;
+        margin-bottom: 20px;
+      }
+
+      .timeline-item::before {
+        content: "";
+        position: absolute;
+        left: -24px;
+        top: 5px;
+        width: 10px;
+        height: 10px;
+        background: #4e73df;
+        border-radius: 50%;
+        z-index: 2;
+      }
+
+      .timeline-item::after {
+        content: "";
+        position: absolute;
+        left: -20px;
+        top: 15px;
+        width: 2px;
+        height: 100%;
+        background: #f1f3f9;
+      }
+
+      .timeline-item:last-child::after {
+        display: none;
+      }
+      .timeline-item:last-child {
+        margin-bottom: 0;
+      }
+
+      .activity-title {
+        font-size: 13px;
+        color: #2b3674;
+        font-weight: 500;
+      }
+
+      .activity-time {
+        font-size: 11px;
+        color: #a3aed0;
+        margin-top: 4px;
+      }
+
+      /* ── Responsive: stack on narrow screens ──────────────────── */
+      @media (max-width: 900px) {
+        .dashboard-main-section {
+          flex-direction: column;
+        }
+        .plan-section {
+          flex: none;
+          width: 100%;
+        }
+        .performance-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="sadbhav-dashboard" class="s-dashboard-container">
+      <div class="s-header">
+        <div class="s-profile">
+          <img
+            id="user-img"
+            src="/assets/frappe/images/default-avatar.png"
+            alt="Profile Photo"
+          />
+          <div>
+            <h2 id="user-name">Welcome!</h2>
+            <p id="user-details">Loading profile...</p>
+          </div>
+        </div>
+        <div class="s-header-actions">
+          <button
+            id="action-btn-1"
+            class="btn btn-primary btn-sm"
+            onclick="triggerBtn1()"
+            style="display: none"
+          >
+            ...
+          </button>
+          <button
+            id="action-btn-2"
+            class="btn btn-default btn-sm"
+            onclick="triggerBtn2()"
+            style="display: none"
+          >
+            ...
+          </button>
+        </div>
+      </div>
+
+      <div class="s-stats-grid" id="kpi-container">
+        <div style="color: #858796; padding: 10px">Loading KPIs...</div>
+      </div>
+
+      <div class="dashboard-main-section">
+        <div class="plan-section">
+          <div class="section-title">TODAY'S ACTION ITEMS</div>
+          <div class="plan-list" id="plan-list-container">
+            <div style="color: #858796; padding: 10px; font-size: 13px">
+              Loading action items...
+            </div>
+          </div>
+        </div>
+
+        <div class="tasks-section">
+          <div class="task-scroll-container">
+            <div class="section-header-row">
+              <span class="section-title blue-text">My Pending Queue</span>
+              <a
+                class="view-all-link"
+                id="view-all-tasks-link"
+                onclick="
+                  viewAllTasks();
+                  return false;
+                "
+                href="#"
+                >View All</a
+              >
+            </div>
+            <table class="s-table">
+              <thead>
+                <tr>
+                  <th>Action Required</th>
+                  <th>Client &amp; Reference</th>
+                  <th>Target Date</th>
+                  <th>TAT Delay</th>
+                </tr>
+              </thead>
+              <tbody id="task-list-body">
+                <tr>
+                  <td
+                    colspan="4"
+                    style="text-align: center; color: #858796; padding: 20px"
+                  >
+                    Loading queue...
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="section-container">
+            <div class="section-header">
+              <span>PERFORMANCE (THIS MONTH)</span>
+            </div>
+            <div class="performance-grid">
+              <div class="perf-card">
+                <div class="perf-label" id="perf-label-1">—</div>
+                <div class="perf-value" id="perf-value-1">0</div>
+              </div>
+              <div class="perf-card">
+                <div class="perf-label" id="perf-label-2">—</div>
+                <div class="perf-value" id="perf-value-2">0</div>
+              </div>
+              <div class="perf-card">
+                <div class="perf-label" id="perf-label-3">—</div>
+                <div class="perf-value green-text" id="perf-value-3">0</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="section-container">
+            <div class="section-header">
+              <span>RECENT ACTIVITY</span>
+            </div>
+            <div class="timeline" id="activity-timeline">
+              <div class="activity-title" style="color: #858796">
+                Loading timeline...
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    ```
+  </body>
+
+  <script>
+    // ============================================================
+    // Sadbhav Solar — Dashboard Client Script
+    // Frappe Custom HTML Block — JavaScript
+    // ============================================================
+
+    // Global store for routing data
+    window.dashData = {};
+
+    // Fallback container in case root_element is slow to inject
+    var dash_container =
+      typeof root_element !== "undefined" ? root_element : document;
+
+    // Delay ensures DOM is fully mounted by Frappe before we query
+    setTimeout(function () {
+      load_dashboard_data();
+    }, 200);
+
+    // ── Main Data Loader ─────────────────────────────────────────
+    function load_dashboard_data() {
+      frappe.call({
+        method: "get_dashboard_data",
+        callback: function (r) {
+          if (!r.message) {
+            return;
+          }
+          var data = r.message;
+
+          // Cache full payload for routing functions
+          window.dashData = data;
+
+          render_profile(data);
+          render_kpi_cards(data.kpi);
+          render_plan_items(data.plan);
+          render_task_queue(data.tasks, data.tasks_route, data.tasks_filter);
+          render_performance(data.performance);
+          render_activity_timeline(data.activities);
+          render_action_buttons(data.actions);
+        },
+      });
+    }
+
+    // ── Profile & Header ─────────────────────────────────────────
+    function render_profile(data) {
+      var emp = data.employee;
+
+      var imgEl = dash_container.querySelector("#user-img");
+      if (imgEl && emp.image) {
+        imgEl.src = emp.image;
+      }
+
+      var nameEl = dash_container.querySelector("#user-name");
+      if (nameEl && emp.employee_name) {
+        nameEl.innerText = "Welcome, " + emp.employee_name + "!";
+      }
+
+      var detailsEl = dash_container.querySelector("#user-details");
+      if (detailsEl) {
+        detailsEl.innerText =
+          (emp.designation || "User") +
+          " | " +
+          (emp.department || "Sadbhav Solar");
+      }
+    }
+
+    // ── Dynamic KPI Cards ────────────────────────────────────────
+    function render_kpi_cards(kpis) {
+      var container = dash_container.querySelector("#kpi-container");
+      if (!container) {
+        return;
+      }
+
+      if (!kpis || kpis.length === 0) {
+        container.innerHTML =
+          "<div style='padding:15px; color:#858796;'>No KPI data available.</div>";
+        return;
+      }
+
+      var html = "";
+      var colors = ["#4e73df", "#6f42c1", "#1cc88a", "#f6c23e", "#e74a3b"];
+
+      for (var i = 0; i < kpis.length; i++) {
+        var kpi = kpis[i];
+        var color = colors[i % colors.length];
+
+        // Build card HTML via concatenation
+        html +=
+          "<div class='s-stat-card' style='border-left-color:" +
+          color +
+          ";' onclick='routeKpi(" +
+          i +
+          ")'>";
+        html +=
+          "<span class='s-stat-title' style='color:" +
+          color +
+          ";'>" +
+          kpi.title +
+          "</span>";
+        html += "<span class='s-stat-value'>" + kpi.count + "</span>";
+
+        if (kpi.tat > 0) {
+          html +=
+            "<span class='s-stat-tat'>Avg TAT: " + kpi.tat + " Days</span>";
+        } else {
+          html +=
+            "<span class='s-stat-tat' style='color:#1cc88a;'>On Track</span>";
+        }
+
+        html += "</div>";
+      }
+
+      container.innerHTML = html;
+    }
+
+    window.routeKpi = function (index) {
+      if (!window.dashData || !window.dashData.kpi) return;
+      var kpi = window.dashData.kpi[index];
+      if (kpi && kpi.route) {
+        frappe.set_route("List", kpi.route, kpi.filter || {});
+      }
+    };
+
+    // ── Dynamic Action Items (Plan) ──────────────────────────────
+    function render_plan_items(plans) {
+      var container = dash_container.querySelector("#plan-list-container");
+      if (!container) {
+        return;
+      }
+
+      if (!plans || plans.length === 0) {
+        container.innerHTML =
+          "<div style='padding:15px; color:#858796;'>No action items scheduled today.</div>";
+        return;
+      }
+
+      var html = "";
+      for (var i = 0; i < plans.length; i++) {
+        var plan = plans[i];
+        html += "<div class='plan-item'>";
+        html += "<span class='plan-item-label'>" + plan.title + "</span>";
+        html += "<div class='plan-meta'>";
+        html += "<span>" + plan.count + "</span>";
+        html +=
+          "<a class='plan-view-link' onclick='routePlan(" +
+          i +
+          "); return false;' href='#'>View</a>";
+        html += "</div>";
+        html += "</div>";
+      }
+
+      container.innerHTML = html;
+    }
+
+    window.routePlan = function (index) {
+      if (!window.dashData || !window.dashData.plan) return;
+      var plan = window.dashData.plan[index];
+      if (plan && plan.route) {
+        frappe.set_route("List", plan.route, plan.filter || {});
+      }
+    };
+
+    // ── Task Queue ───────────────────────────────────────────────
+    function render_task_queue(tasks, route, filter) {
+      var tbody = dash_container.querySelector("#task-list-body");
+      if (!tbody) {
+        return;
+      }
+
+      if (!tasks || tasks.length === 0) {
+        tbody.innerHTML =
+          "<tr><td colspan='4' style='text-align:center; color:#858796; padding:20px;'>Your queue is clear. Great job!</td></tr>";
+        return;
+      }
+
+      var html = "";
+      for (var i = 0; i < tasks.length; i++) {
+        var t = tasks[i];
+
+        // Format Date
+        var dateStr = "No Date";
+        if (t.date && t.date !== "9999-12-31") {
+          dateStr = frappe.datetime.str_to_user(t.date);
+        }
+
+        // TAT Logic
+        var tatVal = t.tat || 0;
+        var tatClass = "p-low";
+        if (tatVal > 3) {
+          tatClass = "p-high";
+        } else if (tatVal >= 1) {
+          tatClass = "p-medium";
+        }
+
+        var tatStr =
+          "<span class='" + tatClass + "'>" + tatVal + " Days</span>";
+        if (tatVal === 0) {
+          tatStr = "<span class='p-low'>On Time</span>";
+        }
+
+        // Build URL Slug (Global Regex Replace)
+        var slug = (t.doctype || "").replace(/ /g, "-");
+        var docUrl =
+          "/app/" + slug.toLowerCase() + "/" + encodeURIComponent(t.ref);
+
+        html += "<tr>";
+        html += "<td><strong>" + (t.type || t.doctype) + "</strong></td>";
+        html +=
+          "<td>" +
+          (t.client || "Internal") +
+          "<br><a href='" +
+          docUrl +
+          "' style='font-size:11px; color:#4e73df;'>" +
+          t.ref +
+          "</a></td>";
+        html += "<td>" + dateStr + "</td>";
+        html += "<td>" + tatStr + "</td>";
+        html += "</tr>";
+      }
+
+      tbody.innerHTML = html;
+    }
+
+    window.viewAllTasks = function () {
+      if (window.dashData && window.dashData.tasks_route) {
+        frappe.set_route(
+          "List",
+          window.dashData.tasks_route,
+          window.dashData.tasks_filter || {},
+        );
+      }
+    };
+
+    // ── Performance Section ───────────────────────────────────────
+    function render_performance(perf) {
+      if (!perf) {
+        return;
+      }
+
+      for (var n = 1; n <= 3; n++) {
+        var labelEl = dash_container.querySelector("#perf-label-" + n);
+        var valueEl = dash_container.querySelector("#perf-value-" + n);
+        if (labelEl) {
+          labelEl.innerText = perf["label" + n] || "Metric";
+        }
+        if (valueEl) {
+          valueEl.innerText = perf["value" + n] || "0";
+          if (n === 3 && String(perf["value" + n]).indexOf("%") === -1) {
+            // If it's the 3rd metric and doesn't have a %, it might be raw count, but let's append % if label contains '%'
+            if (String(perf["label" + n]).indexOf("%") !== -1) {
+              valueEl.innerText = perf["value" + n] + "%";
+            }
+          }
+        }
+      }
+    }
+
+    // ── Activity Timeline ─────────────────────────────────────────
+    function render_activity_timeline(activities) {
+      var timelineEl = dash_container.querySelector("#activity-timeline");
+      if (!timelineEl) {
+        return;
+      }
+
+      if (!activities || activities.length === 0) {
+        timelineEl.innerHTML =
+          "<div class='activity-title' style='color:#858796;'>No recent activity.</div>";
+        return;
+      }
+
+      var html = "";
+      for (var i = 0; i < activities.length; i++) {
+        var act = activities[i];
+
+        var slug = (act.ref_doctype || "").replace(/ /g, "-");
+        var docUrl =
+          "/app/" + slug.toLowerCase() + "/" + encodeURIComponent(act.docname);
+
+        html += "<div class='timeline-item'>";
+        html += "<div class='activity-title'>";
+        html +=
+          "Updated <strong>" +
+          act.ref_doctype +
+          "</strong>: <a href='" +
+          docUrl +
+          "'>" +
+          act.docname +
+          "</a>";
+        html += "</div>";
+        html += "<div class='activity-time'>";
+        html += frappe.datetime.global_date_format(act.creation);
+        html += "</div>";
+        html += "</div>";
+      }
+
+      timelineEl.innerHTML = html;
+    }
+
+    // ── Action Buttons ────────────────────────────────────────────
+    function render_action_buttons(actions) {
+      if (!actions) {
+        return;
+      }
+
+      var btn1 = dash_container.querySelector("#action-btn-1");
+      if (btn1 && actions.btn1_label) {
+        btn1.innerText = actions.btn1_label;
+        btn1.style.display = "inline-block";
+      }
+
+      var btn2 = dash_container.querySelector("#action-btn-2");
+      if (btn2) {
+        if (actions.btn2_visible !== false && actions.btn2_label) {
+          btn2.innerText = actions.btn2_label;
+          btn2.style.display = "inline-block";
+        } else {
+          btn2.style.display = "none";
+        }
+      }
+    }
+
+    window.triggerBtn1 = function () {
+      var a = window.dashData.actions;
+      if (!a) return;
+      if (a.btn1_type === "new_doc") {
+        frappe.new_doc(a.btn1_target);
+      } else if (a.btn1_type === "list_route") {
+        frappe.set_route("List", a.btn1_target, a.btn1_filter || {});
+      }
+    };
+
+    window.triggerBtn2 = function () {
+      var a = window.dashData.actions;
+      if (!a) return;
+      if (a.btn2_type === "new_doc") {
+        frappe.new_doc(a.btn2_target);
+      } else if (a.btn2_type === "list_route") {
+        frappe.set_route("List", a.btn2_target, a.btn2_filter || {});
+      }
+    };
+  </script>
+</html>

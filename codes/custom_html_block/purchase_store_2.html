@@ -1,0 +1,3171 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap");
+
+      :root {
+        --cc-bg: #eef3f9;
+        --cc-surface: rgba(255, 255, 255, 0.94);
+        --cc-surface-2: rgba(248, 250, 252, 0.96);
+        --cc-border: rgba(148, 163, 184, 0.16);
+        --cc-text: #0f172a;
+        --cc-muted: #64748b;
+        --cc-primary: #2563eb;
+        --cc-success: #16a34a;
+        --cc-warning: #f59e0b;
+        --cc-danger: #ef4444;
+        --cc-shadow: 0 10px 28px rgba(15, 23, 42, 0.07);
+        --cc-shadow-hover: 0 18px 40px rgba(15, 23, 42, 0.12);
+        --cc-radius: 18px;
+      }
+
+      body,
+      .desk-page,
+      .page-container {
+        background:
+          radial-gradient(
+            circle at top left,
+            rgba(37, 99, 235, 0.08),
+            transparent 24%
+          ),
+          radial-gradient(
+            circle at top right,
+            rgba(16, 185, 129, 0.06),
+            transparent 20%
+          ),
+          linear-gradient(180deg, #f4f7fb 0%, #eaf0f7 100%) !important;
+        color: var(--cc-text);
+      }
+
+      .cc-wrapper * {
+        box-sizing: border-box;
+        font-family: "Inter", sans-serif;
+      }
+
+      .cc-wrapper {
+        display: flex;
+        background:
+          radial-gradient(
+            circle at top left,
+            rgba(37, 99, 235, 0.08),
+            transparent 28%
+          ),
+          radial-gradient(
+            circle at top right,
+            rgba(16, 185, 129, 0.06),
+            transparent 24%
+          ),
+          linear-gradient(180deg, #f7fbff 0%, #eef4fb 100%);
+        border-radius: 18px;
+        overflow: hidden;
+        border: 1px solid #d9e2f0;
+        min-height: 900px;
+        box-shadow: 0 18px 40px rgba(15, 23, 42, 0.08);
+      }
+
+      .cc-main {
+        flex: 1;
+        padding: 22px;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+      }
+
+      .cc-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 4px 2px 10px;
+      }
+
+      .cc-title h1 {
+        margin: 0;
+        font-size: 23px;
+        font-weight: 800;
+        color: #0f172a;
+        letter-spacing: -0.03em;
+      }
+
+      .cc-title p {
+        margin: 4px 0 0 0;
+        font-size: 13px;
+        color: #6b7280;
+      }
+
+      .btn-cc,
+      .cc-btn,
+      .cc-toolbar-btn,
+      button,
+      .btn {
+        padding: 9px 16px;
+        font-size: 13px;
+        font-weight: 700;
+        border-radius: 12px !important;
+        cursor: pointer;
+        border: 1px solid rgba(148, 163, 184, 0.2) !important;
+        background: linear-gradient(180deg, #ffffff, #f8fafc) !important;
+        color: #334155 !important;
+        box-shadow: 0 4px 12px rgba(15, 23, 42, 0.05) !important;
+        transition: all 0.2s ease;
+      }
+
+      .btn-cc:hover,
+      .cc-toolbar-btn:hover,
+      button:hover,
+      .btn:hover {
+        transform: translateY(-1px);
+        border-color: #93c5fd;
+        box-shadow: 0 10px 22px rgba(15, 23, 42, 0.1) !important;
+      }
+
+      .cc-nav-buttons {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 16px;
+        background: rgba(255, 255, 255, 0.9);
+        border: 1px solid #dce6f4;
+        border-radius: 14px;
+        padding: 16px 20px;
+        box-shadow: 0 10px 24px rgba(15, 23, 42, 0.05);
+      }
+
+      .cc-nav-group {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        flex: 1;
+        min-width: 280px;
+      }
+
+      .cc-nav-group-row {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+
+      .cc-nav-group-label {
+        font-size: 10px !important;
+        font-weight: 900 !important;
+        color: #64748b !important;
+        text-transform: uppercase;
+        letter-spacing: 0.12em !important;
+      }
+
+      .cc-nav-btn {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        padding: 12px 16px;
+        min-height: 42px;
+        background: linear-gradient(
+          180deg,
+          #ffffff 0%,
+          #f8fbff 100%
+        ) !important;
+        border: 1px solid rgba(148, 163, 184, 0.2) !important;
+        border-radius: 14px !important;
+        font-size: 12px;
+        font-weight: 800 !important;
+        color: #1f2937 !important;
+        cursor: pointer;
+        box-shadow: 0 5px 12px rgba(15, 23, 42, 0.06);
+        transition: all 0.18s ease;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .cc-nav-btn::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 4px;
+        height: 100%;
+        background: linear-gradient(180deg, #2563eb, #22c55e);
+        opacity: 0.95;
+      }
+
+      .cc-nav-btn:hover {
+        transform: translateY(-2px);
+        background: linear-gradient(
+          180deg,
+          #eff6ff 0%,
+          #dbeafe 100%
+        ) !important;
+        border-color: rgba(37, 99, 235, 0.22) !important;
+        color: #1d4ed8 !important;
+        box-shadow: 0 12px 24px rgba(37, 99, 235, 0.14);
+      }
+
+      .cc-nav-btn i,
+      .cc-nav-btn .icon,
+      .cc-nav-btn .btn-icon {
+        width: 22px;
+        height: 22px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 7px;
+        background: linear-gradient(135deg, #eff6ff, #dbeafe);
+        color: #2563eb;
+        font-size: 12px;
+        flex: 0 0 22px;
+      }
+
+      .cc-nav-divider {
+        width: 1px;
+        background: linear-gradient(180deg, #e2e8f0, #cbd5e1);
+        align-self: stretch;
+        min-height: 40px;
+      }
+
+      .cc-kpi-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+        gap: 14px;
+      }
+
+      .cc-kpi-card {
+        padding: 18px 16px 16px;
+        border-radius: 20px !important;
+        background: linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0.98),
+          rgba(247, 250, 255, 0.92)
+        ) !important;
+        border: 1px solid rgba(148, 163, 184, 0.16) !important;
+        cursor: pointer;
+        box-shadow: var(--cc-shadow) !important;
+        transition: all 0.22s ease;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .cc-kpi-card::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 4px;
+        background: linear-gradient(90deg, #2563eb, #22c55e, #f59e0b);
+        opacity: 0.95;
+      }
+
+      .cc-kpi-card:hover {
+        transform: translateY(-3px);
+        box-shadow: var(--cc-shadow-hover) !important;
+      }
+
+      .kpi-icon {
+        display: none !important;
+      }
+
+      .cc-kpi-val,
+      .cc-kpi-value {
+        font-size: 22px !important;
+        font-weight: 900 !important;
+        color: #0f172a !important;
+        margin: 0 0 4px 0;
+        letter-spacing: -0.03em;
+      }
+
+      .cc-kpi-label {
+        font-size: 12px !important;
+        font-weight: 800 !important;
+        color: #475569 !important;
+        line-height: 1.3;
+      }
+
+      .cc-data-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 16px;
+      }
+
+      .cc-panel {
+        background: var(--cc-surface) !important;
+        border: 1px solid var(--cc-border) !important;
+        border-radius: 18px !important;
+        padding: 16px;
+        box-shadow: var(--cc-shadow) !important;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .panel-header {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 16px;
+        align-items: center;
+      }
+
+      .panel-title,
+      .cc-section-title,
+      .m-section-title {
+        font-size: 15px !important;
+        font-weight: 900 !important;
+        color: #0f172a !important;
+        line-height: 1.2 !important;
+        letter-spacing: -0.02em;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .panel-title::before,
+      .cc-section-title::before,
+      .m-section-title::before {
+        content: "";
+        width: 4px;
+        height: 14px;
+        border-radius: 999px;
+        background: linear-gradient(180deg, #2563eb, #22c55e);
+        display: inline-block;
+        margin-right: 8px;
+      }
+
+      .panel-link,
+      .lnk-blue {
+        font-size: 12px;
+        color: #2563eb !important;
+        cursor: pointer;
+        text-decoration: none;
+        font-weight: 700 !important;
+      }
+
+      .panel-link:hover,
+      .lnk-blue:hover {
+        color: #1d4ed8;
+        text-decoration: underline;
+      }
+
+      .cc-table {
+        width: 100%;
+        border-collapse: separate !important;
+        border-spacing: 0 !important;
+        font-size: 13px;
+        overflow: hidden;
+        border-radius: 16px !important;
+      }
+
+      .cc-table thead th,
+      .cc-table th {
+        padding: 13px 16px !important;
+        background: linear-gradient(135deg, #0f172a, #334155) !important;
+        color: #fff !important;
+        font-size: 12px !important;
+        font-weight: 700 !important;
+        text-align: left;
+        white-space: nowrap;
+        border-bottom: none !important;
+        letter-spacing: 0.03em;
+      }
+
+      .cc-table tbody td,
+      .cc-table td {
+        padding: 13px 16px !important;
+        border-bottom: 1px solid rgba(226, 232, 240, 0.85) !important;
+        color: #334155 !important;
+        vertical-align: middle;
+        background: #fff;
+        font-weight: 500;
+      }
+
+      .cc-table tr {
+        cursor: pointer;
+      }
+
+      .cc-table tbody tr:hover td,
+      .cc-table tr:hover td {
+        background: #f8fbff !important;
+      }
+
+      .badge,
+      .cc-badge {
+        display: inline-block;
+        padding: 5px 10px !important;
+        border-radius: 999px !important;
+        font-size: 11px !important;
+        font-weight: 700 !important;
+        letter-spacing: 0.01em;
+      }
+
+      .badge-red,
+      .pill-red {
+        background: #fee2e2 !important;
+        color: #dc2626 !important;
+      }
+      .badge-green,
+      .pill-green {
+        background: #dcfce7 !important;
+        color: #15803d !important;
+      }
+      .badge-yellow,
+      .pill-orange {
+        background: #fef3c7 !important;
+        color: #b45309 !important;
+      }
+      .badge-blue,
+      .pill-blue {
+        background: #dbeafe !important;
+        color: #2563eb !important;
+      }
+
+      .cat-tag,
+      .cat-pill {
+        padding: 3px 8px;
+        border-radius: 999px;
+        font-size: 11px;
+        font-weight: 700;
+        background: #eef2ff !important;
+        color: #4338ca !important;
+        border: 1px solid rgba(99, 102, 241, 0.14);
+      }
+
+      .cc-modal-backdrop {
+        position: fixed;
+        inset: 0;
+        background: rgba(15, 23, 42, 0.55);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 99999;
+        padding: 12px;
+        box-sizing: border-box;
+      }
+
+      .cc-modal {
+        width: min(1360px, 98vw);
+        height: min(92vh, 920px);
+        background: rgba(255, 255, 255, 0.98);
+        border-radius: 18px;
+        overflow: hidden;
+        box-shadow: 0 30px 70px rgba(0, 0, 0, 0.28);
+        display: flex;
+        flex-direction: column;
+        box-sizing: border-box;
+      }
+
+      .cc-modal-header {
+        flex: 0 0 auto;
+        padding: 14px 18px;
+        border-bottom: 1px solid #e2e8f0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .cc-modal-header h3 {
+        margin: 0;
+        font-size: 16px;
+        font-weight: 800;
+        color: #0f172a;
+      }
+
+      .cc-modal-header p {
+        margin: 4px 0 0 0;
+        font-size: 12px;
+        color: #64748b;
+      }
+
+      .cc-modal-actions {
+        display: flex;
+        gap: 8px;
+        flex-shrink: 0;
+      }
+
+      .cc-modal-body {
+        flex: 1 1 auto;
+        min-height: 0;
+        overflow: hidden;
+        padding: 14px 18px 18px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .cc-modal-search {
+        flex: 0 0 auto;
+        margin-bottom: 0;
+      }
+
+      .cc-modal-search input,
+      .cc-input,
+      input[type="text"],
+      select {
+        width: 320px;
+        max-width: 100%;
+        padding: 10px 12px;
+        border: 1px solid rgba(148, 163, 184, 0.2) !important;
+        border-radius: 12px !important;
+        outline: none;
+        background: #fff !important;
+        box-shadow: inset 0 1px 2px rgba(15, 23, 42, 0.04);
+        color: #0f172a !important;
+      }
+
+      .cc-modal-table-wrap {
+        flex: 1 1 auto;
+        min-height: 0;
+        overflow: auto;
+        width: 100%;
+      }
+
+      .cc-modal-table {
+        width: max-content;
+        min-width: 100%;
+        border-collapse: collapse;
+      }
+
+      .cc-modal-table tr {
+        cursor: pointer;
+      }
+      .cc-modal-table th,
+      .cc-modal-table td {
+        white-space: nowrap;
+      }
+
+      .cc-analytics-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr 200px;
+        gap: 16px;
+      }
+
+      .action-stack {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .btn-action {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 12px;
+        border-radius: 12px;
+        border: 1px solid #d8e2ee;
+        background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+        color: #0f172a;
+        font-weight: 700;
+        font-size: 12px;
+        cursor: pointer;
+        box-shadow: 0 4px 10px rgba(15, 23, 42, 0.05);
+      }
+
+      .btn-action:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 24px rgba(15, 23, 42, 0.1);
+      }
+
+      .css-donut {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        background: conic-gradient(
+          #3b82f6 0% 38%,
+          #10b981 38% 66%,
+          #f59e0b 66% 88%,
+          #ef4444 88% 100%
+        );
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto;
+        box-shadow:
+          inset 0 0 12px rgba(255, 255, 255, 0.6),
+          0 10px 20px rgba(15, 23, 42, 0.08);
+      }
+
+      .donut-inner {
+        width: 70px;
+        height: 70px;
+        background: #ffffff;
+        border-radius: 50%;
+        box-shadow: inset 0 1px 4px rgba(15, 23, 42, 0.08);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="cc-wrapper" id="command-center-root">
+      <main class="cc-main">
+        <div class="cc-header">
+          <div class="cc-title">
+            <h1>Store & Purchase Dashboard</h1>
+            <p>Real-time overview of your store and purchase operations</p>
+          </div>
+          <div class="cc-controls">
+            <button class="btn-cc" id="cc-date">Loading...</button>
+            <button class="btn-cc" onclick="window.fetchCommandCenterData()">
+              ↻ Refresh
+            </button>
+          </div>
+        </div>
+
+        <div class="cc-nav-buttons">
+          <div class="cc-nav-group">
+            <span class="cc-nav-group-label">Store</span>
+            <div class="cc-nav-group-row">
+              <button
+                class="cc-nav-btn"
+                onclick="window.ccOpenListModal('Item', 'Inventory Master')"
+              >
+                📦 Inventory Master
+              </button>
+              <button
+                class="cc-nav-btn"
+                onclick="
+                  window.ccOpenListModal('Purchase Receipt', 'Goods Received')
+                "
+              >
+                📥 Goods Received
+              </button>
+              <button
+                class="cc-nav-btn"
+                onclick="
+                  window.ccOpenListModal('Stock Entry', 'Stock Movement')
+                "
+              >
+                🔄 Stock Movement
+              </button>
+              <button
+                class="cc-nav-btn"
+                onclick="
+                  window.ccOpenListModal('Item', 'Low Stock Alerts', true)
+                "
+              >
+                ⚠️ Low Stock Alerts
+              </button>
+              <button
+                class="cc-nav-btn"
+                onclick="
+                  window.ccOpenListModal('Delivery Note', 'Material Dispatch')
+                "
+              >
+                📤 Material Dispatch
+              </button>
+            </div>
+          </div>
+
+          <div class="cc-nav-divider"></div>
+
+          <div class="cc-nav-group">
+            <span class="cc-nav-group-label">Purchase</span>
+            <div class="cc-nav-group-row">
+              <button
+                class="cc-nav-btn"
+                onclick="
+                  window.ccOpenListModal('Material Request', 'Purchase Request')
+                "
+              >
+                📋 Purchase Request
+              </button>
+              <button
+                class="cc-nav-btn"
+                onclick="
+                  window.ccOpenListModal('Purchase Order', 'Purchase Orders')
+                "
+              >
+                📄 Purchase Orders
+              </button>
+              <button
+                class="cc-nav-btn"
+                onclick="window.ccOpenListModal('Supplier', 'Supplier')"
+              >
+                🏢 Supplier
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="cc-kpi-grid">
+          <div
+            class="cc-kpi-card"
+            onclick="window.ccOpenListModal('Item', 'Inventory Master')"
+          >
+            <div class="kpi-icon blue">📦</div>
+            <p class="cc-kpi-val" id="kpi-items">--</p>
+            <p class="cc-kpi-label">Total Items</p>
+          </div>
+          <div
+            class="cc-kpi-card"
+            onclick="
+              window.ccOpenListModal('Purchase Receipt', 'Goods Received')
+            "
+          >
+            <div class="kpi-icon green">💰</div>
+            <p class="cc-kpi-val" id="kpi-stock-val">--</p>
+            <p class="cc-kpi-label">Current Stock Value</p>
+          </div>
+          <div
+            class="cc-kpi-card"
+            onclick="
+              window.ccOpenListModal('Purchase Order', 'Purchase Orders')
+            "
+          >
+            <div class="kpi-icon purple">🏢</div>
+            <p class="cc-kpi-val" id="kpi-res-val">--</p>
+            <p class="cc-kpi-label">Reserved (Projects)</p>
+          </div>
+          <div
+            class="cc-kpi-card"
+            onclick="window.ccOpenListModal('Stock Entry', 'Stock Movement')"
+          >
+            <div class="kpi-icon green">✅</div>
+            <p class="cc-kpi-val" id="kpi-avail-val">--</p>
+            <p class="cc-kpi-label">Available Stock</p>
+          </div>
+          <div
+            class="cc-kpi-card"
+            onclick="window.ccOpenListModal('Item', 'Low Stock Alerts', true)"
+          >
+            <div class="kpi-icon orange">⚠️</div>
+            <p class="cc-kpi-val" id="kpi-low-stock">--</p>
+            <p class="cc-kpi-label">Low Stock Items</p>
+          </div>
+          <div
+            class="cc-kpi-card"
+            onclick="
+              window.ccOpenListModal('Delivery Note', 'Material Dispatch')
+            "
+          >
+            <div class="kpi-icon blue">🚚</div>
+            <p class="cc-kpi-val" id="kpi-dispatch">--</p>
+            <p class="cc-kpi-label">Pending Dispatch</p>
+          </div>
+          <div
+            class="cc-kpi-card"
+            onclick="
+              window.ccOpenListModal('Purchase Order', 'Purchase Orders')
+            "
+          >
+            <div class="kpi-icon purple">📄</div>
+            <p class="cc-kpi-val" id="kpi-grn">--</p>
+            <p class="cc-kpi-label">Pending GRN (POs)</p>
+          </div>
+        </div>
+
+        <div class="cc-data-grid">
+          <div class="cc-panel">
+            <div class="panel-header">
+              <div class="panel-title">📋 My Tasks</div>
+              <span
+                class="panel-link"
+                onclick="window.ccOpenListModal('Task', 'My Tasks')"
+                >View All ></span
+              >
+            </div>
+            <table class="cc-table">
+              <tbody id="tbl-tasks"></tbody>
+            </table>
+          </div>
+
+          <div class="cc-panel">
+            <div class="panel-header">
+              <div class="panel-title">🏗️ Project-wise Material</div>
+              <span
+                class="panel-link"
+                onclick="
+                  window.ccOpenListModal('Project', 'Project-wise Material')
+                "
+                >View All ></span
+              >
+            </div>
+            <table class="cc-table">
+              <thead>
+                <tr>
+                  <th>Project</th>
+                  <th>Pending</th>
+                  <th>Dispatched</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="tbl-projects"></tbody>
+            </table>
+          </div>
+
+          <div class="cc-panel">
+            <div class="panel-header">
+              <div class="panel-title">⚠️ Low Stock Alerts</div>
+              <span
+                class="panel-link"
+                onclick="
+                  window.ccOpenListModal('Item', 'Low Stock Alerts', true)
+                "
+                >View All ></span
+              >
+            </div>
+            <table class="cc-table">
+              <thead>
+                <tr>
+                  <th>Item</th>
+                  <th>Avail</th>
+                  <th>Min</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="tbl-low-stock"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="cc-data-grid" style="grid-template-columns: 1fr 1fr">
+          <div class="cc-panel">
+            <div class="panel-header">
+              <div class="panel-title">🚚 Today's Dispatches</div>
+              <span
+                class="panel-link"
+                onclick="
+                  window.ccOpenListModal('Delivery Note', 'Material Dispatch')
+                "
+                >View All ></span
+              >
+            </div>
+            <table class="cc-table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Project</th>
+                  <th>Items</th>
+                  <th>Qty</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="tbl-dispatches"></tbody>
+            </table>
+          </div>
+
+          <div class="cc-panel">
+            <div class="panel-header">
+              <div class="panel-title">📥 Recent GRNs</div>
+              <span
+                class="panel-link"
+                onclick="
+                  window.ccOpenListModal('Purchase Receipt', 'Goods Received')
+                "
+                >View All ></span
+              >
+            </div>
+            <table class="cc-table">
+              <thead>
+                <tr>
+                  <th>GRN ID</th>
+                  <th>Supplier</th>
+                  <th>Item</th>
+                  <th>Qty</th>
+                </tr>
+              </thead>
+              <tbody id="tbl-grns"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="cc-analytics-grid">
+          <div class="cc-panel" style="align-items: center">
+            <div class="panel-title" style="margin-bottom: 20px">
+              Stock Summary
+            </div>
+            <div class="css-donut"><div class="donut-inner"></div></div>
+          </div>
+
+          <div class="cc-panel">
+            <div class="panel-title" style="margin-bottom: 20px">
+              Purchase Summary (Month)
+            </div>
+            <div
+              style="
+                display: flex;
+                justify-content: space-between;
+                text-align: center;
+              "
+            >
+              <div>
+                <p style="margin: 0; font-size: 12px; color: #64748b">
+                  Total PO
+                </p>
+                <h3 style="margin: 5px 0; color: #0f172a">₹1.25 Cr</h3>
+              </div>
+              <div>
+                <p style="margin: 0; font-size: 12px; color: #64748b">
+                  Received
+                </p>
+                <h3 style="margin: 5px 0; color: #059669">₹78 L</h3>
+              </div>
+            </div>
+          </div>
+
+          <div class="cc-panel action-stack" style="grid-column: span 2">
+            <div class="panel-title" style="margin-bottom: 10px">
+              Quick Actions
+            </div>
+            <div
+              style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px"
+            >
+              <button
+                class="btn-action"
+                onclick="
+                  window.ccOpenListModal('Material Request', 'Purchase Request')
+                "
+              >
+                <span style="color: #2563eb">+</span> New Purchase Request
+              </button>
+              <button
+                class="btn-action"
+                onclick="
+                  window.ccOpenListModal('Purchase Order', 'Purchase Orders')
+                "
+              >
+                <span style="color: #059669">+</span> New Purchase Order
+              </button>
+              <button
+                class="btn-action"
+                onclick="
+                  window.ccOpenListModal('Purchase Receipt', 'Goods Received')
+                "
+              >
+                <span style="color: #7c3aed">📦</span> New GRN / Receipt
+              </button>
+              <button
+                class="btn-action"
+                onclick="
+                  window.ccOpenListModal('Stock Entry', 'Stock Movement')
+                "
+              >
+                <span style="color: #ea580c">🔄</span> Stock Movement
+              </button>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      <div
+        class="cc-modal-backdrop"
+        id="cc-modal-backdrop"
+        style="display: none"
+      >
+        <div class="cc-modal">
+          <div class="cc-modal-header">
+            <div>
+              <h3 id="cc-modal-title">List</h3>
+              <p id="cc-modal-subtitle">Data table</p>
+              <!-- ======= MODAL BACKDROP — existing structure maintain ======= -->
+              <div
+                id="cc-modal-backdrop"
+                style="
+                  display: none;
+                  position: fixed;
+                  top: 0;
+                  left: 0;
+                  width: 100%;
+                  height: 100%;
+                  background: rgba(15, 23, 42, 0.5);
+                  z-index: 9999;
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+                "
+              >
+                <div
+                  style="
+                    background: #fff;
+                    border-radius: 18px;
+                    width: 92%;
+                    max-width: 1100px;
+                    max-height: 90vh;
+                    overflow: hidden;
+                    display: flex;
+                    flex-direction: column;
+                    box-shadow: 0 24px 60px rgba(15, 23, 42, 0.18);
+                  "
+                >
+                  <!-- HEADER -->
+                  <div
+                    style="
+                      padding: 20px 24px;
+                      border-bottom: 1px solid #e2e8f0;
+                      display: flex;
+                      align-items: center;
+                      justify-content: space-between;
+                      background: linear-gradient(135deg, #1e293b, #334155);
+                      border-radius: 18px 18px 0 0;
+                    "
+                  >
+                    <div>
+                      <h3
+                        id="cc-modal-title"
+                        style="
+                          margin: 0;
+                          font-size: 18px;
+                          font-weight: 800;
+                          color: #fff;
+                        "
+                      ></h3>
+                      <p
+                        id="cc-modal-subtitle"
+                        style="margin: 4px 0 0; font-size: 12px; color: #94a3b8"
+                      ></p>
+                    </div>
+                    <div style="display: flex; gap: 8px; align-items: center">
+                      <button
+                        id="cc-modal-export-btn"
+                        onclick="window.ccExportCSV()"
+                        style="
+                          padding: 8px 14px;
+                          background: #334155;
+                          color: #fff;
+                          border: 1px solid #475569;
+                          border-radius: 8px;
+                          font-size: 12px;
+                          font-weight: 600;
+                          cursor: pointer;
+                        "
+                      >
+                        Export CSV
+                      </button>
+                      <button
+                        onclick="window.ccCloseModal()"
+                        style="
+                          padding: 8px 14px;
+                          background: #ef4444;
+                          color: #fff;
+                          border: none;
+                          border-radius: 8px;
+                          font-size: 12px;
+                          font-weight: 700;
+                          cursor: pointer;
+                        "
+                      >
+                        ✕ Close
+                      </button>
+                    </div>
+                  </div>
+
+                  <!-- SCROLLABLE BODY -->
+                  <div style="padding: 20px 24px; overflow-y: auto; flex: 1">
+                    <!-- GENERIC FALLBACK (Task/Project) -->
+                    <div
+                      id="sec-generic"
+                      class="cc-section-block"
+                      style="display: none"
+                    >
+                      <input
+                        type="text"
+                        id="cc-modal-search"
+                        placeholder="Search..."
+                        oninput="window.ccFilterModalTable()"
+                        style="
+                          padding: 9px 12px;
+                          border: 1px solid #d6dde8;
+                          border-radius: 10px;
+                          font-size: 13px;
+                          margin-bottom: 14px;
+                          width: 280px;
+                        "
+                      />
+                      <div style="overflow-x: auto">
+                        <table class="cc-table" style="width: 100%">
+                          <thead id="cc-modal-thead"></thead>
+                          <tbody id="cc-modal-tbody"></tbody>
+                        </table>
+                      </div>
+                    </div>
+
+                    <!-- ===== 1. INVENTORY MASTER ===== -->
+                    <div
+                      id="sec-inventory"
+                      class="cc-section-block"
+                      style="display: none"
+                    >
+                      <!-- KPI Row -->
+                      <div
+                        style="
+                          display: grid;
+                          grid-template-columns: repeat(4, 1fr);
+                          gap: 12px;
+                          margin-bottom: 18px;
+                        "
+                      >
+                        <div
+                          onclick="
+                            window.ccOpenListModal('Item', 'Inventory Master')
+                          "
+                          style="
+                            background: linear-gradient(
+                              135deg,
+                              #eff6ff,
+                              #dbeafe
+                            );
+                            border: 1px solid #bfdbfe;
+                            border-radius: 14px;
+                            padding: 16px;
+                            cursor: pointer;
+                            text-align: center;
+                            box-shadow: 0 6px 16px rgba(37, 99, 235, 0.1);
+                          "
+                        >
+                          <div style="font-size: 22px; margin-bottom: 6px">
+                            📦
+                          </div>
+                          <div
+                            id="inv-kpi-stock"
+                            style="
+                              font-size: 22px;
+                              font-weight: 800;
+                              color: #1d4ed8;
+                            "
+                          >
+                            --
+                          </div>
+                          <div
+                            style="
+                              font-size: 11px;
+                              font-weight: 600;
+                              color: #64748b;
+                              margin-top: 4px;
+                            "
+                          >
+                            Total Stock Value
+                          </div>
+                        </div>
+                        <div
+                          onclick="
+                            window.ccOpenListModal(
+                              'Delivery Note',
+                              'Material Dispatch',
+                            )
+                          "
+                          style="
+                            background: linear-gradient(
+                              135deg,
+                              #ecfdf5,
+                              #d1fae5
+                            );
+                            border: 1px solid #6ee7b7;
+                            border-radius: 14px;
+                            padding: 16px;
+                            cursor: pointer;
+                            text-align: center;
+                            box-shadow: 0 6px 16px rgba(16, 185, 129, 0.1);
+                          "
+                        >
+                          <div style="font-size: 22px; margin-bottom: 6px">
+                            🚚
+                          </div>
+                          <div
+                            id="inv-kpi-dispatching"
+                            style="
+                              font-size: 22px;
+                              font-weight: 800;
+                              color: #065f46;
+                            "
+                          >
+                            --
+                          </div>
+                          <div
+                            style="
+                              font-size: 11px;
+                              font-weight: 600;
+                              color: #64748b;
+                              margin-top: 4px;
+                            "
+                          >
+                            Dispatching Projects
+                          </div>
+                        </div>
+                        <div
+                          onclick="
+                            window.ccOpenListModal('Item', 'Out of Stock', true)
+                          "
+                          style="
+                            background: linear-gradient(
+                              135deg,
+                              #fef2f2,
+                              #fee2e2
+                            );
+                            border: 1px solid #fca5a5;
+                            border-radius: 14px;
+                            padding: 16px;
+                            cursor: pointer;
+                            text-align: center;
+                            box-shadow: 0 6px 16px rgba(239, 68, 68, 0.1);
+                          "
+                        >
+                          <div style="font-size: 22px; margin-bottom: 6px">
+                            ⚠️
+                          </div>
+                          <div
+                            id="inv-kpi-oos"
+                            style="
+                              font-size: 22px;
+                              font-weight: 800;
+                              color: #991b1b;
+                            "
+                          >
+                            --
+                          </div>
+                          <div
+                            style="
+                              font-size: 11px;
+                              font-weight: 600;
+                              color: #64748b;
+                              margin-top: 4px;
+                            "
+                          >
+                            Out of Stock
+                          </div>
+                        </div>
+                        <div
+                          onclick="
+                            window.ccOpenListModal(
+                              'Delivery Note',
+                              'Pending Dispatch',
+                            )
+                          "
+                          style="
+                            background: linear-gradient(
+                              135deg,
+                              #fff7ed,
+                              #ffedd5
+                            );
+                            border: 1px solid #fed7aa;
+                            border-radius: 14px;
+                            padding: 16px;
+                            cursor: pointer;
+                            text-align: center;
+                            box-shadow: 0 6px 16px rgba(249, 115, 22, 0.1);
+                          "
+                        >
+                          <div style="font-size: 22px; margin-bottom: 6px">
+                            ⏳
+                          </div>
+                          <div
+                            id="inv-kpi-pending"
+                            style="
+                              font-size: 22px;
+                              font-weight: 800;
+                              color: #9a3412;
+                            "
+                          >
+                            --
+                          </div>
+                          <div
+                            style="
+                              font-size: 11px;
+                              font-weight: 600;
+                              color: #64748b;
+                              margin-top: 4px;
+                            "
+                          >
+                            Pending Dispatch
+                          </div>
+                        </div>
+                      </div>
+
+                      <!-- Toolbar -->
+                      <div
+                        style="
+                          display: flex;
+                          gap: 10px;
+                          align-items: center;
+                          flex-wrap: wrap;
+                          margin-bottom: 14px;
+                        "
+                      >
+                        <input
+                          type="text"
+                          id="inv-search-input"
+                          placeholder="🔍 Search items..."
+                          oninput="window.ccInventoryCatFilter()"
+                          style="
+                            padding: 9px 12px;
+                            border: 1px solid #d6dde8;
+                            border-radius: 10px;
+                            font-size: 13px;
+                            min-width: 200px;
+                            background: #fff;
+                            box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.03);
+                          "
+                        />
+                        <select
+                          id="inv-cat-select"
+                          onchange="window.ccInventoryCatFilter()"
+                          style="
+                            padding: 9px 12px;
+                            border: 1px solid #d6dde8;
+                            border-radius: 10px;
+                            font-size: 13px;
+                            background: #fff;
+                            cursor: pointer;
+                          "
+                        >
+                          <option value="">All Categories</option>
+                        </select>
+                        <button
+                          onclick="frappe.set_route('Form', 'Item', 'new')"
+                          style="
+                            padding: 9px 16px;
+                            background: linear-gradient(
+                              135deg,
+                              #2563eb,
+                              #1d4ed8
+                            );
+                            color: #fff;
+                            border: none;
+                            border-radius: 10px;
+                            font-size: 13px;
+                            font-weight: 700;
+                            cursor: pointer;
+                            box-shadow: 0 6px 16px rgba(37, 99, 235, 0.28);
+                          "
+                        >
+                          + New Entry
+                        </button>
+                      </div>
+
+                      <!-- Item Table -->
+                      <div
+                        style="
+                          overflow-x: auto;
+                          border-radius: 12px;
+                          box-shadow: 0 2px 12px rgba(15, 23, 42, 0.06);
+                        "
+                      >
+                        <table class="cc-table" style="width: 100%">
+                          <thead>
+                            <tr>
+                              <th>Item Code</th>
+                              <th>Item Name</th>
+                              <th>Category</th>
+                              <th>Unit</th>
+                              <th>Opening Stock</th>
+                              <th>Reserved</th>
+                              <th>Available</th>
+                            </tr>
+                          </thead>
+                          <tbody id="inv-tbody"></tbody>
+                        </table>
+                      </div>
+
+                      <!-- Bottom Tiles -->
+                      <div style="display: flex; gap: 12px; margin-top: 16px">
+                        <div
+                          style="
+                            flex: 1;
+                            background: linear-gradient(
+                              135deg,
+                              #eff6ff,
+                              #dbeafe
+                            );
+                            border: 1px solid #bfdbfe;
+                            border-radius: 14px;
+                            padding: 16px;
+                            text-align: center;
+                            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.08);
+                          "
+                        >
+                          <div
+                            style="
+                              font-size: 12px;
+                              font-weight: 700;
+                              color: #64748b;
+                              margin-bottom: 6px;
+                            "
+                          >
+                            Total Stock Value
+                          </div>
+                          <div
+                            id="inv-total-tile"
+                            style="
+                              font-size: 24px;
+                              font-weight: 800;
+                              color: #1d4ed8;
+                            "
+                          >
+                            --
+                          </div>
+                        </div>
+                        <div
+                          style="
+                            flex: 1;
+                            background: linear-gradient(
+                              135deg,
+                              #f5f3ff,
+                              #ede9fe
+                            );
+                            border: 1px solid #c4b5fd;
+                            border-radius: 14px;
+                            padding: 16px;
+                            text-align: center;
+                            box-shadow: 0 4px 12px rgba(109, 40, 217, 0.08);
+                          "
+                        >
+                          <div
+                            style="
+                              font-size: 12px;
+                              font-weight: 700;
+                              color: #64748b;
+                              margin-bottom: 6px;
+                            "
+                          >
+                            Reserved Stock
+                          </div>
+                          <div
+                            id="inv-reserved-tile"
+                            style="
+                              font-size: 24px;
+                              font-weight: 800;
+                              color: #6d28d9;
+                            "
+                          >
+                            --
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- ===== 2. GOODS RECEIVED ===== -->
+                    <div
+                      id="sec-grn"
+                      class="cc-section-block"
+                      style="display: none"
+                    >
+                      <!-- Toolbar -->
+                      <div
+                        style="
+                          display: flex;
+                          gap: 10px;
+                          align-items: center;
+                          flex-wrap: wrap;
+                          margin-bottom: 14px;
+                        "
+                      >
+                        <input
+                          type="text"
+                          id="grn-search"
+                          placeholder="🔍 Search GRN..."
+                          oninput="
+                            window.ccFilterSection('grn-tbody', 'grn-search')
+                          "
+                          style="
+                            padding: 9px 12px;
+                            border: 1px solid #d6dde8;
+                            border-radius: 10px;
+                            font-size: 13px;
+                            min-width: 180px;
+                            background: #fff;
+                          "
+                        />
+                        <input
+                          type="text"
+                          id="grn-dispatch-search"
+                          placeholder="Dispatch ID..."
+                          oninput="
+                            window.ccFilterSection(
+                              'grn-tbody',
+                              'grn-dispatch-search',
+                            )
+                          "
+                          style="
+                            padding: 9px 12px;
+                            border: 1px solid #d6dde8;
+                            border-radius: 10px;
+                            font-size: 13px;
+                            min-width: 140px;
+                            background: #fff;
+                          "
+                        />
+                        <button
+                          onclick="
+                            frappe.set_route('Form', 'Purchase Receipt', 'new')
+                          "
+                          style="
+                            padding: 9px 16px;
+                            background: linear-gradient(
+                              135deg,
+                              #2563eb,
+                              #1d4ed8
+                            );
+                            color: #fff;
+                            border: none;
+                            border-radius: 10px;
+                            font-size: 13px;
+                            font-weight: 700;
+                            cursor: pointer;
+                            box-shadow: 0 6px 16px rgba(37, 99, 235, 0.28);
+                          "
+                        >
+                          + New Good Entry
+                        </button>
+                      </div>
+
+                      <!-- GRN Table -->
+                      <div
+                        style="
+                          overflow-x: auto;
+                          border-radius: 12px;
+                          box-shadow: 0 2px 12px rgba(15, 23, 42, 0.06);
+                          margin-bottom: 24px;
+                        "
+                      >
+                        <table class="cc-table" style="width: 100%">
+                          <thead>
+                            <tr>
+                              <th>GRN No</th>
+                              <th>Supplier</th>
+                              <th>Date</th>
+                              <th>Amount</th>
+                              <th>Status</th>
+                            </tr>
+                          </thead>
+                          <tbody id="grn-tbody"></tbody>
+                        </table>
+                      </div>
+
+                      <!-- Project Material Tracking -->
+                      <div
+                        style="
+                          font-size: 14px;
+                          font-weight: 800;
+                          color: #0f172a;
+                          margin-bottom: 10px;
+                          border-left: 4px solid #2563eb;
+                          padding-left: 10px;
+                        "
+                      >
+                        📦 Project Material Tracking
+                      </div>
+                      <div
+                        style="
+                          overflow-x: auto;
+                          border-radius: 12px;
+                          box-shadow: 0 2px 12px rgba(15, 23, 42, 0.06);
+                        "
+                      >
+                        <table class="cc-table" style="width: 100%">
+                          <thead>
+                            <tr>
+                              <th>PO No</th>
+                              <th>Vendor</th>
+                              <th>Item</th>
+                              <th>Ordered Qty</th>
+                              <th>Received Qty</th>
+                              <th>Pending</th>
+                              <th>Amount</th>
+                              <th>Status</th>
+                            </tr>
+                          </thead>
+                          <tbody id="proj-track-tbody"></tbody>
+                        </table>
+                      </div>
+                    </div>
+
+                    <!-- ===== 3. STOCK MOVEMENT ===== -->
+                    <div
+                      id="sec-stock"
+                      class="cc-section-block"
+                      style="display: none"
+                    >
+                      <!-- Toolbar -->
+                      <div
+                        style="
+                          display: flex;
+                          gap: 10px;
+                          align-items: center;
+                          flex-wrap: wrap;
+                          margin-bottom: 14px;
+                        "
+                      >
+                        <input
+                          type="text"
+                          id="stock-search"
+                          placeholder="🔍 Search stock entries..."
+                          oninput="
+                            window.ccFilterSection(
+                              'stock-tbody',
+                              'stock-search',
+                            )
+                          "
+                          style="
+                            padding: 9px 12px;
+                            border: 1px solid #d6dde8;
+                            border-radius: 10px;
+                            font-size: 13px;
+                            min-width: 220px;
+                            background: #fff;
+                          "
+                        />
+                      </div>
+
+                      <!-- Stock Table -->
+                      <div
+                        style="
+                          overflow-x: auto;
+                          border-radius: 12px;
+                          box-shadow: 0 2px 12px rgba(15, 23, 42, 0.06);
+                          margin-bottom: 20px;
+                        "
+                      >
+                        <table class="cc-table" style="width: 100%">
+                          <thead>
+                            <tr>
+                              <th>Date</th>
+                              <th>Entry No</th>
+                              <th>Type</th>
+                              <th>Qty In</th>
+                              <th>Qty Out</th>
+                              <th>Warehouse</th>
+                              <th>Status</th>
+                            </tr>
+                          </thead>
+                          <tbody id="stock-tbody"></tbody>
+                        </table>
+                      </div>
+
+                      <!-- Bottom 3 Tiles -->
+                      <div
+                        style="
+                          display: grid;
+                          grid-template-columns: repeat(3, 1fr);
+                          gap: 12px;
+                          margin-top: 4px;
+                        "
+                      >
+                        <div
+                          onclick="window.ccLoadStockMovement()"
+                          style="
+                            background: linear-gradient(
+                              135deg,
+                              #ecfdf5,
+                              #d1fae5
+                            );
+                            border: 1px solid #6ee7b7;
+                            border-radius: 14px;
+                            padding: 18px;
+                            cursor: pointer;
+                            text-align: center;
+                            box-shadow: 0 6px 16px rgba(16, 185, 129, 0.1);
+                          "
+                        >
+                          <div
+                            style="
+                              font-size: 28px;
+                              font-weight: 800;
+                              color: #065f46;
+                            "
+                            id="stock-tile-received"
+                          >
+                            --
+                          </div>
+                          <div
+                            style="
+                              font-size: 12px;
+                              font-weight: 700;
+                              color: #64748b;
+                              margin-top: 6px;
+                            "
+                          >
+                            Stock Received
+                          </div>
+                        </div>
+                        <div
+                          onclick="window.ccLoadStockMovement()"
+                          style="
+                            background: linear-gradient(
+                              135deg,
+                              #eff6ff,
+                              #dbeafe
+                            );
+                            border: 1px solid #bfdbfe;
+                            border-radius: 14px;
+                            padding: 18px;
+                            cursor: pointer;
+                            text-align: center;
+                            box-shadow: 0 6px 16px rgba(37, 99, 235, 0.1);
+                          "
+                        >
+                          <div
+                            style="
+                              font-size: 28px;
+                              font-weight: 800;
+                              color: #1d4ed8;
+                            "
+                            id="stock-tile-delivered"
+                          >
+                            --
+                          </div>
+                          <div
+                            style="
+                              font-size: 12px;
+                              font-weight: 700;
+                              color: #64748b;
+                              margin-top: 6px;
+                            "
+                          >
+                            Delivered
+                          </div>
+                        </div>
+                        <div
+                          onclick="window.ccLoadStockMovement()"
+                          style="
+                            background: linear-gradient(
+                              135deg,
+                              #fef2f2,
+                              #fee2e2
+                            );
+                            border: 1px solid #fca5a5;
+                            border-radius: 14px;
+                            padding: 18px;
+                            cursor: pointer;
+                            text-align: center;
+                            box-shadow: 0 6px 16px rgba(239, 68, 68, 0.1);
+                          "
+                        >
+                          <div
+                            style="
+                              font-size: 28px;
+                              font-weight: 800;
+                              color: #991b1b;
+                            "
+                            id="stock-tile-delayed"
+                          >
+                            --
+                          </div>
+                          <div
+                            style="
+                              font-size: 12px;
+                              font-weight: 700;
+                              color: #64748b;
+                              margin-top: 6px;
+                            "
+                          >
+                            Delayed (Drafts)
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- ===== DISPATCH ===== -->
+                    <div
+                      id="sec-dispatch"
+                      class="cc-section-block"
+                      style="display: none"
+                    >
+                      <div
+                        style="
+                          display: flex;
+                          gap: 10px;
+                          align-items: center;
+                          flex-wrap: wrap;
+                          margin-bottom: 14px;
+                        "
+                      >
+                        <input
+                          type="text"
+                          id="dispatch-search"
+                          placeholder="🔍 Search dispatch..."
+                          oninput="
+                            window.ccFilterSection(
+                              'dispatch-tbody',
+                              'dispatch-search',
+                            )
+                          "
+                          style="
+                            padding: 9px 12px;
+                            border: 1px solid #d6dde8;
+                            border-radius: 10px;
+                            font-size: 13px;
+                            min-width: 200px;
+                            background: #fff;
+                          "
+                        />
+                        <button
+                          onclick="
+                            frappe.set_route('Form', 'Delivery Note', 'new')
+                          "
+                          style="
+                            padding: 9px 16px;
+                            background: linear-gradient(
+                              135deg,
+                              #2563eb,
+                              #1d4ed8
+                            );
+                            color: #fff;
+                            border: none;
+                            border-radius: 10px;
+                            font-size: 13px;
+                            font-weight: 700;
+                            cursor: pointer;
+                            box-shadow: 0 6px 16px rgba(37, 99, 235, 0.28);
+                          "
+                        >
+                          + New Dispatch
+                        </button>
+                      </div>
+                      <div
+                        style="
+                          overflow-x: auto;
+                          border-radius: 12px;
+                          box-shadow: 0 2px 12px rgba(15, 23, 42, 0.06);
+                        "
+                      >
+                        <table class="cc-table" style="width: 100%">
+                          <thead>
+                            <tr>
+                              <th>Dispatch ID</th>
+                              <th>Customer</th>
+                              <th>Project</th>
+                              <th>Date</th>
+                              <th>Qty</th>
+                              <th>Transporter</th>
+                              <th>Status</th>
+                            </tr>
+                          </thead>
+                          <tbody id="dispatch-tbody"></tbody>
+                        </table>
+                      </div>
+                    </div>
+
+                    <!-- ===== PURCHASE REQUEST ===== -->
+                    <div
+                      id="sec-pr"
+                      class="cc-section-block"
+                      style="display: none"
+                    >
+                      <div
+                        style="
+                          overflow-x: auto;
+                          border-radius: 12px;
+                          box-shadow: 0 2px 12px rgba(15, 23, 42, 0.06);
+                        "
+                      >
+                        <table class="cc-table" style="width: 100%">
+                          <thead>
+                            <tr>
+                              <th>Request No</th>
+                              <th>Type</th>
+                              <th>Date</th>
+                              <th>Required By</th>
+                              <th>TAT</th>
+                              <th>Status</th>
+                            </tr>
+                          </thead>
+                          <tbody id="pr-tbody"></tbody>
+                        </table>
+                      </div>
+                    </div>
+
+                    <!-- ===== PURCHASE ORDER ===== -->
+                    <div
+                      id="sec-po"
+                      class="cc-section-block"
+                      style="display: none"
+                    >
+                      <div
+                        style="
+                          overflow-x: auto;
+                          border-radius: 12px;
+                          box-shadow: 0 2px 12px rgba(15, 23, 42, 0.06);
+                        "
+                      >
+                        <table class="cc-table" style="width: 100%">
+                          <thead>
+                            <tr>
+                              <th>PO No</th>
+                              <th>Supplier</th>
+                              <th>Date</th>
+                              <th>Required By</th>
+                              <th>Amount</th>
+                              <th>% Received</th>
+                              <th>TAT</th>
+                              <th>Status</th>
+                            </tr>
+                          </thead>
+                          <tbody id="po-tbody"></tbody>
+                        </table>
+                      </div>
+                    </div>
+
+                    <!-- ===== SUPPLIER ===== -->
+                    <div
+                      id="sec-supplier"
+                      class="cc-section-block"
+                      style="display: none"
+                    >
+                      <div
+                        style="display: flex; gap: 10px; margin-bottom: 14px"
+                      >
+                        <input
+                          type="text"
+                          id="sup-search"
+                          placeholder="🔍 Search supplier..."
+                          oninput="
+                            window.ccFilterSection('sup-tbody', 'sup-search')
+                          "
+                          style="
+                            padding: 9px 12px;
+                            border: 1px solid #d6dde8;
+                            border-radius: 10px;
+                            font-size: 13px;
+                            min-width: 200px;
+                            background: #fff;
+                          "
+                        />
+                        <button
+                          onclick="window.ccExportCSV()"
+                          style="
+                            padding: 9px 16px;
+                            background: #334155;
+                            color: #fff;
+                            border: none;
+                            border-radius: 10px;
+                            font-size: 13px;
+                            font-weight: 600;
+                            cursor: pointer;
+                          "
+                        >
+                          Export CSV
+                        </button>
+                      </div>
+                      <div
+                        style="
+                          overflow-x: auto;
+                          border-radius: 12px;
+                          box-shadow: 0 2px 12px rgba(15, 23, 42, 0.06);
+                        "
+                      >
+                        <table class="cc-table" style="width: 100%">
+                          <thead>
+                            <tr>
+                              <th>Supplier Code</th>
+                              <th>Supplier Name</th>
+                              <th>Group</th>
+                              <th>Country</th>
+                            </tr>
+                          </thead>
+                          <tbody id="sup-tbody"></tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- end scrollable body -->
+                </div>
+                <!-- end modal box -->
+              </div>
+              <!-- end backdrop -->
+            </div>
+            <div class="cc-modal-actions">
+              <button class="btn-cc" onclick="window.ccExportCSV()">
+                Export CSV
+              </button>
+              <button class="btn-cc" onclick="window.ccExportExcel()">
+                Export Excel
+              </button>
+              <button class="btn-cc" onclick="window.ccCloseModal()">✕</button>
+            </div>
+          </div>
+          <div class="cc-modal-body">
+            <div class="cc-modal-search">
+              <input
+                type="text"
+                id="cc-modal-search"
+                placeholder="Search..."
+                oninput="window.ccFilterModalTable()"
+              />
+            </div>
+            <div class="cc-modal-table-wrap">
+              <table class="cc-table cc-modal-table">
+                <thead id="cc-modal-thead"></thead>
+                <tbody id="cc-modal-tbody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+
+  <script>
+    window.MY_ROOT = root_element;
+
+    window.CC_STATE = {
+      data: [],
+      headers: [],
+      doctype: "",
+      title: "",
+      lowOnly: false,
+    };
+
+    // ============================================================
+    // EXISTING FUNCTIONS — NOT TOUCHED
+    // ============================================================
+    window.ccCalcTAT = function (startDate, endDate) {
+      if (!startDate || !endDate) return { text: "-", cls: "badge-yellow" };
+      var s = new Date(startDate);
+      var e = new Date(endDate);
+      var today = new Date();
+      var daysLeft = Math.ceil((e - today) / (1000 * 60 * 60 * 24));
+      if (daysLeft < 0) return { text: "Overdue", cls: "badge-red" };
+      if (daysLeft <= 2)
+        return { text: daysLeft + "d left", cls: "badge-yellow" };
+      return { text: daysLeft + "d left", cls: "badge-green" };
+    };
+
+    window.ccOpenDoc = function (doctype, name) {
+      if (window.frappe) frappe.set_route("Form", doctype, name);
+    };
+
+    window.ccCloseModal = function () {
+      window.MY_ROOT.querySelector("#cc-modal-backdrop").style.display = "none";
+    };
+
+    window.ccExportCSV = function () {
+      var rows = [];
+      rows.push(
+        window.CC_STATE.headers
+          .map(function (h) {
+            return h.label;
+          })
+          .join(","),
+      );
+      for (var i = 0; i < window.CC_STATE.data.length; i++) {
+        var row = [];
+        for (var j = 0; j < window.CC_STATE.headers.length; j++) {
+          var key = window.CC_STATE.headers[j].key;
+          var v =
+            window.CC_STATE.data[i][key] != null
+              ? String(window.CC_STATE.data[i][key])
+              : "";
+          row.push('"' + v.replace(/"/g, '""') + '"');
+        }
+        rows.push(row.join(","));
+      }
+      var blob = new Blob([rows.join("\n")], {
+        type: "text/csv;charset=utf-8;",
+      });
+      var link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = (window.CC_STATE.title || "export") + ".csv";
+      link.click();
+    };
+
+    window.ccExportExcel = function () {
+      window.ccExportCSV();
+    };
+
+    // ============================================================
+    // MODAL OPEN — ROUTES TO CORRECT SECTION
+    // ============================================================
+    window.ccOpenListModal = function (doctype, title, lowOnly) {
+      window.CC_STATE.doctype = doctype;
+      window.CC_STATE.title = title || doctype;
+      window.CC_STATE.lowOnly = !!lowOnly;
+
+      var root = window.MY_ROOT;
+      root.querySelector("#cc-modal-title").textContent = window.CC_STATE.title;
+      root.querySelector("#cc-modal-subtitle").textContent = "";
+      root.querySelector("#cc-modal-backdrop").style.display = "flex";
+
+      // Hide all sections first
+      var secs = root.querySelectorAll(".cc-section-block");
+      secs.forEach(function (s) {
+        s.style.display = "none";
+      });
+
+      // Show correct section
+      if (doctype === "Item") {
+        root.querySelector("#sec-inventory").style.display = "block";
+        window.ccLoadInventory();
+      } else if (doctype === "Purchase Receipt") {
+        root.querySelector("#sec-grn").style.display = "block";
+        window.ccLoadGRN();
+      } else if (doctype === "Stock Entry") {
+        root.querySelector("#sec-stock").style.display = "block";
+        window.ccLoadStockMovement();
+      } else if (doctype === "Delivery Note") {
+        root.querySelector("#sec-dispatch").style.display = "block";
+        window.ccLoadDispatch();
+      } else if (doctype === "Material Request") {
+        root.querySelector("#sec-pr").style.display = "block";
+        window.ccLoadMaterialRequest();
+      } else if (doctype === "Purchase Order") {
+        root.querySelector("#sec-po").style.display = "block";
+        window.ccLoadPurchaseOrder();
+      } else if (doctype === "Supplier") {
+        root.querySelector("#sec-supplier").style.display = "block";
+        window.ccLoadSupplier();
+      } else {
+        // fallback — existing generic modal
+        var genericSearch = root.querySelector("#cc-modal-search");
+        if (genericSearch) genericSearch.value = "";
+        root.querySelector("#sec-generic").style.display = "block";
+        window.ccLoadGeneric(doctype);
+      }
+    };
+
+    // Generic filter for old search input
+    window.ccFilterModalTable = function () {
+      var root = window.MY_ROOT;
+      var searchEl = root.querySelector("#cc-modal-search");
+      var q = searchEl ? (searchEl.value || "").toLowerCase() : "";
+      var tbody = root.querySelector("#cc-modal-tbody");
+      if (!tbody) return;
+      var rows = tbody.querySelectorAll("tr");
+      rows.forEach(function (r) {
+        r.style.display =
+          r.textContent.toLowerCase().indexOf(q) >= 0 ? "" : "none";
+      });
+    };
+
+    // Generic section filter
+    window.ccFilterSection = function (tbodyId, inputId) {
+      var root = window.MY_ROOT;
+      var q = (root.querySelector("#" + inputId).value || "").toLowerCase();
+      var rows = root.querySelector("#" + tbodyId).querySelectorAll("tr");
+      rows.forEach(function (r) {
+        r.style.display =
+          r.textContent.toLowerCase().indexOf(q) >= 0 ? "" : "none";
+      });
+    };
+
+    // ============================================================
+    // 1. INVENTORY MASTER — Item doctype
+    // ============================================================
+    window.ccLoadInventory = function () {
+      if (!window.frappe) return;
+      frappe.call({
+        method: "frappe.client.get_list",
+        args: {
+          doctype: "Item",
+          fields: [
+            "name",
+            "item_name",
+            "item_group",
+            "stock_uom",
+            "opening_stock",
+            "safety_stock",
+            "modified",
+          ],
+          filters: [["disabled", "=", 0]],
+          limit_page_length: 100,
+          order_by: "modified desc",
+        },
+        callback: function (r) {
+          var data = r && r.message ? r.message : [];
+          window.CC_STATE.data = data;
+          window.ccBuildInventoryKPIs(data);
+          window.ccBuildCategoryFilter(data);
+          window.ccRenderInventoryTable(data);
+        },
+      });
+    };
+
+    window.ccBuildInventoryKPIs = function (data) {
+      var root = window.MY_ROOT;
+
+      var totalStock = 0;
+      for (var i = 0; i < data.length; i++) {
+        totalStock += Number(data[i].opening_stock || 0);
+      }
+      root.querySelector("#inv-kpi-stock").textContent =
+        totalStock.toLocaleString("en-IN");
+
+      // Dispatching Projects — Delivery Notes submitted
+      frappe.call({
+        method: "frappe.client.get_list",
+        args: {
+          doctype: "Delivery Note",
+          fields: ["name"],
+          filters: [["docstatus", "=", 1]],
+          limit_page_length: 500,
+        },
+        callback: function (r2) {
+          root.querySelector("#inv-kpi-dispatching").textContent =
+            r2 && r2.message ? r2.message.length : 0;
+        },
+      });
+
+      // Out of Stock — items where opening_stock = 0 or null
+      var oos = 0;
+      for (var j = 0; j < data.length; j++) {
+        if (!data[j].opening_stock || Number(data[j].opening_stock) <= 0) oos++;
+      }
+      root.querySelector("#inv-kpi-oos").textContent = oos;
+
+      // Pending Dispatch — Delivery Notes draft
+      frappe.call({
+        method: "frappe.client.get_list",
+        args: {
+          doctype: "Delivery Note",
+          fields: ["name"],
+          filters: [["docstatus", "=", 0]],
+          limit_page_length: 500,
+        },
+        callback: function (r3) {
+          root.querySelector("#inv-kpi-pending").textContent =
+            r3 && r3.message ? r3.message.length : 0;
+        },
+      });
+    };
+
+    window.ccBuildCategoryFilter = function (data) {
+      var root = window.MY_ROOT;
+      var sel = root.querySelector("#inv-cat-select");
+      if (!sel) return;
+      var seen = {};
+      var opts = '<option value="">All Categories</option>';
+      for (var i = 0; i < data.length; i++) {
+        var g = data[i].item_group;
+        if (g && !seen[g]) {
+          seen[g] = 1;
+          opts += '<option value="' + g + '">' + g + "</option>";
+        }
+      }
+      sel.innerHTML = opts;
+    };
+
+    window.ccInventoryCatFilter = function () {
+      var root = window.MY_ROOT;
+      var val = (
+        root.querySelector("#inv-cat-select").value || ""
+      ).toLowerCase();
+      var q = (
+        root.querySelector("#inv-search-input").value || ""
+      ).toLowerCase();
+      var rows = root.querySelector("#inv-tbody").querySelectorAll("tr");
+      rows.forEach(function (r) {
+        var txt = r.textContent.toLowerCase();
+        var catMatch = !val || txt.indexOf(val) >= 0;
+        var qMatch = !q || txt.indexOf(q) >= 0;
+        r.style.display = catMatch && qMatch ? "" : "none";
+      });
+    };
+
+    window.ccRenderInventoryTable = function (data) {
+      var root = window.MY_ROOT;
+      var tbody = root.querySelector("#inv-tbody");
+      var barColors = [
+        "#3B82F6",
+        "#10B981",
+        "#F59E0B",
+        "#8B5CF6",
+        "#EF4444",
+        "#06B6D4",
+      ];
+      var html = "";
+      var totalStock = 0;
+      var totalReserved = 0;
+
+      for (var i = 0; i < data.length; i++) {
+        var d = data[i];
+        var opening = Number(d.opening_stock || 0);
+        var reserved = Number(d.safety_stock || 0);
+        var available = Math.max(0, opening - reserved);
+        var color = barColors[i % barColors.length];
+        var barPct =
+          opening > 0
+            ? Math.min(100, Math.round((opening / (opening + 20)) * 100))
+            : 5;
+        var availCls =
+          available > 20
+            ? "pill-green"
+            : available > 5
+              ? "pill-orange"
+              : "pill-red";
+
+        totalStock += opening;
+        totalReserved += reserved;
+
+        html +=
+          "<tr onclick=\"window.ccOpenDoc('Item', '" +
+          d.name +
+          '\')" style="cursor:pointer;">' +
+          '<td><b class="lnk-blue">' +
+          (d.name || "") +
+          "</b></td>" +
+          "<td>" +
+          (d.item_name || "") +
+          "</td>" +
+          '<td><span class="cat-tag">' +
+          (d.item_group || "") +
+          "</span></td>" +
+          "<td>" +
+          (d.stock_uom || "") +
+          "</td>" +
+          "<td>" +
+          '<div style="display:flex;align-items:center;gap:6px;">' +
+          '<div style="width:55px;height:7px;background:#E2E8F0;border-radius:4px;overflow:hidden;">' +
+          '<div style="width:' +
+          barPct +
+          "%;height:100%;background:" +
+          color +
+          ';border-radius:4px;"></div>' +
+          "</div>" +
+          '<span style="font-weight:700;color:' +
+          color +
+          ';font-size:12px;">' +
+          opening +
+          "</span>" +
+          "</div>" +
+          "</td>" +
+          '<td><span style="font-weight:600;color:#F59E0B;">' +
+          reserved +
+          "</span></td>" +
+          '<td><span class="badge ' +
+          availCls +
+          '">&#9651; ' +
+          available +
+          "</span></td>" +
+          "</tr>";
+      }
+
+      tbody.innerHTML =
+        html ||
+        '<tr><td colspan="7" style="text-align:center;padding:20px;color:#94A3B8;">No items found</td></tr>';
+
+      root.querySelector("#inv-total-tile").textContent =
+        totalStock.toLocaleString("en-IN");
+      root.querySelector("#inv-reserved-tile").textContent =
+        totalReserved.toLocaleString("en-IN");
+    };
+
+    // ============================================================
+    // 2. GOODS RECEIVED — Purchase Receipt doctype
+    // ============================================================
+    window.ccLoadGRN = function () {
+      if (!window.frappe) return;
+      frappe.call({
+        method: "frappe.client.get_list",
+        args: {
+          doctype: "Purchase Receipt",
+          fields: [
+            "name",
+            "supplier",
+            "posting_date",
+            "status",
+            "grand_total",
+            "modified",
+          ],
+          limit_page_length: 50,
+          order_by: "posting_date desc",
+        },
+        callback: function (r) {
+          var data = r && r.message ? r.message : [];
+          window.ccRenderGRNTable(data);
+        },
+      });
+      window.ccLoadProjectMaterialTracking();
+    };
+
+    window.ccRenderGRNTable = function (data) {
+      var root = window.MY_ROOT;
+      var tbody = root.querySelector("#grn-tbody");
+      var html = "";
+
+      for (var i = 0; i < data.length; i++) {
+        var d = data[i];
+        var sCls =
+          d.status === "Completed"
+            ? "pill-green"
+            : d.status === "Cancelled"
+              ? "pill-red"
+              : "pill-orange";
+        html +=
+          "<tr onclick=\"window.ccOpenDoc('Purchase Receipt', '" +
+          d.name +
+          '\')" style="cursor:pointer;">' +
+          '<td><b class="lnk-blue">' +
+          (d.name || "") +
+          "</b></td>" +
+          "<td>" +
+          (d.supplier || "") +
+          "</td>" +
+          "<td>" +
+          (d.posting_date || "") +
+          "</td>" +
+          "<td>&#8377;" +
+          Number(d.grand_total || 0).toLocaleString("en-IN") +
+          "</td>" +
+          '<td><span class="badge ' +
+          sCls +
+          '">' +
+          (d.status || "Draft") +
+          "</span></td>" +
+          "</tr>";
+      }
+
+      tbody.innerHTML =
+        html ||
+        '<tr><td colspan="5" style="text-align:center;padding:20px;color:#94A3B8;">No records found</td></tr>';
+    };
+
+    window.ccLoadProjectMaterialTracking = function () {
+      if (!window.frappe) return;
+      frappe.call({
+        method: "frappe.client.get_list",
+        args: {
+          doctype: "Purchase Order",
+          fields: [
+            "name",
+            "supplier",
+            "transaction_date",
+            "status",
+            "grand_total",
+            "per_received",
+            "modified",
+          ],
+          limit_page_length: 20,
+          order_by: "transaction_date desc",
+        },
+        callback: function (r) {
+          var data = r && r.message ? r.message : [];
+          var root = window.MY_ROOT;
+          var tbody = root.querySelector("#proj-track-tbody");
+          var html = "";
+
+          for (var i = 0; i < data.length; i++) {
+            var d = data[i];
+            var ordQty = Number(d.grand_total || 0);
+            var recPct = Number(d.per_received || 0);
+            var recQty = Math.round((ordQty * recPct) / 100);
+            var total = ordQty > 0 ? Math.round(ordQty - recQty) : 0;
+            var sCls =
+              d.status === "Completed"
+                ? "pill-green"
+                : d.status === "Cancelled"
+                  ? "pill-red"
+                  : "pill-orange";
+
+            html +=
+              "<tr onclick=\"window.ccOpenDoc('Purchase Order', '" +
+              d.name +
+              '\')" style="cursor:pointer;">' +
+              '<td><b class="lnk-blue">' +
+              (d.name || "") +
+              "</b></td>" +
+              "<td>" +
+              (d.supplier || "") +
+              "</td>" +
+              "<td>-</td>" +
+              "<td>" +
+              Math.round(ordQty) +
+              "</td>" +
+              "<td>" +
+              recQty +
+              "</td>" +
+              "<td>" +
+              total +
+              "</td>" +
+              "<td>&#8377;" +
+              ordQty.toLocaleString("en-IN") +
+              "</td>" +
+              '<td><span class="badge ' +
+              sCls +
+              '">' +
+              (d.status || "-") +
+              "</span></td>" +
+              "</tr>";
+          }
+
+          tbody.innerHTML =
+            html ||
+            '<tr><td colspan="8" style="text-align:center;padding:20px;color:#94A3B8;">No data</td></tr>';
+        },
+      });
+    };
+
+    // ============================================================
+    // 3. STOCK MOVEMENT — Stock Entry doctype
+    // ============================================================
+    window.ccLoadStockMovement = function () {
+      if (!window.frappe) return;
+      frappe.call({
+        method: "frappe.client.get_list",
+        args: {
+          doctype: "Stock Entry",
+          fields: [
+            "name",
+            "stock_entry_type",
+            "posting_date",
+            "from_warehouse",
+            "to_warehouse",
+            "docstatus",
+            "modified",
+          ],
+          limit_page_length: 50,
+          order_by: "posting_date desc",
+        },
+        callback: function (r) {
+          var data = r && r.message ? r.message : [];
+          window.ccRenderStockTable(data);
+          window.ccRenderStockTiles(data);
+        },
+      });
+    };
+
+    window.ccRenderStockTable = function (data) {
+      var root = window.MY_ROOT;
+      var tbody = root.querySelector("#stock-tbody");
+      var html = "";
+
+      for (var i = 0; i < data.length; i++) {
+        var d = data[i];
+        var typCls =
+          d.stock_entry_type === "Material Receipt"
+            ? "pill-green"
+            : d.stock_entry_type === "Material Issue"
+              ? "pill-red"
+              : "pill-blue";
+        var stsCls =
+          d.docstatus == 1
+            ? "pill-green"
+            : d.docstatus == 2
+              ? "pill-red"
+              : "pill-orange";
+        var stsText =
+          d.docstatus == 1
+            ? "Submitted"
+            : d.docstatus == 2
+              ? "Cancelled"
+              : "Draft";
+
+        html +=
+          "<tr onclick=\"window.ccOpenDoc('Stock Entry', '" +
+          d.name +
+          '\')" style="cursor:pointer;">' +
+          "<td>" +
+          (d.posting_date || "") +
+          "</td>" +
+          '<td><b class="lnk-blue">' +
+          (d.name || "") +
+          "</b></td>" +
+          '<td><span class="badge ' +
+          typCls +
+          '">' +
+          (d.stock_entry_type || "") +
+          "</span></td>" +
+          "<td>-</td>" +
+          "<td>-</td>" +
+          "<td>" +
+          (d.from_warehouse || d.to_warehouse || "-") +
+          "</td>" +
+          '<td><span class="badge ' +
+          stsCls +
+          '">' +
+          stsText +
+          "</span></td>" +
+          "</tr>";
+      }
+
+      tbody.innerHTML =
+        html ||
+        '<tr><td colspan="7" style="text-align:center;padding:20px;color:#94A3B8;">No entries found</td></tr>';
+    };
+
+    window.ccRenderStockTiles = function (data) {
+      var root = window.MY_ROOT;
+      var received = 0,
+        delivered = 0,
+        delayed = 0;
+
+      for (var i = 0; i < data.length; i++) {
+        var d = data[i];
+        if (d.stock_entry_type === "Material Receipt") received++;
+        else if (d.stock_entry_type === "Material Issue") delivered++;
+        if (d.docstatus == 0) delayed++;
+      }
+
+      root.querySelector("#stock-tile-received").textContent = received;
+      root.querySelector("#stock-tile-delivered").textContent = delivered;
+      root.querySelector("#stock-tile-delayed").textContent = delayed;
+    };
+
+    // ============================================================
+    // DISPATCH (Delivery Note) — used elsewhere
+    // ============================================================
+    window.ccLoadDispatch = function () {
+      if (!window.frappe) return;
+      frappe.call({
+        method: "frappe.client.get_list",
+        args: {
+          doctype: "Delivery Note",
+          fields: [
+            "name",
+            "customer",
+            "project",
+            "posting_date",
+            "total_qty",
+            "transporter_name",
+            "status",
+            "modified",
+          ],
+          limit_page_length: 50,
+          order_by: "posting_date desc",
+        },
+        callback: function (r) {
+          var data = r && r.message ? r.message : [];
+          var root = window.MY_ROOT;
+          var tbody = root.querySelector("#dispatch-tbody");
+          if (!tbody) return;
+          var html = "";
+
+          for (var i = 0; i < data.length; i++) {
+            var d = data[i];
+            var sCls =
+              d.status === "Submitted"
+                ? "pill-green"
+                : d.status === "Cancelled"
+                  ? "pill-red"
+                  : "pill-orange";
+            html +=
+              "<tr onclick=\"window.ccOpenDoc('Delivery Note', '" +
+              d.name +
+              '\')" style="cursor:pointer;">' +
+              '<td><b class="lnk-blue">' +
+              (d.name || "") +
+              "</b></td>" +
+              "<td>" +
+              (d.customer || "") +
+              "</td>" +
+              "<td>" +
+              (d.project || "-") +
+              "</td>" +
+              "<td>" +
+              (d.posting_date || "") +
+              "</td>" +
+              "<td>" +
+              (d.total_qty || 0) +
+              "</td>" +
+              "<td>" +
+              (d.transporter_name || "-") +
+              "</td>" +
+              '<td><span class="badge ' +
+              sCls +
+              '">' +
+              (d.status || "Draft") +
+              "</span></td>" +
+              "</tr>";
+          }
+          tbody.innerHTML =
+            html ||
+            '<tr><td colspan="7" style="text-align:center;padding:20px;color:#94A3B8;">No data</td></tr>';
+        },
+      });
+    };
+
+    // ============================================================
+    // MATERIAL REQUEST
+    // ============================================================
+    window.ccLoadMaterialRequest = function () {
+      if (!window.frappe) return;
+      frappe.call({
+        method: "frappe.client.get_list",
+        args: {
+          doctype: "Material Request",
+          fields: [
+            "name",
+            "transaction_date",
+            "schedule_date",
+            "status",
+            "material_request_type",
+            "modified",
+          ],
+          limit_page_length: 50,
+          order_by: "transaction_date desc",
+        },
+        callback: function (r) {
+          var data = r && r.message ? r.message : [];
+          var root = window.MY_ROOT;
+          var tbody = root.querySelector("#pr-tbody");
+          if (!tbody) return;
+          var html = "";
+
+          for (var i = 0; i < data.length; i++) {
+            var d = data[i];
+            var tat = window.ccCalcTAT(d.transaction_date, d.schedule_date);
+            var sCls =
+              d.status === "Ordered"
+                ? "pill-green"
+                : d.status === "Cancelled"
+                  ? "pill-red"
+                  : "pill-orange";
+            html +=
+              "<tr onclick=\"window.ccOpenDoc('Material Request', '" +
+              d.name +
+              '\')" style="cursor:pointer;">' +
+              '<td><b class="lnk-blue">' +
+              (d.name || "") +
+              "</b></td>" +
+              "<td>" +
+              (d.material_request_type || "") +
+              "</td>" +
+              "<td>" +
+              (d.transaction_date || "") +
+              "</td>" +
+              "<td>" +
+              (d.schedule_date || "-") +
+              "</td>" +
+              '<td><span class="badge ' +
+              tat.cls +
+              '">' +
+              tat.text +
+              "</span></td>" +
+              '<td><span class="badge ' +
+              sCls +
+              '">' +
+              (d.status || "Draft") +
+              "</span></td>" +
+              "</tr>";
+          }
+          tbody.innerHTML =
+            html ||
+            '<tr><td colspan="6" style="text-align:center;padding:20px;color:#94A3B8;">No data</td></tr>';
+        },
+      });
+    };
+
+    // ============================================================
+    // PURCHASE ORDER
+    // ============================================================
+    window.ccLoadPurchaseOrder = function () {
+      if (!window.frappe) return;
+      frappe.call({
+        method: "frappe.client.get_list",
+        args: {
+          doctype: "Purchase Order",
+          fields: [
+            "name",
+            "supplier",
+            "transaction_date",
+            "schedule_date",
+            "grand_total",
+            "per_received",
+            "status",
+            "modified",
+          ],
+          limit_page_length: 50,
+          order_by: "transaction_date desc",
+        },
+        callback: function (r) {
+          var data = r && r.message ? r.message : [];
+          var root = window.MY_ROOT;
+          var tbody = root.querySelector("#po-tbody");
+          if (!tbody) return;
+          var html = "";
+
+          for (var i = 0; i < data.length; i++) {
+            var d = data[i];
+            var tat = window.ccCalcTAT(d.transaction_date, d.schedule_date);
+            var sCls =
+              d.status === "Completed"
+                ? "pill-green"
+                : d.status === "Cancelled"
+                  ? "pill-red"
+                  : d.status === "To Receive"
+                    ? "pill-blue"
+                    : "pill-orange";
+            html +=
+              "<tr onclick=\"window.ccOpenDoc('Purchase Order', '" +
+              d.name +
+              '\')" style="cursor:pointer;">' +
+              '<td><b class="lnk-blue">' +
+              (d.name || "") +
+              "</b></td>" +
+              "<td>" +
+              (d.supplier || "") +
+              "</td>" +
+              "<td>" +
+              (d.transaction_date || "") +
+              "</td>" +
+              "<td>" +
+              (d.schedule_date || "-") +
+              "</td>" +
+              "<td>&#8377;" +
+              Number(d.grand_total || 0).toLocaleString("en-IN") +
+              "</td>" +
+              "<td>" +
+              (d.per_received || 0) +
+              "%</td>" +
+              '<td><span class="badge ' +
+              tat.cls +
+              '">' +
+              tat.text +
+              "</span></td>" +
+              '<td><span class="badge ' +
+              sCls +
+              '">' +
+              (d.status || "Draft") +
+              "</span></td>" +
+              "</tr>";
+          }
+          tbody.innerHTML =
+            html ||
+            '<tr><td colspan="8" style="text-align:center;padding:20px;color:#94A3B8;">No data</td></tr>';
+        },
+      });
+    };
+
+    // ============================================================
+    // SUPPLIER
+    // ============================================================
+    window.ccLoadSupplier = function () {
+      if (!window.frappe) return;
+      frappe.call({
+        method: "frappe.client.get_list",
+        args: {
+          doctype: "Supplier",
+          fields: [
+            "name",
+            "supplier_name",
+            "supplier_group",
+            "country",
+            "modified",
+          ],
+          limit_page_length: 50,
+          order_by: "modified desc",
+        },
+        callback: function (r) {
+          var data = r && r.message ? r.message : [];
+          var root = window.MY_ROOT;
+          var tbody = root.querySelector("#sup-tbody");
+          if (!tbody) return;
+          var html = "";
+
+          for (var i = 0; i < data.length; i++) {
+            var d = data[i];
+            html +=
+              "<tr onclick=\"window.ccOpenDoc('Supplier', '" +
+              d.name +
+              '\')" style="cursor:pointer;">' +
+              '<td><b class="lnk-blue">' +
+              (d.name || "") +
+              "</b></td>" +
+              "<td>" +
+              (d.supplier_name || "") +
+              "</td>" +
+              "<td>" +
+              (d.supplier_group || "-") +
+              "</td>" +
+              "<td>" +
+              (d.country || "-") +
+              "</td>" +
+              "</tr>";
+          }
+          tbody.innerHTML =
+            html ||
+            '<tr><td colspan="4" style="text-align:center;padding:20px;color:#94A3B8;">No data</td></tr>';
+        },
+      });
+    };
+
+    // ============================================================
+    // GENERIC FALLBACK (for Task, Project etc — existing behaviour)
+    // ============================================================
+    window.ccLoadGeneric = function (doctype) {
+      if (!window.frappe) return;
+      var fields = ["name", "modified"];
+      if (doctype === "Task")
+        fields = [
+          "name",
+          "subject",
+          "status",
+          "priority",
+          "expected_start_date",
+          "expected_end_date",
+          "modified",
+        ];
+      if (doctype === "Project")
+        fields = [
+          "name",
+          "project_name",
+          "status",
+          "expected_start_date",
+          "expected_end_date",
+          "modified",
+        ];
+
+      frappe.call({
+        method: "frappe.client.get_list",
+        args: {
+          doctype: doctype,
+          fields: fields,
+          limit_page_length: 20,
+          order_by: "modified desc",
+        },
+        callback: function (r) {
+          var data = r && r.message ? r.message : [];
+          window.CC_STATE.data = data;
+          window.ccRenderGenericTable(data, doctype);
+        },
+      });
+    };
+
+    window.ccRenderGenericTable = function (data, doctype) {
+      var root = window.MY_ROOT;
+      var thead = root.querySelector("#cc-modal-thead");
+      var tbody = root.querySelector("#cc-modal-tbody");
+      var headers = [];
+      var rowsHtml = "";
+
+      if (doctype === "Task") {
+        headers = [
+          { key: "name", label: "Task ID" },
+          { key: "subject", label: "Subject" },
+          { key: "priority", label: "Priority" },
+          { key: "status", label: "Status" },
+          { key: "expected_start_date", label: "Start Date" },
+          { key: "expected_end_date", label: "End Date" },
+        ];
+        rowsHtml = data
+          .map(function (d) {
+            var tat = window.ccCalcTAT(
+              d.expected_start_date,
+              d.expected_end_date,
+            );
+            return (
+              "<tr onclick=\"window.ccOpenDoc('Task', '" +
+              d.name +
+              '\')" style="cursor:pointer;">' +
+              '<td><b class="lnk-blue">' +
+              (d.name || "") +
+              "</b></td>" +
+              "<td>" +
+              (d.subject || "") +
+              "</td>" +
+              "<td>" +
+              (d.priority || "") +
+              "</td>" +
+              '<td><span class="badge ' +
+              tat.cls +
+              '">' +
+              (d.status || "") +
+              "</span></td>" +
+              "<td>" +
+              (d.expected_start_date || "") +
+              "</td>" +
+              "<td>" +
+              (d.expected_end_date || "") +
+              "</td></tr>"
+            );
+          })
+          .join("");
+      } else if (doctype === "Project") {
+        headers = [
+          { key: "name", label: "Project" },
+          { key: "project_name", label: "Project Name" },
+          { key: "status", label: "Status" },
+          { key: "expected_start_date", label: "Start Date" },
+          { key: "expected_end_date", label: "End Date" },
+        ];
+        rowsHtml = data
+          .map(function (d) {
+            var tat = window.ccCalcTAT(
+              d.expected_start_date,
+              d.expected_end_date,
+            );
+            return (
+              "<tr onclick=\"window.ccOpenDoc('Project', '" +
+              d.name +
+              '\')" style="cursor:pointer;">' +
+              '<td><b class="lnk-blue">' +
+              (d.name || "") +
+              "</b></td>" +
+              "<td>" +
+              (d.project_name || "") +
+              "</td>" +
+              '<td><span class="badge ' +
+              tat.cls +
+              '">' +
+              (d.status || "") +
+              "</span></td>" +
+              "<td>" +
+              (d.expected_start_date || "") +
+              "</td>" +
+              "<td>" +
+              (d.expected_end_date || "") +
+              "</td></tr>"
+            );
+          })
+          .join("");
+      } else {
+        headers = [
+          { key: "name", label: "Name" },
+          { key: "modified", label: "Modified" },
+        ];
+        rowsHtml = data
+          .map(function (d) {
+            return (
+              "<tr onclick=\"window.ccOpenDoc('" +
+              doctype +
+              "', '" +
+              d.name +
+              '\')" style="cursor:pointer;">' +
+              '<td><b class="lnk-blue">' +
+              (d.name || "") +
+              "</b></td><td>" +
+              (d.modified || "") +
+              "</td></tr>"
+            );
+          })
+          .join("");
+      }
+
+      window.CC_STATE.headers = headers;
+      if (thead)
+        thead.innerHTML =
+          "<tr>" +
+          headers
+            .map(function (h) {
+              return "<th>" + h.label + "</th>";
+            })
+            .join("") +
+          "</tr>";
+      if (tbody)
+        tbody.innerHTML =
+          rowsHtml ||
+          '<tr><td colspan="' +
+            headers.length +
+            '" style="text-align:center;padding:20px;color:#94A3B8;">No data</td></tr>';
+    };
+
+    // ============================================================
+    // MAIN DASHBOARD KPI LOADER — NOT TOUCHED
+    // ============================================================
+    window.fetchCommandCenterData = function () {
+      if (!window.frappe) return;
+      var dateEl = window.MY_ROOT.querySelector("#cc-date");
+      if (dateEl) {
+        var opts = { day: "numeric", month: "short", year: "numeric" };
+        dateEl.textContent = new Date().toLocaleDateString("en-GB", opts);
+      }
+
+      frappe.call({
+        method: "get_solar_command_center",
+        args: {},
+        callback: function (r) {
+          if (r && r.message) {
+            var data = r.message;
+            var root = window.MY_ROOT;
+            root.querySelector("#kpi-items").textContent =
+              data.kpis.total_items || "--";
+            root.querySelector("#kpi-stock-val").textContent =
+              data.kpis.stock_value || "--";
+            root.querySelector("#kpi-res-val").textContent =
+              data.kpis.reserved_value || "--";
+            root.querySelector("#kpi-avail-val").textContent =
+              data.kpis.available_value || "--";
+            root.querySelector("#kpi-low-stock").textContent =
+              data.kpis.low_stock || "--";
+            root.querySelector("#kpi-dispatch").textContent =
+              data.kpis.pending_dispatch || "--";
+            root.querySelector("#kpi-grn").textContent =
+              data.kpis.pending_grn || "--";
+
+            var taskHtml = "";
+            for (var i = 0; i < data.tasks.length; i++) {
+              var t = data.tasks[i];
+              var badge = t.priority === "High" ? "badge-red" : "badge-yellow";
+              taskHtml +=
+                "<tr><td>" +
+                t.name +
+                '</td><td><span class="badge ' +
+                badge +
+                '">' +
+                t.priority +
+                "</span></td><td>" +
+                t.due +
+                "</td></tr>";
+            }
+            root.querySelector("#tbl-tasks").innerHTML = taskHtml;
+
+            var prjHtml = "";
+            for (var j = 0; j < data.projects.length; j++) {
+              var p = data.projects[j];
+              var stsBadge =
+                p.status === "On Track"
+                  ? "badge-green"
+                  : p.status === "Partial"
+                    ? "badge-yellow"
+                    : "badge-red";
+              prjHtml +=
+                "<tr><td><b>" +
+                p.id +
+                "</b></td><td>" +
+                p.pending +
+                "</td><td>" +
+                p.disp +
+                '</td><td><span class="badge ' +
+                stsBadge +
+                '">' +
+                p.status +
+                "</span></td></tr>";
+            }
+            root.querySelector("#tbl-projects").innerHTML = prjHtml;
+
+            var lsHtml = "";
+            for (var k = 0; k < data.low_stock_list.length; k++) {
+              var l = data.low_stock_list[k];
+              lsHtml +=
+                "<tr><td>" +
+                l.item +
+                "</td><td>" +
+                l.avail +
+                "</td><td>" +
+                l.min +
+                '</td><td><span class="badge badge-red">' +
+                l.status +
+                "</span></td></tr>";
+            }
+            root.querySelector("#tbl-low-stock").innerHTML = lsHtml;
+
+            var dispHtml = "";
+            for (var di = 0; di < data.dispatches.length; di++) {
+              var dsp = data.dispatches[di];
+              dispHtml +=
+                "<tr><td>" +
+                dsp.id +
+                "</td><td>" +
+                dsp.prj +
+                "</td><td>" +
+                dsp.item +
+                "</td><td>" +
+                dsp.qty +
+                '</td><td><span class="badge badge-blue">' +
+                dsp.status +
+                "</span></td></tr>";
+            }
+            root.querySelector("#tbl-dispatches").innerHTML = dispHtml;
+
+            var grnHtml = "";
+            for (var g = 0; g < data.grns.length; g++) {
+              var gr = data.grns[g];
+              grnHtml +=
+                "<tr><td>" +
+                gr.id +
+                "</td><td>" +
+                gr.sup +
+                "</td><td>" +
+                gr.item +
+                "</td><td>" +
+                gr.qty +
+                "</td></tr>";
+            }
+            root.querySelector("#tbl-grns").innerHTML = grnHtml;
+          }
+        },
+      });
+    };
+
+    if (window.frappe) {
+      frappe.ready(function () {
+        window.fetchCommandCenterData();
+      });
+    }
+  </script>
+</html>

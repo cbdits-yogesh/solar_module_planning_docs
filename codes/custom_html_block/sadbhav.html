@@ -1,0 +1,4580 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+
+    <style>
+      /* =========================================================
+   COMBINED ESS + EPC DASHBOARD — CSS
+   Nav hamburger lives inside the topbar (not fixed/floating).
+========================================================= */
+
+      /* ── RESET & CORE ── */
+      .ess-wrap * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      .ess-wrap a {
+        text-decoration: none;
+      }
+
+      .ess-wrap {
+        --bg: #f0f2f7;
+        --surface: #ffffff;
+        --accent: #3b6ef6;
+        --accent2: #6f49ff;
+        --success: #22c55e;
+        --danger: #ef4444;
+        --warn: #f59e0b;
+        --text: #1a202c;
+        --muted: #64748b;
+        --border: #e2e8f0;
+        --radius: 14px;
+        --shadow: 0 2px 16px rgba(0, 0, 0, 0.07);
+        --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.12);
+
+        font-family: "DM Sans", sans-serif;
+        background: var(--bg);
+        display: flex;
+        min-height: 100vh;
+        color: var(--text);
+        position: relative;
+      }
+
+      /* ── MAIN LAYOUT ── */
+      .ess-main {
+        flex: 1;
+        min-width: 0;
+        display: flex;
+        flex-direction: column;
+      }
+
+      /* ── TOPBAR ── */
+      .ess-topbar {
+        background: var(--surface);
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 24px; /* uniform left/right padding — no special offset */
+        height: 64px;
+        position: sticky;
+        top: 0;
+        z-index: 90;
+        gap: 12px;
+      }
+
+      .topbar-left {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        flex-shrink: 0;
+      }
+
+      .topbar-right {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        flex-shrink: 0;
+        margin-left: auto;
+      }
+
+      /* ── NAV HAMBURGER — lives inside topbar ── */
+      .float-nav-wrap {
+        position: relative; /* was fixed; now in-flow inside topbar */
+        flex-shrink: 0;
+      }
+
+      .float-nav-btn {
+        width: 40px;
+        height: 40px;
+        border-radius: 10px;
+        background: linear-gradient(135deg, #0d1b2a, #1a3050);
+        border: none;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        transition:
+          transform 0.2s,
+          box-shadow 0.2s;
+        flex-shrink: 0;
+      }
+      .float-nav-btn:hover {
+        transform: scale(1.06);
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.28);
+      }
+
+      .float-nav-panel {
+        position: absolute;
+        top: calc(100% + 8px);
+        left: 0;
+        width: 220px;
+        background: #0d1b2a;
+        border-radius: 14px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        padding: 8px 8px 12px;
+        display: none;
+        flex-direction: column;
+        gap: 2px;
+        animation: fnpIn 0.18s ease;
+        z-index: 500;
+      }
+      .float-nav-panel.open {
+        display: flex;
+      }
+
+      @keyframes fnpIn {
+        from {
+          opacity: 0;
+          transform: translateY(-6px) scale(0.97);
+        }
+        to {
+          opacity: 1;
+          transform: none;
+        }
+      }
+
+      .fnp-header {
+        font-size: 10px;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        color: rgba(255, 255, 255, 0.3);
+        padding: 8px 10px 6px;
+        font-weight: 700;
+      }
+
+      .fnp-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 11px 12px;
+        border-radius: 9px;
+        color: rgba(255, 255, 255, 0.65);
+        font-size: 13.5px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.18s;
+      }
+      .fnp-item:hover {
+        background: rgba(255, 255, 255, 0.07);
+        color: #fff;
+      }
+      .fnp-item.active {
+        background: linear-gradient(135deg, var(--accent), #5f7bff);
+        color: #fff;
+        box-shadow: 0 4px 14px rgba(59, 110, 246, 0.3);
+      }
+      .fnp-icon {
+        font-size: 15px;
+        width: 18px;
+        text-align: center;
+      }
+
+      /* ── GREETING ── */
+      .topbar-greeting {
+        font-family: "Syne", sans-serif;
+        font-size: 18px;
+        font-weight: 600;
+        color: var(--text);
+        letter-spacing: -0.3px;
+        -webkit-font-smoothing: antialiased;
+        white-space: nowrap;
+      }
+      .topbar-greeting strong {
+        color: var(--accent);
+        font-weight: 800;
+      }
+
+      .topbar-section-label {
+        font-family: "Syne", sans-serif;
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        color: var(--muted);
+        padding: 4px 12px;
+        background: var(--bg);
+        border-radius: 99px;
+        border: 1px solid var(--border);
+        white-space: nowrap;
+      }
+
+      /* ── NOTIFICATION ── */
+      .notif-wrap {
+        position: relative;
+      }
+      .notif-btn {
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        position: relative;
+        transition: all 0.2s;
+        color: var(--muted);
+      }
+      .notif-btn:hover {
+        background: var(--accent);
+        color: #fff;
+        border-color: var(--accent);
+      }
+      .notif-btn svg {
+        width: 18px;
+        height: 18px;
+      }
+      .notif-badge {
+        position: absolute;
+        top: -5px;
+        right: -5px;
+        background: var(--danger);
+        color: #fff;
+        font-size: 9px;
+        font-weight: 700;
+        min-width: 17px;
+        height: 17px;
+        border-radius: 99px;
+        padding: 0 4px;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        border: 2px solid var(--surface);
+      }
+      .notif-badge.visible {
+        display: flex;
+      }
+      .notif-panel {
+        position: absolute;
+        right: 0;
+        top: calc(100% + 10px);
+        width: 350px;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow-lg);
+        display: none;
+        flex-direction: column;
+        overflow: hidden;
+        z-index: 200;
+      }
+      .notif-panel.open {
+        display: flex;
+      }
+      .notif-panel-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 14px 16px;
+        border-bottom: 1px solid var(--border);
+        font-size: 13px;
+        font-weight: 600;
+      }
+      .notif-count {
+        color: var(--accent);
+        font-size: 11px;
+      }
+      .notif-panel-list {
+        list-style: none;
+        max-height: 220px;
+        overflow-y: auto;
+      }
+      .notif-group-header {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 16px;
+        font-size: 10.5px;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+        border-bottom: 1px solid var(--border);
+        position: sticky;
+        top: 0;
+        z-index: 2;
+      }
+      .notif-group-icon {
+        font-size: 13px;
+      }
+      .notif-group-system {
+        color: #1e3a8a;
+        background: #eff6ff;
+      }
+      .notif-group-birthday {
+        color: #9d174d;
+        background: #fce7f3;
+      }
+      .notif-group-anniversary {
+        color: #5b21b6;
+        background: #ede9fe;
+      }
+      .notif-item {
+        padding: 12px 16px;
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        border-left: 3px solid transparent;
+        transition: background 0.15s;
+      }
+      .notif-item:hover {
+        background: var(--bg);
+      }
+      .notif-type-system {
+        border-left-color: var(--accent);
+      }
+      .notif-type-birthday {
+        border-left-color: #ec4899;
+      }
+      .notif-type-anniversary {
+        border-left-color: #8b5cf6;
+      }
+      .notif-item-body {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+        flex: 1;
+      }
+      .notif-item-text {
+        font-size: 12.5px;
+        line-height: 1.45;
+        color: var(--text);
+      }
+      .notif-empty {
+        padding: 24px 16px;
+        text-align: center;
+        color: var(--muted);
+        font-size: 13px;
+        list-style: none;
+      }
+      .notif-panel-footer {
+        padding: 10px 16px;
+        text-align: right;
+        font-size: 12px;
+        border-top: 1px solid var(--border);
+      }
+      .notif-panel-footer a {
+        color: var(--accent);
+        font-weight: 500;
+      }
+
+      /* ── CONTENT & SECTIONS ── */
+      .ess-content {
+        padding: 28px;
+        flex: 1;
+        min-width: 0;
+      }
+      .ess-section {
+        display: none;
+      }
+      .ess-section.active-section {
+        display: block;
+        animation: fadeUp 0.35s ease both;
+      }
+
+      @keyframes fadeUp {
+        from {
+          opacity: 0;
+          transform: translateY(12px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .section-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 20px;
+        flex-wrap: wrap;
+        gap: 15px;
+      }
+      .section-head h2 {
+        font-family: "Syne", sans-serif;
+        font-size: 22px;
+        font-weight: 700;
+      }
+      .section-date {
+        font-size: 13px;
+        color: var(--muted);
+      }
+      .section-hint {
+        font-size: 12px;
+        color: var(--muted);
+        font-style: italic;
+      }
+
+      .section-action {
+        background: var(--accent);
+        color: #fff;
+        border: none;
+        font-size: 12.5px;
+        font-weight: 600;
+        padding: 10px 18px;
+        border-radius: 8px;
+        transition: all 0.2s;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .section-action:hover {
+        background: #2456d0;
+        transform: translateY(-1px);
+      }
+
+      /* ── COMPACT KPI GRID (Solar Theme) ── */
+      .ops-kpi-grid {
+        display: grid;
+        /* Shrunk min-width from 230px to 160px for tighter packing */
+        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+        gap: 12px;
+      }
+
+      .s-stat-card {
+        background: #ffffff;
+        border-radius: 10px;
+        padding: 14px 16px;
+        border-left: 4px solid #f59e0b;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        cursor: pointer;
+        transition:
+          transform 0.2s,
+          box-shadow 0.2s;
+        display: flex; /* ← add */
+        flex-direction: column; /* ← add */
+        justify-content: space-between; /* ← add */
+        min-height: 90px; /* ← add: uniform card height */
+      }
+
+      .s-stat-card:hover {
+        transform: translateY(-2px);
+        /* Soft solar glow on hover */
+        box-shadow: 0 6px 16px rgba(245, 158, 11, 0.15);
+      }
+
+      .s-stat-title {
+        display: block;
+        font-size: 10.5px;
+        letter-spacing: 0.3px;
+        text-transform: uppercase;
+        color: #64748b;
+        font-weight: 700;
+        white-space: normal; /* ← was nowrap */
+        overflow: visible; /* ← was hidden */
+        text-overflow: unset; /* ← was ellipsis */
+        line-height: 1.35;
+        word-break: break-word;
+      }
+
+      .s-stat-value {
+        display: block;
+        margin-top: 6px;
+        /* Shrunk number size from 34px to 22px */
+        font-size: 22px;
+        font-weight: 700;
+        font-family: "Syne", sans-serif;
+        color: #1e293b; /* Dark slate text */
+      }
+
+      .s-stat-tat {
+        display: block;
+        margin-top: 4px;
+        color: #ef4444;
+        font-size: 10px;
+      }
+
+      /* ── OVERVIEW LAYOUT ── */
+      .overview-main-row {
+        display: flex;
+        gap: 20px;
+        align-items: flex-start;
+      }
+      .ov-plan-card,
+      .ov-queue-card,
+      .ov-perf-card,
+      .ov-activity-card {
+        background: var(--surface);
+        border-radius: var(--radius);
+        padding: 22px;
+        box-shadow: var(--shadow);
+      }
+      .ov-plan-card {
+        width: 300px;
+        flex-shrink: 0;
+      }
+      .ov-queue-card {
+        flex: 1;
+        min-width: 0;
+      }
+      .ov-card-title {
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.8px;
+        color: #2b3674;
+        margin-bottom: 16px;
+        text-transform: uppercase;
+      }
+      .blue-text {
+        color: var(--accent);
+      }
+      .green-text {
+        color: var(--success);
+      }
+      .plan-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background: #f8faff;
+        border-radius: 10px;
+        padding: 12px 14px;
+        margin-bottom: 8px;
+      }
+      .plan-item:last-child {
+        margin-bottom: 0;
+      }
+      .plan-item-label {
+        font-size: 13px;
+        font-weight: 500;
+      }
+      .plan-item-count {
+        font-family: "Syne", sans-serif;
+        font-size: 18px;
+        font-weight: 700;
+        color: var(--accent);
+      }
+      .ov-table-wrap {
+        overflow-x: auto;
+        padding-bottom: 6px;
+      }
+      .ov-table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      .ov-table th,
+      .ov-table td {
+        text-align: left;
+        padding: 12px 14px;
+        font-size: 13px;
+        border-bottom: 1px solid #edf2f7;
+        white-space: nowrap;
+      }
+      .ov-table th {
+        color: var(--muted);
+        font-size: 11px;
+        text-transform: uppercase;
+        padding-bottom: 10px;
+      }
+      .ov-table td .doc-ref {
+        font-size: 11px;
+        color: var(--muted);
+        margin-top: 3px;
+      }
+      .overview-bottom-row {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 20px;
+      }
+      .ov-perf-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 14px;
+      }
+      .ov-perf-item {
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 18px;
+        text-align: center;
+      }
+      .ov-perf-label {
+        font-size: 12px;
+        color: var(--muted);
+      }
+      .ov-perf-value {
+        margin-top: 8px;
+        font-size: 30px;
+        font-weight: 700;
+        font-family: "Syne", sans-serif;
+      }
+      .timeline-item {
+        padding: 12px 0;
+        border-bottom: 1px solid #edf2f7;
+      }
+      .timeline-item:last-child {
+        border-bottom: none;
+      }
+      .timeline-title {
+        font-size: 13px;
+        font-weight: 700;
+      }
+      .timeline-meta {
+        margin-top: 3px;
+        color: var(--muted);
+        font-size: 12px;
+      }
+      .ov-loading {
+        color: var(--muted);
+        font-size: 13px;
+        padding: 10px 0;
+      }
+
+      /* ── ATTENDANCE ── */
+      .att-filter-bar {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 20px;
+        flex-wrap: wrap;
+      }
+      .att-filter-bar select {
+        padding: 8px 14px;
+        border: 1.5px solid var(--border);
+        border-radius: 8px;
+        background: var(--surface);
+        font-family: "DM Sans", sans-serif;
+        font-size: 13px;
+        font-weight: 500;
+        color: var(--text);
+        cursor: pointer;
+        outline: none;
+      }
+      .att-filter-bar select:focus {
+        border-color: var(--accent);
+      }
+      .att-summary {
+        margin-left: auto;
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+      .att-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        padding: 5px 12px;
+        border-radius: 99px;
+        font-size: 12px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.18s;
+        user-select: none;
+        opacity: 0.65;
+        border: 2px solid transparent;
+      }
+      .att-chip:hover {
+        opacity: 1;
+        transform: translateY(-1px);
+      }
+      .att-chip.active {
+        opacity: 1;
+        border-color: currentColor;
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.12);
+      }
+      .att-chip.present {
+        background: #dcfce7;
+        color: #166534;
+      }
+      .att-chip.absent {
+        background: #fee2e2;
+        color: #991b1b;
+      }
+      .att-chip.halfday {
+        background: #fef9c3;
+        color: #854d0e;
+      }
+      .att-chip.wfh {
+        background: #dbeafe;
+        color: #1e40af;
+      }
+      .att-chip.onleave {
+        background: #f3e8ff;
+        color: #6b21a8;
+      }
+      .att-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+        gap: 12px;
+      }
+      .att-card {
+        background: var(--surface);
+        border-radius: 12px;
+        padding: 16px;
+        text-align: center;
+        box-shadow: var(--shadow);
+        border-top: 3px solid var(--border);
+        transition:
+          transform 0.2s,
+          opacity 0.2s;
+        cursor: pointer;
+      }
+      .att-card:hover {
+        transform: translateY(-2px);
+      }
+      .att-card.present {
+        border-color: var(--success);
+        background: #f0fdf4;
+      }
+      .att-card.absent {
+        border-color: var(--danger);
+        background: #fff5f5;
+      }
+      .att-card.halfday {
+        border-color: var(--warn);
+        background: #fffbeb;
+      }
+      .att-card.wfh {
+        border-color: #3b82f6;
+        background: #eff6ff;
+      }
+      .att-card.onleave {
+        border-color: #a855f7;
+        background: #faf5ff;
+      }
+      .att-card.dimmed {
+        opacity: 0.3;
+        transform: scale(0.97);
+      }
+      .att-date {
+        font-size: 11px;
+        color: var(--muted);
+        margin-bottom: 6px;
+        font-weight: 500;
+      }
+      .att-day {
+        font-family: "Syne", sans-serif;
+        font-size: 13px;
+        font-weight: 700;
+        margin-bottom: 12px;
+      }
+      .att-badge {
+        display: inline-block;
+        padding: 4px 10px;
+        border-radius: 6px;
+        font-size: 10.5px;
+        font-weight: 600;
+        text-transform: uppercase;
+      }
+      .att-badge.present {
+        background: #dcfce7;
+        color: #166534;
+      }
+      .att-badge.absent {
+        background: #fee2e2;
+        color: #991b1b;
+      }
+      .att-badge.halfday {
+        background: #fef9c3;
+        color: #854d0e;
+      }
+      .att-badge.wfh {
+        background: #dbeafe;
+        color: #1e40af;
+      }
+      .att-badge.onleave {
+        background: #f3e8ff;
+        color: #6b21a8;
+      }
+
+      /* ── LEAVE ── */
+      .leave-cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+        gap: 18px;
+      }
+      .leave-card {
+        background: var(--surface);
+        border-radius: var(--radius);
+        padding: 24px;
+        box-shadow: var(--shadow);
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+        transition:
+          transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1),
+          box-shadow 0.25s;
+        opacity: 0;
+        transform: translateY(20px);
+        animation: leaveCardIn 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+      }
+      @keyframes leaveCardIn {
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .leave-card:hover {
+        transform: translateY(-4px) scale(1.015);
+        box-shadow: var(--shadow-lg);
+      }
+      .leave-card-apply {
+        position: absolute;
+        inset: 0;
+        background: rgba(59, 110, 246, 0.9);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        font-weight: 700;
+        font-size: 14px;
+        opacity: 0;
+        transition: opacity 0.22s;
+        border-radius: var(--radius);
+      }
+      .leave-card:hover .leave-card-apply {
+        opacity: 1;
+      }
+      .leave-type-name {
+        font-family: "Syne", sans-serif;
+        font-size: 16px;
+        font-weight: 700;
+        margin-bottom: 14px;
+      }
+      .leave-bar-track {
+        background: var(--bg);
+        border-radius: 99px;
+        height: 8px;
+        overflow: hidden;
+        margin-bottom: 12px;
+      }
+      .leave-bar-fill {
+        height: 100%;
+        border-radius: 99px;
+        background: linear-gradient(90deg, var(--accent), var(--accent2));
+        transition: width 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+        width: 0;
+      }
+      .leave-stats {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 12px;
+      }
+      .leave-stat {
+        text-align: center;
+      }
+      .leave-stat-val {
+        font-family: "Syne", sans-serif;
+        font-size: 20px;
+        font-weight: 700;
+      }
+      .leave-stat-val.available {
+        color: var(--accent);
+      }
+      .leave-stat-val.used {
+        color: var(--warn);
+      }
+      .leave-stat-val.total {
+        color: var(--muted);
+      }
+      .leave-stat-label {
+        font-size: 10px;
+        color: var(--muted);
+        margin-top: 2px;
+        letter-spacing: 0.3px;
+      }
+
+      /* ── PAYSLIPS ── */
+      .payslip-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 14px;
+      }
+      .payslip-card {
+        background: var(--surface);
+        border-radius: var(--radius);
+        padding: 24px;
+        box-shadow: var(--shadow);
+        text-align: center;
+        border-bottom: 3px solid var(--accent);
+        transition: transform 0.2s;
+        cursor: pointer;
+      }
+      .payslip-card:hover {
+        transform: translateY(-3px);
+        box-shadow: var(--shadow-lg);
+      }
+      .payslip-icon {
+        font-size: 24px;
+        margin-bottom: 12px;
+      }
+      .payslip-month {
+        font-family: "Syne", sans-serif;
+        font-size: 15px;
+        font-weight: 700;
+        margin-bottom: 4px;
+      }
+      .payslip-year {
+        font-size: 11px;
+        color: var(--muted);
+        margin-bottom: 14px;
+      }
+      .payslip-net {
+        font-family: "Syne", sans-serif;
+        font-size: 20px;
+        font-weight: 800;
+        color: var(--accent);
+      }
+      .payslip-label {
+        font-size: 10px;
+        color: var(--muted);
+        margin-top: 2px;
+        letter-spacing: 0.5px;
+      }
+
+      /* ── HOLIDAYS ── */
+      .holiday-remaining-badge {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .holiday-remaining-pill {
+        background: linear-gradient(135deg, var(--accent), var(--accent2));
+        color: #fff;
+        padding: 6px 16px;
+        border-radius: 99px;
+        font-size: 13px;
+        font-weight: 700;
+      }
+      .holiday-year-label {
+        font-size: 12px;
+        color: var(--muted);
+      }
+      .holiday-list {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      .holiday-card {
+        background: var(--surface);
+        border-radius: 12px;
+        padding: 16px 20px;
+        display: flex;
+        align-items: center;
+        gap: 18px;
+        box-shadow: var(--shadow);
+      }
+      .holiday-date-box {
+        background: linear-gradient(135deg, var(--accent), var(--accent2));
+        color: #fff;
+        border-radius: 10px;
+        padding: 10px 14px;
+        text-align: center;
+        flex-shrink: 0;
+        min-width: 58px;
+      }
+      .holiday-day {
+        font-family: "Syne", sans-serif;
+        font-size: 20px;
+        font-weight: 800;
+      }
+      .holiday-mon {
+        font-size: 11px;
+        letter-spacing: 0.5px;
+        opacity: 0.85;
+      }
+      .holiday-desc {
+        font-weight: 600;
+        font-size: 14px;
+      }
+      .holiday-dow {
+        font-size: 12px;
+        color: var(--muted);
+        margin-top: 3px;
+      }
+
+      /* ══════════════════════════════════════════════════
+   PROJECT OVERVIEW (EPC) SECTION STYLES
+══════════════════════════════════════════════════ */
+
+      /* ── EPC FILTER BAR — search + clear only ── */
+      .epc-filter-bar {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        background: var(--surface);
+        border-radius: 12px;
+        padding: 14px 18px;
+        box-shadow: var(--shadow);
+        margin-bottom: 14px;
+      }
+
+      .epc-input {
+        height: 38px;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 0 12px;
+        background: var(--bg);
+        font-size: 13px;
+        color: var(--text);
+        font-family: "DM Sans", sans-serif;
+        outline: none;
+        transition: border-color 0.15s;
+        min-width: 130px;
+      }
+      .epc-input:focus {
+        border-color: var(--accent);
+        box-shadow: 0 0 0 2px rgba(59, 110, 246, 0.12);
+      }
+
+      .epc-name-wrap {
+        position: relative;
+        flex: 1;
+        min-width: 220px;
+      }
+      .epc-name-input {
+        width: 100%;
+        min-width: unset;
+        cursor: text;
+      }
+
+      .epc-name-dd {
+        position: absolute;
+        top: calc(100% + 6px);
+        left: 0;
+        right: 0;
+        max-height: 300px;
+        overflow-y: auto;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        box-shadow: var(--shadow-lg);
+        z-index: 300;
+        display: none;
+      }
+      .epc-name-dd.open {
+        display: block;
+      }
+
+      .epc-dd-item {
+        padding: 10px 14px;
+        border-bottom: 1px solid #f0f4fa;
+        cursor: pointer;
+        transition: background 0.12s;
+      }
+      .epc-dd-item:last-child {
+        border-bottom: none;
+      }
+      .epc-dd-item:hover {
+        background: #eff6ff;
+      }
+      .epc-dd-item-name {
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--text);
+      }
+      .epc-dd-item-stage {
+        font-size: 11px;
+        color: var(--muted);
+        margin-top: 2px;
+      }
+
+      .epc-btn {
+        height: 38px;
+        padding: 0 16px;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        background: var(--surface);
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+        white-space: nowrap;
+        transition:
+          background 0.13s,
+          border-color 0.13s;
+        font-family: "DM Sans", sans-serif;
+      }
+      .epc-btn:hover {
+        background: #f0f5ff;
+        border-color: #a5c3f0;
+      }
+      .epc-btn.primary {
+        background: var(--accent);
+        border-color: var(--accent);
+        color: #fff;
+      }
+      .epc-btn.primary:hover {
+        background: #2456d0;
+      }
+      .epc-btn.ghost {
+        color: var(--muted);
+      }
+      .epc-btn.icon {
+        width: 38px;
+        padding: 0;
+        text-align: center;
+      }
+
+      .epc-loading-bar {
+        height: 3px;
+        width: 100%;
+        border-radius: 2px;
+        background: linear-gradient(
+          90deg,
+          var(--accent) 0%,
+          #60a5fa 50%,
+          var(--accent) 100%
+        );
+        background-size: 200% 100%;
+        animation: epcShimmer 1.1s infinite;
+      }
+      @keyframes epcShimmer {
+        0% {
+          background-position: 100% 0;
+        }
+        100% {
+          background-position: -100% 0;
+        }
+      }
+
+      /* ── FILTER PILLS ── */
+      .epc-pill-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        margin-bottom: 16px;
+      }
+      .epc-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        font-size: 11.5px;
+        color: var(--accent);
+        background: #eff6ff;
+        border: 1px solid #bfdbfe;
+        border-radius: 99px;
+        padding: 3px 11px;
+        font-weight: 500;
+      }
+
+      /* ── EMPTY STATE ── */
+      .epc-empty-state {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 60px 20px;
+        gap: 14px;
+      }
+      .epc-empty-icon {
+        font-size: 40px;
+      }
+      .epc-empty-text {
+        font-size: 14px;
+        color: var(--muted);
+        text-align: center;
+        max-width: 340px;
+      }
+
+      /* ── PROCESS WRAP (Stage Journey) ── */
+      .epc-process-wrap {
+        margin-bottom: 16px;
+      }
+
+      .pv-journey-header {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 14px;
+      }
+      .pv-journey-header h4 {
+        font-family: "Syne", sans-serif;
+        font-size: 13px;
+        font-weight: 700;
+        color: var(--muted);
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        margin: 0;
+      }
+
+      .pv-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 12px;
+      }
+
+      .pv-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: var(--shadow);
+      }
+      .pv-card.pv-reached {
+        border-top: 3px solid var(--success);
+      }
+      .pv-card.pv-pending {
+        border-top: 3px solid #e2e8f0;
+        opacity: 0.7;
+      }
+
+      .pv-card-head {
+        padding: 10px 12px;
+        border-bottom: 1px solid #eef2f9;
+        background: #fafbfe;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 5px;
+      }
+      .pv-card-title {
+        font-size: 12.5px;
+        font-weight: 700;
+      }
+      .pv-open-link {
+        font-size: 11px;
+        color: var(--accent);
+        text-decoration: none;
+        font-weight: 600;
+        white-space: nowrap;
+      }
+      .pv-open-link:hover {
+        text-decoration: underline;
+      }
+
+      .pv-status-chip {
+        display: inline-flex;
+        padding: 2px 9px;
+        border-radius: 99px;
+        font-size: 10px;
+        font-weight: 700;
+        text-transform: uppercase;
+      }
+      .pv-chip-open {
+        background: #dbeafe;
+        color: #1e40af;
+      }
+      .pv-chip-completed {
+        background: #dcfce7;
+        color: #166534;
+      }
+      .pv-chip-overdue {
+        background: #fee2e2;
+        color: #991b1b;
+      }
+      .pv-chip-pending {
+        background: #f1f5f9;
+        color: var(--muted);
+      }
+
+      .pv-body {
+        padding: 10px 12px;
+      }
+      .pv-row {
+        display: flex;
+        justify-content: space-between;
+        gap: 6px;
+        padding: 5px 0;
+        border-bottom: 1px dashed #eef2f9;
+        font-size: 11.5px;
+        line-height: 1.4;
+      }
+      .pv-row:last-child {
+        border-bottom: none;
+      }
+      .pv-row span {
+        color: var(--muted);
+        flex-shrink: 0;
+      }
+      .pv-row strong {
+        font-weight: 600;
+        text-align: right;
+        word-break: break-word;
+        max-width: 140px;
+      }
+      .pv-empty {
+        font-size: 12px;
+        color: #b45309;
+        padding: 12px 0;
+        text-align: center;
+        font-style: italic;
+      }
+
+      /* ── SITE IMAGES ── */
+      .epc-site-images-wrap {
+        margin-top: 8px;
+      }
+      .epc-sitebox {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: var(--shadow);
+      }
+      .epc-sitebox-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px 16px;
+        border-bottom: 1px solid var(--border);
+      }
+      .epc-sitebox-head h3 {
+        margin: 0;
+        font-size: 15px;
+        font-weight: 700;
+      }
+      .epc-sitebox-head a {
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--accent);
+      }
+      .epc-sitebox-row {
+        display: flex;
+        gap: 10px;
+        padding: 12px 14px;
+        flex-wrap: wrap;
+      }
+      .epc-sitebox-empty {
+        padding: 14px 16px;
+        font-size: 13px;
+        color: var(--muted);
+      }
+
+      .epc-mini {
+        width: 140px;
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        overflow: hidden;
+        background: var(--bg);
+        text-decoration: none;
+        display: block;
+        transition:
+          transform 0.15s,
+          box-shadow 0.15s;
+      }
+      .epc-mini:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow);
+      }
+      .epc-mini-t {
+        height: 82px;
+        background: #f3f5f9;
+        overflow: hidden;
+      }
+      .epc-mini-t img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+      }
+      .epc-mini-n {
+        font-size: 10.5px;
+        color: #111827;
+        padding: 5px 7px 0;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .epc-mini-m {
+        font-size: 9.5px;
+        color: var(--muted);
+        padding: 1px 7px 7px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      /* ── EPC MODAL ── */
+      .epc-modal-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(2, 8, 23, 0.45);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 999;
+        padding: 12px;
+      }
+      .epc-modal-overlay.open {
+        display: flex;
+      }
+      .epc-modal-card {
+        width: min(96vw, 1200px);
+        max-height: 90vh;
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: var(--shadow-lg);
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+      }
+      .epc-modal-head {
+        padding: 12px 16px;
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: #fafbfe;
+      }
+      .epc-modal-head h3 {
+        margin: 0;
+        font-size: 15px;
+        font-weight: 700;
+      }
+      .epc-table-shell {
+        flex: 1;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+      }
+      .epc-ts-wrap {
+        flex: 1;
+        overflow-x: auto;
+        overflow-y: auto;
+        max-height: 60vh;
+      }
+      .epc-gme-table {
+        width: 100%;
+        min-width: 700px;
+        border-collapse: collapse;
+        font-size: 13px;
+      }
+      .epc-gme-table th,
+      .epc-gme-table td {
+        padding: 10px 12px;
+        text-align: left;
+        border-bottom: 1px solid #f0f4fa;
+        white-space: nowrap;
+        vertical-align: middle;
+      }
+      .epc-gme-table th {
+        position: sticky;
+        top: 0;
+        z-index: 2;
+        background: #f6f9fe;
+        color: #334155;
+        font-weight: 700;
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        border-bottom: 2px solid var(--border);
+      }
+      .epc-gme-table tr:hover td {
+        background: #f8fbff;
+      }
+      .epc-gme-table td a {
+        color: var(--accent);
+        text-decoration: none;
+        font-weight: 600;
+      }
+      .epc-gme-table td a:hover {
+        text-decoration: underline;
+      }
+      .lc {
+        text-align: center;
+        color: var(--muted);
+        padding: 18px !important;
+        font-style: italic;
+      }
+
+      /* ── RESPONSIVE ── */
+      @media (max-width: 1100px) {
+        .overview-main-row {
+          flex-direction: column;
+        }
+        .ov-plan-card {
+          width: 100%;
+        }
+        .overview-bottom-row {
+          grid-template-columns: 1fr;
+        }
+        .pv-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+      @media (max-width: 768px) {
+        .ess-topbar {
+          padding: 0 16px;
+        }
+        .ess-content {
+          padding: 16px;
+        }
+        .ops-kpi-grid,
+        .ov-perf-grid,
+        .att-grid,
+        .leave-cards,
+        .payslip-grid {
+          grid-template-columns: 1fr;
+        }
+        .pv-grid {
+          grid-template-columns: 1fr;
+        }
+        .notif-panel {
+          width: 300px;
+        }
+        .att-summary {
+          margin-left: 0;
+          width: 100%;
+        }
+        .epc-filter-bar {
+          flex-direction: column;
+          align-items: stretch;
+        }
+        .epc-name-wrap {
+          min-width: unset;
+        }
+        .topbar-greeting {
+          font-size: 15px;
+        }
+      }
+
+      /* ============================================================
+   FOLLOW-UP MODAL — Add at the END of the existing CSS file
+   (after the last @media block)
+============================================================ */
+
+      /* ── FOLLOW-UP MODAL OVERLAY ── */
+      .fu-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(2, 8, 23, 0.6);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 999999 !important; /* <--- CRITICAL: Forces it above Frappe navbars */
+        padding: 16px;
+        backdrop-filter: blur(2px);
+      }
+      .fu-overlay.open {
+        display: flex;
+      }
+
+      .fu-modal {
+        width: min(96vw, 1080px);
+        max-height: 90vh;
+        background: #fff;
+        border-radius: 16px;
+        box-shadow: 0 24px 60px rgba(0, 0, 0, 0.22);
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        animation: fuIn 0.22s cubic-bezier(0.34, 1.2, 0.64, 1);
+      }
+      @keyframes fuIn {
+        from {
+          opacity: 0;
+          transform: translateY(18px) scale(0.97);
+        }
+        to {
+          opacity: 1;
+          transform: none;
+        }
+      }
+
+      /* ── MODAL HEADER ── */
+      .fu-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 18px 22px 0;
+        flex-shrink: 0;
+      }
+      .fu-header-left {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+      }
+      .fu-title {
+        font-family: "Syne", sans-serif;
+        font-size: 17px;
+        font-weight: 800;
+        color: #1a202c;
+        margin: 0;
+      }
+      .fu-subtitle {
+        font-size: 12px;
+        color: var(--muted);
+      }
+      .fu-close-btn {
+        width: 34px;
+        height: 34px;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        background: var(--bg);
+        cursor: pointer;
+        font-size: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--muted);
+        transition: all 0.15s;
+        flex-shrink: 0;
+      }
+      .fu-close-btn:hover {
+        background: var(--danger);
+        color: #fff;
+        border-color: var(--danger);
+      }
+
+      /* ── TABS ── */
+      .fu-tabs {
+        display: flex;
+        gap: 0;
+        padding: 14px 22px 0;
+        border-bottom: 2px solid var(--border);
+        flex-shrink: 0;
+      }
+      .fu-tab {
+        padding: 9px 20px;
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--muted);
+        cursor: pointer;
+        border: none;
+        background: none;
+        border-bottom: 2px solid transparent;
+        margin-bottom: -2px;
+        transition: all 0.18s;
+        font-family: "DM Sans", sans-serif;
+        display: flex;
+        align-items: center;
+        gap: 7px;
+      }
+      .fu-tab:hover {
+        color: var(--accent);
+      }
+      .fu-tab.active {
+        color: var(--accent);
+        border-bottom-color: var(--accent);
+      }
+      .fu-tab-badge {
+        background: var(--accent);
+        color: #fff;
+        font-size: 10px;
+        font-weight: 700;
+        padding: 1px 7px;
+        border-radius: 99px;
+        min-width: 20px;
+        text-align: center;
+      }
+      .fu-tab.active .fu-tab-badge {
+        background: var(--accent);
+      }
+      .fu-tab:not(.active) .fu-tab-badge {
+        background: #e2e8f0;
+        color: var(--muted);
+      }
+
+      /* ── FILTER BAR ── */
+      .fu-filters {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex-wrap: wrap;
+        padding: 12px 22px;
+        background: #fafbfe;
+        border-bottom: 1px solid var(--border);
+        flex-shrink: 0;
+      }
+      .fu-filter-label {
+        font-size: 11px;
+        font-weight: 700;
+        color: var(--muted);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-right: 2px;
+      }
+      .fu-select {
+        height: 32px;
+        padding: 0 10px;
+        border: 1px solid var(--border);
+        border-radius: 7px;
+        background: #fff;
+        font-size: 12px;
+        font-weight: 500;
+        color: var(--text);
+        font-family: "DM Sans", sans-serif;
+        cursor: pointer;
+        outline: none;
+        transition: border-color 0.15s;
+      }
+      .fu-select:focus {
+        border-color: var(--accent);
+      }
+      .fu-filter-sep {
+        width: 1px;
+        height: 20px;
+        background: var(--border);
+        margin: 0 4px;
+      }
+      .fu-count-pill {
+        margin-left: auto;
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 99px;
+        font-size: 11px;
+        font-weight: 600;
+        color: var(--muted);
+        padding: 3px 12px;
+        white-space: nowrap;
+      }
+
+      /* ── TABLE BODY ── */
+      .fu-table-shell {
+        flex: 1;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        min-height: 0;
+      }
+      .fu-table-scroll {
+        flex: 1;
+        overflow-x: auto;
+        overflow-y: auto;
+      }
+
+      .fu-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 12.5px;
+        min-width: 820px;
+      }
+      .fu-table th {
+        position: sticky;
+        top: 0;
+        z-index: 2;
+        background: #f0f4fb;
+        padding: 10px 12px;
+        text-align: left;
+        font-size: 10.5px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: #334155;
+        border-bottom: 2px solid #dde3f0;
+        white-space: nowrap;
+      }
+      .fu-table td {
+        padding: 10px 12px;
+        border-bottom: 1px solid #f1f4f9;
+        vertical-align: top;
+        max-width: 280px;
+      }
+      .fu-table tr:last-child td {
+        border-bottom: none;
+      }
+      .fu-table tr:hover td {
+        background: #f8fbff;
+      }
+
+      /* Stage badge */
+      .fu-stage-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        padding: 3px 9px;
+        border-radius: 6px;
+        font-size: 10px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        white-space: nowrap;
+      }
+      /* Stage colours — distinct per stage */
+      .fu-stage-lead {
+        background: #fef3c7;
+        color: #92400e;
+        border: 1px solid #fde68a;
+      }
+      .fu-stage-survey {
+        background: #dbeafe;
+        color: #1e40af;
+        border: 1px solid #bfdbfe;
+      }
+      .fu-stage-proposal {
+        background: #f3e8ff;
+        color: #6b21a8;
+        border: 1px solid #ddd6fe;
+      }
+      .fu-stage-salesorder {
+        background: #dcfce7;
+        color: #166534;
+        border: 1px solid #bbf7d0;
+      }
+      .fu-stage-dispatch {
+        background: #ffedd5;
+        color: #9a3412;
+        border: 1px solid #fed7aa;
+      }
+      .fu-stage-project {
+        background: #e0f2fe;
+        color: #0c4a6e;
+        border: 1px solid #bae6fd;
+      }
+      .fu-stage-sync {
+        background: #fce7f3;
+        color: #9d174d;
+        border: 1px solid #fbcfe8;
+      }
+
+      /* Doc link */
+      .fu-doc-link {
+        font-weight: 600;
+        color: var(--accent);
+        cursor: pointer;
+        text-decoration: none;
+        display: block;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 160px;
+      }
+      .fu-doc-link:hover {
+        text-decoration: underline;
+      }
+      .fu-doc-sub {
+        font-size: 11px;
+        color: var(--muted);
+        margin-top: 2px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 160px;
+      }
+
+      /* Remark cell */
+      .fu-remark-cell {
+        color: var(--text);
+        line-height: 1.45;
+        /* strip HTML — JS handles this, CSS just limits */
+        max-width: 280px;
+        word-break: break-word;
+      }
+
+      /* Status chip */
+      .fu-status {
+        display: inline-block;
+        padding: 2px 8px;
+        border-radius: 5px;
+        font-size: 10px;
+        font-weight: 700;
+        text-transform: uppercase;
+        background: #f1f5f9;
+        color: var(--muted);
+      }
+      .fu-status-open {
+        background: #dbeafe;
+        color: #1e40af;
+      }
+      .fu-status-closed {
+        background: #dcfce7;
+        color: #166534;
+      }
+      .fu-status-resolved {
+        background: #dcfce7;
+        color: #166534;
+      }
+      .fu-status-pending {
+        background: #fef3c7;
+        color: #92400e;
+      }
+
+      /* Time cell */
+      .fu-time-cell {
+        white-space: nowrap;
+      }
+      .fu-time-date {
+        font-weight: 600;
+        color: var(--text);
+      }
+      .fu-time-hour {
+        font-size: 11px;
+        color: var(--muted);
+        margin-top: 2px;
+      }
+
+      /* Empty state */
+      .fu-empty {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 50px 20px;
+        gap: 10px;
+        color: var(--muted);
+        font-size: 13px;
+      }
+      .fu-empty-icon {
+        font-size: 36px;
+      }
+
+      /* Loading shimmer row */
+      .fu-shimmer td {
+        background: linear-gradient(
+          90deg,
+          #f0f4fb 25%,
+          #e2e8f0 50%,
+          #f0f4fb 75%
+        );
+        background-size: 200% 100%;
+        animation: fuShimmer 1.2s infinite;
+        color: transparent;
+        border-radius: 4px;
+      }
+      @keyframes fuShimmer {
+        0% {
+          background-position: 200% 0;
+        }
+        100% {
+          background-position: -200% 0;
+        }
+      }
+
+      /* Responsive */
+      @media (max-width: 768px) {
+        .fu-filters {
+          padding: 10px 14px;
+        }
+        .fu-table th,
+        .fu-table td {
+          padding: 8px 10px;
+        }
+        .fu-header,
+        .fu-tabs {
+          padding-left: 14px;
+          padding-right: 14px;
+        }
+      }
+
+      /* ── EPC RECENT LEADS LIST ── */
+      .epc-leads-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 12px;
+      }
+      .epc-leads-title {
+        font-family: "Syne", sans-serif;
+        font-size: 14px;
+        font-weight: 700;
+        color: var(--text);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .epc-leads-count {
+        font-family: "DM Sans", sans-serif;
+        font-size: 12px;
+        font-weight: 500;
+        color: var(--muted);
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 99px;
+        padding: 2px 12px;
+      }
+      .epc-leads-table-wrap {
+        background: var(--surface);
+        border-radius: 12px;
+        border: 1px solid var(--border);
+        overflow: hidden;
+        box-shadow: var(--shadow);
+      }
+      .epc-leads-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 13px;
+      }
+      .epc-leads-table thead th {
+        background: #f8fafc;
+        padding: 11px 14px;
+        text-align: left;
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--muted);
+        border-bottom: 2px solid var(--border);
+        white-space: nowrap;
+      }
+      .epc-leads-table tbody tr {
+        border-bottom: 1px solid #f1f5f9;
+      }
+      .epc-leads-table tbody tr:last-child {
+        border-bottom: none;
+      }
+      .epc-lead-row {
+        cursor: pointer;
+        transition: background 0.12s;
+      }
+      .epc-lead-row:hover {
+        background: #f0f7ff;
+      }
+      .epc-leads-table td {
+        padding: 11px 14px;
+        vertical-align: middle;
+      }
+      .epc-lead-name {
+        font-weight: 600;
+        color: var(--text);
+      }
+      .epc-lead-row:hover .epc-lead-name {
+        color: var(--accent);
+      }
+      .epc-lead-status {
+        display: inline-block;
+        padding: 3px 10px;
+        border-radius: 99px;
+        font-size: 11px;
+        font-weight: 600;
+        white-space: nowrap;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="ess-wrap" id="essDashRoot">
+      <main class="ess-main">
+        <!-- ── TOPBAR ── -->
+        <header class="ess-topbar">
+          <div class="topbar-left">
+            <!-- ── FLOATING NAV (inside topbar now) ── -->
+            <div class="float-nav-wrap" id="floatNavWrap">
+              <button class="float-nav-btn" id="floatNavBtn" title="Menu">
+                <span class="float-nav-icon">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.2"
+                    width="20"
+                    height="20"
+                  >
+                    <line x1="3" y1="6" x2="21" y2="6" />
+                    <line x1="3" y1="12" x2="21" y2="12" />
+                    <line x1="3" y1="18" x2="21" y2="18" />
+                  </svg>
+                </span>
+              </button>
+              <div class="float-nav-panel" id="floatNavPanel">
+                <div class="fnp-header">Navigation</div>
+                <a class="fnp-item active" data-section="overview">
+                  <span class="fnp-icon">⬡</span> My Profile
+                </a>
+                <a class="fnp-item" data-section="attendance">
+                  <span class="fnp-icon">◈</span> Attendance
+                </a>
+                <a class="fnp-item" data-section="leave">
+                  <span class="fnp-icon">◉</span> Leave
+                </a>
+                <a class="fnp-item" data-section="payslip">
+                  <span class="fnp-icon">◪</span> Payslips
+                </a>
+                <a class="fnp-item" data-section="holiday">
+                  <span class="fnp-icon">◬</span> Holidays
+                </a>
+                <a class="fnp-item" data-section="epc">
+                  <span class="fnp-icon">⚡</span> Project Overview
+                </a>
+
+                <a
+                  class="fnp-item fnp-external"
+                  href="https://sadbhavuat.getmyerp.com/app/gme-support-portal"
+                  target="_blank"
+                >
+                  <span class="fnp-icon">🎧</span> Helpdesk
+                </a>
+              </div>
+            </div>
+
+            <div class="topbar-greeting">
+              <span id="greetingText">Good Morning</span>,&nbsp;<strong
+                id="greetingName"
+                >—</strong
+              >
+            </div>
+          </div>
+
+          <div class="topbar-right">
+            <div class="topbar-section-label" id="topbarSectionLabel">
+              My Profile
+            </div>
+            <div class="notif-wrap" id="notifWrap">
+              <button class="notif-btn" id="notifBtn">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+                  <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+                </svg>
+                <span class="notif-badge" id="notifBadge">0</span>
+              </button>
+              <div class="notif-panel" id="notifPanel">
+                <div class="notif-panel-header">
+                  <span>Notifications</span>
+                  <span class="notif-count" id="notifCount">0 unread</span>
+                </div>
+                <ul class="notif-panel-list" id="notifList"></ul>
+                <div class="notif-panel-footer">
+                  <a id="notif-view-all" href="#" onclick="return false;"
+                    >View all →</a
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+        </header>
+
+        <div class="ess-content">
+          <!-- ══ SECTION: MY PROFILE (was Overview) ══ -->
+          <section id="overview" class="ess-section active-section">
+            <div class="section-head">
+              <div>
+                <h2>My Profile</h2>
+                <span class="section-date" id="todayDate"></span>
+              </div>
+              <div class="overview-actions">
+                <button
+                  id="action-btn-2"
+                  class="section-action secondary-action"
+                  style="display: none"
+                ></button>
+                <button
+                  id="action-btn-1"
+                  class="section-action primary-action"
+                  style="display: none"
+                ></button>
+              </div>
+            </div>
+
+            <div
+              class="section-head"
+              style="margin-top: 10px"
+              id="workKpiHeadWrap"
+            >
+              <h2>My Work KPIs</h2>
+            </div>
+            <div class="ops-kpi-grid" id="ops-kpi-container"></div>
+
+            <div class="overview-main-row" style="margin-top: 20px">
+              <div class="ov-plan-card">
+                <div class="ov-card-title">TODAY'S ACTION ITEMS</div>
+                <div id="plan-list-container">
+                  <div class="ov-loading">Loading…</div>
+                </div>
+              </div>
+              <div class="ov-queue-card">
+                <div class="ov-card-title blue-text">MY PENDING QUEUE</div>
+                <div class="ov-table-wrap">
+                  <table class="ov-table">
+                    <thead>
+                      <tr>
+                        <th>Action Required</th>
+                        <th>Client &amp; Reference</th>
+                        <th>Assigned Date</th>
+                        <th>Target Date</th>
+                        <th>Delayed Days</th>
+                        <th>Delay Reason</th>
+                      </tr>
+                    </thead>
+                    <tbody id="task-list-body">
+                      <tr>
+                        <td colspan="4">Loading…</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+            <div class="overview-bottom-row" style="margin-top: 20px">
+              <div class="ov-perf-card">
+                <div class="ov-card-title" id="perf-card-title">
+                  PERFORMANCE (THIS MONTH)
+                </div>
+                <div class="ov-perf-grid">
+                  <div class="ov-perf-item">
+                    <div class="ov-perf-label" id="perf-label-1">—</div>
+                    <div class="ov-perf-value" id="perf-value-1">0</div>
+                  </div>
+                  <div class="ov-perf-item">
+                    <div class="ov-perf-label" id="perf-label-2">—</div>
+                    <div class="ov-perf-value" id="perf-value-2">0</div>
+                  </div>
+                  <div class="ov-perf-item">
+                    <div class="ov-perf-label" id="perf-label-3">—</div>
+                    <div class="ov-perf-value" id="perf-value-3">0</div>
+                  </div>
+                  <div class="ov-perf-item">
+                    <div class="ov-perf-label" id="perf-label-4">—</div>
+                    <div class="ov-perf-value" id="perf-value-4">0</div>
+                  </div>
+                </div>
+              </div>
+              <div class="ov-activity-card">
+                <div class="ov-card-title">RECENT ACTIVITY</div>
+                <div class="ov-timeline" id="activity-timeline">
+                  <div class="ov-loading">Loading…</div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- ══ SECTION: ATTENDANCE ══ -->
+          <section id="attendance" class="ess-section">
+            <div class="section-head">
+              <h2>My Attendance</h2>
+              <a
+                class="section-action primary-action"
+                id="qa-att-correction"
+                href="#"
+                >+ Request Correction</a
+              >
+            </div>
+            <div class="att-filter-bar">
+              <select id="attMonth">
+                <option value="0">January</option>
+                <option value="1">February</option>
+                <option value="2">March</option>
+                <option value="3">April</option>
+                <option value="4">May</option>
+                <option value="5">June</option>
+                <option value="6">July</option>
+                <option value="7">August</option>
+                <option value="8">September</option>
+                <option value="9">October</option>
+                <option value="10">November</option>
+                <option value="11">December</option>
+              </select>
+              <select id="attYear"></select>
+              <div class="att-summary" id="attSummary"></div>
+            </div>
+            <div class="att-grid" id="attendanceGrid"></div>
+          </section>
+
+          <!-- ══ SECTION: LEAVE ══ -->
+          <section id="leave" class="ess-section">
+            <div class="section-head">
+              <h2>Leave Balances</h2>
+              <span class="section-hint"
+                >Click a card to apply for that leave</span
+              >
+            </div>
+            <div class="leave-cards" id="leaveCards"></div>
+          </section>
+
+          <!-- ══ SECTION: PAYSLIPS ══ -->
+          <section id="payslip" class="ess-section">
+            <div class="section-head">
+              <h2>Payslips</h2>
+              <a class="section-action primary-action" href="/app/salary-slip"
+                >View All</a
+              >
+            </div>
+            <div class="payslip-grid" id="payslipGrid"></div>
+          </section>
+
+          <!-- ══ SECTION: HOLIDAYS ══ -->
+          <section id="holiday" class="ess-section">
+            <div class="section-head">
+              <h2>Upcoming Holidays</h2>
+              <div class="holiday-remaining-badge" id="holidayRemaining"></div>
+            </div>
+            <div class="holiday-list" id="holidayList"></div>
+          </section>
+
+          <!-- ══ SECTION: PROJECT OVERVIEW (was EPC Control Panel) ══ -->
+          <section id="epc" class="ess-section">
+            <div class="section-head">
+              <div>
+                <h2>⚡ Project Overview</h2>
+                <span class="section-hint"
+                  >Project Journey &amp; Stage Tracker</span
+                >
+              </div>
+            </div>
+
+            <!-- EPC Filter Bar — search + clear only -->
+            <div class="epc-filter-bar">
+              <!-- Unified Name Search (all stages, deduplicated by customer) -->
+              <div class="epc-name-wrap">
+                <input
+                  id="epc-name-input"
+                  class="epc-input epc-name-input"
+                  type="text"
+                  placeholder="Search customer / record name…"
+                  autocomplete="off"
+                />
+                <div id="epc-name-dropdown" class="epc-name-dd"></div>
+              </div>
+              <button id="epc-btn-clear" class="epc-btn ghost">Clear</button>
+              <div
+                id="epc-loading-bar"
+                class="epc-loading-bar"
+                style="display: none"
+              ></div>
+            </div>
+
+            <!-- Active filter pills -->
+            <div id="epc-pill-row" class="epc-pill-row"></div>
+
+            <!-- Stage Journey Cards -->
+            <div id="epc-process-wrap" class="epc-process-wrap">
+              <div class="epc-empty-state">
+                <div class="epc-empty-icon">🔍</div>
+                <div class="epc-empty-text">
+                  Search a customer or record name above to trace their project
+                  journey
+                </div>
+              </div>
+            </div>
+
+            <!-- Site Images -->
+            <div id="epc-site-images-wrap" class="epc-site-images-wrap"></div>
+          </section>
+        </div>
+        <!-- /.ess-content -->
+      </main>
+    </div>
+
+    <!-- ══ EPC STAGE MODAL ══ -->
+    <div id="epc-stage-modal-overlay" class="epc-modal-overlay">
+      <div class="epc-modal-card">
+        <div class="epc-modal-head">
+          <h3 id="epc-stage-modal-title">Stage Records</h3>
+          <button id="epc-btn-close-modal" class="epc-btn icon" type="button">
+            ✕
+          </button>
+        </div>
+        <div class="epc-table-shell">
+          <div class="epc-ts-wrap" id="epc-stage-table-wrap">
+            <table class="epc-gme-table">
+              <thead id="epc-stage-modal-thead"></thead>
+              <tbody id="epc-stage-modal-tbody">
+                <tr>
+                  <td class="lc">No data</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+
+  <script>
+    /* =========================================================
+   COMBINED ESS + EPC DASHBOARD — UNIFIED JAVASCRIPT
+   Cleaned of all duplications. Modal logic fixed.
+========================================================= */
+
+    window.MY_ROOT = root_element;
+
+    /* ── HELPERS ── */
+    function $(id) {
+      return window.MY_ROOT.querySelector("#" + id);
+    }
+    function $$(sel) {
+      return window.MY_ROOT.querySelectorAll(sel);
+    }
+
+    function initials(name) {
+      return (name || "")
+        .split(" ")
+        .filter(Boolean)
+        .slice(0, 2)
+        .map(function (w) {
+          return w[0].toUpperCase();
+        })
+        .join("");
+    }
+
+    function stripHtml(htmlStr) {
+      if (!htmlStr) return "-";
+      var tmp = document.createElement("div");
+      tmp.innerHTML = String(htmlStr);
+      return (tmp.textContent || tmp.innerText || "-").trim();
+    }
+
+    function formatDate(dateStr) {
+      var d = new Date(dateStr);
+      if (isNaN(d)) return dateStr || "-";
+      return d.toLocaleDateString("en-IN", {
+        day: "2-digit",
+        month: "short",
+        year: "numeric",
+      });
+    }
+
+    function dayName(dateStr) {
+      var d = new Date(dateStr);
+      if (isNaN(d)) return "";
+      return d.toLocaleDateString("en-IN", { weekday: "short" });
+    }
+
+    function rupee(n) {
+      return "₹" + Number(n || 0).toLocaleString("en-IN");
+    }
+
+    function statusClass(status) {
+      var map = {
+        present: "present",
+        absent: "absent",
+        "half day": "halfday",
+        wfh: "wfh",
+        "work from home": "wfh",
+        "on leave": "onleave",
+        leave: "onleave",
+      };
+      return map[(status || "").toLowerCase()] || "absent";
+    }
+
+    function escHtml(v) {
+      if (v === undefined || v === null) return "";
+      return String(v)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+    }
+
+    function fmtR(v) {
+      var n = parseFloat(v) || 0;
+      if (n >= 10000000) return "₹" + (n / 10000000).toFixed(2) + " Cr";
+      if (n >= 100000) return "₹" + (n / 100000).toFixed(2) + " L";
+      if (n <= 0) return "₹0";
+      return "₹" + n.toLocaleString("en-IN");
+    }
+
+    function fmtDate(d) {
+      if (!d || d === "—" || d === "None" || d === "null") return "—";
+      var x = new Date(d);
+      if (isNaN(x.getTime())) return String(d);
+      return x.toLocaleDateString("en-IN", {
+        day: "2-digit",
+        month: "short",
+        year: "numeric",
+      });
+    }
+
+    /* ── GLOBAL STATE ── */
+    var ALL_ATTENDANCE = [];
+    var CURRENT_EMP_ID = "";
+    var ACTIVE_STATUS_FILTER = null;
+
+    /* ── EPC STATE ── */
+    var EPC = {
+      stageName: "",
+      stageDoc: "",
+      allNames: [],
+      nameTimer: null,
+      siteImages: [],
+    };
+
+    /* ── GREETING ── */
+    (function setGreeting() {
+      var h = new Date().getHours();
+      var greet =
+        h < 12 ? "Good Morning" : h < 17 ? "Good Afternoon" : "Good Evening";
+      if ($("greetingText")) $("greetingText").innerText = greet;
+      if ($("todayDate"))
+        $("todayDate").innerText = new Date().toLocaleDateString("en-IN", {
+          weekday: "long",
+          day: "numeric",
+          month: "long",
+          year: "numeric",
+        });
+    })();
+
+    /* ── ATTENDANCE YEAR DROPDOWN ── */
+    (function initAttFilter() {
+      var now = new Date();
+      if ($("attMonth")) $("attMonth").value = now.getMonth();
+      var yearSel = $("attYear");
+      if (yearSel) {
+        for (var y = now.getFullYear() - 1; y <= now.getFullYear() + 1; y++) {
+          var opt = document.createElement("option");
+          opt.value = y;
+          opt.text = y;
+          if (y === now.getFullYear()) opt.selected = true;
+          yearSel.appendChild(opt);
+        }
+        $("attMonth").onchange = function () {
+          ACTIVE_STATUS_FILTER = null;
+          filterAttendance();
+        };
+        $("attYear").onchange = function () {
+          ACTIVE_STATUS_FILTER = null;
+          filterAttendance();
+        };
+      }
+    })();
+
+    /* ── NAV (hamburger inside topbar) ── */
+    var floatBtn = $("floatNavBtn");
+    var floatPanel = $("floatNavPanel");
+
+    if (floatBtn) {
+      floatBtn.addEventListener("click", function (e) {
+        e.stopPropagation();
+        floatPanel.classList.toggle("open");
+      });
+    }
+
+    document.addEventListener("click", function (e) {
+      if (!floatPanel) return;
+      var wrap = window.MY_ROOT ? $("floatNavWrap") : null;
+      if (wrap && !wrap.contains(e.target)) {
+        floatPanel.classList.remove("open");
+      }
+    });
+
+    var SECTION_LABELS = {
+      overview: "My Profile",
+      attendance: "Attendance",
+      leave: "Leave",
+      payslip: "Payslips",
+      holiday: "Holidays",
+      epc: "Project Overview",
+    };
+
+    window.MY_ROOT.querySelectorAll(".fnp-item:not(.fnp-external)").forEach(
+      function (item) {
+        item.addEventListener("click", function () {
+          var target = this.dataset.section;
+          window.MY_ROOT.querySelectorAll(".fnp-item").forEach(function (n) {
+            n.classList.remove("active");
+          });
+          this.classList.add("active");
+
+          $$(".ess-section").forEach(function (s) {
+            s.classList.remove("active-section");
+          });
+          var sectionEl = $("" + target);
+          if (sectionEl) sectionEl.classList.add("active-section");
+
+          var label = $("topbarSectionLabel");
+          if (label) label.innerText = SECTION_LABELS[target] || target;
+
+          floatPanel.classList.remove("open");
+
+          if (target === "epc") {
+            if (EPC.allNames.length === 0) epcLoadAllNames();
+            if (!EPC.stageName) epcLoadRecentLeads();
+          }
+        });
+      },
+    );
+
+    /* ── NOTIFICATION BELL ── */
+    if ($("notifBtn")) {
+      $("notifBtn").addEventListener("click", function (e) {
+        e.stopPropagation();
+        var p = $("notifPanel");
+        if (p) p.classList.toggle("open");
+      });
+    }
+    document.addEventListener("click", function () {
+      var p = window.MY_ROOT ? $("notifPanel") : null;
+      if (p) p.classList.remove("open");
+    });
+    var panelEl = window.MY_ROOT ? $("notifPanel") : null;
+    if (panelEl)
+      panelEl.addEventListener("click", function (e) {
+        e.stopPropagation();
+      });
+
+    function renderNotifications(notifications) {
+      var list = $("notifList");
+      var badge = $("notifBadge");
+      var count = $("notifCount");
+      var n = notifications || [];
+      if (!list) return;
+      list.innerHTML = "";
+
+      if (!n.length) {
+        list.innerHTML = '<li class="notif-empty">All caught up! 🎉</li>';
+        if (badge) badge.classList.remove("visible");
+        if (count) count.innerText = "0 unread";
+        return;
+      }
+
+      var sections = [
+        { key: "birthday", title: "Birthdays", icon: "🎂" },
+        { key: "anniversary", title: "Work Anniversaries", icon: "🎉" },
+        { key: "system", title: "Pending Tasks", icon: "📋" },
+      ];
+
+      sections.forEach(function (sec) {
+        var groupItems = n.filter(function (item) {
+          return item.type === sec.key;
+        });
+        if (!groupItems.length) return;
+
+        var headerLi = document.createElement("li");
+        headerLi.className = "notif-group-header notif-group-" + sec.key;
+        headerLi.innerHTML =
+          '<span class="notif-group-icon">' + sec.icon + "</span> " + sec.title;
+        list.appendChild(headerLi);
+
+        groupItems.forEach(function (item) {
+          var li = document.createElement("li");
+          li.className = "notif-item notif-type-" + sec.key;
+
+          var refType = item.reference_type || "";
+          var refName = item.reference_name || "";
+          if (refType && refName) {
+            li.style.cursor = "pointer";
+            li.addEventListener("click", function () {
+              if (typeof frappe !== "undefined") {
+                frappe.set_route("Form", refType, refName);
+              }
+              var p = $("notifPanel");
+              if (p) p.classList.remove("open");
+            });
+          }
+
+          li.innerHTML =
+            '<div class="notif-item-body">' +
+            '<span class="notif-item-text">' +
+            escHtml(item.subject || item.message || "") +
+            "</span>" +
+            (item.date
+              ? '<span style="font-size:11px;color:var(--muted);margin-top:2px;display:block;">' +
+                item.date +
+                "</span>"
+              : "") +
+            (refType && refName
+              ? '<span style="font-size:11px;color:var(--accent);margin-top:2px;display:block;">→ ' +
+                escHtml(refType) +
+                "</span>"
+              : "") +
+            "</div>";
+          list.appendChild(li);
+        });
+      });
+
+      if (badge) {
+        badge.innerText = n.length;
+        badge.classList.add("visible");
+      }
+      if (count) count.innerText = n.length + " unread";
+    }
+
+    /* ══════════════════════════════════════════════════
+   KPI RENDERER
+══════════════════════════════════════════════════ */
+    function renderOpsKpis(kpis) {
+      var container = $("ops-kpi-container");
+      if (!container) return;
+      if (!kpis || !kpis.length) {
+        container.innerHTML = '<div class="ov-loading">No KPI data</div>';
+        return;
+      }
+
+      var html = "";
+      kpis.forEach(function (k) {
+        var isFollowUp = k.action === "followup_modal";
+        var filterStr = JSON.stringify(k.filter || {}).replace(/'/g, "&#39;");
+
+        html +=
+          '<div class="s-stat-card kpi-clickable" ' +
+          'data-fu-action="' +
+          (isFollowUp ? "followup_modal" : "") +
+          '" ' +
+          'data-route="' +
+          escHtml(k.route || "") +
+          '" ' +
+          "data-filter='" +
+          filterStr +
+          "' " +
+          'style="cursor:pointer;">' +
+          '<span class="s-stat-title">' +
+          escHtml(k.title || "-") +
+          "</span>" +
+          '<span class="s-stat-value">' +
+          escHtml(k.count || 0) +
+          "</span>" +
+          "</div>";
+      });
+
+      container.innerHTML = html;
+    }
+
+    var kpiContainer = window.MY_ROOT
+      ? window.MY_ROOT.querySelector("#ops-kpi-container")
+      : null;
+    if (kpiContainer) {
+      kpiContainer.addEventListener("click", function (e) {
+        var card = e.target.closest(".kpi-clickable");
+        if (!card) return;
+
+        var action = card.getAttribute("data-fu-action");
+
+        if (action === "followup_modal") {
+          var valEl = card.querySelector(".s-stat-value");
+          var cnt = valEl ? parseInt(valEl.innerText) || 0 : 0;
+          if (typeof window.openFollowUpModal === "function") {
+            window.openFollowUpModal(cnt);
+          } else {
+            frappe.msgprint({
+              title: "Error",
+              indicator: "red",
+              message: "Modal logic failed to load. Please refresh.",
+            });
+          }
+          return;
+        }
+
+        var route = card.getAttribute("data-route");
+        var filterAttr = card.getAttribute("data-filter");
+        var filterObj = {};
+        try {
+          if (filterAttr) filterObj = JSON.parse(filterAttr);
+        } catch (err) {}
+
+        if (route && typeof frappe !== "undefined") {
+          frappe.set_route("List", route, filterObj);
+        }
+      });
+    }
+
+    /* ── PLANS ── */
+    function renderPlans(plans) {
+      var container = $("plan-list-container");
+      if (!container) return;
+      if (!plans || !plans.length) {
+        container.innerHTML = '<div class="ov-loading">No action items</div>';
+        return;
+      }
+      var html = "";
+      plans.forEach(function (p) {
+        html +=
+          '<div class="plan-item" style="cursor:pointer" data-route="' +
+          escHtml(p.route || "") +
+          "\" data-filter='" +
+          JSON.stringify(p.filter || {}) +
+          "'>" +
+          '<span class="plan-item-label">' +
+          escHtml(p.title || "-") +
+          "</span>" +
+          '<span class="plan-item-count">' +
+          escHtml(p.count || 0) +
+          "</span></div>";
+      });
+      container.innerHTML = html;
+      container.querySelectorAll(".plan-item").forEach(function (el) {
+        el.addEventListener("click", function () {
+          var route = this.dataset.route;
+          var filter = {};
+          try {
+            filter = JSON.parse(this.dataset.filter);
+          } catch (e) {}
+          if (route && typeof frappe !== "undefined")
+            frappe.set_route("List", route, filter);
+        });
+      });
+    }
+
+    /* ── TASKS (Pending Queue) ── */
+    function renderTasks(tasks) {
+      var body = $("task-list-body");
+      if (!body) return;
+      if (!tasks || !tasks.length) {
+        body.innerHTML =
+          '<tr><td colspan="5" style="color:var(--muted)">No pending tasks</td></tr>';
+        return;
+      }
+      var html = "";
+      tasks.forEach(function (t) {
+        var isDelayed = t.is_delayed === true || t.is_delayed === 1;
+        var tatDisplay =
+          t.tat === "-" || t.tat === null || t.tat === undefined || t.tat === 0
+            ? "-"
+            : t.tat;
+        var tatStyle = isDelayed
+          ? "color:var(--danger);font-weight:700;"
+          : "color:var(--muted);";
+
+        html +=
+          "<tr style=\"cursor:pointer\" onclick=\"if(typeof frappe!=='undefined'){frappe.set_route('Form','" +
+          escHtml(t.doctype || "") +
+          "','" +
+          escHtml(t.ref || "") +
+          "');}\">" +
+          "<td>" +
+          escHtml(t.type || "-") +
+          "</td>" +
+          '<td><div style="font-weight:600">' +
+          escHtml(t.client || "-") +
+          "</div>" +
+          '<div class="doc-ref">' +
+          escHtml(t.ref || "-") +
+          "</div></td>" +
+          "<td>" +
+          (t.assigned_date ? formatDate(t.assigned_date) : "—") +
+          "</td>" +
+          "<td>" +
+          formatDate(t.date) +
+          "</td>" +
+          '<td><span style="' +
+          tatStyle +
+          '">' +
+          escHtml(tatDisplay) +
+          "</span></td></tr>";
+      });
+      body.innerHTML = html;
+    }
+
+    /* ── PERFORMANCE ── */
+    function renderPerformance(p) {
+      if (!p) return;
+      var slots = [1, 2, 3, 4];
+      slots.forEach(function (i) {
+        var labelEl = $("perf-label-" + i);
+        var valueEl = $("perf-value-" + i);
+        var itemEl = labelEl ? labelEl.closest(".ov-perf-item") : null;
+        var hasData =
+          p["label" + i] !== undefined &&
+          p["label" + i] !== null &&
+          p["label" + i] !== "";
+        if (hasData) {
+          if (itemEl) itemEl.style.display = "";
+          if (labelEl) labelEl.innerText = p["label" + i];
+          if (valueEl) {
+            valueEl.innerText = p["value" + i] || 0;
+            valueEl.className =
+              "ov-perf-value" + (i === 4 ? " green-text" : "");
+          }
+          var route = p["route" + i];
+          var filter = p["filter" + i] || {};
+          if (route && itemEl) {
+            itemEl.style.cursor = "pointer";
+            itemEl.onclick = function () {
+              if (typeof frappe !== "undefined")
+                frappe.set_route("List", route, filter);
+            };
+          }
+        } else {
+          if (itemEl) itemEl.style.display = "none";
+        }
+      });
+    }
+
+    /* ── ACTIVITIES ── */
+    function renderActivities(list) {
+      var container = $("activity-timeline");
+      if (!container) return;
+      if (!list || !list.length) {
+        container.innerHTML =
+          '<div class="ov-loading">No recent activity</div>';
+        return;
+      }
+      var html = "";
+      list.forEach(function (a) {
+        var dt = a.ref_doctype || "";
+        var dn = a.docname || "-";
+        var url = dt
+          ? "/app/" +
+            dt.toLowerCase().replace(/ /g, "-") +
+            "/" +
+            encodeURIComponent(dn)
+          : "#";
+
+        var timeHtml = "";
+        if (a.creation) {
+          var d = new Date(a.creation);
+          if (!isNaN(d)) {
+            var dateStr = d.toLocaleDateString("en-IN", {
+              month: "short",
+              day: "numeric",
+            });
+            var timeStr = d.toLocaleTimeString("en-IN", {
+              hour: "2-digit",
+              minute: "2-digit",
+              hour12: true,
+            });
+            timeHtml =
+              '<div style="font-size:10.5px; color:var(--muted); text-align:right; white-space:nowrap; margin-left:12px;">' +
+              '<div style="font-weight:600; margin-bottom:2px;">' +
+              timeStr +
+              "</div>" +
+              "<div>" +
+              dateStr +
+              "</div>" +
+              "</div>";
+          }
+        }
+        html +=
+          '<div class="timeline-item" onclick="location.href=\'' +
+          url +
+          '\'" style="cursor:pointer; display:flex; justify-content:space-between; align-items:flex-start;">' +
+          '<div style="overflow:hidden;">' +
+          '<div class="timeline-title" style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">' +
+          escHtml(dt || "-") +
+          "</div>" +
+          '<div class="timeline-meta" style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">' +
+          escHtml(dn) +
+          "</div>" +
+          "</div>" +
+          timeHtml +
+          "</div>";
+      });
+      container.innerHTML = html;
+    }
+
+    /* ── ATTENDANCE ── */
+    function renderAttendance(attendanceData) {
+      var records =
+        (attendanceData || {}).records || (attendanceData || {}).logs || [];
+      ALL_ATTENDANCE = records;
+      var now = new Date();
+      var mDropdown = $("attMonth");
+      if (mDropdown) mDropdown.value = now.getMonth();
+      ACTIVE_STATUS_FILTER = null;
+      filterAttendance();
+    }
+
+    function filterAttendance() {
+      if (!$("attMonth") || !$("attYear")) return;
+      var month = parseInt($("attMonth").value);
+      var year = parseInt($("attYear").value);
+      var filtered = ALL_ATTENDANCE.filter(function (a) {
+        var d = new Date(a.date);
+        return d.getMonth() === month && d.getFullYear() === year;
+      });
+      renderAttendanceGrid(filtered);
+    }
+
+    function renderAttendanceGrid(records) {
+      var grid = $("attendanceGrid");
+      var summary = $("attSummary");
+      if (!grid || !summary) return;
+      grid.innerHTML = "";
+      var counts = { present: 0, absent: 0, halfday: 0, wfh: 0, onleave: 0 };
+      records.forEach(function (a) {
+        var c = statusClass(a.status);
+        if (counts[c] !== undefined) counts[c]++;
+      });
+      summary.innerHTML = "";
+      var chipDefs = [
+        { key: "present", icon: "✓", label: "Present" },
+        { key: "absent", icon: "✗", label: "Absent" },
+        { key: "halfday", icon: "◑", label: "Half Day" },
+        { key: "wfh", icon: "⌂", label: "WFH" },
+        { key: "onleave", icon: "🏖", label: "On Leave" },
+      ];
+      chipDefs.forEach(function (def) {
+        if (!counts[def.key]) return;
+        var chip = document.createElement("span");
+        chip.className =
+          "att-chip " +
+          def.key +
+          (ACTIVE_STATUS_FILTER === def.key ? " active" : "");
+        chip.innerHTML = def.icon + " " + counts[def.key] + " " + def.label;
+        chip.dataset.filter = def.key;
+        chip.addEventListener("click", function () {
+          ACTIVE_STATUS_FILTER =
+            ACTIVE_STATUS_FILTER === def.key ? null : def.key;
+          applyCardFilter();
+          $$(".att-chip").forEach(function (c) {
+            c.classList.toggle(
+              "active",
+              c.dataset.filter === ACTIVE_STATUS_FILTER,
+            );
+          });
+        });
+        summary.appendChild(chip);
+      });
+      if (!records.length) {
+        grid.innerHTML =
+          '<div style="color:var(--muted);font-size:14px;padding:20px 0">No attendance data found.</div>';
+        return;
+      }
+      var sorted = records.slice().sort(function (a, b) {
+        return new Date(a.date) - new Date(b.date);
+      });
+      sorted.forEach(function (a) {
+        var cls = statusClass(a.status);
+        var card = document.createElement("div");
+        card.className = "att-card " + cls;
+        card.dataset.status = cls;
+        card.style.cursor = "pointer";
+        card.addEventListener("click", function () {
+          if (typeof frappe !== "undefined")
+            frappe.set_route("List", "Attendance", {
+              employee: CURRENT_EMP_ID,
+              attendance_date: a.date,
+            });
+        });
+        card.innerHTML =
+          '<div class="att-date">' +
+          formatDate(a.date) +
+          "</div>" +
+          '<div class="att-day">' +
+          dayName(a.date) +
+          "</div>" +
+          '<span class="att-badge ' +
+          cls +
+          '">' +
+          escHtml(a.status || "—") +
+          "</span>";
+        grid.appendChild(card);
+      });
+      applyCardFilter();
+    }
+
+    function applyCardFilter() {
+      $$(".att-card").forEach(function (card) {
+        if (
+          !ACTIVE_STATUS_FILTER ||
+          card.dataset.status === ACTIVE_STATUS_FILTER
+        ) {
+          card.classList.remove("dimmed");
+        } else {
+          card.classList.add("dimmed");
+        }
+      });
+    }
+
+    /* ── LEAVE ── */
+    function renderLeave(leaves) {
+      var container = $("leaveCards");
+      if (!container) return;
+      container.innerHTML = "";
+      (leaves || []).forEach(function (l) {
+        var available = l.unused_leaves || l.available || 0;
+        var total = l.total_leaves || l.total || 0;
+        var used = Math.max(total - available, 0);
+        var pct = total > 0 ? Math.min((available / total) * 100, 100) : 0;
+        var typeName = l.leave_type || l.type || "-";
+        var applyUrl =
+          "/app/leave-application/new-leave-application?employee=" +
+          encodeURIComponent(CURRENT_EMP_ID) +
+          "&leave_type=" +
+          encodeURIComponent(typeName);
+        var card = document.createElement("div");
+        card.className = "leave-card";
+        card.innerHTML =
+          '<div class="leave-card-apply">+ Apply for ' +
+          escHtml(typeName) +
+          "</div>" +
+          '<div class="leave-type-name">' +
+          escHtml(typeName) +
+          "</div>" +
+          '<div class="leave-bar-track"><div class="leave-bar-fill" data-pct="' +
+          pct +
+          '"></div></div>' +
+          '<div class="leave-stats">' +
+          '<div class="leave-stat"><div class="leave-stat-val available">' +
+          available +
+          '</div><div class="leave-stat-label">AVAILABLE</div></div>' +
+          '<div class="leave-stat"><div class="leave-stat-val used">' +
+          used +
+          '</div><div class="leave-stat-label">USED</div></div>' +
+          '<div class="leave-stat"><div class="leave-stat-val total">' +
+          total +
+          '</div><div class="leave-stat-label">TOTAL</div></div>' +
+          "</div>";
+        card.onclick = function () {
+          location.href = applyUrl;
+        };
+        container.appendChild(card);
+      });
+      requestAnimationFrame(function () {
+        requestAnimationFrame(function () {
+          container.querySelectorAll(".leave-bar-fill").forEach(function (bar) {
+            bar.style.width = (bar.dataset.pct || 0) + "%";
+          });
+        });
+      });
+    }
+
+    /* ── PAYSLIPS ── */
+    function renderPayslips(payslips) {
+      var grid = $("payslipGrid");
+      if (!grid) return;
+      grid.innerHTML = "";
+      if (!payslips || !payslips.length) {
+        grid.innerHTML =
+          '<div style="color:var(--muted);font-size:14px;">No payslips found.</div>';
+        return;
+      }
+      payslips.forEach(function (p) {
+        var url = "/app/salary-slip/" + encodeURIComponent(p.name || "");
+        var card = document.createElement("div");
+        card.className = "payslip-card";
+        card.onclick = function () {
+          location.href = url;
+        };
+        card.innerHTML =
+          '<div class="payslip-icon">📄</div>' +
+          '<div class="payslip-month">' +
+          escHtml(p.month || "-") +
+          "</div>" +
+          '<div class="payslip-year">' +
+          escHtml(p.year || "-") +
+          "</div>" +
+          '<div class="payslip-net">' +
+          rupee(p.amount || p.net_pay || 0) +
+          "</div>" +
+          '<div class="payslip-label">NET PAY</div>';
+        grid.appendChild(card);
+      });
+    }
+
+    /* ── HOLIDAYS ── */
+    function renderHolidays(holidays) {
+      var container = $("holidayList");
+      var badge = $("holidayRemaining");
+      if (!container || !badge) return;
+
+      container.innerHTML = "";
+      var today = new Date();
+      today.setHours(0, 0, 0, 0);
+
+      var upcoming = (holidays || []).filter(function (h) {
+        var d = new Date(h.holiday_date);
+        d.setHours(0, 0, 0, 0);
+        return d >= today;
+      });
+
+      badge.innerHTML =
+        '<span class="holiday-remaining-pill">' +
+        upcoming.length +
+        " remaining</span>" +
+        '<span class="holiday-year-label">in ' +
+        new Date().getFullYear() +
+        "</span>";
+
+      if (!upcoming.length) {
+        container.innerHTML =
+          '<div style="color:var(--muted);font-size:14px;">No upcoming holidays.</div>';
+        return;
+      }
+
+      upcoming.forEach(function (h) {
+        var d = new Date(h.holiday_date);
+        var day = isNaN(d) ? "—" : d.getDate();
+        var mon = isNaN(d)
+          ? ""
+          : d.toLocaleDateString("en-IN", { month: "short" }).toUpperCase();
+        var dow = isNaN(d)
+          ? ""
+          : d.toLocaleDateString("en-IN", { weekday: "long" });
+        var diff = Math.ceil((d - today) / (1000 * 60 * 60 * 24));
+        var soon =
+          diff <= 7
+            ? '<span class="att-chip present" style="font-size:10px;padding:2px 8px;margin-left:auto;">In ' +
+              diff +
+              " day" +
+              (diff === 1 ? "" : "s") +
+              "</span>"
+            : "";
+
+        var cleanDesc = stripHtml(h.description);
+        var card = document.createElement("div");
+        card.className = "holiday-card";
+        card.innerHTML =
+          '<div class="holiday-date-box"><div class="holiday-day">' +
+          day +
+          '</div><div class="holiday-mon">' +
+          mon +
+          "</div></div>" +
+          '<div style="flex:1"><div class="holiday-desc">' +
+          escHtml(cleanDesc) +
+          '</div><div class="holiday-dow">' +
+          dow +
+          "</div></div>" +
+          soon;
+        container.appendChild(card);
+      });
+    }
+
+    /* ── PROFILE ── */
+    function renderProfile(emp) {
+      if (!emp) return;
+      var name = emp.employee_name || emp.full_name || "User";
+      if ($("greetingName")) $("greetingName").innerText = name;
+    }
+
+    /* ── ACTIONS ── */
+    function renderActions(actions) {
+      if (!actions) return;
+      var btn1 = $("action-btn-1");
+      var btn2 = $("action-btn-2");
+      if (btn1 && actions.btn1_label) {
+        btn1.style.display = "inline-flex";
+        btn1.innerText = actions.btn1_label;
+        btn1.onclick = function () {
+          if (actions.btn1_type === "new_doc")
+            frappe.new_doc(actions.btn1_target);
+          else if (actions.btn1_type === "list_route")
+            frappe.set_route(
+              "List",
+              actions.btn1_target,
+              actions.btn1_filter || {},
+            );
+          else if (actions.btn1_type === "external_link")
+            window.open(actions.btn1_target, "_blank");
+        };
+      }
+      if (btn2 && actions.btn2_visible) {
+        btn2.style.display = "inline-flex";
+        btn2.innerText = actions.btn2_label;
+        btn2.onclick = function () {
+          if (actions.btn2_type === "new_doc")
+            frappe.new_doc(actions.btn2_target);
+          else if (actions.btn2_type === "list_route")
+            frappe.set_route(
+              "List",
+              actions.btn2_target,
+              actions.btn2_filter || {},
+            );
+          else if (actions.btn2_type === "external_link")
+            window.open(actions.btn2_target, "_blank");
+        };
+      }
+    }
+
+    /* ══════════════════════════════════════════════════
+   EPC / PROJECT OVERVIEW SECTION
+══════════════════════════════════════════════════ */
+    function epcLoading(on) {
+      var el = $("epc-loading-bar");
+      if (el) el.style.display = on ? "block" : "none";
+    }
+
+    function epcLoadAllNames() {
+      if (typeof frappe === "undefined") return;
+      epcLoading(true);
+      frappe.call({
+        method: "combined_dashboard",
+        args: { action: "get_all_names" },
+        callback: function (r) {
+          epcLoading(false);
+          EPC.allNames = r && r.message ? r.message : [];
+        },
+      });
+    }
+
+    var STAGE_PRIORITY = {
+      Project: 7,
+      Synchronization: 6,
+      "Sales Order": 5,
+      Dispatch: 4,
+      Proposal: 3,
+      "Site Survey": 2,
+      Lead: 1,
+    };
+
+    function epcLoadRecentLeads() {
+      var wrap = $("epc-process-wrap");
+      if (!wrap) return;
+      wrap.innerHTML =
+        '<div class="epc-leads-loading" style="padding:30px;text-align:center;color:var(--muted)">' +
+        '<i class="fa fa-spinner fa-spin"></i> Loading recent leads...</div>';
+
+      frappe.call({
+        method: "combined_dashboard",
+        args: { action: "get_recent_leads" },
+        callback: function (r) {
+          var rows = r && r.message ? r.message : [];
+          epcRenderLeadList(rows);
+        },
+      });
+    }
+
+    function epcRenderLeadList(rows) {
+      var wrap = $("epc-process-wrap");
+      if (!wrap) return;
+
+      if (!rows || !rows.length) {
+        wrap.innerHTML =
+          '<div class="epc-empty-state">' +
+          '<div class="epc-empty-icon">📋</div>' +
+          '<div class="epc-empty-text">No leads found in the last 2 days.</div>' +
+          "</div>";
+        return;
+      }
+
+      var STATUS_COLORS = {
+        Open: { bg: "#dbeafe", color: "#1e40af" },
+        Replied: { bg: "#e0f2fe", color: "#0c4a6e" },
+        Opportunity: { bg: "#fef9c3", color: "#854d0e" },
+        Proposal: { bg: "#f3e8ff", color: "#6b21a8" },
+        "Lost Quotation": { bg: "#fee2e2", color: "#991b1b" },
+        Interested: { bg: "#dcfce7", color: "#166534" },
+        "Not Interested": { bg: "#f1f5f9", color: "#64748b" },
+        Converted: { bg: "#d1fae5", color: "#065f46" },
+        "Do Not Contact": { bg: "#fce7f3", color: "#9d174d" },
+        "Site Survey": { bg: "#ffedd5", color: "#9a3412" },
+      };
+
+      var html =
+        '<div class="epc-leads-header">' +
+        '<span class="epc-leads-title">📋 Recent Leads <span class="epc-leads-count">' +
+        rows.length +
+        " leads (last 2 days)</span></span>" +
+        "</div>" +
+        '<div class="epc-leads-table-wrap">' +
+        '<table class="epc-leads-table">' +
+        "<thead><tr>" +
+        "<th>Lead Name</th><th>Mobile</th><th>Status</th><th>Source</th><th>Created Date</th>" +
+        "</tr></thead><tbody>";
+
+      rows.forEach(function (r) {
+        var statusCfg = STATUS_COLORS[r.status] || {
+          bg: "#f1f5f9",
+          color: "#64748b",
+        };
+        var createdDate = r.creation
+          ? new Date(r.creation).toLocaleDateString("en-IN", {
+              day: "2-digit",
+              month: "short",
+              year: "numeric",
+              hour: "2-digit",
+              minute: "2-digit",
+              hour12: true,
+            })
+          : "—";
+
+        html +=
+          '<tr class="epc-lead-row" data-name="' +
+          escHtml(r.name) +
+          '">' +
+          '<td><span class="epc-lead-name">' +
+          escHtml(r.lead_name || "—") +
+          "</span></td>" +
+          "<td>" +
+          escHtml(r.mobile_no || "—") +
+          "</td>" +
+          '<td><span class="epc-lead-status" style="background:' +
+          statusCfg.bg +
+          ";color:" +
+          statusCfg.color +
+          '">' +
+          escHtml(r.status || "—") +
+          "</span></td>" +
+          "<td>" +
+          escHtml(r.source || "—") +
+          "</td>" +
+          '<td style="white-space:nowrap;font-size:12px;color:var(--muted)">' +
+          createdDate +
+          "</td>" +
+          "</tr>";
+      });
+
+      html += "</tbody></table></div>";
+      wrap.innerHTML = html;
+
+      wrap.querySelectorAll(".epc-lead-row").forEach(function (row) {
+        row.addEventListener("click", function () {
+          var name = this.getAttribute("data-name");
+          var leadName = this.querySelector(".epc-lead-name");
+          var label = leadName ? leadName.innerText : name;
+          if (!name) return;
+          EPC.stageName = name;
+          EPC.stageDoc = "Lead";
+          var inp = $("epc-name-input");
+          if (inp) inp.value = label;
+          epcRenderPills();
+          epcFetchProcessView();
+          epcFetchSiteImages();
+        });
+      });
+    }
+
+    function epcDeduplicatedNames(raw, query) {
+      var bestMap = {};
+      var t = (query || "").toLowerCase().replace(/\s+/g, " ").trim();
+      for (var i = 0; i < raw.length; i++) {
+        var x = raw[i];
+        var cleanLabel = (x.label || x.name || "").replace(/\s+/g, " ").trim();
+        var lowerLabel = cleanLabel.toLowerCase();
+        if (t && lowerLabel.indexOf(t) === -1) continue;
+        var priority = STAGE_PRIORITY[x.stage] || 0;
+        if (!bestMap[lowerLabel] || priority > bestMap[lowerLabel].priority) {
+          bestMap[lowerLabel] = {
+            name: x.name,
+            label: cleanLabel,
+            stage: x.stage,
+            priority: priority,
+          };
+        }
+      }
+      var result = [];
+      for (var key in bestMap) {
+        if (bestMap.hasOwnProperty(key)) {
+          result.push(bestMap[key]);
+          if (result.length >= 60) break;
+        }
+      }
+      return result;
+    }
+
+    function epcStagesForLabel(raw) {
+      var stageMap = {};
+      for (var i = 0; i < raw.length; i++) {
+        var x = raw[i];
+        var lowerLabel = (x.label || x.name || "")
+          .replace(/\s+/g, " ")
+          .trim()
+          .toLowerCase();
+        if (!stageMap[lowerLabel]) stageMap[lowerLabel] = [];
+        var stg = x.stage || "";
+        if (stg && stageMap[lowerLabel].indexOf(stg) === -1) {
+          stageMap[lowerLabel].push(stg);
+        }
+      }
+      return stageMap;
+    }
+
+    function epcOpenNameDropdown(q) {
+      var dd = $("epc-name-dropdown");
+      if (!dd) return;
+      var filtered = epcDeduplicatedNames(EPC.allNames, q);
+      if (!filtered.length) {
+        dd.innerHTML =
+          '<div class="epc-dd-item" style="color:var(--muted)">No records found</div>';
+        dd.classList.add("open");
+        return;
+      }
+      var stageMap = epcStagesForLabel(EPC.allNames);
+      var html = "";
+      filtered.forEach(function (item) {
+        var lowerLabel = item.label.toLowerCase();
+        var allStages = (stageMap[lowerLabel] || [item.stage]).join(" · ");
+        html +=
+          '<div class="epc-dd-item" data-name="' +
+          escHtml(item.name) +
+          '" data-label="' +
+          escHtml(item.label) +
+          '" data-stage="' +
+          escHtml(item.stage || "") +
+          '">' +
+          '<div class="epc-dd-item-name">' +
+          escHtml(item.label) +
+          "</div>" +
+          '<div class="epc-dd-item-stage">' +
+          escHtml(allStages) +
+          "</div>" +
+          "</div>";
+      });
+      dd.innerHTML = html;
+      dd.classList.add("open");
+      dd.querySelectorAll(".epc-dd-item[data-name]").forEach(function (el) {
+        el.addEventListener("mousedown", function (e) {
+          e.preventDefault();
+          var nm = el.getAttribute("data-name") || "";
+          var lb = el.getAttribute("data-label") || nm;
+          var stg = el.getAttribute("data-stage") || "";
+          var inp = $("epc-name-input");
+          if (inp) inp.value = lb;
+          EPC.stageName = nm;
+          EPC.stageDoc = stg;
+          dd.classList.remove("open");
+          epcRenderPills();
+          epcFetchProcessView();
+          epcFetchSiteImages();
+        });
+      });
+    }
+
+    function epcRenderPills() {
+      var row = $("epc-pill-row");
+      if (!row) return;
+      row.innerHTML = "";
+      if (!EPC.stageName) return;
+      var d = document.createElement("div");
+      d.className = "epc-pill";
+      d.innerHTML = "<b>Record:</b> " + escHtml(EPC.stageName);
+      row.appendChild(d);
+    }
+
+    var EPC_STAGE_FIELDS = {
+      lead: [
+        ["Customer", "customer"],
+        ["Mobile", "mobile"],
+        ["Source", "source"],
+        ["Owner", "actor"],
+        ["Status", "status"],
+        ["Date", "date", true],
+        ["Next Step", "next_step", true],
+      ],
+      survey: [
+        ["Client", "customer"],
+        ["Surveyed By", "actor"],
+        ["Plant Category", "plant_category"],
+        ["Capacity", "capacity"],
+        ["Site Type", "site_type"],
+        ["Location", "location"],
+        ["Survey Date", "date", true],
+        ["Status", "status"],
+      ],
+      proposal: [
+        ["Customer", "customer"],
+        ["Manager", "actor"],
+        ["Capacity", "capacity"],
+        ["Amount", "amount", false, true],
+        ["Date", "date", true],
+        ["Status", "status"],
+        ["Next Followup", "next_step", true],
+      ],
+      sales_order: [
+        ["Customer", "customer"],
+        ["Manager", "actor"],
+        ["Amount", "amount", false, true],
+        ["Advance", "advance", false, true],
+        ["Outstanding", "outstanding", false, true],
+        ["% Advance", "adv_pct"],
+        ["Order Date", "date", true],
+        ["Status", "status"],
+      ],
+      dispatch: [
+        ["Customer", "customer"],
+        ["Manager", "actor"],
+        ["Date", "date", true],
+        ["Status", "status"],
+        ["Late Remark", "remark"],
+      ],
+      project: [
+        ["Project", "customer"],
+        ["Manager", "actor"],
+        ["% Complete", "pct"],
+        ["Start Date", "date", true],
+        ["Status", "status"],
+      ],
+      sync: [
+        ["Customer", "customer"],
+        ["Owner", "actor"],
+        ["Status", "status"],
+        ["Start Date", "date", true],
+        ["Sync Done", "sync_done", true],
+        ["Delay Log", "remark"],
+      ],
+    };
+
+    function epcStatusChip(status) {
+      if (!status || status === "—")
+        return '<span class="pv-status-chip pv-chip-pending">—</span>';
+      var s = String(status).toLowerCase(),
+        cls = "pv-chip-open";
+      if (
+        s.indexOf("complet") !== -1 ||
+        s.indexOf("synchronized") !== -1 ||
+        s.indexOf("converted") !== -1
+      )
+        cls = "pv-chip-completed";
+      else if (s.indexOf("overdue") !== -1 || s.indexOf("cancel") !== -1)
+        cls = "pv-chip-overdue";
+      return (
+        '<span class="pv-status-chip ' +
+        cls +
+        '">' +
+        escHtml(status) +
+        "</span>"
+      );
+    }
+
+    function epcBuildCard(icon, title, key, data, docName, doctype) {
+      var reached = !!(data && data.reached);
+      var cardCls = reached ? "pv-card pv-reached" : "pv-card pv-pending";
+      var openHtml = "";
+      if (docName && reached) {
+        openHtml =
+          '<a class="pv-open-link" href="javascript:void(0)" onclick=\'epc_openDoc("' +
+          escHtml(doctype) +
+          '","' +
+          escHtml(docName) +
+          "\")'>Open ↗</a>";
+      }
+      var headHtml =
+        '<div class="pv-card-head">' +
+        '<span class="pv-card-title">' +
+        icon +
+        " " +
+        escHtml(title) +
+        "</span>" +
+        (reached ? epcStatusChip(data && data.status) : "") +
+        openHtml +
+        "</div>";
+      if (!reached) {
+        return (
+          '<article class="' +
+          cardCls +
+          '">' +
+          headHtml +
+          '<div class="pv-body"><div class="pv-empty">Not reached in process flow</div></div></article>'
+        );
+      }
+      var fields = EPC_STAGE_FIELDS[key] || [],
+        rowsHtml = "";
+      fields.forEach(function (f) {
+        var raw = data[f[1]],
+          val = "—";
+        if (raw !== undefined && raw !== null && raw !== "" && raw !== "—") {
+          if (f[2]) val = fmtDate(raw);
+          else if (f[3]) val = fmtR(raw);
+          else val = String(raw);
+        }
+        rowsHtml +=
+          '<div class="pv-row"><span>' +
+          escHtml(f[0]) +
+          "</span><strong>" +
+          escHtml(val) +
+          "</strong></div>";
+      });
+      return (
+        '<article class="' +
+        cardCls +
+        '">' +
+        headHtml +
+        '<div class="pv-body">' +
+        rowsHtml +
+        "</div></article>"
+      );
+    }
+
+    function epcRenderProcessCards(d) {
+      var wrap = $("epc-process-wrap");
+      if (!wrap) return;
+      if (!EPC.stageName) {
+        epcLoadRecentLeads();
+        return;
+      }
+      d = d || {};
+      wrap.innerHTML =
+        '<div class="pv-journey-header"><h4>📋 Stage Journey — ' +
+        escHtml(EPC.stageName) +
+        "</h4></div>" +
+        '<div class="pv-grid">' +
+        epcBuildCard("👤", "Lead Details", "lead", d.lead, d.lead_doc, "Lead") +
+        epcBuildCard(
+          "🗺",
+          "Site Survey",
+          "survey",
+          d.survey,
+          d.survey_doc,
+          "Site Survey",
+        ) +
+        epcBuildCard(
+          "📄",
+          "Proposal",
+          "proposal",
+          d.proposal,
+          d.proposal_doc,
+          "Quotation",
+        ) +
+        epcBuildCard(
+          "📦",
+          "Sales Order",
+          "sales_order",
+          d.sales_order,
+          d.sales_order_doc,
+          "Sales Order",
+        ) +
+        epcBuildCard(
+          "🚚",
+          "Dispatch",
+          "dispatch",
+          d.dispatch,
+          d.dispatch_doc,
+          "Delivery Note",
+        ) +
+        epcBuildCard(
+          "🏗",
+          "Project",
+          "project",
+          d.project,
+          d.project_doc,
+          "Project",
+        ) +
+        epcBuildCard(
+          "🔄",
+          "Synchronization",
+          "sync",
+          d.sync,
+          d.sync_doc,
+          "Liaisoning And Synchronization",
+        ) +
+        "</div>";
+    }
+
+    function epcFetchProcessView() {
+      if (!EPC.stageName) {
+        epcRenderProcessCards({});
+        return;
+      }
+      epcLoading(true);
+      frappe.call({
+        method: "combined_dashboard",
+        args: {
+          action: "get_process_view",
+          stage: EPC.stageDoc || "",
+          name: EPC.stageName,
+          project: "",
+        },
+        callback: function (r) {
+          epcLoading(false);
+          epcRenderProcessCards(r && r.message ? r.message : {});
+        },
+      });
+    }
+
+    function epcRenderSiteImages(rows) {
+      var wrap = $("epc-site-images-wrap");
+      if (!wrap) return;
+      rows = rows || [];
+      EPC.siteImages = rows.slice(0);
+      if (!EPC.stageName) {
+        wrap.innerHTML = "";
+        return;
+      }
+      if (!rows.length) {
+        wrap.innerHTML =
+          '<div class="epc-sitebox"><div class="epc-sitebox-head"><h3>🖼 Stage Images</h3></div>' +
+          '<div class="epc-sitebox-empty">No images found.</div></div>';
+        return;
+      }
+      var groups = {};
+      rows.forEach(function (r) {
+        var stageName = r.doctype || "Other";
+        if (stageName === "Delivery Note") stageName = "Dispatch";
+        if (!groups[stageName]) groups[stageName] = [];
+        groups[stageName].push(r);
+      });
+      var html =
+        '<div class="epc-sitebox"><div class="epc-sitebox-head"><h3>🖼 Stage Images</h3></div><div class="epc-sitebox-row">';
+      for (var stage in groups) {
+        if (groups.hasOwnProperty(stage)) {
+          var stageImages = groups[stage];
+          var coverImage = stageImages[0];
+          html +=
+            '<a class="epc-mini" href="javascript:void(0)" onclick="epcOpenStageImagesModal(\'' +
+            escHtml(stage) +
+            "')\">" +
+            '<div class="epc-mini-t"><img src="' +
+            escHtml(coverImage.file_url || "") +
+            '" alt="Cover" loading="lazy"></div>' +
+            '<div class="epc-mini-n" style="font-size:12px;">' +
+            escHtml(stage) +
+            "</div>" +
+            '<div class="epc-mini-m" style="font-weight:600; color:var(--accent);">' +
+            stageImages.length +
+            " Image(s)</div></a>";
+        }
+      }
+      html += "</div></div>";
+      wrap.innerHTML = html;
+    }
+
+    function epcFetchSiteImages() {
+      if (!EPC.stageName) {
+        epcRenderSiteImages([]);
+        return;
+      }
+      frappe.call({
+        method: "combined_dashboard",
+        args: {
+          action: "get_site_images",
+          stage: EPC.stageDoc || "",
+          name: EPC.stageName,
+          project: "",
+        },
+        callback: function (r) {
+          epcRenderSiteImages(r && r.message ? r.message : []);
+        },
+      });
+    }
+
+    window.epcOpenStageImagesModal = function (targetStage) {
+      var allRows = EPC.siteImages || [];
+      var rows = allRows.filter(function (r) {
+        var s = r.doctype || "Other";
+        if (s === "Delivery Note") s = "Dispatch";
+        return s === targetStage;
+      });
+      if (!rows.length) return;
+      epcCloseAllImagesModal();
+      var html =
+        '<div id="epc-img-modal-ov" style="position:fixed;inset:0;background:rgba(15,23,42,.5);z-index:9999;display:flex;align-items:center;justify-content:center;padding:16px;">' +
+        '<div style="width:min(1100px,96vw);max-height:90vh;background:#fff;border-radius:14px;box-shadow:0 20px 50px rgba(0,0,0,.25);display:flex;flex-direction:column;overflow:hidden;">' +
+        '<div style="display:flex;justify-content:space-between;align-items:center;padding:14px 18px;border-bottom:1px solid #e2e8f0;">' +
+        '<h3 style="margin:0;font-size:15px;font-weight:700;">🖼 ' +
+        escHtml(targetStage) +
+        " Images (" +
+        rows.length +
+        ")</h3>" +
+        '<button id="epc-close-img-modal" style="background:none;border:1px solid #e2e8f0;border-radius:8px;width:32px;height:32px;cursor:pointer;font-size:14px;">✕</button></div>' +
+        '<div style="padding:14px;overflow:auto;display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px;">';
+      rows.forEach(function (r) {
+        html +=
+          '<a href="' +
+          escHtml(r.file_url || "") +
+          '" target="_blank" style="display:block;border:1px solid #e2e8f0;border-radius:10px;overflow:hidden;text-decoration:none;background:#fff;">' +
+          '<div style="height:130px;overflow:hidden;background:#f3f5f9;"><img src="' +
+          escHtml(r.file_url || "") +
+          '" style="width:100%;height:100%;object-fit:cover;" loading="lazy"></div>' +
+          '<div style="font-size:11px;padding:6px 8px;font-weight:600;color:#111;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' +
+          escHtml(r.file_name || "") +
+          "</div>" +
+          '<div style="font-size:10px;padding:0 8px 8px;color:#64748b;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' +
+          escHtml(r.docname || "") +
+          "</div></a>";
+      });
+      html += "</div></div></div>";
+      var holder = document.createElement("div");
+      holder.innerHTML = html;
+      document.body.appendChild(holder.firstChild);
+      var ov = document.getElementById("epc-img-modal-ov");
+      var cb = document.getElementById("epc-close-img-modal");
+      if (cb) cb.addEventListener("click", epcCloseAllImagesModal);
+      if (ov)
+        ov.addEventListener("click", function (e) {
+          if (e.target === ov) epcCloseAllImagesModal();
+        });
+    };
+
+    function epcCloseAllImagesModal() {
+      var ov = document.getElementById("epc-img-modal-ov");
+      if (ov && ov.parentNode) ov.parentNode.removeChild(ov);
+    }
+
+    function epcCloseModal() {
+      var ov = $("epc-stage-modal-overlay");
+      if (ov) ov.classList.remove("open");
+    }
+
+    (function bindEpcControls() {
+      var nameInp = $("epc-name-input");
+      var nameDd = $("epc-name-dropdown");
+
+      if (nameInp) {
+        nameInp.addEventListener("keydown", function (e) {
+          e.stopPropagation();
+        });
+        nameInp.addEventListener("keyup", function (e) {
+          e.stopPropagation();
+        });
+        nameInp.addEventListener("keypress", function (e) {
+          e.stopPropagation();
+        });
+        nameInp.addEventListener("focus", function () {
+          if (EPC.allNames.length === 0) epcLoadAllNames();
+          else epcOpenNameDropdown(nameInp.value || "");
+        });
+        nameInp.addEventListener("input", function () {
+          clearTimeout(EPC.nameTimer);
+          EPC.nameTimer = setTimeout(function () {
+            epcOpenNameDropdown(nameInp.value || "");
+          }, 220);
+        });
+      }
+
+      document.addEventListener("mousedown", function (e) {
+        if (!nameInp || !nameDd) return;
+        if (!nameInp.contains(e.target) && !nameDd.contains(e.target))
+          nameDd.classList.remove("open");
+      });
+
+      var clearBtn = $("epc-btn-clear");
+      if (clearBtn) {
+        clearBtn.addEventListener("click", function () {
+          EPC.stageName = "";
+          EPC.stageDoc = "";
+          if (nameInp) nameInp.value = "";
+          if (nameDd) nameDd.classList.remove("open");
+          epcRenderPills();
+          epcRenderProcessCards({});
+          epcRenderSiteImages([]);
+        });
+      }
+
+      var closeBtn = $("epc-btn-close-modal");
+      if (closeBtn) closeBtn.addEventListener("click", epcCloseModal);
+      var modalOv = $("epc-stage-modal-overlay");
+      if (modalOv)
+        modalOv.addEventListener("click", function (e) {
+          if (e.target === modalOv) epcCloseModal();
+        });
+    })();
+
+    window.epc_openDoc = function (dt, name) {
+      if (dt && name) {
+        var url =
+          "/app/" +
+          dt.toLowerCase().replace(/ /g, "-") +
+          "/" +
+          encodeURIComponent(name);
+        window.open(url, "_blank");
+      }
+    };
+
+    /* ══════════════════════════════════════════════════
+   MAIN API CALL
+══════════════════════════════════════════════════ */
+    if (typeof frappe !== "undefined") {
+      frappe.call({
+        method: "combined_dashboard",
+        callback: function (r) {
+          if (!r || !r.message) return;
+          var d = r.message;
+          CURRENT_EMP_ID =
+            (d.employee || {}).employee_id || (d.employee || {}).name || "";
+          renderProfile(d.employee || {});
+          renderOpsKpis(d.kpi || []);
+          renderPlans(d.plan || []);
+          renderTasks(d.tasks || []);
+          renderPerformance(d.performance || {});
+
+          /* Update performance heading with current month name */
+          var perfHint = window.MY_ROOT.querySelector(".section-hint");
+          if (perfHint && d.performance_label) {
+            perfHint.innerText = d.performance_label;
+          }
+          var perfCardTitle = $("perf-card-title");
+          if (perfCardTitle && d.performance_label) {
+            perfCardTitle.innerText =
+              "PERFORMANCE (" +
+              (d.performance_label || "THIS MONTH").toUpperCase() +
+              ")";
+          }
+
+          renderActivities(d.activities || []);
+          renderActions(d.actions || {});
+          renderAttendance(d.attendance || {});
+          renderLeave(d.leaves || d.leave_balances || []);
+          renderPayslips(d.payslips || []);
+          renderHolidays(d.holidays || []);
+          renderNotifications(d.notifications || []);
+
+          /* View all ToDo — filter by role */
+          var viewAllBtn = $("notif-view-all");
+          if (viewAllBtn) {
+            viewAllBtn.onclick = function (e) {
+              e.preventDefault();
+              var role = d.role || "";
+              if (role.indexOf("Residential Pipeline") !== -1) {
+                frappe.set_route("List", "ToDo", {
+                  allocated_to: [
+                    "in",
+                    [
+                      "tara.sadbhavrenewable@gmail.com",
+                      "ergayatrisadbhav01@gmail.com",
+                      "daminisadbhavrenewable7@gmail.com",
+                    ],
+                  ],
+                  status: "Open",
+                });
+              } else {
+                frappe.set_route("List", "ToDo", {
+                  allocated_to: frappe.session.user,
+                  status: "Open",
+                });
+              }
+              var p = $("notifPanel");
+              if (p) p.classList.remove("open");
+            };
+          }
+
+          if ($("qa-att-correction") && CURRENT_EMP_ID) {
+            $("qa-att-correction").href =
+              "/app/attendance-request/new-attendance-request?employee=" +
+              encodeURIComponent(CURRENT_EMP_ID);
+          }
+        },
+      });
+    }
+
+    /* ============================================================
+   FOLLOW-UP MODAL LOGIC
+============================================================ */
+
+    var FU_STAGE_CONFIG = {
+      Lead: {
+        label: "Lead",
+        cls: "fu-stage-lead",
+        icon: "👤",
+        frappe_dt: "Lead",
+      },
+      "Site Survey": {
+        label: "Survey",
+        cls: "fu-stage-survey",
+        icon: "🗺",
+        frappe_dt: "Site Survey",
+      },
+      Quotation: {
+        label: "Proposal",
+        cls: "fu-stage-proposal",
+        icon: "📄",
+        frappe_dt: "Quotation",
+      },
+      "Sales Order": {
+        label: "Sales Order",
+        cls: "fu-stage-salesorder",
+        icon: "📦",
+        frappe_dt: "Sales Order",
+      },
+      "Delivery Note": {
+        label: "Dispatch",
+        cls: "fu-stage-dispatch",
+        icon: "🚚",
+        frappe_dt: "Delivery Note",
+      },
+      Project: {
+        label: "Project",
+        cls: "fu-stage-project",
+        icon: "🏗",
+        frappe_dt: "Project",
+      },
+      "Liaisoning And Synchronization": {
+        label: "Sync",
+        cls: "fu-stage-sync",
+        icon: "🔄",
+        frappe_dt: "Liaisoning And Synchronization",
+      },
+    };
+
+    var FU_STAGE_KEYS = [
+      "Lead",
+      "Site Survey",
+      "Quotation",
+      "Sales Order",
+      "Delivery Note",
+      "Project",
+      "Liaisoning And Synchronization",
+    ];
+
+    var FU_STATE = {
+      activeTab: "today",
+      todayRows: null,
+      allRows: null,
+      loading: false,
+      stageFilter: "all",
+      datePreset: "this_month",
+      fromDate: "",
+      toDate: "",
+      todayCount: 0,
+    };
+
+    function fuQ(id) {
+      return document.getElementById(id);
+    }
+
+    function fuGetTodayStr() {
+      if (
+        typeof frappe !== "undefined" &&
+        frappe.datetime &&
+        frappe.datetime.get_today
+      ) {
+        return frappe.datetime.get_today();
+      }
+      return new Date().toISOString().split("T")[0];
+    }
+
+    function fuInjectModal() {
+      if (document.getElementById("fu-modal-overlay")) return;
+
+      var stageOptions = '<option value="all">All Stages</option>';
+      FU_STAGE_KEYS.forEach(function (k) {
+        var cfg = FU_STAGE_CONFIG[k];
+        stageOptions +=
+          '<option value="' +
+          k +
+          '">' +
+          cfg.icon +
+          " " +
+          cfg.label +
+          "</option>";
+      });
+
+      var html =
+        '<div id="fu-modal-overlay" class="fu-overlay">' +
+        '<div class="fu-modal" id="fu-modal-card">' +
+        '<div class="fu-header">' +
+        '<div class="fu-header-left">' +
+        '<h3 class="fu-title">📋 Follow-Up Logs</h3>' +
+        '<span class="fu-subtitle">All stages · Remark &amp; Delay Log entries</span>' +
+        "</div>" +
+        '<button class="fu-close-btn" id="fu-close-btn" title="Close">✕</button>' +
+        "</div>" +
+        '<div class="fu-tabs">' +
+        '<button class="fu-tab active" id="fu-tab-today" data-tab="today">Today <span class="fu-tab-badge" id="fu-today-badge">0</span></button>' +
+        '<button class="fu-tab" id="fu-tab-overview" data-tab="overview">Overview <span class="fu-tab-badge" id="fu-overview-badge">—</span></button>' +
+        "</div>" +
+        '<div class="fu-filters" id="fu-filters">' +
+        '<span class="fu-filter-label">Stage:</span>' +
+        '<select class="fu-select" id="fu-stage-filter">' +
+        stageOptions +
+        "</select>" +
+        '<div class="fu-filter-sep" id="fu-date-sep" style="display:none"></div>' +
+        '<span class="fu-filter-label" id="fu-date-label" style="display:none">Period:</span>' +
+        '<select class="fu-select" id="fu-date-preset" style="display:none">' +
+        '<option value="today">Today</option>' +
+        '<option value="this_week">This Week</option>' +
+        '<option value="this_month" selected>This Month</option>' +
+        '<option value="last_month">Last Month</option>' +
+        '<option value="this_year">This Year</option>' +
+        '<option value="custom">Custom Range</option>' +
+        "</select>" +
+        '<input type="date" class="fu-select" id="fu-from-date" style="display:none" />' +
+        '<span id="fu-to-label" style="display:none;font-size:12px;color:var(--muted)">to</span>' +
+        '<input type="date" class="fu-select" id="fu-to-date" style="display:none" />' +
+        '<span class="fu-count-pill" id="fu-count-pill">0 entries</span>' +
+        "</div>" +
+        '<div class="fu-table-shell">' +
+        '<div class="fu-table-scroll" id="fu-table-scroll">' +
+        '<table class="fu-table">' +
+        "<thead><tr>" +
+        '<th style="width:90px">Stage</th>' +
+        '<th style="width:150px">Document</th>' +
+        '<th style="min-width:80px">Customer</th>' +
+        '<th style="min-width:200px">Remark</th>' +
+        '<th style="width:110px">Category</th>' +
+        '<th style="width:80px">Status</th>' +
+        '<th style="width:110px">User</th>' +
+        '<th style="width:120px">Log Time</th>' +
+        "</tr></thead>" +
+        '<tbody id="fu-table-body"></tbody>' +
+        "</table>" +
+        "</div>" +
+        "</div>" +
+        "</div>" +
+        "</div>";
+
+      var holder = document.createElement("div");
+      holder.innerHTML = html;
+      document.body.appendChild(holder.firstChild);
+      fuBindModalEvents();
+    }
+
+    function fuBindModalEvents() {
+      var closeBtn = fuQ("fu-close-btn");
+      if (closeBtn) closeBtn.addEventListener("click", fuCloseModal);
+
+      var overlay = fuQ("fu-modal-overlay");
+      if (overlay)
+        overlay.addEventListener("click", function (e) {
+          if (e.target === overlay) fuCloseModal();
+        });
+
+      var tabToday = fuQ("fu-tab-today");
+      var tabOv = fuQ("fu-tab-overview");
+
+      if (tabToday) {
+        tabToday.addEventListener("click", function () {
+          FU_STATE.activeTab = "today";
+          fuUpdateTabs();
+          fuToggleDateFilters();
+          fuRenderTable();
+        });
+      }
+
+      if (tabOv) {
+        tabOv.addEventListener("click", function () {
+          FU_STATE.activeTab = "overview";
+          fuUpdateTabs();
+          fuToggleDateFilters();
+          if (FU_STATE.allRows === null) fuFetchOverviewRows();
+          else fuRenderTable();
+        });
+      }
+
+      var sf = fuQ("fu-stage-filter");
+      if (sf)
+        sf.addEventListener("change", function () {
+          FU_STATE.stageFilter = this.value;
+          fuRenderTable();
+        });
+
+      var dp = fuQ("fu-date-preset");
+      if (dp)
+        dp.addEventListener("change", function () {
+          FU_STATE.datePreset = this.value;
+          fuToggleCustomDates();
+          fuFetchOverviewRows();
+        });
+
+      var fd = fuQ("fu-from-date");
+      var td2 = fuQ("fu-to-date");
+      if (fd)
+        fd.addEventListener("change", function () {
+          FU_STATE.fromDate = this.value;
+          if (FU_STATE.datePreset === "custom" && FU_STATE.toDate)
+            fuFetchOverviewRows();
+        });
+      if (td2)
+        td2.addEventListener("change", function () {
+          FU_STATE.toDate = this.value;
+          if (FU_STATE.datePreset === "custom" && FU_STATE.fromDate)
+            fuFetchOverviewRows();
+        });
+    }
+
+    function fuInjectStyles() {
+      if (document.getElementById("fu-dynamic-styles")) return;
+      var style = document.createElement("style");
+      style.id = "fu-dynamic-styles";
+      style.innerHTML =
+        ".fu-overlay{position:fixed;inset:0;background:rgba(2,8,23,.65);display:none;align-items:center;justify-content:center;z-index:999999!important;padding:16px;backdrop-filter:blur(3px);font-family:'DM Sans',sans-serif;}" +
+        ".fu-overlay.open{display:flex!important;}" +
+        ".fu-modal{width:min(96vw,1080px);max-height:90vh;background:#fff;border-radius:16px;box-shadow:0 24px 60px rgba(0,0,0,.25);display:flex;flex-direction:column;overflow:hidden;animation:fuIn .25s cubic-bezier(0.16,1,0.3,1);}" +
+        "@keyframes fuIn{from{opacity:0;transform:translateY(20px) scale(.98)}to{opacity:1;transform:translateY(0) scale(1)}}" +
+        ".fu-header{display:flex;align-items:center;justify-content:space-between;padding:20px 24px 0;flex-shrink:0;}" +
+        ".fu-header-left{display:flex;flex-direction:column;gap:4px;}" +
+        ".fu-title{font-family:'Syne',sans-serif;font-size:18px;font-weight:800;color:#1e293b;margin:0;}" +
+        ".fu-subtitle{font-size:12.5px;color:#64748b;}" +
+        ".fu-close-btn{width:36px;height:36px;border:1px solid #e2e8f0;border-radius:10px;background:#f8fafc;cursor:pointer;font-size:15px;display:flex;align-items:center;justify-content:center;color:#64748b;transition:all .2s;flex-shrink:0;}" +
+        ".fu-close-btn:hover{background:#ef4444;color:#fff;border-color:#ef4444;}" +
+        ".fu-tabs{display:flex;gap:0;padding:16px 24px 0;border-bottom:2px solid #e2e8f0;flex-shrink:0;}" +
+        ".fu-tab{padding:10px 22px;font-size:13.5px;font-weight:600;color:#64748b;cursor:pointer;border:none;background:none;border-bottom:2.5px solid transparent;margin-bottom:-2px;transition:all .2s;font-family:'DM Sans',sans-serif;display:flex;align-items:center;gap:8px;}" +
+        ".fu-tab:hover{color:#3b6ef6;}" +
+        ".fu-tab.active{color:#3b6ef6;border-bottom-color:#3b6ef6;}" +
+        ".fu-tab-badge{background:#3b6ef6;color:#fff;font-size:10.5px;font-weight:700;padding:2px 8px;border-radius:99px;min-width:20px;text-align:center;}" +
+        ".fu-tab:not(.active) .fu-tab-badge{background:#e2e8f0;color:#64748b;}" +
+        ".fu-filters{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:14px 24px;background:#f8fafc;border-bottom:1px solid #e2e8f0;flex-shrink:0;}" +
+        ".fu-filter-label{font-size:11.5px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.5px;margin-right:4px;}" +
+        ".fu-select{height:34px;padding:0 12px;border:1px solid #cbd5e1;border-radius:8px;background:#fff;font-size:12.5px;font-weight:600;color:#1e293b;font-family:'DM Sans',sans-serif;cursor:pointer;outline:none;}" +
+        ".fu-count-pill{margin-left:auto;background:#fff;border:1px solid #cbd5e1;border-radius:99px;font-size:11.5px;font-weight:700;color:#475569;padding:4px 14px;white-space:nowrap;}" +
+        ".fu-table-shell{flex:1;overflow:hidden;display:flex;flex-direction:column;min-height:0;}" +
+        ".fu-table-scroll{flex:1;overflow-x:auto;overflow-y:auto;}" +
+        ".fu-table{width:100%;border-collapse:collapse;font-size:12.5px;min-width:860px;}" +
+        ".fu-table th{position:sticky;top:0;z-index:2;background:#f1f5f9;padding:12px 14px;text-align:left;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:#334155;border-bottom:2px solid #e2e8f0;white-space:nowrap;}" +
+        ".fu-table td{padding:12px 14px;border-bottom:1px solid #f1f5f9;vertical-align:top;max-width:280px;color:#1e293b;}" +
+        ".fu-table tr:last-child td{border-bottom:none;}" +
+        ".fu-table tr:hover td{background:#f8fafc;}" +
+        ".fu-stage-badge{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:6px;font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;white-space:nowrap;}" +
+        ".fu-stage-lead{background:#fef3c7;color:#92400e;border:1px solid #fde68a;}" +
+        ".fu-stage-survey{background:#dbeafe;color:#1e40af;border:1px solid #bfdbfe;}" +
+        ".fu-stage-proposal{background:#f3e8ff;color:#6b21a8;border:1px solid #ddd6fe;}" +
+        ".fu-stage-salesorder{background:#dcfce7;color:#166534;border:1px solid #bbf7d0;}" +
+        ".fu-stage-dispatch{background:#ffedd5;color:#9a3412;border:1px solid #fed7aa;}" +
+        ".fu-stage-project{background:#e0f2fe;color:#0c4a6e;border:1px solid #bae6fd;}" +
+        ".fu-stage-sync{background:#fce7f3;color:#9d174d;border:1px solid #fbcfe8;}" +
+        ".fu-doc-link{font-weight:700;color:#3b6ef6;cursor:pointer;text-decoration:none;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:160px;}" +
+        ".fu-doc-link:hover{text-decoration:underline;}" +
+        ".fu-doc-sub{font-size:11.5px;color:#64748b;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:160px;}" +
+        ".fu-remark-cell{color:#334155;line-height:1.5;max-width:280px;word-break:break-word;}" +
+        ".fu-status{display:inline-block;padding:3px 10px;border-radius:6px;font-size:10.5px;font-weight:700;text-transform:uppercase;background:#f1f5f9;color:#64748b;}" +
+        ".fu-status-open{background:#dbeafe;color:#1e40af;}" +
+        ".fu-status-closed{background:#dcfce7;color:#166534;}" +
+        ".fu-status-pending{background:#fef3c7;color:#92400e;}" +
+        ".fu-time-cell{white-space:nowrap;}" +
+        ".fu-time-date{font-weight:700;color:#1e293b;}" +
+        ".fu-time-hour{font-size:11.5px;color:#64748b;margin-top:2px;}" +
+        ".fu-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px 20px;gap:12px;color:#64748b;font-size:14px;}" +
+        ".fu-empty-icon{font-size:42px;}" +
+        ".fu-shimmer td{background:linear-gradient(90deg,#f1f5f9 25%,#e2e8f0 50%,#f1f5f9 75%);background-size:200% 100%;animation:fuShimmer 1.5s infinite;color:transparent;border-radius:4px;}" +
+        "@keyframes fuShimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}";
+      document.head.appendChild(style);
+    }
+
+    window.openFollowUpModal = function (todayCount) {
+      fuInjectStyles();
+      FU_STATE.todayCount = todayCount || 0;
+      FU_STATE.activeTab = "today";
+      FU_STATE.stageFilter = "all";
+      FU_STATE.datePreset = "this_month";
+      FU_STATE.fromDate = "";
+      FU_STATE.toDate = "";
+      FU_STATE.allRows = null;
+      fuInjectModal();
+      var sf = fuQ("fu-stage-filter");
+      if (sf) sf.value = "all";
+      var dp = fuQ("fu-date-preset");
+      if (dp) dp.value = "this_month";
+      fuUpdateTabs();
+      fuToggleDateFilters();
+      var tb = fuQ("fu-today-badge");
+      if (tb) tb.innerText = FU_STATE.todayCount;
+      var ob = fuQ("fu-overview-badge");
+      if (ob) ob.innerText = "—";
+      var ov = fuQ("fu-modal-overlay");
+      if (ov) ov.classList.add("open");
+      if (FU_STATE.todayRows === null) fuFetchTodayRows();
+      else fuRenderTable();
+    };
+
+    function fuCloseModal() {
+      var ov = fuQ("fu-modal-overlay");
+      if (ov) ov.classList.remove("open");
+    }
+
+    function fuUpdateTabs() {
+      var tabToday = fuQ("fu-tab-today");
+      var tabOv = fuQ("fu-tab-overview");
+      if (tabToday)
+        tabToday.classList.toggle("active", FU_STATE.activeTab === "today");
+      if (tabOv)
+        tabOv.classList.toggle("active", FU_STATE.activeTab === "overview");
+    }
+
+    function fuToggleDateFilters() {
+      var isOv = FU_STATE.activeTab === "overview";
+      ["fu-date-sep", "fu-date-label", "fu-date-preset"].forEach(function (id) {
+        var el = fuQ(id);
+        if (el) el.style.display = isOv ? "" : "none";
+      });
+      if (isOv) {
+        fuToggleCustomDates();
+      } else {
+        ["fu-from-date", "fu-to-label", "fu-to-date"].forEach(function (id) {
+          var el = fuQ(id);
+          if (el) el.style.display = "none";
+        });
+      }
+    }
+
+    function fuToggleCustomDates() {
+      var isCustom = FU_STATE.datePreset === "custom";
+      ["fu-from-date", "fu-to-label", "fu-to-date"].forEach(function (id) {
+        var el = fuQ(id);
+        if (el) el.style.display = isCustom ? "" : "none";
+      });
+    }
+
+    function fuGetDateRange() {
+      var nowStr = fuGetTodayStr();
+      var nowDate = new Date(nowStr);
+      function fmt(d) {
+        return d.toISOString().split("T")[0];
+      }
+      var p = FU_STATE.datePreset;
+      if (p === "today") return [nowStr, nowStr];
+      if (p === "this_week") {
+        var day = nowDate.getDay();
+        var diff = nowDate.getDate() - day + (day === 0 ? -6 : 1);
+        var mon = new Date(nowDate);
+        mon.setDate(diff);
+        var sun = new Date(nowDate);
+        sun.setDate(diff + 6);
+        return [fmt(mon), fmt(sun)];
+      }
+      if (p === "this_month")
+        return [
+          fmt(new Date(nowDate.getFullYear(), nowDate.getMonth(), 1)),
+          fmt(new Date(nowDate.getFullYear(), nowDate.getMonth() + 1, 0)),
+        ];
+      if (p === "last_month")
+        return [
+          fmt(new Date(nowDate.getFullYear(), nowDate.getMonth() - 1, 1)),
+          fmt(new Date(nowDate.getFullYear(), nowDate.getMonth(), 0)),
+        ];
+      if (p === "this_year")
+        return [
+          nowDate.getFullYear() + "-01-01",
+          nowDate.getFullYear() + "-12-31",
+        ];
+      if (p === "custom")
+        return [FU_STATE.fromDate || "2000-01-01", FU_STATE.toDate || nowStr];
+      return ["2000-01-01", nowStr];
+    }
+
+    function fuFetchTodayRows() {
+      fuSetLoading(true);
+      var tod = fuGetTodayStr();
+      frappe.call({
+        method: "combined_dashboard",
+        args: { action: "get_followup_logs", from_date: tod, to_date: tod },
+        callback: function (r) {
+          fuSetLoading(false);
+          FU_STATE.todayRows = r && r.message ? r.message : [];
+          var tb = fuQ("fu-today-badge");
+          if (tb) tb.innerText = FU_STATE.todayRows.length;
+          FU_STATE.todayCount = FU_STATE.todayRows.length;
+          fuRenderTable();
+        },
+      });
+    }
+
+    function fuFetchOverviewRows() {
+      if (FU_STATE.activeTab !== "overview") return;
+      fuSetLoading(true);
+      FU_STATE.allRows = null;
+      var range = fuGetDateRange();
+      frappe.call({
+        method: "combined_dashboard",
+        args: {
+          action: "get_followup_logs",
+          from_date: range[0],
+          to_date: range[1],
+        },
+        callback: function (r) {
+          fuSetLoading(false);
+          FU_STATE.allRows = r && r.message ? r.message : [];
+          var ob = fuQ("fu-overview-badge");
+          if (ob) ob.innerText = FU_STATE.allRows.length;
+          fuRenderTable();
+        },
+      });
+    }
+
+    function fuSetLoading(on) {
+      FU_STATE.loading = on;
+      var body = fuQ("fu-table-body");
+      if (!body || !on) return;
+      var shimHtml = "";
+      for (var i = 0; i < 5; i++) {
+        shimHtml +=
+          '<tr class="fu-shimmer"><td>&nbsp;&nbsp;&nbsp;</td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td>&nbsp;&nbsp;&nbsp;&nbsp;</td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td>&nbsp;&nbsp;&nbsp;</td><td>&nbsp;&nbsp;&nbsp;</td><td>&nbsp;&nbsp;&nbsp;&nbsp;</td><td>&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>';
+      }
+      body.innerHTML = shimHtml;
+    }
+
+    function fuRenderTable() {
+      var rows =
+        FU_STATE.activeTab === "today"
+          ? FU_STATE.todayRows || []
+          : FU_STATE.allRows || [];
+      if (FU_STATE.stageFilter !== "all") {
+        var filtered = [];
+        for (var i = 0; i < rows.length; i++) {
+          if (rows[i].stage === FU_STATE.stageFilter) filtered.push(rows[i]);
+        }
+        rows = filtered;
+      }
+      var pill = fuQ("fu-count-pill");
+      if (pill)
+        pill.innerText =
+          rows.length + (rows.length === 1 ? " entry" : " entries");
+      var body = fuQ("fu-table-body");
+      if (!body) return;
+      if (!rows.length) {
+        var msg = FU_STATE.loading
+          ? "Loading…"
+          : FU_STATE.activeTab === "today"
+            ? "No follow-ups logged today."
+            : "No entries found for this period.";
+        body.innerHTML =
+          '<tr><td colspan="8"><div class="fu-empty"><div class="fu-empty-icon">📭</div><div>' +
+          msg +
+          "</div></div></td></tr>";
+        return;
+      }
+      var html = "";
+      for (var ri = 0; ri < rows.length; ri++) {
+        var row = rows[ri];
+        var cfg = FU_STAGE_CONFIG[row.stage] || {
+          label: row.stage,
+          cls: "fu-stage-lead",
+          icon: "•",
+          frappe_dt: row.stage,
+        };
+        var stageBadge =
+          '<span class="fu-stage-badge ' +
+          cfg.cls +
+          '">' +
+          cfg.icon +
+          " " +
+          cfg.label +
+          "</span>";
+        var docLink = row.doc_id
+          ? '<a class="fu-doc-link" href="javascript:void(0)" onclick="fuOpenDoc(\'' +
+            fuEsc(cfg.frappe_dt) +
+            "','" +
+            fuEsc(row.doc_id) +
+            "')\">" +
+            fuEsc(row.doc_id) +
+            "</a>"
+          : "—";
+        var custSub = row.customer_name
+          ? '<div class="fu-doc-sub" title="' +
+            fuEsc(row.customer_name) +
+            '">' +
+            fuEsc(fuTrunc(row.customer_name, 24)) +
+            "</div>"
+          : "";
+        var cleanRemark = fuStripHtml(row.remark || "—");
+        var remarkHtml =
+          '<div class="fu-remark-cell" title="' +
+          fuEsc(cleanRemark) +
+          '">' +
+          fuEsc(fuTrunc(cleanRemark, 80)) +
+          "</div>";
+        var stCls = "fu-status";
+        var stLower = (row.status || "").toLowerCase();
+        if (stLower === "open") stCls += " fu-status-open";
+        else if (stLower === "closed" || stLower === "resolved")
+          stCls += " fu-status-closed";
+        else if (stLower === "pending") stCls += " fu-status-pending";
+        var statusChip =
+          '<span class="' + stCls + '">' + fuEsc(row.status || "—") + "</span>";
+        var timeHtml = "—";
+        if (row.log_time) {
+          var d = new Date(row.log_time);
+          if (!isNaN(d.getTime())) {
+            timeHtml =
+              '<div class="fu-time-cell"><div class="fu-time-date">' +
+              d.toLocaleDateString("en-IN", {
+                day: "2-digit",
+                month: "short",
+                year: "numeric",
+              }) +
+              '</div><div class="fu-time-hour">' +
+              d.toLocaleTimeString("en-IN", {
+                hour: "2-digit",
+                minute: "2-digit",
+                hour12: true,
+              }) +
+              "</div></div>";
+          }
+        }
+        var userVal = row.log_user || "—";
+        if (userVal.indexOf("@") !== -1)
+          userVal = userVal
+            .split("@")[0]
+            .replace(/\./g, " ")
+            .replace(/\b\w/g, function (c) {
+              return c.toUpperCase();
+            });
+        html +=
+          "<tr><td>" +
+          stageBadge +
+          "</td><td>" +
+          docLink +
+          custSub +
+          '</td><td><div style="font-size:12px;">' +
+          fuEsc(fuTrunc(row.customer_name || "—", 22)) +
+          "</div></td><td>" +
+          remarkHtml +
+          '</td><td><div style="font-size:11.5px;color:var(--muted);">' +
+          fuEsc(row.category || "—") +
+          "</div></td><td>" +
+          statusChip +
+          '</td><td><div style="font-size:11.5px;">' +
+          fuEsc(fuTrunc(userVal, 18)) +
+          "</div></td><td>" +
+          timeHtml +
+          "</td></tr>";
+      }
+      body.innerHTML = html;
+    }
+
+    function fuStripHtml(str) {
+      if (!str) return "—";
+      var tmp = document.createElement("div");
+      tmp.innerHTML = String(str);
+      return (tmp.textContent || tmp.innerText || "—").trim();
+    }
+    function fuTrunc(str, n) {
+      if (!str) return "";
+      str = String(str);
+      return str.length > n ? str.slice(0, n) + "…" : str;
+    }
+    function fuEsc(v) {
+      if (v === undefined || v === null) return "";
+      return String(v)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+    }
+    window.fuOpenDoc = function (dt, name) {
+      if (dt && name && typeof frappe !== "undefined")
+        frappe.set_route("Form", dt, name);
+    };
+  </script>
+</html>

@@ -1,0 +1,3372 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+
+    <style>
+      /* ═══════════════════════════════════════════════════
+   SADBHAV EPC CONTROL PANEL — CSS v5.0
+═══════════════════════════════════════════════════ */
+
+      .gme-dashboard {
+        --bg: #f2f5fa;
+        --card: #fff;
+        --line: #dce5f0;
+        --txt: #0f172a;
+        --muted: #64748b;
+        --pri: #2563eb;
+        --pri-lt: #eff6ff;
+        --green: #16a34a;
+        --green-lt: #dcfce7;
+        --orange: #d97706;
+        --orange-lt: #fef3c7;
+        --red: #dc2626;
+        --red-lt: #fee2e2;
+        --blue-lt: #dbeafe;
+        --radius: 8px;
+        --sh:
+          0 1px 3px rgba(15, 23, 42, 0.07), 0 1px 2px rgba(15, 23, 42, 0.04);
+        --sh-md: 0 4px 12px rgba(15, 23, 42, 0.1);
+        --sh-lg: 0 8px 28px rgba(15, 23, 42, 0.14);
+
+        font-family: Inter, "Segoe UI", Arial, sans-serif;
+        font-size: 13px;
+        color: var(--txt);
+        background: var(--bg);
+        padding: 12px;
+        width: 100%;
+        box-sizing: border-box;
+      }
+
+      /* ── HEADER ─────────────────────────────────────── */
+      .gme-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 10px;
+        flex-wrap: wrap;
+        padding-bottom: 10px;
+        border-bottom: 1px solid var(--line);
+      }
+      .gme-title-block h2 {
+        margin: 0;
+        font-size: 20px;
+        font-weight: 800;
+        letter-spacing: -0.3px;
+      }
+      .gme-title-block p {
+        margin: 3px 0 0;
+        font-size: 12px;
+        color: var(--muted);
+      }
+      .gme-toolbar {
+        display: flex;
+        gap: 5px;
+        align-items: center;
+        flex-wrap: wrap;
+      }
+
+      /* ── INPUTS & BUTTONS ───────────────────────────── */
+      .gme-input {
+        height: 30px;
+        border: 1px solid #c9d6e8;
+        border-radius: var(--radius);
+        padding: 0 10px;
+        background: #fff;
+        font-size: 12px;
+        color: var(--txt);
+        outline: none;
+        transition: border-color 0.15s;
+        min-width: 115px;
+      }
+      .gme-input:focus {
+        border-color: var(--pri);
+        box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.13);
+      }
+      .gme-input:disabled {
+        background: #f8fafc;
+        color: var(--muted);
+        cursor: not-allowed;
+      }
+      select.gme-input {
+        cursor: pointer;
+      }
+
+      .gme-btn {
+        height: 30px;
+        padding: 0 11px;
+        border: 1px solid #c9d6e8;
+        border-radius: var(--radius);
+        background: #fff;
+        font-size: 12px;
+        font-weight: 600;
+        cursor: pointer;
+        white-space: nowrap;
+        transition:
+          background 0.13s,
+          border-color 0.13s;
+      }
+      .gme-btn:hover {
+        background: #f0f5ff;
+        border-color: #a5c3f0;
+      }
+      .gme-btn.primary {
+        background: var(--pri);
+        border-color: var(--pri);
+        color: #fff;
+      }
+      .gme-btn.primary:hover {
+        background: #1d4ed8;
+      }
+      .gme-btn.ghost {
+        color: var(--muted);
+      }
+      .gme-btn.icon {
+        width: 30px;
+        padding: 0;
+        text-align: center;
+      }
+
+      /* ── NAME SEARCH ────────────────────────────────── */
+      .name-wrap {
+        position: relative;
+      }
+      .name-input {
+        min-width: 170px;
+      }
+      .name-dd {
+        position: absolute;
+        top: 34px;
+        left: 0;
+        width: 310px;
+        max-height: 250px;
+        overflow-y: auto;
+        background: #fff;
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        box-shadow: var(--sh-md);
+        z-index: 200;
+        display: none;
+      }
+      .name-dd.open {
+        display: block;
+      }
+      .name-dd-item {
+        padding: 7px 10px;
+        border-bottom: 1px solid #edf2fa;
+        cursor: pointer;
+        font-size: 12px;
+      }
+      .name-dd-item:last-child {
+        border-bottom: none;
+      }
+      .name-dd-item:hover {
+        background: var(--pri-lt);
+      }
+      .name-dd-item-name {
+        font-weight: 600;
+      }
+      .name-dd-item-meta {
+        font-size: 11px;
+        color: var(--muted);
+        margin-top: 1px;
+      }
+
+      /* ── LOADING BAR ────────────────────────────────── */
+      .gme-loading-bar {
+        height: 3px;
+        border-radius: 2px;
+        margin: 6px 0;
+        background: linear-gradient(
+          90deg,
+          var(--pri) 0%,
+          #60a5fa 50%,
+          var(--pri) 100%
+        );
+        background-size: 200% 100%;
+        animation: shimmer 1.1s infinite;
+      }
+      @keyframes shimmer {
+        0% {
+          background-position: 100% 0;
+        }
+        100% {
+          background-position: -100% 0;
+        }
+      }
+
+      /* ── FILTER PILLS ───────────────────────────────── */
+      .filter-pill-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 5px;
+        margin: 8px 0 2px;
+      }
+      .filter-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 3px;
+        font-size: 11px;
+        color: var(--pri);
+        background: var(--pri-lt);
+        border: 1px solid #bfdbfe;
+        border-radius: 999px;
+        padding: 2px 9px;
+      }
+
+      /* ── TABS ───────────────────────────────────────── */
+      .gme-tabs {
+        display: flex;
+        gap: 0;
+        margin-top: 10px;
+        border-bottom: 2px solid var(--line);
+      }
+      .gme-tab {
+        padding: 8px 20px;
+        font-size: 13px;
+        font-weight: 600;
+        border: none;
+        background: none;
+        cursor: pointer;
+        color: var(--muted);
+        border-bottom: 3px solid transparent;
+        margin-bottom: -2px;
+        transition:
+          color 0.15s,
+          border-color 0.15s;
+      }
+      .gme-tab:hover {
+        color: var(--pri);
+      }
+      .gme-tab.active {
+        color: var(--pri);
+        border-bottom: 3px solid var(--pri);
+      }
+      .tab-content {
+        padding-top: 4px;
+      }
+
+      /* ── CARDS ──────────────────────────────────────── */
+      .mt8 {
+        margin-top: 8px;
+      }
+      .card {
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        box-shadow: var(--sh);
+        overflow: hidden;
+      }
+      .card-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 9px 12px;
+        border-bottom: 1px solid var(--line);
+        background: #fafbfe;
+      }
+      .card-head h3 {
+        margin: 0;
+        font-size: 14px;
+        font-weight: 700;
+      }
+      .head-link {
+        font-size: 11px;
+        color: var(--pri);
+        text-decoration: none;
+        font-weight: 600;
+      }
+      .head-link:hover {
+        text-decoration: underline;
+      }
+
+      /* ── LAYOUT ─────────────────────────────────────── */
+      .grid-two {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+      }
+      .grid-one {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 8px;
+      }
+      .kv-row-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+      }
+
+      /* ── KV ROWS ────────────────────────────────────── */
+      .kv {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 8px 12px;
+        border-bottom: 1px solid #f0f4fa;
+        font-size: 12px;
+        gap: 8px;
+      }
+      .kv:last-child {
+        border-bottom: none;
+      }
+      .kv.kv-click {
+        cursor: pointer;
+        transition: background 0.12s;
+      }
+      .kv.kv-click:hover {
+        background: var(--pri-lt);
+      }
+      .kv strong {
+        font-size: 13px;
+        font-weight: 700;
+      }
+      .kv.kv-total {
+        background: #f0f5ff;
+        font-weight: 700;
+      }
+      .kv.kv-margin {
+        background: #f0fff4;
+      }
+      .kv-row-grid .kv {
+        border-bottom: 1px solid #f0f4fa;
+        border-right: 1px solid #f0f4fa;
+      }
+
+      /* ── COLOUR UTILS ───────────────────────────────── */
+      .c-green {
+        color: var(--green) !important;
+      }
+      .c-red {
+        color: var(--red) !important;
+      }
+      .c-orange {
+        color: var(--orange) !important;
+      }
+      .c-blue {
+        color: var(--pri) !important;
+      }
+      .margin-val {
+        font-size: 18px !important;
+      }
+
+      /* ── PIPELINE ───────────────────────────────────── */
+      .pipeline-wrap {
+        display: grid;
+        grid-template-columns: repeat(7, minmax(88px, 1fr));
+        gap: 8px;
+        padding: 10px 12px;
+      }
+      .hint-line {
+        text-align: center;
+        font-size: 11px;
+        color: var(--muted);
+        padding: 0 0 8px;
+        margin: 0;
+      }
+      .stage {
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        padding: 10px 8px;
+        background: #fafcff;
+        cursor: pointer;
+        text-align: center;
+        transition:
+          background 0.14s,
+          border-color 0.14s,
+          box-shadow 0.14s;
+      }
+      .stage:hover {
+        background: var(--pri-lt);
+        border-color: #93c5fd;
+        box-shadow: 0 2px 8px rgba(37, 99, 235, 0.12);
+      }
+      .stage-value {
+        font-size: 22px;
+        color: var(--pri);
+        font-weight: 800;
+        line-height: 1;
+      }
+      .stage-label {
+        margin-top: 4px;
+        font-size: 10px;
+        color: var(--muted);
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+      }
+      .stage-bar {
+        margin-top: 8px;
+        height: 4px;
+        border-radius: 999px;
+        background: #e7edf6;
+        overflow: hidden;
+      }
+      .stage-bar-fill {
+        height: 100%;
+        width: 0;
+        background: var(--pri);
+        border-radius: 999px;
+        transition: width 0.5s ease;
+      }
+
+      /* ── TABLES ─────────────────────────────────────── */
+      .table-shell {
+        width: 100%;
+      }
+      .ts-top {
+        overflow-x: auto;
+        overflow-y: hidden;
+        height: 10px;
+        border-bottom: 1px solid var(--line);
+      }
+      .ts-top > div {
+        height: 1px;
+      }
+      .ts-wrap {
+        overflow-x: auto;
+        overflow-y: auto;
+        max-height: 400px;
+        width: 100%;
+      }
+      .gme-table {
+        width: 100%;
+        min-width: 860px;
+        border-collapse: collapse;
+        font-size: 12px;
+      }
+      .gme-table th,
+      .gme-table td {
+        border-bottom: 1px solid #f0f4fa;
+        padding: 7px 10px;
+        text-align: left;
+        vertical-align: middle;
+        white-space: nowrap;
+      }
+      .gme-table th {
+        position: sticky;
+        top: 0;
+        z-index: 2;
+        background: #f6f9fe;
+        color: #334155;
+        font-weight: 700;
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        border-bottom: 2px solid var(--line);
+      }
+      .gme-table tr:hover td {
+        background: #f8fbff;
+      }
+      .gme-table td a {
+        color: var(--pri);
+        text-decoration: none;
+        font-weight: 600;
+      }
+      .gme-table td a:hover {
+        text-decoration: underline;
+      }
+      .gme-table .dbadge {
+        display: inline-flex;
+        padding: 2px 8px;
+        border-radius: 999px;
+        font-size: 10px;
+        font-weight: 700;
+        text-transform: uppercase;
+      }
+      .dbadge-red {
+        background: var(--red-lt);
+        color: var(--red);
+      }
+      .dbadge-yellow {
+        background: var(--orange-lt);
+        color: var(--orange);
+      }
+      .lc {
+        text-align: center;
+        color: var(--muted);
+        padding: 14px !important;
+        font-style: italic;
+      }
+
+      /* ── PROJECT SEARCH (tab 2 hero) ────────────────── */
+      .proj-search-hero {
+        background: linear-gradient(
+          135deg,
+          #1e3a8a 0%,
+          #2563eb 60%,
+          #3b82f6 100%
+        );
+        border-radius: 12px;
+        padding: 24px;
+        box-shadow: var(--sh-md);
+      }
+      .proj-search-inner {
+        max-width: 600px;
+        margin: 0 auto;
+        text-align: center;
+      }
+      .proj-search-label {
+        font-size: 15px;
+        font-weight: 700;
+        color: #fff;
+        margin-bottom: 12px;
+      }
+      .proj-search-wrap {
+        position: relative;
+        margin: 0 auto;
+      }
+      .proj-search-input {
+        width: 100%;
+        height: 44px;
+        border: none;
+        border-radius: 10px;
+        padding: 0 16px;
+        font-size: 14px;
+        font-weight: 500;
+        box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.4);
+        outline: none;
+        transition: box-shadow 0.2s;
+        box-sizing: border-box;
+      }
+      .proj-search-input:focus {
+        box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.7);
+      }
+      .proj-search-dd {
+        position: absolute;
+        top: 48px;
+        left: 0;
+        right: 0;
+        background: #fff;
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        box-shadow: var(--sh-lg);
+        z-index: 300;
+        display: none;
+        max-height: 240px;
+        overflow-y: auto;
+      }
+      .proj-search-dd.open {
+        display: block;
+      }
+      .psd-item {
+        padding: 8px 12px;
+        border-bottom: 1px solid #edf2fa;
+        cursor: pointer;
+      }
+      .psd-item:last-child {
+        border-bottom: none;
+      }
+      .psd-item:hover {
+        background: var(--pri-lt);
+      }
+      .psd-item-name {
+        font-size: 13px;
+        font-weight: 600;
+      }
+      .psd-item-meta {
+        font-size: 11px;
+        color: var(--muted);
+        margin-top: 2px;
+      }
+      .proj-search-hint {
+        font-size: 11px;
+        color: rgba(255, 255, 255, 0.7);
+        margin-top: 10px;
+      }
+
+      /* ── PROJECT HERO CARD ──────────────────────────── */
+      .proj-hero-card {
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: var(--sh-md);
+      }
+      .proj-hero-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        padding: 16px 20px;
+        background: linear-gradient(120deg, #1d4ed8, #2563eb 70%, #3b82f6);
+      }
+      .proj-hero-name {
+        font-size: 22px;
+        font-weight: 800;
+        color: #fff;
+        margin-bottom: 6px;
+      }
+      .proj-hero-tags {
+        display: flex;
+        gap: 6px;
+        flex-wrap: wrap;
+      }
+      .proj-tag {
+        font-size: 11px;
+        padding: 3px 9px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.2);
+        color: #fff;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+      }
+      .proj-tag-blue {
+        background: rgba(59, 130, 246, 0.35);
+      }
+      .proj-tag-gray {
+        background: rgba(255, 255, 255, 0.12);
+      }
+      .proj-open-btn {
+        display: inline-block;
+        padding: 7px 14px;
+        background: rgba(255, 255, 255, 0.2);
+        color: #fff;
+        text-decoration: none;
+        border-radius: 8px;
+        font-size: 12px;
+        font-weight: 700;
+        border: 1px solid rgba(255, 255, 255, 0.35);
+        white-space: nowrap;
+        transition: background 0.15s;
+      }
+      .proj-open-btn:hover {
+        background: rgba(255, 255, 255, 0.35);
+        text-decoration: none;
+      }
+
+      .proj-hero-kpis {
+        display: grid;
+        grid-template-columns: repeat(6, 1fr);
+        border-bottom: 1px solid var(--line);
+      }
+      .proj-kpi {
+        padding: 14px 12px;
+        text-align: center;
+        border-right: 1px solid var(--line);
+      }
+      .proj-kpi:last-child {
+        border-right: none;
+      }
+      .proj-kpi-icon {
+        font-size: 18px;
+        margin-bottom: 4px;
+      }
+      .proj-kpi-val {
+        font-size: 18px;
+        font-weight: 800;
+        color: var(--txt);
+      }
+      .proj-kpi-val.c-green {
+        color: var(--green);
+      }
+      .proj-kpi-val.c-blue {
+        color: var(--pri);
+      }
+      .proj-kpi-val.c-orange {
+        color: var(--orange);
+      }
+      .proj-kpi-lbl {
+        font-size: 10px;
+        color: var(--muted);
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        margin-top: 3px;
+      }
+      .proj-kpi-small {
+        font-size: 13px !important;
+      }
+
+      .proj-progress-bar {
+        height: 4px;
+        background: #e7edf6;
+        border-radius: 999px;
+        overflow: hidden;
+        margin-top: 6px;
+      }
+      .proj-progress-fill {
+        height: 100%;
+        background: var(--green);
+        border-radius: 999px;
+        transition: width 1s ease;
+      }
+
+      .proj-hero-details {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        padding: 0;
+      }
+      .proj-detail {
+        padding: 10px 14px;
+        border-right: 1px solid var(--line);
+        border-top: 1px solid var(--line);
+        font-size: 12px;
+      }
+      .proj-detail:last-child {
+        border-right: none;
+      }
+      .proj-detail span {
+        display: block;
+        color: var(--muted);
+        margin-bottom: 3px;
+        font-size: 11px;
+      }
+      .proj-detail strong {
+        font-size: 13px;
+        font-weight: 600;
+      }
+
+      /* ── PROCESS CHAIN CARDS ────────────────────────── */
+      .pv-header {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 8px;
+      }
+      .pv-header h4 {
+        margin: 0;
+        font-size: 12px;
+        font-weight: 700;
+        color: var(--muted);
+        text-transform: uppercase;
+        letter-spacing: 0.07em;
+      }
+      .pv-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 8px;
+      }
+      .pv-card {
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: var(--sh);
+      }
+      .pv-card.pv-reached {
+        border-top: 3px solid var(--green);
+      }
+      .pv-card.pv-pending {
+        border-top: 3px solid #e2e8f0;
+        opacity: 0.7;
+      }
+      .pv-card-head {
+        padding: 8px 10px;
+        border-bottom: 1px solid #eef2f9;
+        background: #fafbfe;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .pv-card-title {
+        font-size: 12px;
+        font-weight: 700;
+      }
+      .pv-status-chip {
+        display: inline-flex;
+        padding: 2px 8px;
+        border-radius: 999px;
+        font-size: 10px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+      }
+      .pv-chip-reached {
+        background: var(--green-lt);
+        color: var(--green);
+      }
+      .pv-chip-pending {
+        background: #f1f5f9;
+        color: var(--muted);
+      }
+      .pv-chip-overdue {
+        background: var(--red-lt);
+        color: var(--red);
+      }
+      .pv-chip-open {
+        background: var(--blue-lt);
+        color: var(--pri);
+      }
+      .pv-chip-completed {
+        background: var(--green-lt);
+        color: var(--green);
+      }
+      .pv-open-link {
+        font-size: 11px;
+        color: var(--pri);
+        text-decoration: none;
+        font-weight: 600;
+        white-space: nowrap;
+      }
+      .pv-open-link:hover {
+        text-decoration: underline;
+      }
+      .pv-body {
+        padding: 8px 10px;
+      }
+      .pv-row {
+        display: flex;
+        justify-content: space-between;
+        gap: 6px;
+        padding: 4px 0;
+        border-bottom: 1px dashed #eef2f9;
+        font-size: 11px;
+        line-height: 1.4;
+      }
+      .pv-row:last-child {
+        border-bottom: none;
+      }
+      .pv-row span {
+        color: var(--muted);
+        flex-shrink: 0;
+      }
+      .pv-row strong {
+        font-weight: 600;
+        text-align: right;
+        word-break: break-word;
+        max-width: 130px;
+      }
+      .pv-empty {
+        font-size: 11px;
+        color: #b45309;
+        padding: 10px 0;
+        text-align: center;
+        font-style: italic;
+      }
+
+      /* ── MODAL ──────────────────────────────────────── */
+      .modal-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(2, 8, 23, 0.45);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 999;
+        padding: 12px;
+      }
+      .modal-overlay.open {
+        display: flex;
+      }
+      .modal-card {
+        width: min(96vw, 1300px);
+        max-height: 90vh;
+        background: #fff;
+        border-radius: 10px;
+        box-shadow: var(--sh-lg);
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        animation: mIn 0.2s ease;
+      }
+      @keyframes mIn {
+        from {
+          opacity: 0;
+          transform: translateY(-10px) scale(0.97);
+        }
+        to {
+          opacity: 1;
+          transform: none;
+        }
+      }
+      .modal-head {
+        padding: 10px 14px;
+        border-bottom: 1px solid var(--line);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: #fafbfe;
+        flex-shrink: 0;
+      }
+      .modal-head h3 {
+        margin: 0;
+        font-size: 15px;
+        font-weight: 700;
+      }
+      .modal-card .table-shell {
+        flex: 1;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+      }
+      .modal-card .ts-wrap {
+        flex: 1;
+      }
+
+      /* ── RESPONSIVE ─────────────────────────────────── */
+      @media (max-width: 1200px) {
+        .pipeline-wrap {
+          grid-template-columns: repeat(4, minmax(85px, 1fr));
+        }
+        .pv-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        .proj-hero-kpis {
+          grid-template-columns: repeat(3, 1fr);
+        }
+        .kv-row-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+      @media (max-width: 900px) {
+        .grid-two {
+          grid-template-columns: 1fr;
+        }
+        .proj-hero-kpis {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        .proj-hero-details {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+      @media (max-width: 640px) {
+        .pipeline-wrap {
+          grid-template-columns: repeat(2, minmax(80px, 1fr));
+        }
+        .pv-grid {
+          grid-template-columns: 1fr;
+        }
+        .proj-hero-kpis {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        .kv-row-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      .img-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+        gap: 10px;
+        padding: 12px;
+      }
+      .img-card {
+        display: block;
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        overflow: hidden;
+        text-decoration: none;
+        background: #fff;
+        transition:
+          transform 0.12s,
+          box-shadow 0.12s,
+          border-color 0.12s;
+      }
+      .img-card:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--sh-md);
+        border-color: #bfdbfe;
+      }
+      .img-thumb {
+        width: 100%;
+        height: 120px;
+        background: #f8fafc;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+      }
+      .img-thumb img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      .img-meta {
+        padding: 8px 8px 2px;
+        font-size: 11px;
+        font-weight: 600;
+        color: var(--txt);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .img-sub {
+        padding: 0 8px 8px;
+        font-size: 10px;
+        color: var(--muted);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      /* Compact Site Images preview */
+      .gme-img-preview-row {
+        display: flex;
+        gap: 8px;
+        padding: 8px 10px 10px;
+        flex-wrap: wrap;
+      }
+      .gme-img-mini {
+        width: 140px; /* was 170 */
+        border: 1px solid #d6dbe4;
+        border-radius: 8px;
+        overflow: hidden;
+        background: #fff;
+        text-decoration: none;
+        display: block;
+      }
+      .gme-img-mini .t {
+        height: 82px; /* was 95 */
+        background: #f3f5f9;
+        overflow: hidden;
+      }
+      .gme-img-mini .t img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      .gme-img-mini .n {
+        font-size: 10.5px;
+        padding: 5px 7px 0;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .gme-img-mini .m {
+        font-size: 9.5px;
+        color: #64748b;
+        padding: 1px 7px 7px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      /* Site Images section should auto-fit content */
+      #site-images-wrap .card {
+        height: auto !important;
+        min-height: 0 !important;
+      }
+
+      #site-images-wrap .gme-img-preview-row {
+        display: inline-flex !important; /* shrink-wrap to images */
+        flex-wrap: wrap !important;
+        align-items: flex-start !important;
+        gap: 8px !important;
+        padding: 8px 10px 10px !important;
+      }
+
+      #site-images-wrap .gme-img-mini {
+        width: 140px;
+      }
+
+      /* If parent card body has forced min-height in your theme */
+      #site-images-wrap .card-body,
+      #site-images-wrap .card-content {
+        min-height: 0 !important;
+        height: auto !important;
+        padding-bottom: 0 !important;
+      }
+
+      #site-images-wrap,
+      #site-images-wrap > section {
+        height: auto !important;
+        min-height: 0 !important;
+      }
+
+      #site-images-wrap,
+      #site-images-wrap * {
+        box-sizing: border-box;
+      }
+
+      #site-images-wrap section.card {
+        min-height: 0 !important;
+        height: auto !important;
+      }
+
+      #site-images-wrap .card-content,
+      #site-images-wrap .card-body,
+      #site-images-wrap .widget-body,
+      #site-images-wrap .section-body {
+        min-height: 0 !important;
+        height: auto !important;
+      }
+      /* completely independent site image container */
+      .gme-sitebox {
+        margin-top: 8px;
+        border: 1px solid #d8dee8;
+        border-radius: 10px;
+        background: #fff;
+      }
+      .gme-sitebox-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 12px;
+        border-bottom: 1px solid #e5eaf2;
+      }
+      .gme-sitebox-head h3 {
+        margin: 0;
+        font-size: 20px;
+        line-height: 1.2;
+      }
+      .gme-sitebox-head a {
+        font-size: 12px;
+        font-weight: 600;
+      }
+      .gme-sitebox-row {
+        display: flex;
+        gap: 8px;
+        padding: 8px 10px 10px;
+        flex-wrap: wrap;
+        align-items: flex-start;
+      }
+      .gme-mini {
+        width: 140px;
+        border: 1px solid #d6dbe4;
+        border-radius: 8px;
+        overflow: hidden;
+        background: #fff;
+        text-decoration: none;
+      }
+      .gme-mini-t {
+        height: 82px;
+        background: #f3f5f9;
+      }
+      .gme-mini-t img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      .gme-mini-n {
+        font-size: 10.5px;
+        color: #111827;
+        padding: 5px 7px 0;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .gme-mini-m {
+        font-size: 9.5px;
+        color: #64748b;
+        padding: 1px 7px 7px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .gme-sitebox-empty {
+        padding: 10px 12px;
+        font-size: 12px;
+        color: #64748b;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="gme-root" class="gme-dashboard">
+      <!-- ═══ HEADER ══════════════════════════════════════════════ -->
+      <header class="gme-header">
+        <div class="gme-title-block">
+          <h2>⚡ Sadbhav EPC Control Panel</h2>
+          <p id="hdr-subtitle">Real-time Operations &amp; Financial Overview</p>
+        </div>
+        <div class="gme-toolbar">
+          <select id="filter-preset" class="gme-input">
+            <option value="till_now" selected>Till Now</option>
+            <option value="today">Today</option>
+            <option value="this_month">This Month</option>
+            <option value="quarterly">This Quarter</option>
+            <option value="this_year">This Year</option>
+            <option value="last_year">Last Year</option>
+            <option value="custom">Custom Range</option>
+          </select>
+          <select id="filter-type" class="gme-input">
+            <option value="">All Types</option>
+            <option value="Residential">Residential</option>
+            <option value="Commercial">Commercial</option>
+            <option value="Both">Both</option>
+            <option value="Others">Others</option>
+          </select>
+          <select id="filter-stage" class="gme-input">
+            <option value="">All Stages</option>
+            <option value="Lead">Lead</option>
+            <option value="Site Survey">Site Survey</option>
+            <option value="Proposal">Proposal</option>
+            <option value="Sales Order">Sales Order</option>
+            <option value="Project">Project</option>
+            <option value="Synchronization">Synchronization</option>
+          </select>
+          <div id="name-wrap" class="name-wrap">
+            <input
+              id="filter-name-input"
+              class="gme-input name-input"
+              type="text"
+              placeholder="Search name..."
+              autocomplete="off"
+              disabled
+            />
+            <div id="name-dropdown" class="name-dd"></div>
+          </div>
+          <div
+            id="custom-date-wrap"
+            style="display: none; gap: 5px; align-items: center; display: none"
+          >
+            <input
+              id="filter-from"
+              class="gme-input"
+              type="date"
+              style="min-width: 130px"
+            />
+            <span style="color: #64748b; font-size: 12px">→</span>
+            <input
+              id="filter-to"
+              class="gme-input"
+              type="date"
+              style="min-width: 130px"
+            />
+          </div>
+          <button id="btn-clear-filters" class="gme-btn ghost">Clear</button>
+          <button id="btn-apply" class="gme-btn primary">Apply</button>
+          <button id="btn-export" class="gme-btn ghost">📸 Capture</button>
+          <button id="btn-reload" class="gme-btn icon" title="Refresh">
+            ↻
+          </button>
+        </div>
+      </header>
+
+      <!-- active filter pills -->
+      <div id="filter-pill-row" class="filter-pill-row"></div>
+
+      <!-- loading bar -->
+      <div
+        id="gme-loading-bar"
+        class="gme-loading-bar"
+        style="display: none"
+      ></div>
+
+      <!-- ═══ TABS ═════════════════════════════════════════════════ -->
+      <div class="gme-tabs">
+        <button
+          class="gme-tab active"
+          id="tab-btn-overview"
+          onclick="gme_switchTab('overview')"
+        >
+          📊 Overview
+        </button>
+        <button
+          class="gme-tab"
+          id="tab-btn-project"
+          onclick="gme_switchTab('project')"
+        >
+          🏗 Project View
+        </button>
+      </div>
+
+      <!-- ═══ TAB 1: OVERVIEW ══════════════════════════════════════ -->
+      <div id="tab-overview" class="tab-content">
+        <!-- Pipeline -->
+        <section class="card mt8">
+          <div class="card-head">
+            <h3>📊 Project Pipeline — Lead → Sync</h3>
+            <a
+              class="head-link"
+              href="javascript:void(0)"
+              id="link-all-projects"
+              >All Projects →</a
+            >
+          </div>
+          <div id="pipeline-wrap" class="pipeline-wrap"></div>
+          <p class="hint-line">
+            ☝ Click any stage bar to view detailed records
+          </p>
+        </section>
+
+        <!-- Row 1: Delay + Financial -->
+        <div class="grid-two mt8">
+          <article class="card">
+            <div class="card-head">
+              <h3>🚨 Delay Control Panel</h3>
+              <a
+                class="head-link"
+                href="javascript:void(0)"
+                id="link-view-all-delays"
+                >View All →</a
+              >
+            </div>
+            <div class="table-shell">
+              <div class="ts-top" id="delay-top-scroll"><div></div></div>
+              <div class="ts-wrap" id="delay-table-wrap">
+                <table class="gme-table">
+                  <thead>
+                    <tr>
+                      <th>Record</th>
+                      <th>Stage</th>
+                      <th>Department</th>
+                      <th>Reason</th>
+                      <th>Delay</th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tbody id="delay-tbody">
+                    <tr>
+                      <td colspan="6" class="lc">Loading…</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </article>
+
+          <article class="card">
+            <div class="card-head">
+              <h3>💰 Financial Dashboard</h3>
+              <a
+                class="head-link"
+                href="javascript:void(0)"
+                onclick="frappe.set_route('List', 'Sales Invoice')"
+                >Invoices →</a
+              >
+            </div>
+            <div
+              class="kv kv-click"
+              onclick="
+                frappe.set_route('List', 'Sales Order', { docstatus: 1 })
+              "
+            >
+              <span>Total Project Value</span><strong id="fin-total">₹0</strong>
+            </div>
+            <div
+              class="kv kv-click"
+              onclick="
+                frappe.set_route('List', 'Payment Entry', {
+                  payment_type: 'Receive',
+                  unallocated_amount: ['>', 0],
+                })
+              "
+            >
+              <span>Advance Received</span
+              ><strong id="fin-adv" class="c-green">₹0</strong>
+            </div>
+            <div
+              class="kv kv-click"
+              onclick="
+                frappe.set_route('List', 'Payment Entry', {
+                  payment_type: 'Receive',
+                })
+              "
+            >
+              <span>Payment Received</span
+              ><strong id="fin-recv" class="c-blue">₹0</strong>
+            </div>
+            <div
+              class="kv kv-click"
+              onclick="
+                frappe.set_route('List', 'Sales Invoice', {
+                  outstanding_amount: ['>', 0],
+                  docstatus: 1,
+                })
+              "
+            >
+              <span>Outstanding</span
+              ><strong id="fin-out" class="c-orange">₹0</strong>
+            </div>
+            <div
+              class="kv kv-click"
+              onclick="
+                frappe.set_route('List', 'Sales Invoice', {
+                  outstanding_amount: ['>', 0],
+                  due_date: ['<', frappe.datetime.get_today()],
+                  docstatus: 1,
+                })
+              "
+            >
+              <span>⚠ Overdue Payments</span
+              ><strong id="fin-overdue" class="c-red">₹0</strong>
+            </div>
+            <div class="kv">
+              <span>Collection Efficiency</span
+              ><strong id="fin-coll-pct" class="c-green">0%</strong>
+            </div>
+          </article>
+        </div>
+
+        <!-- Row 2: Costing + Purchase -->
+        <div class="grid-two mt8">
+          <article class="card">
+            <div class="card-head"><h3>📐 Costing &amp; Profitability</h3></div>
+            <div
+              class="kv kv-click"
+              onclick="
+                frappe.set_route('List', 'Sales Order', { docstatus: 1 })
+              "
+            >
+              <span>Project Value</span><strong id="cost-total-val">₹0</strong>
+            </div>
+            <div
+              class="kv kv-click"
+              onclick="frappe.set_route('List', 'Purchase Order Item')"
+            >
+              <span>Material Cost</span><strong id="cost-mat">₹0</strong>
+            </div>
+            <div class="kv">
+              <span>Civil Cost</span><strong id="cost-civ">₹0</strong>
+            </div>
+            <div class="kv">
+              <span>Labor Cost</span><strong id="cost-lab">₹0</strong>
+            </div>
+            <div class="kv">
+              <span>Partner / Contractor Cost</span
+              ><strong id="cost-partner">₹0</strong>
+            </div>
+            <div
+              class="kv kv-total kv-click"
+              onclick="
+                frappe.set_route('List', 'Purchase Order', { docstatus: 1 })
+              "
+            >
+              <span>Total Cost</span><strong id="cost-act">₹0</strong>
+            </div>
+            <div class="kv kv-margin">
+              <span>Profit Margin</span
+              ><strong id="cost-margin" class="margin-val">0%</strong>
+            </div>
+          </article>
+
+          <article class="card">
+            <div class="card-head"><h3>🧾 Purchase &amp; Inventory</h3></div>
+            <div
+              class="kv kv-click"
+              onclick="
+                frappe.set_route('List', 'Purchase Order', {
+                  status: ['Draft', 'To Receive', 'To Receive and Bill'],
+                })
+              "
+            >
+              <span>Open Purchase Orders</span
+              ><strong id="pi-po" class="c-blue">0</strong>
+            </div>
+            <div
+              class="kv kv-click"
+              onclick="frappe.set_route('List', 'Purchase Order')"
+            >
+              <span>Material Pending Delivery</span
+              ><strong id="pi-mat-pend">0</strong>
+            </div>
+            <div class="kv">
+              <span>Inverter Pending</span
+              ><strong id="pi-inv" class="c-orange">0</strong>
+            </div>
+            <div
+              class="kv kv-click"
+              onclick="
+                frappe.set_route('List', 'Purchase Receipt', { docstatus: 0 })
+              "
+            >
+              <span>GRN Pending</span
+              ><strong id="pi-grn" class="c-orange">0</strong>
+            </div>
+            <div
+              class="card-head"
+              style="margin-top: 8px; border-top: 1px solid #e8eef7"
+            >
+              <h3>🚚 Dispatch Monitoring</h3>
+              <a
+                class="head-link"
+                href="javascript:void(0)"
+                onclick="
+                  frappe.set_route('List', 'Delivery Note', { docstatus: 1 })
+                "
+                >View All →</a
+              >
+            </div>
+            <div
+              class="kv kv-click"
+              onclick="
+                frappe.set_route('List', 'Delivery Note', { docstatus: 1 })
+              "
+            >
+              <span>Total Dispatches</span
+              ><strong id="disp-total" class="c-blue">0</strong>
+            </div>
+            <div
+              class="kv kv-click"
+              onclick="
+                frappe.set_route('List', 'Delivery Note', {
+                  per_billed: ['<', 100],
+                  docstatus: 1,
+                })
+              "
+            >
+              <span>Partial Dispatches</span
+              ><strong id="disp-partial" class="c-orange">0</strong>
+            </div>
+            <div
+              class="kv kv-click"
+              onclick="
+                frappe.set_route('List', 'Delivery Note', {
+                  stage_status: 'Overdue',
+                })
+              "
+            >
+              <span>Dispatch Delay Alerts</span
+              ><strong id="disp-delay" class="c-red">0</strong>
+            </div>
+            <div
+              class="card-head"
+              style="margin-top: 8px; border-top: 1px solid #e8eef7"
+            >
+              <h3>↩ Material Returns</h3>
+            </div>
+            <div
+              class="kv kv-click"
+              onclick="
+                frappe.set_route('List', 'Stock Entry', {
+                  stock_entry_type: 'Material Return',
+                  docstatus: 1,
+                })
+              "
+            >
+              <span>Returns Logged</span><strong id="ret-logged">0</strong>
+            </div>
+            <div class="kv">
+              <span>Value Returned</span><strong id="ret-value">₹0</strong>
+            </div>
+          </article>
+        </div>
+
+        <!-- Row 3: Sync -->
+        <div class="grid-one mt8">
+          <article class="card">
+            <div class="card-head">
+              <h3>🔄 Synchronization &amp; Productivity</h3>
+              <a
+                class="head-link"
+                href="javascript:void(0)"
+                onclick="
+                  frappe.set_route('List', 'Liaisoning And Synchronization')
+                "
+                >View All →</a
+              >
+            </div>
+            <div class="kv-row-grid">
+              <div
+                class="kv kv-click"
+                onclick="
+                  frappe.set_route('List', 'Liaisoning And Synchronization', {
+                    liaisoning_status: [
+                      'in',
+                      [
+                        'New',
+                        'In Process',
+                        'Registered',
+                        'Agreement Signed',
+                        'Submit to Division',
+                      ],
+                    ],
+                  })
+                "
+              >
+                <span>Sync in Progress</span
+                ><strong id="sync-prog" class="c-blue">0</strong>
+              </div>
+              <div
+                class="kv kv-click"
+                onclick="
+                  frappe.set_route('List', 'Liaisoning And Synchronization', {
+                    stage_status: 'Overdue',
+                  })
+                "
+              >
+                <span>Sync Delayed</span
+                ><strong id="sync-delayed" class="c-red">0</strong>
+              </div>
+              <div
+                class="kv kv-click"
+                onclick="
+                  frappe.set_route('List', 'Liaisoning And Synchronization', {
+                    liaisoning_status: [
+                      'in',
+                      ['Submit to Division', 'In Process'],
+                    ],
+                  })
+                "
+              >
+                <span>DISCOM Approval Pending</span
+                ><strong id="sync-discom" class="c-orange">0</strong>
+              </div>
+              <div
+                class="kv kv-click"
+                onclick="
+                  frappe.set_route('List', 'Project', { status: 'Completed' })
+                "
+              >
+                <span>Projects Completed (Period)</span
+                ><strong id="prod-comp" class="c-green">0</strong>
+              </div>
+              <div class="kv">
+                <span>Avg Project Duration</span
+                ><strong id="prod-avg-comp">—</strong>
+              </div>
+              <div class="kv">
+                <span>Avg Installation Time</span
+                ><strong id="prod-time">—</strong>
+              </div>
+              <div class="kv">
+                <span>Avg Sync Duration</span
+                ><strong id="prod-sync-time">—</strong>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+      <!-- /#tab-overview -->
+
+      <!-- ═══ TAB 2: PROJECT VIEW ══════════════════════════════════ -->
+      <div id="tab-project" class="tab-content" style="display: none">
+        <!-- Project Search (highlighted) -->
+        <div class="proj-search-hero">
+          <div class="proj-search-inner">
+            <div class="proj-search-label">
+              🏗 Search &amp; Select a Project
+            </div>
+            <div class="proj-search-wrap">
+              <input
+                id="project-search-input"
+                class="proj-search-input"
+                type="text"
+                placeholder="Type project name, customer, or code…"
+                autocomplete="off"
+              />
+              <div id="project-search-dropdown" class="proj-search-dd"></div>
+            </div>
+            <button
+              id="btn-clear-project"
+              class="gme-btn ghost"
+              style="display: none"
+            >
+              ✕ Clear Project
+            </button>
+            <p class="proj-search-hint">
+              Or select <b>Stage</b> + <b>Name</b> from the top filters to trace
+              any customer's journey.
+            </p>
+          </div>
+        </div>
+
+        <!-- Process chain cards (stage journey) -->
+        <div id="process-view-wrap" class="mt8"></div>
+
+        <div id="site-images-wrap" class="mt8"></div>
+
+        <!-- Project Hero (shown when project selected) -->
+        <div id="project-hero-wrap" style="display: none" class="mt8">
+          <div class="proj-hero-card">
+            <div class="proj-hero-top">
+              <div>
+                <div class="proj-hero-name" id="pm-name">—</div>
+                <div class="proj-hero-tags">
+                  <span class="proj-tag" id="pm-status">—</span>
+                  <span class="proj-tag proj-tag-blue" id="pm-size">—</span>
+                  <span class="proj-tag proj-tag-gray" id="pm-type">—</span>
+                </div>
+              </div>
+              <div class="proj-hero-open">
+                <a
+                  id="pm-open-link"
+                  class="proj-open-btn"
+                  href="javascript:void(0)"
+                  >Open Project ↗</a
+                >
+              </div>
+            </div>
+            <div class="proj-hero-kpis">
+              <div class="proj-kpi">
+                <div class="proj-kpi-icon">📈</div>
+                <div class="proj-kpi-val" id="pm-pct">0%</div>
+                <div class="proj-kpi-lbl">Completion</div>
+                <div class="proj-progress-bar">
+                  <div
+                    class="proj-progress-fill"
+                    id="pm-pct-bar"
+                    style="width: 0%"
+                  ></div>
+                </div>
+              </div>
+              <div class="proj-kpi">
+                <div class="proj-kpi-icon">💰</div>
+                <div class="proj-kpi-val c-green" id="pm-val">₹0</div>
+                <div class="proj-kpi-lbl">Project Value</div>
+              </div>
+              <div class="proj-kpi">
+                <div class="proj-kpi-icon">✅</div>
+                <div class="proj-kpi-val c-blue" id="pm-recv">₹0</div>
+                <div class="proj-kpi-lbl">Payment Received</div>
+              </div>
+              <div class="proj-kpi">
+                <div class="proj-kpi-icon">⚠</div>
+                <div class="proj-kpi-val c-orange" id="pm-out">₹0</div>
+                <div class="proj-kpi-lbl">Outstanding</div>
+              </div>
+              <div class="proj-kpi">
+                <div class="proj-kpi-icon">📅</div>
+                <div class="proj-kpi-val proj-kpi-small" id="pm-start">—</div>
+                <div class="proj-kpi-lbl">Start Date</div>
+              </div>
+              <div class="proj-kpi">
+                <div class="proj-kpi-icon">🏁</div>
+                <div class="proj-kpi-val proj-kpi-small" id="pm-end">—</div>
+                <div class="proj-kpi-lbl">Expected End</div>
+              </div>
+            </div>
+            <div class="proj-hero-details">
+              <div class="proj-detail">
+                <span>Customer</span><strong id="pm-customer">—</strong>
+              </div>
+              <div class="proj-detail">
+                <span>Project Manager</span><strong id="pm-manager">—</strong>
+              </div>
+              <div class="proj-detail">
+                <span>Capacity</span><strong id="pm-capacity">—</strong>
+              </div>
+              <div class="proj-detail">
+                <span>Category</span><strong id="pm-category">—</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- /#tab-project -->
+
+      <!-- ═══ STAGE DRILL-DOWN MODAL ═════════════════════════════ -->
+      <div id="stage-modal-overlay" class="modal-overlay">
+        <div class="modal-card">
+          <div class="modal-head">
+            <h3 id="stage-modal-title">Stage Records</h3>
+            <button
+              id="btn-close-stage-modal"
+              class="gme-btn icon"
+              type="button"
+            >
+              ✕
+            </button>
+          </div>
+          <div class="table-shell">
+            <div class="ts-top" id="stage-top-scroll"><div></div></div>
+            <div class="ts-wrap" id="stage-table-wrap">
+              <table class="gme-table">
+                <thead id="stage-modal-thead"></thead>
+                <tbody id="stage-modal-tbody">
+                  <tr>
+                    <td class="lc">No data</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- /.gme-dashboard -->
+  </body>
+
+  <script>
+    /* ═══════════════════════════════════════════════════
+   SADBHAV EPC CONTROL PANEL — Client Script v5.6
+   Fixes:
+   - Search bar no longer triggers ERPNext global search
+   - stopPropagation on all keyboard events for both
+     project search input and name filter input
+═══════════════════════════════════════════════════ */
+
+    var GME = {
+      state: {
+        mode: "overview",
+        project: "",
+        preset: "till_now",
+        fromDate: "",
+        toDate: "",
+        projectType: "",
+        stage: "",
+        stageName: "",
+      },
+      nameRows: [],
+      searchTimer: null,
+      nameTimer: null,
+      allSiteImages: [],
+    };
+
+    GME.R = function () {
+      if (typeof root_element !== "undefined" && root_element) {
+        return root_element;
+      }
+      return document;
+    };
+    GME.qs = function (s) {
+      return GME.R().querySelector(s);
+    };
+    GME.qsa = function (s) {
+      return Array.prototype.slice.call(GME.R().querySelectorAll(s));
+    };
+
+    GME.esc = function (v) {
+      if (v === undefined || v === null) {
+        return "";
+      }
+      return String(v)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+    };
+
+    GME.fmtR = function (v) {
+      var n = parseFloat(v) || 0;
+      if (n >= 10000000) {
+        return "\u20B9" + (n / 10000000).toFixed(2) + " Cr";
+      }
+      if (n >= 100000) {
+        return "\u20B9" + (n / 100000).toFixed(2) + " L";
+      }
+      if (n <= 0) {
+        return "\u20B90";
+      }
+      return "\u20B9" + n.toLocaleString("en-IN");
+    };
+
+    GME.fmtDate = function (d) {
+      if (!d || d === "—" || d === "None" || d === "null") {
+        return "—";
+      }
+      var x = new Date(d);
+      if (isNaN(x.getTime())) {
+        return String(d);
+      }
+      return x.toLocaleDateString("en-IN", {
+        day: "2-digit",
+        month: "short",
+        year: "numeric",
+      });
+    };
+
+    GME.setText = function (sel, val) {
+      var el = GME.qs(sel);
+      if (!el) {
+        return;
+      }
+      el.textContent =
+        val === undefined || val === null || val === "" ? "—" : String(val);
+    };
+
+    GME.loading = function (on) {
+      var el = GME.qs("#gme-loading-bar");
+      if (el) {
+        el.style.display = on ? "block" : "none";
+      }
+    };
+
+    GME.args = function (extra) {
+      var a = {
+        preset: GME.state.preset,
+        from_date: GME.state.preset === "custom" ? GME.state.fromDate : "",
+        to_date: GME.state.preset === "custom" ? GME.state.toDate : "",
+        project_type: GME.state.projectType,
+        stage_filter: GME.state.stage,
+        name_filter: GME.state.stageName,
+      };
+      var k;
+      for (k in extra || {}) {
+        if (extra.hasOwnProperty(k)) {
+          a[k] = extra[k];
+        }
+      }
+      return a;
+    };
+
+    GME.routeByStage = function (stage, name) {
+      if (!name) {
+        return;
+      }
+      if (stage === "Lead") {
+        frappe.set_route("Form", "Lead", name);
+      } else if (stage === "Site Survey") {
+        frappe.set_route("Form", "Site Survey", name);
+      } else if (stage === "Proposal") {
+        frappe.set_route("Form", "Quotation", name);
+      } else if (stage === "Sales Order") {
+        frappe.set_route("Form", "Sales Order", name);
+      } else if (stage === "Project") {
+        frappe.set_route("Form", "Project", name);
+      } else if (stage === "Synchronization") {
+        frappe.set_route("Form", "Liaisoning And Synchronization", name);
+      } else if (stage === "Dispatch") {
+        frappe.set_route("Form", "Delivery Note", name);
+      } else if (stage === "Installation") {
+        frappe.set_route("Form", "Installation Note", name);
+      }
+    };
+
+    /* ─── html2canvas export ─────────────────────────────────── */
+    GME.ensureHtml2Canvas = function (cb) {
+      if (window.html2canvas) {
+        cb();
+        return;
+      }
+      var s = document.createElement("script");
+      s.src =
+        "https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js";
+      s.onload = function () {
+        cb();
+      };
+      s.onerror = function () {
+        frappe.msgprint("Unable to load image export library.");
+      };
+      document.head.appendChild(s);
+    };
+
+    GME.exportImage = function () {
+      var root = GME.qs("#gme-root");
+      if (!root) {
+        frappe.msgprint("Dashboard root not found.");
+        return;
+      }
+      GME.ensureHtml2Canvas(function () {
+        GME.loading(true);
+        var nd = GME.qs("#name-dropdown");
+        var pd = GME.qs("#project-search-dropdown");
+        var ndWas = nd ? nd.classList.contains("open") : false;
+        var pdWas = pd ? pd.classList.contains("open") : false;
+        if (nd) {
+          nd.classList.remove("open");
+        }
+        if (pd) {
+          pd.classList.remove("open");
+        }
+        window
+          .html2canvas(root, {
+            scale: 2,
+            useCORS: true,
+            backgroundColor: "#f2f5fa",
+            windowWidth: document.documentElement.scrollWidth,
+            windowHeight: document.documentElement.scrollHeight,
+          })
+          .then(function (canvas) {
+            GME.loading(false);
+            if (nd && ndWas) {
+              nd.classList.add("open");
+            }
+            if (pd && pdWas) {
+              pd.classList.add("open");
+            }
+            var a = document.createElement("a");
+            a.href = canvas.toDataURL("image/png");
+            a.download =
+              "Sadbhav_EPC_Dashboard_" + frappe.datetime.get_today() + ".png";
+            a.click();
+          })
+          .catch(function () {
+            GME.loading(false);
+            frappe.msgprint("Failed to export dashboard image.");
+          });
+      });
+    };
+
+    /* ─── Tab switching ──────────────────────────────────────── */
+    GME.switchTab = function (tab) {
+      var ov = GME.qs("#tab-overview");
+      var pj = GME.qs("#tab-project");
+      var btnOv = GME.qs("#tab-btn-overview");
+      var btnPj = GME.qs("#tab-btn-project");
+      if (!ov || !pj) {
+        return;
+      }
+      if (tab === "overview") {
+        ov.style.display = "block";
+        pj.style.display = "none";
+        if (btnOv) {
+          btnOv.className = "gme-tab active";
+        }
+        if (btnPj) {
+          btnPj.className = "gme-tab";
+        }
+        GME.state.mode = "overview";
+      } else {
+        ov.style.display = "none";
+        pj.style.display = "block";
+        if (btnOv) {
+          btnOv.className = "gme-tab";
+        }
+        if (btnPj) {
+          btnPj.className = "gme-tab active";
+        }
+        GME.state.mode = "project";
+      }
+    };
+
+    /* ─── Filter pills ───────────────────────────────────────── */
+    GME.renderPills = function () {
+      var row = GME.qs("#filter-pill-row");
+      if (!row) {
+        return;
+      }
+      row.innerHTML = "";
+      var labels = {
+        till_now: "Till Now",
+        today: "Today",
+        this_month: "This Month",
+        quarterly: "This Quarter",
+        this_year: "This Year",
+        last_year: "Last Year",
+        custom: "Custom",
+      };
+      function pill(k, v) {
+        var d = document.createElement("div");
+        d.className = "filter-pill";
+        d.innerHTML = "<b>" + GME.esc(k) + ":</b> " + GME.esc(v);
+        row.appendChild(d);
+      }
+      pill("Period", labels[GME.state.preset] || GME.state.preset);
+      if (GME.state.preset === "custom" && GME.state.fromDate) {
+        pill(
+          "Range",
+          GME.fmtDate(GME.state.fromDate) +
+            " to " +
+            GME.fmtDate(GME.state.toDate),
+        );
+      }
+      if (GME.state.projectType) {
+        pill("Type", GME.state.projectType);
+      }
+      if (GME.state.stage) {
+        pill("Stage", GME.state.stage);
+      }
+      if (GME.state.stageName) {
+        pill("Name", GME.state.stageName);
+      }
+      if (GME.state.project) {
+        pill("Project", GME.state.project);
+      }
+    };
+
+    /* ─── Pipeline ───────────────────────────────────────────── */
+    GME.renderPipeline = function (tl) {
+      var wrap = GME.qs("#pipeline-wrap");
+      if (!wrap) {
+        return;
+      }
+      wrap.innerHTML = "";
+      var keys = [
+        "Lead",
+        "Survey",
+        "Proposal",
+        "Order",
+        "Dispatch",
+        "Installation",
+        "Sync",
+      ];
+      var modals = {
+        Lead: "Lead",
+        Survey: "Site Survey",
+        Proposal: "Proposal",
+        Order: "Sales Order",
+        Dispatch: "Dispatch",
+        Installation: "Installation",
+        Sync: "Synchronization",
+      };
+      var max = 1,
+        i = 0;
+      for (i = 0; i < keys.length; i++) {
+        var vv = parseInt((tl || {})[keys[i]] || 0, 10);
+        if (vv > max) {
+          max = vv;
+        }
+      }
+      for (i = 0; i < keys.length; i++) {
+        var k = keys[i];
+        var n = parseInt((tl || {})[k] || 0, 10);
+        var p = Math.round((n / max) * 100);
+        var div = document.createElement("div");
+        div.className = "stage";
+        div.innerHTML =
+          '<div class="stage-value">' +
+          GME.esc(n) +
+          "</div>" +
+          '<div class="stage-label">' +
+          GME.esc(k) +
+          "</div>" +
+          '<div class="stage-bar"><div class="stage-bar-fill" data-pct="' +
+          p +
+          '"></div></div>';
+        (function (sn) {
+          div.addEventListener("click", function () {
+            GME.openStageModal(sn);
+          });
+        })(modals[k]);
+        wrap.appendChild(div);
+      }
+      setTimeout(function () {
+        GME.qsa(".stage-bar-fill").forEach(function (el) {
+          el.style.width = (el.dataset.pct || 0) + "%";
+        });
+      }, 120);
+    };
+
+    /* ─── Delay table ────────────────────────────────────────── */
+    GME.renderDelays = function (rows) {
+      var tb = GME.qs("#delay-tbody");
+      if (!tb) {
+        return;
+      }
+      if (!rows || !rows.length) {
+        tb.innerHTML =
+          '<tr><td colspan="6" class="lc">No overdue delays found</td></tr>';
+        return;
+      }
+      var html = "",
+        i = 0;
+      for (i = 0; i < rows.length; i++) {
+        var r = rows[i],
+          stg = r.stage || "",
+          doc = r.task_name || "",
+          days = parseInt(r.delay_days, 10) || 0;
+        var bc = days > 3 ? "dbadge dbadge-red" : "dbadge dbadge-yellow";
+        html +=
+          "<tr>" +
+          '<td><a href="javascript:void(0)" onclick=\'gme_openRowDoc("' +
+          GME.esc(stg) +
+          '","' +
+          GME.esc(doc) +
+          "\")'>" +
+          GME.esc(r.project_name || "—") +
+          "</a></td>" +
+          "<td>" +
+          GME.esc(stg) +
+          "</td>" +
+          "<td>" +
+          GME.esc(r.dept || "—") +
+          "</td>" +
+          '<td style="max-width:160px;white-space:normal;">' +
+          GME.esc(r.reason || "—") +
+          "</td>" +
+          '<td><span class="' +
+          bc +
+          '">' +
+          days +
+          " Days</span></td>" +
+          '<td><a href="javascript:void(0)" onclick=\'gme_openRowDoc("' +
+          GME.esc(stg) +
+          '","' +
+          GME.esc(doc) +
+          "\")'>Open ↗</a></td>" +
+          "</tr>";
+      }
+      tb.innerHTML = html;
+      GME.syncScroll("delay-top-scroll", "delay-table-wrap");
+    };
+
+    /* ─── Overview render ────────────────────────────────────── */
+    GME.renderOverview = function (d) {
+      d = d || {};
+      GME.renderPipeline(d.timeline || {});
+      GME.renderDelays(d.delay_panel || []);
+
+      GME.setText("#fin-total", GME.fmtR(d.fin_total));
+      GME.setText("#fin-adv", GME.fmtR(d.fin_adv));
+      GME.setText("#fin-recv", GME.fmtR(d.fin_recv));
+      GME.setText("#fin-out", GME.fmtR(d.fin_out));
+      GME.setText("#fin-overdue", GME.fmtR(d.fin_overdue));
+
+      var ft = parseFloat(d.fin_total) || 0;
+      var fr = parseFloat(d.fin_recv) || 0;
+      GME.setText(
+        "#fin-coll-pct",
+        ft > 0 ? ((fr / ft) * 100).toFixed(1) + "%" : "0%",
+      );
+
+      GME.setText("#cost-total-val", GME.fmtR(d.fin_total));
+      GME.setText("#cost-mat", GME.fmtR(d.cost_mat));
+      GME.setText("#cost-civ", GME.fmtR(d.cost_civ));
+      GME.setText("#cost-lab", GME.fmtR(d.cost_lab));
+      GME.setText("#cost-partner", GME.fmtR(d.cost_partner));
+      GME.setText("#cost-act", GME.fmtR(d.cost_act));
+
+      var ca = parseFloat(d.cost_act) || 0;
+      var mgn = ft > 0 ? ((ft - ca) / ft) * 100 : 0;
+      var mEl = GME.qs("#cost-margin");
+      if (mEl) {
+        mEl.textContent = mgn.toFixed(1) + "%";
+        mEl.style.color =
+          mgn < 10 ? "var(--red)" : mgn < 20 ? "var(--orange)" : "var(--green)";
+      }
+
+      GME.setText("#pi-po", d.pi_po || 0);
+      GME.setText("#pi-mat-pend", d.pi_mat_pend || 0);
+      GME.setText("#pi-inv", d.pi_inv || 0);
+      GME.setText("#pi-grn", d.pi_grn || 0);
+      GME.setText("#disp-total", d.disp_total || 0);
+      GME.setText("#disp-partial", d.disp_partial || 0);
+      GME.setText("#disp-delay", d.disp_delay || 0);
+      GME.setText("#ret-logged", d.ret_logged || 0);
+      GME.setText("#ret-value", GME.fmtR(d.ret_value || 0));
+
+      GME.setText("#sync-prog", d.sync_prog || 0);
+      GME.setText("#sync-delayed", d.sync_delayed || 0);
+      GME.setText("#sync-discom", d.sync_discom || 0);
+      GME.setText("#prod-comp", d.prod_comp || 0);
+      GME.setText("#prod-avg-comp", d.prod_avg_comp || "—");
+      GME.setText("#prod-time", d.prod_time || "—");
+      GME.setText("#prod-sync-time", d.prod_sync_time || "—");
+    };
+
+    /* ─── Stage journey cards ────────────────────────────────── */
+    GME.stageFields = {
+      lead: [
+        ["Customer", "customer"],
+        ["Mobile", "mobile"],
+        ["Source", "source"],
+        ["Owner", "actor"],
+        ["Status", "status"],
+        ["Date", "date", true],
+        ["Next Step", "next_step", true],
+      ],
+      survey: [
+        ["Client", "customer"],
+        ["Surveyed By", "actor"],
+        ["Capacity", "capacity"],
+        ["Site Type", "site_type"],
+        ["Location", "location"],
+        ["Survey Date", "date", true],
+        ["Status", "status"],
+      ],
+      proposal: [
+        ["Customer", "customer"],
+        ["Manager", "actor"],
+        ["Capacity", "capacity"],
+        ["Amount", "amount", false, true],
+        ["Date", "date", true],
+        ["Status", "status"],
+        ["Next Followup", "next_step", true],
+      ],
+      sales_order: [
+        ["Customer", "customer"],
+        ["Manager", "actor"],
+        ["Amount", "amount", false, true],
+        ["Advance", "advance", false, true],
+        ["Outstanding", "outstanding", false, true],
+        ["% Advance", "adv_pct"],
+        ["Order Date", "date", true],
+        ["Status", "status"],
+      ],
+      dispatch: [
+        ["Customer", "customer"],
+        ["Manager", "actor"],
+        ["Date", "date", true],
+        ["Status", "status"],
+        ["Late Remark", "remark"],
+      ],
+      project: [
+        ["Project", "customer"],
+        ["Manager", "actor"],
+        ["% Complete", "pct"],
+        ["Start Date", "date", true],
+        ["Status", "status"],
+      ],
+      sync: [
+        ["Customer", "customer"],
+        ["Owner", "actor"],
+        ["Status", "status"],
+        ["Start Date", "date", true],
+        ["Sync Done", "sync_done", true],
+        ["Delay Log", "remark"],
+      ],
+    };
+
+    GME.statusChip = function (status) {
+      if (!status || status === "—") {
+        return '<span class="pv-status-chip pv-chip-pending">—</span>';
+      }
+      var s = String(status).toLowerCase(),
+        cls = "pv-chip-open";
+      if (
+        s.indexOf("complet") !== -1 ||
+        s.indexOf("synchronized") !== -1 ||
+        s.indexOf("converted") !== -1
+      ) {
+        cls = "pv-chip-completed";
+      } else if (s.indexOf("overdue") !== -1 || s.indexOf("cancel") !== -1) {
+        cls = "pv-chip-overdue";
+      }
+      return (
+        '<span class="pv-status-chip ' +
+        cls +
+        '">' +
+        GME.esc(status) +
+        "</span>"
+      );
+    };
+
+    GME.buildPvCard = function (icon, title, key, data, docName, doctype) {
+      var reached = !!(data && data.reached);
+      var cardCls = reached ? "pv-card pv-reached" : "pv-card pv-pending";
+      var openHtml = "";
+      if (docName && reached) {
+        openHtml =
+          '<a class="pv-open-link" href="javascript:void(0)" onclick=\'gme_openDoctype("' +
+          GME.esc(doctype) +
+          '","' +
+          GME.esc(docName) +
+          "\")'>Open ↗</a>";
+      }
+      var headHtml =
+        '<div class="pv-card-head">' +
+        '<span class="pv-card-title">' +
+        icon +
+        " " +
+        GME.esc(title) +
+        "</span>" +
+        (reached ? GME.statusChip(data && data.status) : "") +
+        openHtml +
+        "</div>";
+
+      if (!reached) {
+        return (
+          '<article class="' +
+          cardCls +
+          '">' +
+          headHtml +
+          '<div class="pv-body"><div class="pv-empty">Not reached in process flow</div></div></article>'
+        );
+      }
+
+      var fields = GME.stageFields[key] || [],
+        rowsHtml = "",
+        i = 0;
+      for (i = 0; i < fields.length; i++) {
+        var f = fields[i],
+          raw = data[f[1]],
+          val = "—";
+        if (raw !== undefined && raw !== null && raw !== "" && raw !== "—") {
+          if (f[2]) {
+            val = GME.fmtDate(raw);
+          } else if (f[3]) {
+            val = GME.fmtR(raw);
+          } else {
+            val = String(raw);
+          }
+        }
+        rowsHtml +=
+          '<div class="pv-row"><span>' +
+          GME.esc(f[0]) +
+          "</span><strong>" +
+          GME.esc(val) +
+          "</strong></div>";
+      }
+      return (
+        '<article class="' +
+        cardCls +
+        '">' +
+        headHtml +
+        '<div class="pv-body">' +
+        rowsHtml +
+        "</div></article>"
+      );
+    };
+
+    GME.renderProcessCards = function (d) {
+      var wrap = GME.qs("#process-view-wrap");
+      if (!wrap) {
+        return;
+      }
+      if (!GME.state.stageName && !GME.state.project) {
+        wrap.innerHTML = "";
+        return;
+      }
+      d = d || {};
+      var label = GME.state.stageName || GME.state.project;
+      wrap.innerHTML =
+        '<div class="pv-header"><h4>📋 Stage Journey — ' +
+        GME.esc(label) +
+        "</h4></div>" +
+        '<div class="pv-grid">' +
+        GME.buildPvCard(
+          "👤",
+          "Lead Details",
+          "lead",
+          d.lead,
+          d.lead_doc,
+          "Lead",
+        ) +
+        GME.buildPvCard(
+          "🗺",
+          "Site Survey",
+          "survey",
+          d.survey,
+          d.survey_doc,
+          "Site Survey",
+        ) +
+        GME.buildPvCard(
+          "📄",
+          "Proposal",
+          "proposal",
+          d.proposal,
+          d.proposal_doc,
+          "Quotation",
+        ) +
+        GME.buildPvCard(
+          "📦",
+          "Sales Order",
+          "sales_order",
+          d.sales_order,
+          d.sales_order_doc,
+          "Sales Order",
+        ) +
+        GME.buildPvCard(
+          "🚚",
+          "Dispatch",
+          "dispatch",
+          d.dispatch,
+          d.dispatch_doc,
+          "Delivery Note",
+        ) +
+        GME.buildPvCard(
+          "🏗",
+          "Project",
+          "project",
+          d.project,
+          d.project_doc,
+          "Project",
+        ) +
+        GME.buildPvCard(
+          "🔄",
+          "Synchronization",
+          "sync",
+          d.sync,
+          d.sync_doc,
+          "Liaisoning And Synchronization",
+        ) +
+        "</div>";
+    };
+
+    GME.fetchProcessView = function () {
+      if (!GME.state.stageName && !GME.state.project) {
+        GME.renderProcessCards({});
+        return;
+      }
+      frappe.call({
+        method: "test",
+        args: GME.args({
+          action: "get_process_view",
+          stage: GME.state.stage || "",
+          name: GME.state.stageName || "",
+          project: GME.state.project || "",
+        }),
+        callback: function (r) {
+          GME.renderProcessCards(r && r.message ? r.message : {});
+        },
+      });
+    };
+
+    /* ─── Site Images ────────────────────────────────────────── */
+    GME.ensureImageModalStyle = function () {
+      if (document.getElementById("gme-img-style")) {
+        return;
+      }
+      var css =
+        "#site-images-wrap .gme-sitebox{margin-top:8px;border:1px solid #d8dee8;border-radius:10px;background:#fff;overflow:hidden;}" +
+        "#site-images-wrap .gme-sitebox-head{display:flex;justify-content:space-between;align-items:center;padding:10px 12px;border-bottom:1px solid #e5eaf2;}" +
+        "#site-images-wrap .gme-sitebox-head h3{margin:0;font-size:14px;font-weight:700;line-height:1.2;}" +
+        "#site-images-wrap .gme-sitebox-head a{font-size:12px;font-weight:600;color:#2563eb;text-decoration:none;}" +
+        "#site-images-wrap .gme-sitebox-row{display:flex;gap:8px;padding:8px 10px 10px;flex-wrap:wrap;align-items:flex-start;}" +
+        "#site-images-wrap .gme-mini{width:130px;border:1px solid #d6dbe4;border-radius:8px;overflow:hidden;background:#fff;text-decoration:none;display:block;}" +
+        "#site-images-wrap .gme-mini-t{height:72px;background:#f3f5f9;}" +
+        "#site-images-wrap .gme-mini-t img{width:100%;height:100%;object-fit:cover;display:block;}" +
+        "#site-images-wrap .gme-mini-n{font-size:10px;color:#111827;padding:4px 6px 0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}" +
+        "#site-images-wrap .gme-mini-m{font-size:9px;color:#64748b;padding:1px 6px 6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}" +
+        "#site-images-wrap .gme-sitebox-empty{padding:10px 12px;font-size:12px;color:#64748b;}" +
+        "#gme-img-modal-ov{position:fixed;inset:0;background:rgba(15,23,42,.45);z-index:9999;display:flex;align-items:center;justify-content:center;padding:16px;}" +
+        "#gme-img-modal-ov .gme-img-modal{width:min(1100px,96vw);max-height:90vh;background:#fff;border-radius:12px;box-shadow:0 20px 50px rgba(0,0,0,.25);display:flex;flex-direction:column;overflow:hidden;}" +
+        "#gme-img-modal-ov .gme-img-modal-h{display:flex;justify-content:space-between;align-items:center;padding:12px 14px;border-bottom:1px solid #e5e7eb;}" +
+        "#gme-img-modal-ov .gme-img-modal-b{padding:12px;overflow:auto;}" +
+        "#gme-img-modal-ov .gme-img-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px;}" +
+        "#gme-img-modal-ov .gme-img-card{border:1px solid #d6dbe4;border-radius:8px;overflow:hidden;text-decoration:none;color:inherit;background:#fff;display:block;}" +
+        "#gme-img-modal-ov .gme-img-card .t{height:125px;background:#f3f5f9;overflow:hidden;}" +
+        "#gme-img-modal-ov .gme-img-card .t img{width:100%;height:100%;object-fit:cover;display:block;}" +
+        "#gme-img-modal-ov .gme-img-card .n{font-size:11px;padding:6px 8px 0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}" +
+        "#gme-img-modal-ov .gme-img-card .m{font-size:10px;color:#64748b;padding:2px 8px 8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}";
+      var st = document.createElement("style");
+      st.id = "gme-img-style";
+      st.type = "text/css";
+      st.appendChild(document.createTextNode(css));
+      document.head.appendChild(st);
+    };
+
+    GME.fixSiteBoxHeight = function () {
+      var wrap = GME.qs("#site-images-wrap");
+      if (!wrap) {
+        return;
+      }
+      var box = wrap.querySelector(".gme-sitebox");
+      if (!box) {
+        return;
+      }
+      box.style.height = "auto";
+      box.style.minHeight = "0px";
+      box.style.maxHeight = "none";
+      var row = box.querySelector(".gme-sitebox-row");
+      if (row) {
+        row.style.height = "auto";
+        row.style.minHeight = "0px";
+        row.style.maxHeight = "none";
+      }
+      var forced = box.querySelectorAll(
+        ".card-body,.card-content,.widget-body,.section-body",
+      );
+      var i = 0;
+      for (i = 0; i < forced.length; i++) {
+        forced[i].style.height = "auto";
+        forced[i].style.minHeight = "0px";
+        forced[i].style.maxHeight = "none";
+        forced[i].style.paddingBottom = "0px";
+      }
+      setTimeout(function () {
+        var head = box.querySelector(".gme-sitebox-head");
+        var body =
+          box.querySelector(".gme-sitebox-row") ||
+          box.querySelector(".gme-sitebox-empty");
+        if (head && body) {
+          box.style.height = head.offsetHeight + body.offsetHeight + 2 + "px";
+        }
+      }, 0);
+    };
+
+    GME.renderSiteImages = function (rows) {
+      var wrap = GME.qs("#site-images-wrap");
+      if (!wrap) {
+        return;
+      }
+      rows = rows || [];
+      GME.allSiteImages = rows.slice(0);
+      GME.ensureImageModalStyle();
+
+      if (!GME.state.stageName && !GME.state.project) {
+        wrap.innerHTML = "";
+        return;
+      }
+
+      if (!rows.length) {
+        wrap.innerHTML =
+          '<div class="gme-sitebox">' +
+          '<div class="gme-sitebox-head"><h3>🖼 Site Images</h3></div>' +
+          '<div class="gme-sitebox-empty">No images found in linked documents.</div>' +
+          "</div>";
+        GME.fixSiteBoxHeight();
+        return;
+      }
+
+      var preview = rows.slice(0, 3),
+        html = "",
+        i = 0;
+      html += '<div class="gme-sitebox">';
+      html += '<div class="gme-sitebox-head"><h3>🖼 Site Images</h3>';
+      html +=
+        '<a href="javascript:void(0)" id="gme-view-all-images">View All (' +
+        rows.length +
+        ")</a></div>";
+      html += '<div class="gme-sitebox-row">';
+      for (i = 0; i < preview.length; i++) {
+        var r = preview[i] || {};
+        var url = r.file_url || "";
+        var fname = r.file_name || "image";
+        var meta = (r.doctype || "") + " / " + (r.docname || "");
+        html +=
+          '<a class="gme-mini" href="' +
+          GME.esc(url) +
+          '" target="_blank">' +
+          '<div class="gme-mini-t"><img src="' +
+          GME.esc(url) +
+          '" alt="' +
+          GME.esc(fname) +
+          '" loading="lazy"></div>' +
+          '<div class="gme-mini-n">' +
+          GME.esc(fname) +
+          "</div>" +
+          '<div class="gme-mini-m">' +
+          GME.esc(meta) +
+          "</div>" +
+          "</a>";
+      }
+      html += "</div>";
+      html += "</div>";
+      wrap.innerHTML = html;
+
+      var va = GME.qs("#gme-view-all-images");
+      if (va) {
+        va.addEventListener("click", function (e) {
+          e.preventDefault();
+          GME.openAllImagesModal();
+        });
+      }
+      GME.fixSiteBoxHeight();
+    };
+
+    GME.openAllImagesModal = function () {
+      var rows = GME.allSiteImages || [];
+      if (!rows.length) {
+        frappe.msgprint("No images to show.");
+        return;
+      }
+      GME.closeAllImagesModal();
+      GME.ensureImageModalStyle();
+      var html = '<div id="gme-img-modal-ov"><div class="gme-img-modal">';
+      html +=
+        '<div class="gme-img-modal-h"><h3 style="margin:0;font-size:15px;">🖼 All Site Images (' +
+        rows.length +
+        ")</h3>";
+      html +=
+        '<button id="gme-img-close-btn" class="gme-btn icon">✕</button></div>';
+      html += '<div class="gme-img-modal-b"><div class="gme-img-grid">';
+      var i = 0;
+      for (i = 0; i < rows.length; i++) {
+        var r = rows[i] || {},
+          url = r.file_url || "",
+          fname = r.file_name || "image";
+        var meta = (r.doctype || "") + " / " + (r.docname || "");
+        html +=
+          '<a class="gme-img-card" href="' +
+          GME.esc(url) +
+          '" target="_blank">' +
+          '<div class="t"><img src="' +
+          GME.esc(url) +
+          '" alt="' +
+          GME.esc(fname) +
+          '" loading="lazy"></div>' +
+          '<div class="n">' +
+          GME.esc(fname) +
+          "</div>" +
+          '<div class="m">' +
+          GME.esc(meta) +
+          "</div></a>";
+      }
+      html += "</div></div></div></div>";
+      var holder = document.createElement("div");
+      holder.innerHTML = html;
+      document.body.appendChild(holder.firstChild);
+      var ov = document.getElementById("gme-img-modal-ov");
+      var cb = document.getElementById("gme-img-close-btn");
+      if (cb) {
+        cb.addEventListener("click", GME.closeAllImagesModal);
+      }
+      if (ov) {
+        ov.addEventListener("click", function (e) {
+          if (e.target === ov) {
+            GME.closeAllImagesModal();
+          }
+        });
+      }
+    };
+
+    GME.closeAllImagesModal = function () {
+      var ov = document.getElementById("gme-img-modal-ov");
+      if (ov && ov.parentNode) {
+        ov.parentNode.removeChild(ov);
+      }
+    };
+
+    GME.fetchSiteImages = function () {
+      if (!GME.state.stageName && !GME.state.project) {
+        GME.renderSiteImages([]);
+        return;
+      }
+      frappe.call({
+        method: "test",
+        args: GME.args({
+          action: "get_site_images",
+          stage: GME.state.stage || "",
+          name: GME.state.stageName || "",
+          project: GME.state.project || "",
+        }),
+        callback: function (r) {
+          GME.renderSiteImages(r && r.message ? r.message : []);
+        },
+      });
+    };
+
+    /* ─── Project Hero ───────────────────────────────────────── */
+    GME.renderProjectHero = function (d) {
+      d = d || {};
+      var heroWrap = GME.qs("#project-hero-wrap");
+      if (heroWrap) {
+        heroWrap.style.display = "block";
+      }
+
+      GME.setText("#pm-name", d.project_name || GME.state.project || "—");
+      GME.setText("#pm-status", d.status || "—");
+
+      var cap = d.capacity || "—";
+      if (cap !== "—" && String(cap).toLowerCase().indexOf("kw") === -1) {
+        cap = cap + " kW";
+      }
+      GME.setText("#pm-size", cap);
+      GME.setText("#pm-type", d.project_type || "—");
+
+      var pct = parseFloat(d.percent_complete) || 0;
+      GME.setText("#pm-pct", pct.toFixed(0) + "%");
+      var pctBar = GME.qs("#pm-pct-bar");
+      if (pctBar) {
+        setTimeout(function () {
+          pctBar.style.width = Math.min(pct, 100) + "%";
+        }, 200);
+      }
+
+      GME.setText("#pm-val", GME.fmtR(d.fin_total || 0));
+      GME.setText("#pm-recv", GME.fmtR(d.fin_recv || 0));
+      GME.setText("#pm-out", GME.fmtR(d.fin_out || 0));
+      GME.setText("#pm-start", GME.fmtDate(d.expected_start_date));
+      GME.setText("#pm-end", GME.fmtDate(d.expected_end_date));
+      GME.setText("#pm-customer", d.customer || "—");
+      GME.setText("#pm-manager", d.project_manager || "—");
+      GME.setText("#pm-capacity", cap);
+      GME.setText("#pm-category", d.project_type || "—");
+
+      var openLink = GME.qs("#pm-open-link");
+      if (openLink && GME.state.project) {
+        openLink.onclick = function () {
+          frappe.set_route("Form", "Project", GME.state.project);
+        };
+      }
+    };
+
+    /* ─── Stage modal ────────────────────────────────────────── */
+    GME.STAGE_COLS = {
+      Lead: [
+        "Customer Name",
+        "Mobile",
+        "Location",
+        "Source",
+        "Lead Owner",
+        "Creation Date",
+        "Status",
+      ],
+      "Site Survey": [
+        "Client Name",
+        "Survey Date",
+        "Surveyed By",
+        "Capacity",
+        "Category",
+        "Location",
+        "Completed",
+      ],
+      Proposal: ["Customer", "Capacity", "Manager", "Date", "Amount", "Status"],
+      "Sales Order": [
+        "Customer",
+        "Total",
+        "Advance",
+        "Outstanding",
+        "% Advance",
+        "Date",
+        "Manager",
+        "Status",
+      ],
+      Dispatch: [
+        "Title",
+        "Customer",
+        "Qty",
+        "Date",
+        "Manager",
+        "Late Remark",
+        "Status",
+      ],
+      Installation: [
+        "Customer",
+        "Install Date",
+        "Territory",
+        "Status",
+        "Remarks",
+        "Owner",
+      ],
+      Synchronization: [
+        "Customer",
+        "Start Date",
+        "Liaisoning Status",
+        "Sync Done",
+        "Owner",
+        "Delay Log",
+      ],
+      Project: [
+        "Project Name",
+        "Status",
+        "% Complete",
+        "Start Date",
+        "Expected End",
+      ],
+    };
+
+    GME.openStageModal = function (stageName) {
+      var cols = GME.STAGE_COLS[stageName] || ["Record"];
+      GME.setText("#stage-modal-title", stageName + " — Records");
+      var th = GME.qs("#stage-modal-thead");
+      var tb = GME.qs("#stage-modal-tbody");
+      if (th) {
+        th.innerHTML =
+          "<tr>" +
+          cols
+            .map(function (c) {
+              return "<th>" + GME.esc(c) + "</th>";
+            })
+            .join("") +
+          "</tr>";
+      }
+      if (tb) {
+        tb.innerHTML =
+          '<tr><td colspan="' + cols.length + '" class="lc">Loading…</td></tr>';
+      }
+      var ov = GME.qs("#stage-modal-overlay");
+      if (ov) {
+        ov.classList.add("open");
+      }
+      var _nf =
+        GME.state.stage && GME.state.stage !== stageName
+          ? ""
+          : GME.state.stageName || "";
+      frappe.call({
+        method: "test",
+        args: GME.args({
+          action: "get_stage_data",
+          stage: stageName,
+          project: GME.state.project || "",
+          name_filter: _nf,
+        }),
+        callback: function (r) {
+          if (!tb) {
+            return;
+          }
+          var rows = r && r.message ? r.message : [];
+          if (!rows.length) {
+            tb.innerHTML =
+              '<tr><td colspan="' +
+              cols.length +
+              '" class="lc">No records found for this stage.</td></tr>';
+            return;
+          }
+          var html = "",
+            i = 0,
+            j = 0;
+          for (i = 0; i < rows.length; i++) {
+            var row = rows[i];
+            if (!Array.isArray(row)) {
+              continue;
+            }
+            if (row.length === 1) {
+              html +=
+                '<tr><td colspan="' +
+                cols.length +
+                '" class="lc">' +
+                GME.esc(row[0]) +
+                "</td></tr>";
+              continue;
+            }
+            var doc = row[0],
+              cells = row.slice(1);
+            html += "<tr>";
+            for (j = 0; j < cells.length; j++) {
+              var cv = GME.esc(cells[j]);
+              if (j === 0) {
+                html +=
+                  '<td><a href="javascript:void(0)" onclick=\'gme_openRowDoc("' +
+                  GME.esc(stageName) +
+                  '","' +
+                  GME.esc(doc) +
+                  "\")'>" +
+                  cv +
+                  "</a></td>";
+              } else {
+                html += "<td>" + cv + "</td>";
+              }
+            }
+            html += "</tr>";
+          }
+          tb.innerHTML = html;
+          GME.syncScroll("stage-top-scroll", "stage-table-wrap");
+        },
+      });
+    };
+
+    GME.closeStageModal = function () {
+      var ov = GME.qs("#stage-modal-overlay");
+      if (ov) {
+        ov.classList.remove("open");
+      }
+    };
+
+    /* ─── Scroll sync ────────────────────────────────────────── */
+    GME.syncScroll = function (topId, wrapId) {
+      var top = GME.qs("#" + topId);
+      var wrap = GME.qs("#" + wrapId);
+      if (!top || !wrap) {
+        return;
+      }
+      var inner = top.firstElementChild;
+      if (inner) {
+        inner.style.width = wrap.scrollWidth + "px";
+      }
+      if (!top.dataset.bound) {
+        top.addEventListener("scroll", function () {
+          wrap.scrollLeft = top.scrollLeft;
+        });
+        wrap.addEventListener("scroll", function () {
+          top.scrollLeft = wrap.scrollLeft;
+        });
+        top.dataset.bound = "1";
+      }
+    };
+
+    /* ─── Name dropdown (top-bar filter) ────────────────────── */
+    GME.openNameDropdown = function (q) {
+      var dd = GME.qs("#name-dropdown");
+      var rows = GME.nameRows || [];
+      if (!dd) {
+        return;
+      }
+      var t = (q || "").toLowerCase(),
+        filtered = [],
+        i = 0;
+      for (i = 0; i < rows.length; i++) {
+        var x = rows[i],
+          a = ((x.label || x.name) + "").toLowerCase();
+        if (a.indexOf(t) !== -1) {
+          filtered.push(x);
+        }
+        if (filtered.length >= 60) {
+          break;
+        }
+      }
+      if (!filtered.length) {
+        dd.innerHTML =
+          '<div class="name-dd-item" style="color:var(--muted);">No names found</div>';
+        dd.classList.add("open");
+        return;
+      }
+      var html = "";
+      for (i = 0; i < filtered.length; i++) {
+        var item = filtered[i];
+        html +=
+          '<div class="name-dd-item" data-name="' +
+          GME.esc(item.name) +
+          '" data-label="' +
+          GME.esc(item.label || item.name) +
+          '">' +
+          '<div class="name-dd-item-name">' +
+          GME.esc(item.name) +
+          "</div>" +
+          '<div class="name-dd-item-meta">' +
+          GME.esc(item.label || "") +
+          "</div>" +
+          "</div>";
+      }
+      dd.innerHTML = html;
+      dd.classList.add("open");
+      dd.querySelectorAll(".name-dd-item[data-name]").forEach(function (el) {
+        el.addEventListener("mousedown", function (e) {
+          e.preventDefault();
+          var nm = el.getAttribute("data-name") || "";
+          var lb = el.getAttribute("data-label") || nm;
+          var inp = GME.qs("#filter-name-input");
+          if (inp) {
+            inp.value = lb;
+          }
+          GME.state.stageName = nm;
+          dd.classList.remove("open");
+          GME.switchTab("project");
+          GME.fetchProcessView();
+          GME.fetchSiteImages();
+          GME.renderPills();
+        });
+      });
+    };
+
+    GME.loadNamesByStage = function () {
+      var stage = (GME.qs("#filter-stage") || {}).value || "";
+      var inp = GME.qs("#filter-name-input");
+      var dd = GME.qs("#name-dropdown");
+      if (!inp) {
+        return;
+      }
+      inp.value = "";
+      inp.disabled = true;
+      GME.nameRows = [];
+      GME.state.stageName = "";
+      if (dd) {
+        dd.classList.remove("open");
+      }
+      if (!stage) {
+        return;
+      }
+      frappe.call({
+        method: "test",
+        args: { action: "get_names_by_stage", stage: stage },
+        callback: function (r) {
+          var arr = r && r.message ? r.message : [];
+          GME.nameRows = arr;
+          inp.disabled = arr.length === 0;
+        },
+      });
+    };
+
+    /* ─── Project search ─────────────────────────────────────── */
+    GME.searchProjects = function (q) {
+      var dd = GME.qs("#project-search-dropdown");
+      if (!dd) {
+        return;
+      }
+      frappe.call({
+        method: "test",
+        args: { action: "search_projects", query: q || "" },
+        callback: function (r) {
+          var rows = r && r.message ? r.message : [];
+          if (!rows.length) {
+            dd.innerHTML =
+              '<div class="psd-item" style="color:var(--muted)">No projects found</div>';
+            dd.classList.add("open");
+            return;
+          }
+          var html = "",
+            i = 0;
+          for (i = 0; i < rows.length; i++) {
+            var p = rows[i];
+            html +=
+              '<div class="psd-item" data-name="' +
+              GME.esc(p.name) +
+              '">' +
+              '<div class="psd-item-name">' +
+              GME.esc(p.name) +
+              "</div>" +
+              '<div class="psd-item-meta">' +
+              GME.esc((p.customer || "") + (p.status ? " · " + p.status : "")) +
+              "</div>" +
+              "</div>";
+          }
+          dd.innerHTML = html;
+          dd.classList.add("open");
+          dd.querySelectorAll(".psd-item[data-name]").forEach(function (el) {
+            el.addEventListener("mousedown", function (e) {
+              e.preventDefault();
+              var nm = el.getAttribute("data-name") || "";
+              var inp = GME.qs("#project-search-input");
+              if (inp) {
+                inp.value = nm;
+              }
+              dd.classList.remove("open");
+              GME.selectProject(nm);
+            });
+          });
+        },
+      });
+    };
+
+    GME.selectProject = function (nm) {
+      GME.state.project = nm;
+      GME.renderPills();
+      GME.switchTab("project");
+      var cpBtn = GME.qs("#btn-clear-project");
+      if (cpBtn) {
+        cpBtn.style.display = "inline-flex";
+      }
+      GME.loading(true);
+      frappe.call({
+        method: "test",
+        args: GME.args({ action: "get_project_data", project: nm }),
+        callback: function (r) {
+          GME.loading(false);
+          GME.renderProjectHero(r && r.message ? r.message : {});
+          GME.fetchProcessView();
+          GME.fetchSiteImages();
+        },
+      });
+    };
+
+    GME.clearProject = function () {
+      GME.state.project = "";
+      var inp = GME.qs("#project-search-input");
+      var cpBtn = GME.qs("#btn-clear-project");
+      var hw = GME.qs("#project-hero-wrap");
+      if (inp) {
+        inp.value = "";
+      }
+      if (cpBtn) {
+        cpBtn.style.display = "none";
+      }
+      if (hw) {
+        hw.style.display = "none";
+      }
+      GME.renderProcessCards({});
+      GME.renderSiteImages([]);
+      GME.renderPills();
+    };
+
+    /* ─── Fetch overview ─────────────────────────────────────── */
+    GME.fetchOverview = function () {
+      GME.loading(true);
+      GME.renderPills();
+      frappe.call({
+        method: "test",
+        args: GME.args({ action: "get_dashboard_data" }),
+        callback: function (r) {
+          GME.loading(false);
+          GME.renderOverview(r && r.message ? r.message : {});
+        },
+      });
+    };
+
+    /* ═══════════════════════════════════════════════════════════
+   bindUI — all event listeners
+   KEY FIX: stopPropagation on keyboard events for both search
+   inputs so ERPNext's global shortcut handler never fires.
+═══════════════════════════════════════════════════════════ */
+    GME.bindUI = function () {
+      var presetEl = GME.qs("#filter-preset");
+      var typeEl = GME.qs("#filter-type");
+      var stageEl = GME.qs("#filter-stage");
+      var nameInp = GME.qs("#filter-name-input");
+      var fromEl = GME.qs("#filter-from");
+      var toEl = GME.qs("#filter-to");
+      var customWrap = GME.qs("#custom-date-wrap");
+      var nameDd = GME.qs("#name-dropdown");
+
+      /* preset */
+      if (presetEl) {
+        presetEl.addEventListener("change", function () {
+          if (customWrap) {
+            customWrap.style.display =
+              presetEl.value === "custom" ? "flex" : "none";
+          }
+        });
+      }
+
+      /* stage filter */
+      if (stageEl) {
+        stageEl.addEventListener("change", function () {
+          GME.state.stage = stageEl.value || "";
+          GME.state.stageName = "";
+          GME.loadNamesByStage();
+        });
+      }
+
+      /* name search input — stopPropagation FIX ── */
+      if (nameInp) {
+        // Prevent ERPNext global keyboard shortcuts from firing
+        nameInp.addEventListener("keydown", function (e) {
+          e.stopPropagation();
+        });
+        nameInp.addEventListener("keyup", function (e) {
+          e.stopPropagation();
+        });
+        nameInp.addEventListener("keypress", function (e) {
+          e.stopPropagation();
+        });
+        nameInp.addEventListener("focus", function () {
+          GME.openNameDropdown(nameInp.value || "");
+        });
+        nameInp.addEventListener("input", function () {
+          clearTimeout(GME.nameTimer);
+          GME.nameTimer = setTimeout(function () {
+            GME.openNameDropdown(nameInp.value || "");
+          }, 250);
+        });
+      }
+
+      document.addEventListener("mousedown", function (e) {
+        if (!nameInp || !nameDd) {
+          return;
+        }
+        if (!nameInp.contains(e.target) && !nameDd.contains(e.target)) {
+          nameDd.classList.remove("open");
+        }
+      });
+
+      /* Apply button */
+      var applyBtn = GME.qs("#btn-apply");
+      if (applyBtn) {
+        applyBtn.addEventListener("click", function () {
+          GME.state.preset = (presetEl || {}).value || "till_now";
+          GME.state.projectType = (typeEl || {}).value || "";
+          GME.state.stage = (stageEl || {}).value || "";
+          GME.state.fromDate = (fromEl || {}).value || "";
+          GME.state.toDate = (toEl || {}).value || "";
+          if (GME.state.stageName) {
+            GME.switchTab("project");
+            GME.fetchProcessView();
+            GME.fetchSiteImages();
+          } else {
+            GME.fetchOverview();
+            if (GME.state.project) {
+              GME.fetchProcessView();
+              GME.fetchSiteImages();
+            } else {
+              GME.renderSiteImages([]);
+            }
+          }
+        });
+      }
+
+      /* Clear filters */
+      var clearBtn = GME.qs("#btn-clear-filters");
+      if (clearBtn) {
+        clearBtn.addEventListener("click", function () {
+          GME.state.preset = "till_now";
+          GME.state.projectType = "";
+          GME.state.stage = "";
+          GME.state.stageName = "";
+          GME.state.fromDate = "";
+          GME.state.toDate = "";
+          if (presetEl) {
+            presetEl.value = "till_now";
+          }
+          if (typeEl) {
+            typeEl.value = "";
+          }
+          if (stageEl) {
+            stageEl.value = "";
+          }
+          if (nameInp) {
+            nameInp.value = "";
+            nameInp.disabled = true;
+          }
+          if (fromEl) {
+            fromEl.value = "";
+          }
+          if (toEl) {
+            toEl.value = "";
+          }
+          if (customWrap) {
+            customWrap.style.display = "none";
+          }
+          GME.nameRows = [];
+          if (nameDd) {
+            nameDd.classList.remove("open");
+          }
+          GME.renderProcessCards({});
+          GME.renderSiteImages([]);
+          GME.renderPills();
+          GME.fetchOverview();
+        });
+      }
+
+      /* Reload */
+      var reloadBtn = GME.qs("#btn-reload");
+      if (reloadBtn) {
+        reloadBtn.addEventListener("click", function () {
+          GME.fetchOverview();
+        });
+      }
+
+      /* Export */
+      var expBtn = GME.qs("#btn-export");
+      if (expBtn) {
+        expBtn.addEventListener("click", function () {
+          GME.exportImage();
+        });
+      }
+
+      /* Stage modal close */
+      var csBtn = GME.qs("#btn-close-stage-modal");
+      if (csBtn) {
+        csBtn.addEventListener("click", GME.closeStageModal);
+      }
+      var stOv = GME.qs("#stage-modal-overlay");
+      if (stOv) {
+        stOv.addEventListener("click", function (e) {
+          if (e.target === stOv) {
+            GME.closeStageModal();
+          }
+        });
+      }
+
+      /* Header links */
+      var apLink = GME.qs("#link-all-projects");
+      if (apLink) {
+        apLink.addEventListener("click", function () {
+          frappe.set_route("List", "Project");
+        });
+      }
+      var vdLink = GME.qs("#link-view-all-delays");
+      if (vdLink) {
+        vdLink.addEventListener("click", function () {
+          frappe.set_route("List", "Sales Order", { stage_status: "Overdue" });
+        });
+      }
+
+      /* Clear project */
+      var cpBtn = GME.qs("#btn-clear-project");
+      if (cpBtn) {
+        cpBtn.addEventListener("click", GME.clearProject);
+      }
+
+      /* ── Project search input — stopPropagation FIX ── */
+      var sInp = GME.qs("#project-search-input");
+      var sDd = GME.qs("#project-search-dropdown");
+      if (sInp && sDd) {
+        // Prevent ERPNext global keyboard shortcuts (Ctrl+G etc.) from firing
+        sInp.addEventListener("keydown", function (e) {
+          e.stopPropagation();
+        });
+        sInp.addEventListener("keyup", function (e) {
+          e.stopPropagation();
+        });
+        sInp.addEventListener("keypress", function (e) {
+          e.stopPropagation();
+        });
+
+        // Close on Escape
+        sInp.addEventListener("keydown", function (e) {
+          if (e.key === "Escape") {
+            sDd.classList.remove("open");
+            sInp.blur();
+          }
+        });
+
+        sInp.addEventListener("focus", function () {
+          GME.searchProjects(sInp.value || "");
+        });
+        sInp.addEventListener("input", function () {
+          clearTimeout(GME.searchTimer);
+          GME.searchTimer = setTimeout(function () {
+            GME.searchProjects(sInp.value || "");
+          }, 270);
+        });
+        document.addEventListener("mousedown", function (e) {
+          if (!sInp.contains(e.target) && !sDd.contains(e.target)) {
+            sDd.classList.remove("open");
+          }
+        });
+      }
+    };
+
+    /* ─── Global helpers (called from inline onclick attrs) ──── */
+    window.gme_switchTab = function (tab) {
+      GME.switchTab(tab);
+    };
+    window.gme_openRowDoc = function (stage, name) {
+      GME.routeByStage(stage, name);
+    };
+    window.gme_openDoctype = function (dt, name) {
+      if (dt && name) {
+        frappe.set_route("Form", dt, name);
+      }
+    };
+    window.gme_openStageModal = function (s) {
+      GME.openStageModal(s);
+    };
+    window.gme_closeStageModal = function () {
+      GME.closeStageModal();
+    };
+
+    /* ─── Init ───────────────────────────────────────────────── */
+    GME.init = function () {
+      GME.bindUI();
+      GME.fetchOverview();
+      GME.renderSiteImages([]);
+    };
+
+    var _gme_tries = 0;
+    function _gme_waitForDom() {
+      _gme_tries = _gme_tries + 1;
+      var root =
+        typeof root_element !== "undefined" && root_element
+          ? root_element
+          : document;
+      if (root.querySelector(".gme-dashboard")) {
+        GME.init();
+      } else if (_gme_tries < 40) {
+        setTimeout(_gme_waitForDom, 200);
+      }
+    }
+    setTimeout(_gme_waitForDom, 250);
+  </script>
+</html>

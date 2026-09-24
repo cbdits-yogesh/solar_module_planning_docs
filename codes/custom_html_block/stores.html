@@ -1,0 +1,591 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+
+    <style>
+      .sadbhav-dash {
+        font-family: "Inter", sans-serif;
+        background: #f8fafc;
+        padding: 20px;
+        color: #1e293b;
+      }
+      .sd-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+      }
+      .sd-header h2 {
+        margin: 0;
+        font-size: 22px;
+        font-weight: 600;
+        color: #0f172a;
+      }
+      .sd-header p {
+        margin: 4px 0 0;
+        font-size: 13px;
+        color: #64748b;
+      }
+
+      .sd-btn-group button {
+        padding: 8px 16px;
+        border-radius: 6px;
+        border: none;
+        font-weight: 500;
+        cursor: pointer;
+        margin-left: 10px;
+        transition: 0.2s;
+      }
+      .sd-btn-quick {
+        background: #fff;
+        border: 1px solid #cbd5e1;
+        color: #334155;
+      }
+      .sd-btn-quick:hover {
+        background: #f1f5f9;
+      }
+      .sd-btn-primary {
+        background: #2563eb;
+        color: #fff;
+      }
+      .sd-btn-primary:hover {
+        background: #1d4ed8;
+      }
+
+      /* Navigation Cards Section */
+      .sd-nav-cards {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 10px;
+        margin-bottom: 20px;
+      }
+      .sd-nav-card {
+        background: #fff;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        padding: 12px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        cursor: pointer;
+        transition: 0.2s;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+      }
+      .sd-nav-card:hover {
+        border-color: #cbd5e1;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        transform: translateY(-2px);
+      }
+      .sd-nav-icon {
+        font-size: 20px;
+      }
+      .sd-nav-card b {
+        font-size: 12px;
+        color: #0f172a;
+      }
+      .sd-nav-card span {
+        font-size: 10px;
+        color: #64748b;
+      }
+
+      .sd-metrics-grid {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 15px;
+        margin-bottom: 20px;
+      }
+      .sd-metric-card {
+        background: #fff;
+        border-radius: 8px;
+        padding: 15px;
+        border: 1px solid #e2e8f0;
+        cursor: pointer;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+        transition: 0.2s;
+      }
+      .sd-metric-card:hover {
+        border-color: #3b82f6;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+      }
+      .sd-metric-title {
+        font-size: 12px;
+        color: #64748b;
+        margin-bottom: 8px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .sd-metric-value {
+        font-size: 18px;
+        font-weight: 700;
+        color: #0f172a;
+      }
+
+      .sd-main-grid {
+        display: grid;
+        grid-template-columns: 1fr 2fr 1fr;
+        gap: 20px;
+      }
+      .sd-panel {
+        background: #fff;
+        border-radius: 8px;
+        border: 1px solid #e2e8f0;
+        padding: 15px;
+        margin-bottom: 20px;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+      }
+      .sd-panel-title {
+        font-size: 14px;
+        font-weight: 600;
+        border-bottom: 1px solid #e2e8f0;
+        padding-bottom: 10px;
+        margin-bottom: 15px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .sd-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 12px;
+      }
+      .sd-table th {
+        text-align: left;
+        padding: 8px;
+        color: #64748b;
+        font-weight: 500;
+        border-bottom: 1px solid #f1f5f9;
+      }
+      .sd-table td {
+        padding: 10px 8px;
+        border-bottom: 1px solid #f1f5f9;
+        color: #334155;
+      }
+      .sd-table tbody tr {
+        cursor: pointer;
+        transition: 0.2s;
+      }
+      .sd-table tbody tr:hover {
+        background-color: #f8fafc;
+      }
+
+      .sd-badge {
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 11px;
+        font-weight: 500;
+      }
+      .sd-badge-green {
+        background: #dcfce7;
+        color: #166534;
+      }
+      .sd-badge-orange {
+        background: #fef3c7;
+        color: #92400e;
+      }
+      .sd-badge-red {
+        background: #fee2e2;
+        color: #991b1b;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="sadbhav-dashboard-root" class="sadbhav-dash">
+      <div class="sd-header">
+        <div>
+          <h2>Welcome, <span id="sd-dynamic-username">Loading...</span> 👋</h2>
+          <p>
+            Store Manager Dashboard • Today:
+            <span id="sd-date-container"></span>
+          </p>
+        </div>
+        <div class="sd-btn-group">
+          <button class="sd-btn-quick" onclick="window.SD_SHOW_STATUS()">
+            📊 Current Status
+          </button>
+          <button class="sd-btn-quick" onclick="window.SD_SHOW_QUICK_ENTRY()">
+            ⚡ Quick Entry
+          </button>
+          <button class="sd-btn-primary" onclick="window.SD_NEW_GRN()">
+            + New GRN / Dispatch
+          </button>
+        </div>
+      </div>
+
+      <div class="sd-nav-cards">
+        <div
+          class="sd-nav-card"
+          onclick="frappe.set_route('List', 'Stock Ledger Entry')"
+        >
+          <div class="sd-nav-icon">🗃️</div>
+          <div><b>Inventory Master</b><br /><span>Manage items</span></div>
+        </div>
+        <div
+          class="sd-nav-card"
+          onclick="frappe.set_route('List', 'Purchase Receipt')"
+        >
+          <div class="sd-nav-icon" style="color: green">📥</div>
+          <div>
+            <b>Goods Received</b><br /><span>GRN / Purchase Entry</span>
+          </div>
+        </div>
+        <div
+          class="sd-nav-card"
+          onclick="frappe.set_route('List', 'Delivery Note')"
+        >
+          <div class="sd-nav-icon" style="color: blue">🚚</div>
+          <div>
+            <b>Material Dispatch</b><br /><span>Dispatch to Projects</span>
+          </div>
+        </div>
+        <div
+          class="sd-nav-card"
+          onclick="frappe.set_route('List', 'Stock Ledger Entry')"
+        >
+          <div class="sd-nav-icon" style="color: navy">🔄</div>
+          <div><b>Stock Movement</b><br /><span>In/Out Log</span></div>
+        </div>
+        <div class="sd-nav-card" onclick="frappe.set_route('List', 'Project')">
+          <div class="sd-nav-icon" style="color: purple">🏗️</div>
+          <div>
+            <b>Project Tracking</b><br /><span>Site Material Status</span>
+          </div>
+        </div>
+        <div
+          class="sd-nav-card"
+          onclick="
+            frappe.set_route('List', 'Purchase Receipt', { is_return: 1 })
+          "
+        >
+          <div class="sd-nav-icon" style="color: teal">↩️</div>
+          <div><b>Returns & GRN</b><br /><span>Returns / Damage</span></div>
+        </div>
+        <div
+          class="sd-nav-card"
+          onclick="frappe.set_route('List', 'Item Reorder')"
+        >
+          <div class="sd-nav-icon" style="color: orange">⚠️</div>
+          <div><b>Low Stock Alerts</b><br /><span>Reorder & Alerts</span></div>
+        </div>
+      </div>
+
+      <div
+        class="sd-metrics-grid"
+        id="sd-metrics-container"
+        style="display: none"
+      ></div>
+
+      <div id="sd-dynamic-view" style="display: none" class="sd-panel">
+        <div class="sd-panel-title">
+          <span id="sd-dynamic-title">Detail View</span>
+          <button
+            onclick="window.SD_CLOSE_DYNAMIC_VIEW()"
+            style="border: none; background: none; cursor: pointer"
+          >
+            ❌
+          </button>
+        </div>
+        <table class="sd-table">
+          <tbody id="sd-dynamic-table-body"></tbody>
+        </table>
+      </div>
+
+      <div class="sd-main-grid">
+        <div class="sd-panel">
+          <div class="sd-panel-title">
+            <span>📋 My Tasks (6)</span
+            ><a href="#" style="color: #2563eb">View All</a>
+          </div>
+          <div style="font-size: 12px; line-height: 2.5">
+            <div>
+              <input type="checkbox" /> Verify GRN #GRN-2458
+              <span class="sd-badge sd-badge-red" style="float: right"
+                >Due Today</span
+              >
+            </div>
+            <div>
+              <input type="checkbox" /> Dispatch Inverters
+              <span class="sd-badge sd-badge-red" style="float: right"
+                >Due Today</span
+              >
+            </div>
+          </div>
+        </div>
+
+        <div class="sd-panel">
+          <div class="sd-panel-title">
+            <span>🏗️ Project-wise Material Status</span
+            ><a href="#" style="color: #2563eb">View All</a>
+          </div>
+          <table class="sd-table">
+            <thead>
+              <tr>
+                <th>Project ID</th>
+                <th>Site</th>
+                <th>Pending</th>
+                <th>Dispatched</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="sd-project-table-body"></tbody>
+          </table>
+        </div>
+
+        <div class="sd-panel">
+          <div class="sd-panel-title">
+            <span>⚠️ Low Stock Alerts</span
+            ><a href="#" style="color: #2563eb">View All</a>
+          </div>
+          <table class="sd-table" style="line-height: 2">
+            <tbody id="sd-alerts-table-body"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </body>
+
+  <script>
+    // CRITICAL: Bind root element immediately
+    window.MY_ROOT = root_element;
+
+    // ---------------------------------------------------------
+    // TOP BUTTON ACTIONS
+    // ---------------------------------------------------------
+    window.SD_NEW_GRN = function () {
+      frappe.set_route("List", "Purchase Receipt");
+    };
+
+    // Toggle Current Status KPIs
+    window.SD_SHOW_STATUS = function () {
+      var metricsContainer = window.MY_ROOT.querySelector(
+        "#sd-metrics-container",
+      );
+      if (metricsContainer.style.display === "none") {
+        metricsContainer.style.display = "grid";
+        load_real_metrics();
+      } else {
+        metricsContainer.style.display = "none";
+        window.SD_CLOSE_DYNAMIC_VIEW();
+      }
+    };
+
+    // Quick Entry -> Loads Stock Entry Table
+    window.SD_SHOW_QUICK_ENTRY = function () {
+      window.SD_LOAD_DYNAMIC_TABLE("quick_entry", "⚡ Recent Stock Entries");
+    };
+
+    window.SD_CLOSE_DYNAMIC_VIEW = function () {
+      window.MY_ROOT.querySelector("#sd-dynamic-view").style.display = "none";
+    };
+
+    // ---------------------------------------------------------
+    // DYNAMIC TABLE RENDERER FOR CLICKED KPIs
+    // ---------------------------------------------------------
+    window.SD_LOAD_DYNAMIC_TABLE = function (kpi_type, title) {
+      window.MY_ROOT.querySelector("#sd-dynamic-view").style.display = "block";
+      window.MY_ROOT.querySelector("#sd-dynamic-title").textContent = title;
+      window.MY_ROOT.querySelector("#sd-dynamic-table-body").innerHTML =
+        "<tr><td>Loading data...</td></tr>";
+
+      frappe.call({
+        method: "get_store_dashboard_data",
+        args: { block: "kpi_table", kpi_type: kpi_type },
+        callback: function (r) {
+          if (r && r.message) {
+            var html = "";
+            for (var i = 0; i < r.message.length; i++) {
+              var row = r.message[i];
+              // Example formatting based on object keys returned from Python
+              html += "<tr>";
+              for (var key in row) {
+                html += "<td>" + row[key] + "</td>";
+              }
+              html += "</tr>";
+            }
+            window.MY_ROOT.querySelector("#sd-dynamic-table-body").innerHTML =
+              html;
+          } else {
+            window.MY_ROOT.querySelector("#sd-dynamic-table-body").innerHTML =
+              "<tr><td>No data found.</td></tr>";
+          }
+        },
+      });
+    };
+
+    // ---------------------------------------------------------
+    // STRING CONCAT HELPERS
+    // ---------------------------------------------------------
+    window.build_metric_card = function (title, value, icon, kpi_type) {
+      // Adding onclick event to load dynamic tables
+      return (
+        "<div class='sd-metric-card' onclick=\"window.SD_LOAD_DYNAMIC_TABLE('" +
+        kpi_type +
+        "', '" +
+        icon +
+        " " +
+        title +
+        "')\">" +
+        "<div class='sd-metric-title'>" +
+        icon +
+        " " +
+        title +
+        "</div>" +
+        "<div class='sd-metric-value'>" +
+        value +
+        "</div>" +
+        "</div>"
+      );
+    };
+
+    // ---------------------------------------------------------
+    // INITIAL DATA FETCHING
+    // ---------------------------------------------------------
+    function load_real_metrics() {
+      window.MY_ROOT.querySelector("#sd-metrics-container").innerHTML =
+        "<div style='grid-column: span 7; padding: 20px;'>Loading ERPNext Status...</div>";
+
+      frappe.call({
+        method: "get_store_dashboard_data",
+        args: { block: "metrics" },
+        callback: function (r) {
+          if (r && r.message) {
+            var m = r.message;
+            var html = "";
+            html += window.build_metric_card(
+              "Total Items",
+              m.total_items,
+              "📦",
+              "total_items",
+            );
+            html += window.build_metric_card(
+              "Current Stock Value",
+              m.stock_value,
+              "💵",
+              "stock_value",
+            );
+            html += window.build_metric_card(
+              "Reserved",
+              m.reserved,
+              "🔖",
+              "reserved",
+            );
+            html += window.build_metric_card(
+              "Available Stock",
+              m.available,
+              "✅",
+              "available",
+            );
+            html += window.build_metric_card(
+              "Low Stock Items",
+              m.low_stock,
+              "⚠️",
+              "low_stock",
+            );
+            html += window.build_metric_card(
+              "Pending Dispatch",
+              m.pending_dispatch,
+              "🚚",
+              "pending_dispatch",
+            );
+            html += window.build_metric_card(
+              "Pending GRN",
+              m.pending_grn,
+              "📥",
+              "pending_grn",
+            );
+
+            window.MY_ROOT.querySelector("#sd-metrics-container").innerHTML =
+              html;
+          }
+        },
+      });
+    }
+
+    function load_base_dashboard() {
+      // Set Header Date
+      var today = frappe.datetime.get_today();
+      window.MY_ROOT.querySelector("#sd-date-container").textContent = today;
+
+      // Fetch Dynamic User Name
+      frappe.call({
+        method: "get_store_dashboard_data",
+        args: { block: "user_info" },
+        callback: function (r) {
+          if (r && r.message && r.message.name) {
+            window.MY_ROOT.querySelector("#sd-dynamic-username").textContent =
+              r.message.name;
+          }
+        },
+      });
+
+      // Fetch Base Tables (Projects & Alerts)
+      frappe.call({
+        method: "get_store_dashboard_data",
+        args: { block: "project_status" },
+        callback: function (r) {
+          if (r && r.message) {
+            var html = "";
+            for (var i = 0; i < r.message.length; i++) {
+              var row = r.message[i];
+              html +=
+                "<tr onclick=\"frappe.set_route('Form', 'Project', '" +
+                row.id +
+                "')\">" +
+                "<td><b>" +
+                row.id +
+                "</b></td>" +
+                "<td>" +
+                row.site +
+                "</td><td>" +
+                row.pending +
+                "</td>" +
+                "<td>" +
+                row.dispatched +
+                "</td><td><span class='sd-badge sd-badge-" +
+                row.color +
+                "'>" +
+                row.status +
+                "</span></td></tr>";
+            }
+            window.MY_ROOT.querySelector("#sd-project-table-body").innerHTML =
+              html;
+          }
+        },
+      });
+
+      frappe.call({
+        method: "get_store_dashboard_data",
+        args: { block: "low_stock_alerts" },
+        callback: function (r) {
+          if (r && r.message) {
+            var html = "";
+            for (var i = 0; i < r.message.length; i++) {
+              var item = r.message[i];
+              html +=
+                "<tr onclick=\"frappe.set_route('Form', 'Item', '" +
+                item.item +
+                "')\">" +
+                "<td>" +
+                item.item +
+                "</td><td>" +
+                item.qty +
+                "</td>" +
+                "<td><span class='sd-badge sd-badge-red'>" +
+                item.alert +
+                "</span></td></tr>";
+            }
+            window.MY_ROOT.querySelector("#sd-alerts-table-body").innerHTML =
+              html;
+          }
+        },
+      });
+    }
+
+    // Init
+    load_base_dashboard();
+  </script>
+</html>

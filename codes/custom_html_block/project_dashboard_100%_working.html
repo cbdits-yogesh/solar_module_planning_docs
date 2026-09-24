@@ -1,0 +1,3317 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+
+    <style>
+      /* ============================================
+   SADBHAV RENEWABLE ERP — STYLES v5
+   Changes from v4:
+     1. Colorful (but professional) card theme —
+        stat cards, panels, and detail cards now carry
+        a soft tinted background + colored left/top accent
+        instead of plain white.
+     2. Date semantic classes: .sb-date-ontime (green) /
+        .sb-date-overdue (red) — used wherever a date is
+        rendered (Key Dates, End Date column, Payment due
+        dates).
+     3. Pipeline stage TAT badge (.sb-stg-tat).
+     4. CRM Follow-ups table wrapper now scrollable
+        (.sb-fu-scroll).
+     5. Removed unused rules tied to Project Status /
+        Quick Summary cards (kept generic ones that are
+        reused elsewhere e.g. sb-sum-item still used by
+        Payment Received / Payment Schedule swap-in).
+   ============================================ */
+
+      #sb-wrap {
+        display: flex;
+        height: 100vh;
+        min-height: 600px;
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        font-size: 13px;
+        color: #333;
+        background: #eef1f8;
+        overflow: hidden;
+        position: relative;
+        transition: all 0.25s ease;
+      }
+
+      /* ── MAIN ────────────────── */
+      #sb-main {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        min-width: 0;
+      }
+
+      #sb-topbar {
+        background: #fff;
+        border-bottom: 1px solid #e4e6ef;
+        padding: 8px 16px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-shrink: 0;
+        min-height: 50px;
+        z-index: 10;
+      }
+      .sb-back-link {
+        color: #5e64ff;
+        cursor: pointer;
+        font-size: 12.5px;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        white-space: nowrap;
+      }
+      .sb-back-link:hover {
+        text-decoration: underline;
+      }
+
+      /* Search with dropdown */
+      #sb-search-wrap {
+        flex: 1;
+        max-width: 380px;
+        position: relative;
+      }
+      .sb-search-icon {
+        position: absolute;
+        left: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #aaa;
+        font-size: 13px;
+      }
+      #sb-search {
+        width: 100%;
+        padding: 6px 12px 6px 28px;
+        border: 1px solid #e0e3ea;
+        border-radius: 20px;
+        font-size: 12.5px;
+        outline: none;
+        color: #555;
+        box-sizing: border-box;
+      }
+      #sb-search:focus {
+        border-color: #5e64ff;
+        border-radius: 20px 20px 0 0;
+      }
+      .sb-search-drop {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: #fff;
+        border: 1px solid #5e64ff;
+        border-top: none;
+        border-radius: 0 0 10px 10px;
+        max-height: 280px;
+        overflow-y: auto;
+        z-index: 100;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+      }
+      .sb-drop-item {
+        padding: 8px 14px;
+        cursor: pointer;
+        font-size: 12.5px;
+        border-bottom: 1px solid #f0f2f8;
+        transition: background 0.12s;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .sb-drop-item:last-child {
+        border-bottom: none;
+      }
+      .sb-drop-item:hover {
+        background: #f6f7fb;
+      }
+      .sb-drop-name {
+        font-weight: 600;
+        color: #1a2641;
+      }
+      .sb-drop-cust {
+        font-size: 11px;
+        color: #8a96b0;
+      }
+      .sb-drop-badge {
+        font-size: 10.5px;
+        font-weight: 500;
+        padding: 1px 6px;
+        border-radius: 8px;
+      }
+
+      #sb-topbar-actions {
+        display: flex;
+        gap: 8px;
+        margin-left: auto;
+        flex-shrink: 0;
+      }
+
+      .sb-btn-outline {
+        padding: 6px 12px;
+        border: 1px solid #d0d4e0;
+        background: #fff;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 12px;
+        color: #555;
+        transition: all 0.15s;
+        white-space: nowrap;
+      }
+      .sb-btn-outline:hover {
+        border-color: #5e64ff;
+        color: #5e64ff;
+      }
+      .sb-btn-primary {
+        padding: 6px 14px;
+        border: none;
+        background: linear-gradient(135deg, #5e64ff, #7c82ff);
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 12px;
+        color: #fff;
+        font-weight: 600;
+        transition: background 0.15s;
+        white-space: nowrap;
+      }
+      .sb-btn-primary:hover {
+        background: linear-gradient(135deg, #4a50e6, #6469f0);
+      }
+
+      /* ── LIST VIEW ───────────── */
+      #sb-list-view {
+        flex: 1;
+        overflow-y: auto;
+        overflow-x: hidden;
+      }
+      #sb-list-inner {
+        padding: 16px 20px 20px;
+      }
+      .sb-page-title {
+        font-size: 20px;
+        font-weight: 700;
+        color: #1a2641;
+        margin: 0 0 14px;
+      }
+
+      .sb-stat-row {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 10px;
+        flex-wrap: wrap;
+      }
+      .sb-stat-row2 {
+        margin-bottom: 14px;
+      }
+
+      /* ── COLORFUL STAT CARDS ──────────────────────
+   Each card gets a tinted background + a colored
+   top accent bar (via border-top) so the dashboard
+   reads as intentionally themed rather than plain white. */
+      .sb-stat {
+        background: #fff;
+        border: 1px solid #e4e6ef;
+        border-top: 3px solid #d0d4e0;
+        border-radius: 10px;
+        padding: 12px 14px;
+        display: flex;
+        align-items: center;
+        gap: 11px;
+        cursor: pointer;
+        flex: 1;
+        min-width: 130px;
+        transition:
+          box-shadow 0.2s,
+          transform 0.15s;
+      }
+      .sb-stat:hover {
+        box-shadow: 0 3px 12px rgba(0, 0, 0, 0.09);
+        transform: translateY(-1px);
+      }
+      .sb-stat-wide {
+        min-width: 200px;
+        flex: 1.4;
+      }
+
+      /* Tint each stat card by its icon-box color context */
+      .sb-stat:has(.si-grey) {
+        background: #f8f9fc;
+        border-top-color: #8a96b0;
+      }
+      .sb-stat:has(.si-green) {
+        background: #eefaf1;
+        border-top-color: #22a959;
+      }
+      .sb-stat:has(.si-red) {
+        background: #fdeeee;
+        border-top-color: #dc3545;
+      }
+      .sb-stat:has(.si-blue) {
+        background: #eef5fd;
+        border-top-color: #2670e8;
+      }
+      .sb-stat:has(.si-amber) {
+        background: #fef9ec;
+        border-top-color: #e8a020;
+      }
+      .sb-stat:has(.si-orange) {
+        background: #fff3e8;
+        border-top-color: #fd7e14;
+      }
+
+      .sb-stat-icon-box {
+        width: 38px;
+        height: 38px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 16px;
+        flex-shrink: 0;
+      }
+      .si-grey {
+        background: #e6e9f0;
+      }
+      .si-green {
+        background: #d5f0dd;
+      }
+      .si-red {
+        background: #fbd8d8;
+      }
+      .si-blue {
+        background: #d6e8fb;
+      }
+      .si-amber {
+        background: #fbedc4;
+      }
+      .si-orange {
+        background: #ffe1c7;
+      }
+      .sb-stat-val {
+        font-size: 20px;
+        font-weight: 700;
+        color: #1a2641;
+        line-height: 1.1;
+      }
+      .sb-stat-lbl {
+        font-size: 11px;
+        color: #8a96b0;
+        margin-top: 1px;
+      }
+      .sb-stat-sub {
+        font-size: 11.5px;
+        color: #5a6070;
+        font-weight: 500;
+        margin-top: 1px;
+      }
+      .clr-green {
+        color: #22a959;
+      }
+      .clr-red {
+        color: #dc3545;
+      }
+      .clr-blue {
+        color: #2670e8;
+      }
+      .clr-amber {
+        color: #e8a020;
+      }
+      .clr-orange {
+        color: #fd7e14;
+      }
+
+      #sb-filter-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 10px;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+      .sb-tabs {
+        display: flex;
+        gap: 3px;
+        background: #fff;
+        border: 1px solid #e4e6ef;
+        border-radius: 7px;
+        padding: 3px;
+      }
+      .sb-tab {
+        padding: 4px 13px;
+        border: none;
+        background: transparent;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 12px;
+        color: #666;
+        transition: all 0.15s;
+      }
+      .sb-tab.sb-tab-active {
+        background: #1a2641;
+        color: #fff;
+      }
+      .sb-tab:hover:not(.sb-tab-active) {
+        background: #f0f1f5;
+      }
+      .sb-filter-right {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+      }
+
+      /* Table compact */
+      .sb-table-wrap {
+        background: #fff;
+        border: 1px solid #e4e6ef;
+        border-radius: 10px;
+        overflow: hidden;
+        margin-bottom: 14px;
+        max-height: 300px;
+        overflow-y: auto;
+      }
+      .sb-table-wrap::-webkit-scrollbar {
+        width: 5px;
+      }
+      .sb-table-wrap::-webkit-scrollbar-thumb {
+        background: #d0d4e0;
+        border-radius: 3px;
+      }
+      #sb-proj-table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      #sb-proj-table thead {
+        position: sticky;
+        top: 0;
+        z-index: 2;
+      }
+      #sb-proj-table thead th {
+        background: #eef1fb;
+        padding: 8px 11px;
+        text-align: left;
+        font-size: 11.5px;
+        color: #5e64ff;
+        font-weight: 700;
+        border-bottom: 1px solid #e4e6ef;
+        white-space: nowrap;
+      }
+      #sb-proj-table tbody tr {
+        border-bottom: 1px solid #f0f2f8;
+        cursor: pointer;
+        transition: background 0.12s;
+      }
+      #sb-proj-table tbody tr:hover {
+        background: #f6f7fb;
+      }
+      #sb-proj-table tbody tr:last-child {
+        border-bottom: none;
+      }
+      #sb-proj-table tbody td {
+        padding: 7px 11px;
+        font-size: 12px;
+        vertical-align: middle;
+      }
+
+      .sb-loading-row {
+        text-align: center;
+        padding: 28px;
+        color: #aaa;
+        font-size: 13px;
+      }
+      .sb-loading-sm {
+        color: #aaa;
+        font-size: 12px;
+        padding: 6px 0;
+      }
+      .sb-proj-id {
+        font-weight: 600;
+        color: #1a2641;
+        font-size: 12px;
+      }
+      .sb-proj-sub {
+        font-size: 11px;
+        color: #aaa;
+        margin-top: 2px;
+      }
+      .sb-cust-name {
+        font-weight: 500;
+        color: #333;
+        font-size: 12px;
+      }
+      .sb-cust-loc {
+        font-size: 11px;
+        color: #aaa;
+      }
+      .sb-prog-wrap {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+      }
+      .sb-prog-bg {
+        width: 70px;
+        height: 5px;
+        background: #e8e8e8;
+        border-radius: 3px;
+        overflow: hidden;
+      }
+      .sb-prog-fill {
+        height: 100%;
+        border-radius: 3px;
+      }
+      .pf-green {
+        background: #22a959;
+      }
+      .pf-blue {
+        background: #2670e8;
+      }
+      .pf-orange {
+        background: #fd7e14;
+      }
+      .pf-gray {
+        background: #bbb;
+      }
+
+      .sb-pending-amt {
+        text-align: right;
+        font-size: 12px;
+        color: #555;
+      }
+      .sb-more-btn {
+        background: none;
+        border: none;
+        cursor: pointer;
+        color: #aaa;
+        font-size: 16px;
+        padding: 0 4px;
+      }
+      .sb-more-btn:hover {
+        color: #555;
+      }
+
+      /* ── SEMANTIC DATE COLORING ─────────────────
+   Applied to any rendered date value: green = on time /
+   within SLA, red = overdue / breached SLA. */
+      .sb-date-ontime {
+        color: #1e8e3e;
+        font-weight: 600;
+      }
+      .sb-date-overdue {
+        color: #dc3545;
+        font-weight: 700;
+      }
+      .sb-date-neutral {
+        color: #333;
+        font-weight: 500;
+      }
+
+      /* ── BOTTOM PANELS ─── */
+      #sb-bottom-panels {
+        display: flex;
+        gap: 12px;
+        flex-wrap: nowrap;
+        min-height: 130px;
+      }
+      .sb-panel {
+        border-radius: 12px;
+        padding: 16px;
+        flex: 1;
+        min-width: 0;
+        overflow: hidden;
+        border: 1px solid #e4e6ef;
+      }
+
+      .sb-pay-overview-panel {
+        background: #eef0ff;
+        border-top: 3px solid #5e64ff;
+      }
+      .sb-sites-panel {
+        background: #eaf7ee;
+        border-top: 3px solid #22a959;
+      }
+      .sb-qs-panel {
+        background: #fef7e8;
+        border-top: 3px solid #e8a020;
+      }
+
+      .sb-panel-hdr {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 12px;
+        font-weight: 700;
+        font-size: 13px;
+        color: #1a2641;
+      }
+      .sb-link-btn {
+        background: none;
+        border: none;
+        color: #5e64ff;
+        cursor: pointer;
+        font-size: 12px;
+        padding: 0;
+      }
+      .sb-link-btn:hover {
+        text-decoration: underline;
+      }
+
+      /* Payment overview */
+      .sb-pay-row {
+        display: flex;
+        gap: 0;
+      }
+      .sb-pay-col {
+        text-align: center;
+        flex: 1;
+        padding: 4px 0;
+      }
+      .sb-pay-val {
+        font-size: 18px;
+        font-weight: 700;
+        color: #1a2641;
+        cursor: pointer;
+        line-height: 1.2;
+      }
+      .sb-pay-val:hover {
+        text-decoration: underline;
+      }
+      .sb-pay-lbl {
+        font-size: 11px;
+        color: #8a96b0;
+        margin-top: 2px;
+      }
+      .sb-pay-divider {
+        width: 1px;
+        background: #d6dbf5;
+        margin: 4px 0;
+      }
+
+      /* ── DETAIL VIEW ─────────── */
+      #sb-detail-view {
+        flex: 1;
+        overflow-y: auto;
+        overflow-x: hidden;
+      }
+      #sb-detail-inner {
+        padding-bottom: 30px;
+      }
+
+      .sb-d-topbar {
+        background: #fff;
+        border-bottom: 1px solid #e4e6ef;
+        padding: 11px 20px;
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        flex-wrap: wrap;
+        position: sticky;
+        top: 0;
+        z-index: 5;
+      }
+
+      .sb-d-title {
+        font-size: 17px;
+        font-weight: 700;
+        color: #1a2641;
+      }
+
+      /* Status badges */
+      .db-complete {
+        background: #e6f4ea !important;
+        color: #1e8e3e !important;
+        border: 1px solid #a8d5b5 !important;
+        padding: 4px 10px !important;
+        border-radius: 12px !important;
+        font-size: 11px !important;
+        font-weight: 600 !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        gap: 4px !important;
+        white-space: nowrap !important;
+      }
+      .db-open {
+        background: #e8f0fe !important;
+        color: #1a73e8 !important;
+        border: 1px solid #d2e3fc !important;
+        padding: 4px 10px !important;
+        border-radius: 12px !important;
+        font-size: 11px !important;
+        font-weight: 600 !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        gap: 4px !important;
+        white-space: nowrap !important;
+      }
+      .db-delayed {
+        background: #fff3e0 !important;
+        color: #fd7e14 !important;
+        border: 1px solid #ffc07a !important;
+        padding: 4px 10px !important;
+        border-radius: 12px !important;
+        font-size: 11px !important;
+        font-weight: 600 !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        gap: 4px !important;
+        white-space: nowrap !important;
+      }
+      .db-cancelled {
+        background: #fce8e6 !important;
+        color: #d93025 !important;
+        border: 1px solid #fad2cf !important;
+        padding: 4px 10px !important;
+        border-radius: 12px !important;
+        font-size: 11px !important;
+        font-weight: 600 !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        gap: 4px !important;
+        white-space: nowrap !important;
+      }
+
+      .db-cash {
+        background: #fff8e1;
+        color: #e8a020;
+        border: 1px solid #ffc107;
+        padding: 3px 11px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 600;
+      }
+      .sb-d-meta {
+        font-size: 12px;
+        color: #7a8099;
+        display: flex;
+        flex-wrap: wrap;
+      }
+      .sb-d-meta span {
+        margin-right: 14px;
+      }
+      .sb-d-meta strong {
+        color: #333;
+      }
+      .sb-d-dl-btn {
+        margin-left: auto;
+        padding: 6px 13px;
+        border: 1px solid #d0d4e0;
+        background: #fff;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 12px;
+        color: #555;
+        white-space: nowrap;
+      }
+      .sb-d-dl-btn:hover {
+        border-color: #5e64ff;
+        color: #5e64ff;
+      }
+      .sb-d-open-btn {
+        padding: 6px 13px;
+        border: 1px solid #5e64ff;
+        background: linear-gradient(135deg, #5e64ff, #7c82ff);
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 12px;
+        color: #fff;
+        white-space: nowrap;
+      }
+      .sb-d-open-btn:hover {
+        background: linear-gradient(135deg, #4a50e6, #6469f0);
+      }
+
+      /* Pipeline */
+      .sb-pipeline {
+        background: #f7f8fd;
+        border-bottom: 1px solid #e4e6ef;
+        padding: 16px 20px;
+      }
+      .sb-stages {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        width: 100%;
+      }
+      .sb-stage {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        flex: 1;
+        cursor: pointer;
+        transition: opacity 0.15s;
+        position: relative;
+        min-width: 0;
+      }
+      .sb-stage:not(:last-child)::after {
+        content: "";
+        position: absolute;
+        top: 16px;
+        left: calc(50% + 16px);
+        right: calc(-50% + 16px);
+        height: 2px;
+        background: #d6dbf0;
+        z-index: 0;
+      }
+      .sb-stage.stg-done:not(:last-child)::after {
+        background: #22a959;
+      }
+      .sb-stage.stg-done.stg-breached:not(:last-child)::after {
+        background: #dc3545;
+      }
+      .sb-stage.stg-disabled {
+        cursor: default;
+        opacity: 0.55;
+      }
+      .sb-stage:not(.stg-disabled):hover {
+        opacity: 0.8;
+      }
+
+      .sb-stg-circle {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: #e8ecf5;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+        margin-bottom: 5px;
+        font-weight: 600;
+        color: #7a8099;
+        position: relative;
+        z-index: 1;
+        flex-shrink: 0;
+      }
+      .sb-stage.stg-done .sb-stg-circle {
+        background: #e6f4ea;
+        color: #22a959;
+        font-size: 15px;
+        border: 2px solid #a8d5b5;
+      }
+      .sb-stage.stg-current .sb-stg-circle {
+        background: #e3f0fd;
+        color: #2670e8;
+        box-shadow: 0 0 0 3px rgba(38, 112, 232, 0.15);
+      }
+      /* Done but breached SLA -> red, per request */
+      .sb-stage.stg-done.stg-breached .sb-stg-circle {
+        background: #fde8e8;
+        color: #dc3545;
+        border: 2px solid #f3a9a9;
+      }
+
+      .sb-stg-name {
+        font-size: 10.5px;
+        font-weight: 600;
+        color: #333;
+        text-align: center;
+        line-height: 1.2;
+      }
+      .sb-stg-sub {
+        font-size: 9.5px;
+        color: #aaa;
+        text-align: center;
+      }
+
+      /* TAT badge shown under each stage */
+      .sb-stg-tat {
+        font-size: 9px;
+        font-weight: 700;
+        text-align: center;
+        margin-top: 3px;
+        padding: 1px 6px;
+        border-radius: 8px;
+        display: inline-block;
+        background: #eef0ff;
+        color: #5e64ff;
+      }
+      .sb-stage.stg-done .sb-stg-tat {
+        background: #e6f4ea;
+        color: #1e8e3e;
+      }
+      .sb-stage.stg-done.stg-breached .sb-stg-tat {
+        background: #fde8e8;
+        color: #dc3545;
+      }
+
+      /* Delay alerts */
+      .sb-alerts-bar {
+        background: #fff8e1;
+        border: 1px solid #ffe082;
+        border-radius: 8px;
+        padding: 10px 16px;
+        margin: 12px 20px;
+        font-size: 12px;
+        position: relative;
+      }
+      .sb-alerts-title {
+        font-weight: 600;
+        color: #e8a020;
+        margin-bottom: 6px;
+      }
+      .sb-alert-item {
+        color: #666;
+        margin-bottom: 3px;
+        padding-left: 14px;
+        position: relative;
+      }
+      .sb-alert-item::before {
+        content: "●";
+        position: absolute;
+        left: 0;
+        color: #dc3545;
+      }
+      .sb-view-analysis {
+        position: absolute;
+        right: 14px;
+        bottom: 10px;
+        font-size: 12px;
+        color: #5e64ff;
+        cursor: pointer;
+      }
+      .sb-view-analysis:hover {
+        text-decoration: underline;
+      }
+
+      /* Detail grid — 4 columns */
+      .sb-d-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 12px;
+        padding: 12px 20px;
+        align-items: start;
+      }
+      .sb-card {
+        background: #fff;
+        border: 1px solid #e4e6ef;
+        border-top: 3px solid #d0d4e0;
+        border-radius: 10px;
+        padding: 14px;
+        min-width: 0;
+      }
+      .sb-card.c2 {
+        grid-column: span 2;
+      }
+      .sb-card.c3 {
+        grid-column: span 3;
+      }
+      .sb-card.c4 {
+        grid-column: 1 / -1;
+      }
+
+      /* Colorful accents per card type (targeted by data-card attr, set in JS) */
+      .sb-card[data-card="info"] {
+        background: #f5f7ff;
+        border-top-color: #5e64ff;
+      }
+      .sb-card[data-card="key-dates"] {
+        background: #fef9ec;
+        border-top-color: #e8a020;
+      }
+      .sb-card[data-card="crm"] {
+        background: #f3f8ff;
+        border-top-color: #2670e8;
+      }
+      .sb-card[data-card="team"] {
+        background: #f2fbf5;
+        border-top-color: #22a959;
+      }
+      .sb-card[data-card="pay-sched"] {
+        background: #fff5ea;
+        border-top-color: #fd7e14;
+      }
+      .sb-card[data-card="pay-recv"] {
+        background: #f0fbf3;
+        border-top-color: #22a959;
+      }
+      .sb-card[data-card="delay"] {
+        background: #fdf1f1;
+        border-top-color: #dc3545;
+      }
+      .sb-card[data-card="photos"] {
+        background: #f6f5fe;
+        border-top-color: #9b59b6;
+      }
+      .sb-card[data-card="progress"] {
+        background: #eef8fb;
+        border-top-color: #17a2b8;
+      }
+
+      .sb-card-title {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        font-size: 13px;
+        font-weight: 700;
+        color: #1a2641;
+        margin-bottom: 12px;
+      }
+      .sb-card-icon {
+        font-size: 15px;
+      }
+
+      .sb-field {
+        display: flex;
+        margin-bottom: 6px;
+        font-size: 12px;
+        align-items: flex-start;
+      }
+      .sb-flabel {
+        color: #8a96b0;
+        min-width: 120px;
+        flex-shrink: 0;
+        font-size: 11.5px;
+      }
+      .sb-fvalue {
+        color: #333;
+        font-weight: 500;
+        flex: 1;
+        word-break: break-word;
+        font-size: 12px;
+      }
+      .sb-flink {
+        color: #5e64ff;
+        cursor: pointer;
+      }
+      .sb-flink:hover {
+        text-decoration: underline;
+      }
+      .sb-fna {
+        color: #bbb;
+        font-style: italic;
+        font-size: 11px;
+      }
+
+      /* Mini table */
+      .sb-mini-tbl {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 12px;
+      }
+      .sb-mini-tbl th {
+        background: #f8f9fc;
+        padding: 7px 9px;
+        text-align: left;
+        font-weight: 600;
+        color: #7a8099;
+        border-bottom: 1px solid #e4e6ef;
+        white-space: nowrap;
+      }
+      .sb-mini-tbl td {
+        padding: 7px 9px;
+        border-bottom: 1px solid #f0f2f8;
+        color: #333;
+      }
+      .sb-mini-tbl tr:last-child td {
+        border-bottom: none;
+      }
+      .sb-mini-tbl tbody tr:hover {
+        background: #f6f7fb;
+        cursor: pointer;
+      }
+      .sb-tbl-badge {
+        padding: 2px 8px;
+        border-radius: 10px;
+        font-size: 11px;
+        font-weight: 500;
+      }
+      .tbg-prog {
+        background: #e3f0fd;
+        color: #2670e8;
+      }
+      .tbg-done {
+        background: #e6f4ea;
+        color: #22a959;
+      }
+      .tbg-late {
+        background: #fde8e8;
+        color: #e81e6b;
+      }
+      .tbg-warn {
+        background: #fff3e0;
+        color: #fd7e14;
+      }
+
+      /* CRM Follow-ups scroll wrapper */
+      .sb-fu-scroll {
+        max-height: 260px;
+        overflow-y: auto;
+        overflow-x: auto;
+        border-radius: 6px;
+      }
+      .sb-fu-scroll::-webkit-scrollbar {
+        width: 6px;
+      }
+      .sb-fu-scroll::-webkit-scrollbar-thumb {
+        background: #cfd4ea;
+        border-radius: 3px;
+      }
+      .sb-fu-scroll .sb-mini-tbl thead th {
+        position: sticky;
+        top: 0;
+        z-index: 1;
+      }
+
+      /* Quick Summary / reused sum-item styling (now used for Payment Received tiles etc.) */
+      .sb-sum-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+      }
+      .sb-sum-item {
+        text-align: center;
+        padding: 10px 6px;
+        background: #f8f9fc;
+        border-radius: 7px;
+        cursor: pointer;
+        transition: background 0.15s;
+      }
+      .sb-sum-item:hover {
+        background: #eef0f8;
+      }
+      .sb-sum-val {
+        font-size: 14px;
+        font-weight: 700;
+        color: #1a2641;
+        line-height: 1.3;
+      }
+      .sb-sum-lbl {
+        font-size: 10px;
+        color: #8a96b0;
+        margin-top: 2px;
+      }
+
+      /* Key dates */
+      .sb-date-row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 5px;
+        padding-bottom: 5px;
+        border-bottom: 1px solid #f0f2f8;
+        font-size: 12px;
+      }
+      .sb-date-row:last-child {
+        border-bottom: none;
+      }
+      .sb-date-key {
+        color: #8a96b0;
+      }
+      .sb-date-val {
+        font-weight: 500;
+      }
+
+      /* Team */
+      .sb-team-section {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      .sb-pm-row {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 8px 10px;
+        background: #eef0ff;
+        border-radius: 8px;
+        border-left: 3px solid #5e64ff;
+      }
+      .sb-pm-label {
+        font-size: 10px;
+        color: #5e64ff;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+      .sb-pm-name {
+        font-size: 13px;
+        font-weight: 700;
+        color: #1a2641;
+      }
+      .sb-team-wrap {
+        display: flex;
+        gap: 14px;
+        flex-wrap: wrap;
+      }
+      .sb-member {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        cursor: pointer;
+      }
+      .sb-member:hover .sb-member-name {
+        color: #5e64ff;
+        text-decoration: underline;
+      }
+      .sb-avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #5e64ff, #7c82ff);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        font-weight: 700;
+        font-size: 14px;
+        flex-shrink: 0;
+      }
+      .sb-avatar-pm {
+        background: linear-gradient(135deg, #1a2641, #2670e8);
+        width: 40px;
+        height: 40px;
+      }
+      .sb-member-name {
+        font-size: 12.5px;
+        font-weight: 600;
+        color: #333;
+      }
+      .sb-member-role {
+        font-size: 11px;
+        color: #8a96b0;
+      }
+
+      .sb-team-separator {
+        border-top: 1px solid #e4e6ef;
+        margin: 16px 0 12px 0;
+        padding-top: 12px;
+        font-size: 10px;
+        color: #8a96b0;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      /* Photos */
+      .sb-photo-card-wrap {
+        display: flex;
+        gap: 20px;
+      }
+      .sb-photo-section {
+        flex: 1;
+        min-width: 0;
+        margin-bottom: 0;
+      }
+      .sb-photo-section-title {
+        font-size: 12px;
+        font-weight: 600;
+        color: #5a6070;
+        margin-bottom: 8px;
+        padding-bottom: 5px;
+        border-bottom: 1px solid #e4e6ef;
+      }
+      .sb-photos-wrap {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+      .sb-photo-box {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        cursor: pointer;
+      }
+      .sb-photo-thumb {
+        width: 95px;
+        height: 68px;
+        border-radius: 7px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #e8ecf5;
+        font-size: 26px;
+        transition: opacity 0.15s;
+        overflow: hidden;
+      }
+      .sb-photo-thumb img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 7px;
+      }
+      .sb-photo-thumb:hover {
+        opacity: 0.82;
+      }
+      .sb-photo-lbl {
+        font-size: 10px;
+        color: #8a96b0;
+        margin-top: 3px;
+        text-align: center;
+        width: 95px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      /* Follow-up stage header */
+      .sb-fu-stage-hdr {
+        background: #eef0ff;
+        padding: 4px 9px;
+        font-size: 11px;
+        font-weight: 700;
+        color: #5e64ff;
+        border-radius: 4px;
+        margin: 8px 0 4px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      /* ── MODAL ────────────────── */
+      #sb-modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 10000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      #sb-modal-bg {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(26, 38, 65, 0.45);
+      }
+      #sb-modal-box {
+        position: relative;
+        background: #fff;
+        border-radius: 10px;
+        width: 92%;
+        max-width: 860px;
+        max-height: 84vh;
+        overflow-y: auto;
+        box-shadow: 0 14px 44px rgba(0, 0, 0, 0.22);
+      }
+      #sb-modal-hdr {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 14px 20px;
+        border-bottom: 1px solid #e4e6ef;
+        font-weight: 700;
+        font-size: 15px;
+        color: #1a2641;
+        position: sticky;
+        top: 0;
+        background: #fff;
+        z-index: 1;
+      }
+      .sb-modal-close {
+        background: none;
+        border: none;
+        font-size: 18px;
+        cursor: pointer;
+        color: #8a96b0;
+      }
+      .sb-modal-close:hover {
+        color: #1a2641;
+      }
+      #sb-modal-body {
+        padding: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="sb-wrap">
+      <div id="sb-main">
+        <div id="sb-topbar">
+          <div id="sb-back-btn" style="display: none">
+            <a onclick="window.sbShowList()" class="sb-back-link">
+              <i class="fa fa-arrow-left"></i> Back to Projects
+            </a>
+          </div>
+          <div id="sb-search-wrap">
+            <i class="fa fa-search sb-search-icon"></i>
+            <input
+              id="sb-search"
+              type="text"
+              placeholder="Search by Customer, Order ID, Lead ID..."
+            />
+            <div
+              id="sb-search-drop"
+              class="sb-search-drop"
+              style="display: none"
+            ></div>
+          </div>
+          <div id="sb-topbar-actions">
+            <button class="sb-btn-outline" onclick="window.sbDownloadReport()">
+              <i class="fa fa-download"></i> Export CSV
+            </button>
+            <button
+              class="sb-btn-outline"
+              onclick="
+                window.open(
+                  'https://sadbhavuat.getmyerp.com/app/tool-manager',
+                  '_self',
+                )
+              "
+            >
+              <i class="fa fa-wrench"></i> Tool
+            </button>
+            <button class="sb-btn-primary" onclick="window.sbNewProject()">
+              + New Project
+            </button>
+          </div>
+        </div>
+
+        <!-- LIST VIEW -->
+        <div id="sb-list-view">
+          <div id="sb-list-inner">
+            <h2 class="sb-page-title">Projects Dashboard</h2>
+
+            <div id="sb-stat-row1" class="sb-stat-row">
+              <div style="color: #aaa; font-size: 13px; padding: 10px">
+                <i class="fa fa-spinner fa-spin"></i> Loading...
+              </div>
+            </div>
+            <div
+              id="sb-stat-row2"
+              class="sb-stat-row sb-stat-row2"
+              style="display: none"
+            ></div>
+
+            <!-- Plant Category Filter -->
+            <div
+              id="sb-category-filter"
+              style="
+                display: flex;
+                align-items: center;
+                margin-bottom: 8px;
+                padding: 6px 0;
+              "
+            ></div>
+
+            <div id="sb-filter-row">
+              <div class="sb-tabs">
+                <button
+                  class="sb-tab sb-tab-active"
+                  onclick="window.sbFilter('All')"
+                >
+                  All
+                </button>
+                <button class="sb-tab" onclick="window.sbFilter('Ongoing')">
+                  Ongoing
+                </button>
+                <button class="sb-tab" onclick="window.sbFilter('Delayed')">
+                  Delayed
+                </button>
+                <button class="sb-tab" onclick="window.sbFilter('Completed')">
+                  Completed
+                </button>
+              </div>
+              <div class="sb-filter-right">
+                <button
+                  class="sb-btn-outline"
+                  onclick="window.sbDownloadReport()"
+                >
+                  <i class="fa fa-file-text-o"></i> Download Report
+                  <i class="fa fa-caret-down"></i>
+                </button>
+              </div>
+            </div>
+
+            <div class="sb-table-wrap">
+              <table id="sb-proj-table">
+                <thead>
+                  <tr>
+                    <th>Project Info</th>
+                    <th>Customer</th>
+                    <th>Capacity</th>
+                    <th>Progress</th>
+                    <th>Status</th>
+                    <th>Plant Category</th>
+                    <th>Last Activity</th>
+                    <th>End Date</th>
+                    <th style="text-align: right">Payment Recv %</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody id="sb-proj-tbody">
+                  <tr>
+                    <td colspan="9" class="sb-loading-row">
+                      <i class="fa fa-spinner fa-spin"></i> Loading projects...
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Bottom 2 panels (Sites Overview removed) -->
+            <div id="sb-bottom-panels">
+              <div class="sb-panel sb-pay-overview-panel">
+                <div class="sb-panel-hdr">
+                  <span
+                    ><i
+                      class="fa fa-credit-card"
+                      style="color: #5e64ff; margin-right: 6px"
+                    ></i
+                    >Payments Overview</span
+                  >
+                </div>
+                <div id="sb-pay-panel">
+                  <div class="sb-loading-sm">
+                    <i class="fa fa-spinner fa-spin"></i>
+                  </div>
+                </div>
+              </div>
+              <div class="sb-panel sb-qs-panel">
+                <div class="sb-panel-hdr">
+                  <span
+                    ><i
+                      class="fa fa-bolt"
+                      style="color: #e8a020; margin-right: 6px"
+                    ></i
+                    >Quick Stats</span
+                  >
+                </div>
+                <div id="sb-qs-panel">
+                  <div class="sb-loading-sm">
+                    <i class="fa fa-spinner fa-spin"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- DETAIL VIEW -->
+        <div id="sb-detail-view" style="display: none">
+          <div id="sb-detail-inner">
+            <div class="sb-loading-row" style="padding: 60px">
+              <i class="fa fa-spinner fa-spin"></i> Loading project details...
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL -->
+    <div id="sb-modal" style="display: none">
+      <div id="sb-modal-bg" onclick="window.sbCloseModal()"></div>
+      <div id="sb-modal-box">
+        <div id="sb-modal-hdr">
+          <span id="sb-modal-title">Details</span>
+          <button onclick="window.sbCloseModal()" class="sb-modal-close">
+            &#10005;
+          </button>
+        </div>
+        <div id="sb-modal-body"></div>
+      </div>
+    </div>
+  </body>
+
+  <script>
+    /* ============================================================
+   SADBHAV DASHBOARD — JS v11
+   Changes from v10:
+     1. Date semantic coloring: sbDateCls()/sbDateSpan() helper
+        colors any rendered date green (on time) or red
+        (overdue / past SLA) — applied to Key Dates, End Date
+        column, and Payment Schedule due dates.
+     2. Pipeline stages now show a TAT badge under each stage
+        (uses stage.completed_date / stage.end_date +
+        stage.sla_breached supplied by the backend); a stage
+        that is done but breached its SLA now renders red
+        instead of green (stg-breached class).
+     3. Removed "Project Status" and "Quick Summary" cards from
+        the detail grid; that slot now shows Payment Schedule
+        and Payment Received tables directly (the older, lower
+        duplicate Payment Schedule / Payment Received cards
+        have been removed so each only appears once).
+     4. CRM Follow-ups table body wrapped in a scrollable
+        container (.sb-fu-scroll).
+     5. Cards tagged with data-card="..." so the new CSS can
+        tint each one distinctly.
+   ============================================================ */
+
+    var _sb = {
+      allProjects: [],
+      filtered: [],
+      filter: "All",
+      query: "",
+      stats: {},
+      loaded: false,
+      categoryFilter: "",
+    };
+
+    var dom = typeof root_element !== "undefined" ? root_element : document;
+
+    /* ─── STAGE BADGE COLORS ──────────────────────────────────── */
+    var _sbStageColors = {
+      Lead: { bg: "#e3f0fd", color: "#2670e8" },
+      "Site Survey": { bg: "#f4ecf7", color: "#9b59b6" },
+      Proposal: { bg: "#fff8e1", color: "#e8a020" },
+      "Sales Order": { bg: "#fff3e0", color: "#fd7e14" },
+      Dispatch: { bg: "#e6f4ea", color: "#22a959" },
+      Synchronization: { bg: "#fde8e8", color: "#e81e6b" },
+      Project: { bg: "#f0f1f5", color: "#1a2641" },
+    };
+
+    /* Standard TAT (days) shown on stages where backend doesn't
+   supply an explicit tat_days value. Kept as a simple fallback
+   map matching the "Progress Photos Tracking" standards already
+   used elsewhere on this dashboard. */
+    var _sbStageStdTat = {
+      Dispatch: 6,
+      Installation: 5,
+      Synchronization: 6,
+    };
+
+    /* ─── FORMAT HELPERS ──────────────────────────────────────── */
+    function sbFmtCr(v) {
+      if (!v || v === 0) return "\u20B90.00 Cr";
+      return "\u20B9" + (v / 10000000).toFixed(2) + " Cr";
+    }
+    function sbFmtCr1(v) {
+      if (!v || v === 0) return "\u20B90.0 Cr";
+      return "\u20B9" + (v / 10000000).toFixed(1) + " Cr";
+    }
+    function sbFmtINR(v) {
+      if (!v) return "\u20B90";
+      return "\u20B9" + parseFloat(v).toLocaleString("en-IN");
+    }
+    function sbCapacity(cap) {
+      if (!cap || cap === "N/A") return "\u2014";
+      var s = String(cap).trim();
+      return s.toLowerCase().indexOf("kw") > -1 ? s : s + " kW";
+    }
+    function sbInitials(name) {
+      if (!name) return "U";
+      var p = name.trim().split(" ");
+      return p.length > 1
+        ? (p[0][0] + p[1][0]).toUpperCase()
+        : name.substr(0, 2).toUpperCase();
+    }
+
+    /* ─── DATE SEMANTIC COLORING ───────────────────────────────
+   sbDateSpan(dateStr, dueDateStr, opts) wraps a date string in
+   a colored span:
+     - green (.sb-date-ontime)  when there's no due date to
+       compare against, or the date is on/before the due date
+     - red   (.sb-date-overdue) when the date is after its due
+       date, OR (no completion date yet) today has already
+       passed the due date
+   Values like "Pending" / "N/A" / "\u2014" are left neutral. */
+    function sbIsBlankDate(v) {
+      if (!v) return true;
+      var s = String(v).trim();
+      return (
+        s === "" ||
+        s === "Pending" ||
+        s === "N/A" ||
+        s === "\u2014" ||
+        s.indexOf("N/A") === 0
+      );
+    }
+    function sbDateSpan(dateStr, dueDateStr) {
+      if (sbIsBlankDate(dateStr)) {
+        return (
+          '<span class="sb-date-neutral">' + (dateStr || "\u2014") + "</span>"
+        );
+      }
+      if (sbIsBlankDate(dueDateStr)) {
+        return '<span class="sb-date-neutral">' + dateStr + "</span>";
+      }
+      var d1 = new Date(dateStr);
+      var d2 = new Date(dueDateStr);
+      if (isNaN(d1) || isNaN(d2)) {
+        return '<span class="sb-date-neutral">' + dateStr + "</span>";
+      }
+      var cls = d1 <= d2 ? "sb-date-ontime" : "sb-date-overdue";
+      return '<span class="' + cls + '">' + dateStr + "</span>";
+    }
+    /* For a single date compared against "today" (e.g. table End Date
+   column, where there's no explicit completion vs due pairing —
+   overdue if the date has already passed and isn't marked done). */
+    function sbDueSpan(dateStr, isDone) {
+      if (sbIsBlankDate(dateStr))
+        return (
+          '<span class="sb-date-neutral">' + (dateStr || "N/A") + "</span>"
+        );
+      var d = new Date(dateStr);
+      if (isNaN(d))
+        return '<span class="sb-date-neutral">' + dateStr + "</span>";
+      var today = new Date();
+      today.setHours(0, 0, 0, 0);
+      if (!isDone && d < today)
+        return '<span class="sb-date-overdue">' + dateStr + "</span>";
+      return '<span class="sb-date-ontime">' + dateStr + "</span>";
+    }
+
+    /* ─── sbGo — full module route map ───────────────────────── */
+    function sbGo(module) {
+      var routes = {
+        Lead: ["List", "Lead"],
+        "Site Survey": ["List", "Site Survey"],
+        Quotation: ["List", "Quotation"],
+        "Purchase Order": ["List", "Purchase Order"],
+        "Stock Entry": ["List", "Stock Entry"],
+        Report: ["List", "Report"],
+        Attendance: ["List", "Attendance"],
+        "Leave Application": ["List", "Leave Application"],
+      };
+      var r = routes[module];
+      if (r) frappe.set_route(r[0], r[1]);
+      else frappe.set_route("List", module);
+    }
+
+    /* ─── CRM SUBMENU TOGGLE ──────────────────────────────────── */
+    function sbToggleCRMMenu(e) {
+      e.stopPropagation();
+      var sub = dom.querySelector("#sb-crm-sub");
+      var arrow = dom.querySelector("#sb-crm-arrow");
+      if (!sub) return;
+      var open = sub.style.display === "block";
+      sub.style.display = open ? "none" : "block";
+      if (arrow)
+        arrow.className = open
+          ? "fa fa-chevron-down sb-crm-arrow-icon"
+          : "fa fa-chevron-up sb-crm-arrow-icon";
+    }
+
+    /* ─── SIDEBAR TOGGLE ──────────────────────────────────────── */
+    function sbToggleSidebar() {
+      var wrap = dom.querySelector("#sb-wrap");
+      if (wrap) wrap.classList.toggle("sb-collapsed");
+    }
+
+    /* ─── INIT ────────────────────────────────────────────────── */
+    function sbInit() {
+      var searchInput = dom.querySelector("#sb-search");
+      if (searchInput) {
+        searchInput.addEventListener(
+          "keydown",
+          function (e) {
+            e.stopPropagation();
+            e.stopImmediatePropagation();
+          },
+          true,
+        );
+        searchInput.addEventListener(
+          "keyup",
+          function (e) {
+            e.stopPropagation();
+            e.stopImmediatePropagation();
+            window.sbSearch(searchInput.value);
+          },
+          true,
+        );
+        searchInput.addEventListener(
+          "keypress",
+          function (e) {
+            e.stopPropagation();
+            e.stopImmediatePropagation();
+          },
+          true,
+        );
+        searchInput.addEventListener("focus", function () {
+          window.sbShowAllInSearch();
+          window._sb_orig_onkeydown = document.onkeydown;
+          document.onkeydown = null;
+          try {
+            if (frappe.ui && frappe.ui.keys && frappe.ui.keys.disable)
+              frappe.ui.keys.disable();
+          } catch (ex) {}
+        });
+        searchInput.addEventListener("blur", function () {
+          if (typeof window._sb_orig_onkeydown !== "undefined")
+            document.onkeydown = window._sb_orig_onkeydown;
+          try {
+            if (frappe.ui && frappe.ui.keys && frappe.ui.keys.enable)
+              frappe.ui.keys.enable();
+          } catch (ex) {}
+        });
+      }
+
+      document.addEventListener("click", function (e) {
+        var sw = dom.querySelector("#sb-search-wrap");
+        var dd = dom.querySelector(".sb-search-drop");
+        if (dd && sw && !sw.contains(e.target)) dd.style.display = "none";
+      });
+
+      var searchWrap = dom.querySelector("#sb-search-wrap");
+      if (searchWrap) {
+        searchWrap.addEventListener("click", function (e) {
+          e.stopPropagation();
+        });
+      }
+
+      sbLoadDashboard();
+    }
+
+    /* ─── LOAD DASHBOARD ──────────────────────────────────────── */
+    function sbLoadDashboard() {
+      var tbody = dom.querySelector("#sb-proj-tbody");
+      if (tbody)
+        tbody.innerHTML =
+          '<tr><td colspan="9" class="sb-loading-row"><i class="fa fa-spinner fa-spin"></i> Loading...</td></tr>';
+
+      setTimeout(function () {
+        frappe.call({
+          method: "project_test",
+          args: { action: "get_dashboard" },
+          callback: function (r) {
+            if (r && r.message) {
+              _sb.allProjects = r.message.projects || [];
+              _sb.filtered = _sb.allProjects.slice();
+              _sb.stats = r.message.stats || {};
+              _sb.loaded = true;
+              sbRenderStats(_sb.stats);
+              sbRenderCategoryFilter();
+              sbRenderTable(_sb.filtered);
+              sbRenderBottomPanels(_sb.stats, _sb.allProjects);
+
+              var isHardRefresh = false;
+              if (typeof window._sb_app_booted === "undefined") {
+                isHardRefresh = true;
+                window._sb_app_booted = true;
+              }
+              if (isHardRefresh) {
+                try {
+                  sessionStorage.removeItem("sb_last_project");
+                } catch (e) {}
+              }
+              var savedPid = "";
+              try {
+                savedPid = sessionStorage.getItem("sb_last_project") || "";
+              } catch (e) {}
+              if (savedPid) {
+                sbOpenDetailNoReload(savedPid);
+              }
+            } else if (tbody) {
+              tbody.innerHTML =
+                '<tr><td colspan="9" class="sb-loading-row" style="color:#dc3545">No data returned. Check server script is enabled.</td></tr>';
+            }
+          },
+          error: function () {
+            if (tbody)
+              tbody.innerHTML =
+                '<tr><td colspan="9" class="sb-loading-row" style="color:#dc3545">Server error. Open browser console for details.</td></tr>';
+          },
+        });
+      }, 50);
+    }
+
+    /* ─── STAT CARDS ──────────────────────────────────────────── */
+    function sbRenderStats(s) {
+      var r1 = dom.querySelector("#sb-stat-row1");
+      if (!r1) return;
+      r1.innerHTML =
+        sbSC(
+          "&#128203;",
+          "si-grey",
+          s.total || 0,
+          "Total Projects",
+          (s.total || 0) + " Projects",
+          "",
+          "sbKpiRoute('all_projects')",
+        ) +
+        sbSC(
+          "&#128202;",
+          "si-green",
+          s.ongoing || 0,
+          "Ongoing",
+          (s.ongoing || 0) + " Ongoing",
+          "clr-green",
+          "sbKpiRoute('ongoing')",
+        ) +
+        sbSC(
+          "&#9888;",
+          "si-red",
+          s.delayed || 0,
+          "Delayed Projects",
+          (s.delayed || 0) + " Delayed",
+          "clr-red",
+          "sbKpiRoute('delayed')",
+        ) +
+        sbSC(
+          "&#128295;",
+          "si-blue",
+          s.installation_completed || 0,
+          "Installation Completed",
+          (s.installation_completed || 0) + " Done",
+          "clr-blue",
+          "sbKpiRoute('installation_completed')",
+        ) +
+        sbSC(
+          "&#128260;",
+          "si-amber",
+          s.sync_completed || 0,
+          "Synchronization Completed",
+          (s.sync_completed || 0) + " Done",
+          "clr-amber",
+          "sbKpiRoute('sync_completed')",
+        );
+    }
+
+    /* ─── KPI ROUTE — navigate to correct list with filters ──── */
+    function sbKpiRoute(kpi) {
+      if (kpi === "all_projects") {
+        frappe.route_options = { __override_filters: 1 };
+        frappe.set_route("List", "Project");
+        setTimeout(function () {
+          try {
+            var view = frappe.views && frappe.views.list_view;
+            if (view && view.filter_area) {
+              view.filter_area.clear();
+              view.refresh();
+            }
+          } catch (e) {}
+        }, 800);
+      } else if (kpi === "ongoing") {
+        frappe.route_options = { status: "Open" };
+        frappe.set_route("List", "Project");
+      } else if (kpi === "delayed") {
+        frappe.route_options = { complete_status: "Delayed" };
+        frappe.set_route("List", "Project");
+      } else if (kpi === "installation_completed") {
+        frappe.route_options = { status: "Completed" };
+        frappe.set_route("List", "Project");
+      } else if (kpi === "sync_completed") {
+        frappe.route_options = { complete_status: ["is", "set"] };
+        frappe.set_route("List", "Liaisoning And Synchronization");
+      }
+    }
+    function sbSC(icon, icls, val, lbl, sub, vcls, fn) {
+      return (
+        '<div class="sb-stat" onclick="window.' +
+        fn +
+        '"><div class="sb-stat-icon-box ' +
+        icls +
+        '">' +
+        icon +
+        '</div><div><div class="sb-stat-val ' +
+        vcls +
+        '">' +
+        val +
+        '</div><div class="sb-stat-lbl">' +
+        lbl +
+        "</div>" +
+        (sub ? '<div class="sb-stat-sub">' + sub + "</div>" : "") +
+        "</div></div>"
+      );
+    }
+
+    /* ─── TABLE ───────────────────────────────────────────────── */
+    function sbRenderTable(projects) {
+      var tbody = dom.querySelector("#sb-proj-tbody");
+      if (!tbody) return;
+      if (!projects || projects.length === 0) {
+        tbody.innerHTML =
+          '<tr><td colspan="9" class="sb-loading-row">No projects found.</td></tr>';
+        return;
+      }
+      var html = "";
+      for (var i = 0; i < projects.length; i++) {
+        var p = projects[i];
+        var bClass = "db-open";
+        var bText = "&#9672; Open";
+        var isDone = false;
+        if (
+          p.status === "Completed" &&
+          (p.complete_status || "") === "Delayed"
+        ) {
+          bClass = "db-delayed";
+          bText = "&#10003; Late Done";
+          isDone = true;
+        } else if (p.status === "Completed") {
+          bClass = "db-complete";
+          bText = "&#10003; Completed";
+          isDone = true;
+        } else if (p.status === "Cancelled") {
+          bClass = "db-cancelled";
+          bText = "&#10005; Cancelled";
+          isDone = true;
+        } else if ((p.complete_status || "") === "Delayed") {
+          bClass = "db-delayed";
+          bText = "&#9888; Delayed";
+        }
+        var pct = parseFloat(p.percent_complete) || 0;
+        var pFill =
+          pct >= 100
+            ? "pf-green"
+            : p.complete_status === "Delayed"
+              ? "pf-orange"
+              : p.status === "Completed"
+                ? "pf-green"
+                : "pf-blue";
+        if (pct === 0) pFill = "pf-gray";
+        html +=
+          "<tr onclick=\"window.sbOpenDetail('" +
+          p.name +
+          "')\">" +
+          '<td><div class="sb-proj-id">' +
+          p.name +
+          '</div><div class="sb-proj-sub">&#9889;</div></td>' +
+          '<td><div class="sb-cust-name">' +
+          (p.customer || "\u2014") +
+          "</div></td>" +
+          '<td style="font-weight:500;white-space:nowrap">' +
+          sbCapacity(p.solar_capacity) +
+          "</td>" +
+          '<td><div class="sb-prog-wrap"><div class="sb-prog-bg"><div class="sb-prog-fill ' +
+          pFill +
+          '" style="width:' +
+          pct +
+          '%"></div></div>' +
+          '<span style="font-size:11px;color:#aaa">' +
+          Math.round(pct) +
+          "%</span></div></td>" +
+          '<td><span class="sb-badge ' +
+          bClass +
+          '">' +
+          bText +
+          "</span></td>" +
+          "<td>" +
+          (p.plant_category
+            ? '<span style="font-size:11px;padding:2px 8px;border-radius:8px;background:#f0f1f5;color:#555;font-weight:500">' +
+              p.plant_category +
+              "</span>"
+            : "\u2014") +
+          "</td>" +
+          '<td style="font-size:12px;color:#666;white-space:nowrap">' +
+          (p.last_activity || "\u2014") +
+          "</td>" +
+          '<td style="font-size:12px;white-space:nowrap">' +
+          sbDueSpan(p.expected_end_date, isDone) +
+          "</td>" +
+          '<td style="text-align:right;font-size:12px;font-weight:600;color:' +
+          (p.payment_pct >= 100
+            ? "#22a959"
+            : p.payment_pct >= 50
+              ? "#2670e8"
+              : "#fd7e14") +
+          '">' +
+          (p.payment_pct || 0) +
+          "%</td>" +
+          '<td><button class="sb-more-btn" onclick="event.stopPropagation();window.sbProjectMenu(\'' +
+          p.name +
+          "')\">&#8942;</button></td>" +
+          "</tr>";
+      }
+      tbody.innerHTML = html;
+    }
+
+    /* ─── BOTTOM PANELS ───────────────────────────────────────── */
+    function sbRenderBottomPanels(s, projects) {
+      var payDiv = dom.querySelector("#sb-pay-panel");
+      if (payDiv) {
+        payDiv.innerHTML =
+          '<div class="sb-pay-row" onclick="window.sbShowPaymentsModal()" style="cursor:pointer">' +
+          '<div class="sb-pay-col"><div class="sb-pay-val">' +
+          sbFmtCr(s.total_received) +
+          '</div><div class="sb-pay-lbl">&#9650; Received</div></div>' +
+          '<div class="sb-pay-divider"></div>' +
+          '<div class="sb-pay-col"><div class="sb-pay-val clr-amber">' +
+          sbFmtCr1(s.total_pending) +
+          '</div><div class="sb-pay-lbl">&#9679; Pending</div></div>' +
+          '<div class="sb-pay-divider"></div>' +
+          '<div class="sb-pay-col"><div class="sb-pay-val clr-red">' +
+          sbFmtCr(s.overdue || 0) +
+          '</div><div class="sb-pay-lbl">&#9650; Overdue</div></div>' +
+          "</div>";
+      }
+      var qsDiv = dom.querySelector("#sb-qs-panel");
+      if (qsDiv) {
+        var totalKw = 0;
+        for (var i = 0; i < projects.length; i++) {
+          if (projects[i].status !== "Completed") {
+            var n = parseFloat(projects[i].solar_capacity_raw || 0);
+            if (!isNaN(n)) totalKw = totalKw + n;
+          }
+        }
+        qsDiv.innerHTML =
+          '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;text-align:center">' +
+          '<div onclick="window.sbFilter(\'Delayed\')" style="cursor:pointer;padding:10px 6px;background:#fff3d6;border-radius:8px">' +
+          '<div style="font-size:24px;font-weight:700;color:#fd7e14">' +
+          (s.delayed || 0) +
+          "</div>" +
+          '<div style="font-size:11px;color:#8a96b0">Delayed Projects</div></div>' +
+          '<div style="padding:10px 6px;background:#dcecfd;border-radius:8px">' +
+          '<div style="font-size:18px;font-weight:700;color:#2670e8">' +
+          totalKw.toFixed(1) +
+          " kW</div>" +
+          '<div style="font-size:11px;color:#8a96b0">Total Pending Capacity</div></div>' +
+          "</div>";
+      }
+    }
+
+    /* ─── PLANT CATEGORY FILTER ──────────────────────────────── */
+    function sbRenderCategoryFilter() {
+      var filterRow = dom.querySelector("#sb-category-filter");
+      if (!filterRow) return;
+      filterRow.innerHTML =
+        '<span style="font-size:12px;color:#8a96b0;font-weight:600;margin-right:8px;">Plant Category:</span>' +
+        '<select id="sb-cat-select" onchange="window.sbFilterCategory(this.value)" ' +
+        'style="padding:4px 10px;border:1px solid #e0e3ea;border-radius:6px;font-size:12px;color:#555;background:#fff;cursor:pointer;">' +
+        '<option value="">All Categories</option>' +
+        '<option value="Residential">Residential</option>' +
+        '<option value="Commercial">Commercial</option>' +
+        '<option value="Both">Both</option>' +
+        '<option value="Others">Others</option>' +
+        "</select>";
+    }
+
+    function sbFilterCategory(cat) {
+      _sb.categoryFilter = cat;
+      var base = _sb.allProjects.slice();
+      if (cat) {
+        var t = [];
+        for (var i = 0; i < base.length; i++) {
+          if ((base[i].plant_category || "") === cat) t.push(base[i]);
+        }
+        base = t;
+      }
+      if (_sb.filter && _sb.filter !== "All") {
+        var t2 = [];
+        for (var j = 0; j < base.length; j++) {
+          if (_sb.filter === "Ongoing" && base[j].status === "Open")
+            t2.push(base[j]);
+          if (
+            _sb.filter === "Delayed" &&
+            (base[j].complete_status || "") === "Delayed"
+          )
+            t2.push(base[j]);
+          if (_sb.filter === "Completed" && base[j].status === "Completed")
+            t2.push(base[j]);
+        }
+        base = t2;
+      }
+      _sb.filtered = base;
+      sbRenderTable(base);
+    }
+
+    /* ─── FILTER & SEARCH ─────────────────────────────────────── */
+    function sbFilter(status) {
+      _sb.filter = status;
+      var tabs = dom.querySelectorAll(".sb-tab");
+      for (var i = 0; i < tabs.length; i++) {
+        var txt = tabs[i].textContent.trim();
+        tabs[i].className = txt === status ? "sb-tab sb-tab-active" : "sb-tab";
+      }
+      var res = _sb.allProjects.slice();
+      if (status === "Ongoing") {
+        var t1 = [];
+        for (var a = 0; a < res.length; a++) {
+          if (res[a].status === "Open") t1.push(res[a]);
+        }
+        res = t1;
+      } else if (status === "Delayed") {
+        var t2 = [];
+        for (var b = 0; b < res.length; b++) {
+          if ((res[b].complete_status || "") === "Delayed") t2.push(res[b]);
+        }
+        res = t2;
+      } else if (status === "Completed") {
+        var t3 = [];
+        for (var c = 0; c < res.length; c++) {
+          if (res[c].status === "Completed") t3.push(res[c]);
+        }
+        res = t3;
+      }
+      var cat = _sb.categoryFilter || "";
+      if (cat) {
+        var t4 = [];
+        for (var d = 0; d < res.length; d++) {
+          if ((res[d].plant_category || "") === cat) t4.push(res[d]);
+        }
+        res = t4;
+      }
+      _sb.filtered = res;
+      sbRenderTable(res);
+    }
+
+    /* ─── SEARCH ──────────────────────────────────────────────── */
+    function sbSearch(q) {
+      _sb.query = q;
+      if (!q || q.trim().length < 2) {
+        sbFilter(_sb.filter);
+        var dd = dom.querySelector(".sb-search-drop");
+        if (dd) dd.style.display = "none";
+        return;
+      }
+      setTimeout(function () {
+        frappe.call({
+          method: "project_test",
+          args: { action: "search", query: q.trim() },
+          callback: function (r) {
+            sbRenderSearchDrop(r.message || []);
+          },
+          error: function () {
+            var ql = q.toLowerCase();
+            var res = _sb.allProjects.filter(function (p) {
+              return (
+                (p.name || "").toLowerCase().indexOf(ql) > -1 ||
+                (p.customer || "").toLowerCase().indexOf(ql) > -1
+              );
+            });
+            _sb.filtered = res;
+            sbRenderTable(res);
+          },
+        });
+      }, 50);
+    }
+
+    /* ─── RENDER SEARCH DROPDOWN ──────────────────────────────── */
+    function sbRenderSearchDrop(results) {
+      var dd = dom.querySelector(".sb-search-drop");
+      if (!dd) return;
+
+      if (!results || results.length === 0) {
+        dd.innerHTML =
+          '<div style="padding:12px;color:#aaa;text-align:center;font-size:12px;">No records found</div>';
+        dd.style.display = "block";
+        return;
+      }
+
+      var stageColors = {
+        Lead: { bg: "#e3f0fd", color: "#2670e8" },
+        "Site Survey": { bg: "#f4ecf7", color: "#9b59b6" },
+        Proposal: { bg: "#fff8e1", color: "#e8a020" },
+        "Sales Order": { bg: "#fff3e0", color: "#fd7e14" },
+        Project: { bg: "#e6f4ea", color: "#22a959" },
+      };
+
+      var html = "";
+      for (var i = 0; i < results.length; i++) {
+        var r = results[i];
+        var stage = r.stage || "Lead";
+        var clr = stageColors[stage] || { bg: "#f0f1f5", color: "#555" };
+        var dateStr = r.date ? String(r.date).substr(0, 10) : "";
+        var pid = r.project_id || "";
+        var lid = r.lead_id || "";
+
+        html +=
+          '<div class="sb-drop-item sb-search-result"' +
+          ' data-lid="' +
+          lid +
+          '"' +
+          ' data-stage="' +
+          stage +
+          '"' +
+          ' data-pid="' +
+          pid +
+          '">' +
+          "<div>" +
+          '<div class="sb-drop-name">' +
+          (r.customer || r.lead_id || "") +
+          "</div>" +
+          '<div class="sb-drop-cust">' +
+          (r.lead_id || "") +
+          (dateStr ? " &nbsp;&middot;&nbsp; " + dateStr : "") +
+          "</div>" +
+          "</div>" +
+          '<span style="background:' +
+          clr.bg +
+          ";color:" +
+          clr.color +
+          ";" +
+          'padding:2px 8px;border-radius:8px;font-size:10px;font-weight:600;white-space:nowrap;">' +
+          stage +
+          "</span>" +
+          "</div>";
+      }
+
+      dd.innerHTML = html;
+      dd.style.display = "block";
+
+      dd.querySelectorAll(".sb-search-result").forEach(function (el) {
+        el.addEventListener("click", function () {
+          var lid = this.getAttribute("data-lid") || "";
+          var stage = this.getAttribute("data-stage") || "Lead";
+          var pid = this.getAttribute("data-pid") || "";
+          window.sbSelectFromSearch(lid, stage, pid);
+        });
+      });
+    }
+
+    /* ─── SHOW ALL IN SEARCH (on focus) ──────────────────────── */
+    function sbShowAllInSearch() {
+      var dd = dom.querySelector(".sb-search-drop");
+      var src = dom.querySelector("#sb-search");
+      if (!dd) return;
+
+      var q = src ? (src.value || "").trim() : "";
+
+      if (q.length >= 2) {
+        sbSearch(q);
+        return;
+      }
+
+      if (!_sb.allProjects || !_sb.allProjects.length) {
+        dd.style.display = "none";
+        return;
+      }
+
+      var list = _sb.allProjects.slice(0, 30);
+      var html =
+        '<div style="padding:6px 12px 4px;font-size:10px;color:#aaa;font-weight:600;' +
+        'text-transform:uppercase;letter-spacing:0.5px;">Recent Projects</div>';
+
+      for (var i = 0; i < list.length; i++) {
+        var p = list[i];
+        var bCls =
+          p.status === "Completed"
+            ? "tbg-done"
+            : (p.complete_status || "") === "Delayed"
+              ? "tbg-warn"
+              : "tbg-prog";
+        html +=
+          '<div class="sb-drop-item sb-recent-proj" data-pid="' +
+          p.name +
+          '">' +
+          "<div>" +
+          '<div class="sb-drop-name">' +
+          (p.customer || p.name) +
+          "</div>" +
+          '<div class="sb-drop-cust">' +
+          p.name +
+          "</div>" +
+          "</div>" +
+          '<span class="sb-drop-badge ' +
+          bCls +
+          '">' +
+          (p.status || "Open") +
+          "</span>" +
+          "</div>";
+      }
+
+      dd.innerHTML = html;
+      dd.style.display = "block";
+
+      dd.querySelectorAll(".sb-recent-proj").forEach(function (el) {
+        el.addEventListener("click", function () {
+          var pid = this.getAttribute("data-pid");
+          window.sbSelectFromSearch("", "Project", pid);
+        });
+      });
+    }
+
+    /* ─── SELECT FROM SEARCH DROP ─────────────────────────────── */
+    function sbSelectFromSearch(leadId, stage, projectId) {
+      leadId = leadId || "";
+      stage = stage || "Lead";
+      projectId = projectId || "";
+
+      function isLeadId(id) {
+        if (!id) return false;
+        if (id.toUpperCase().indexOf("LEAD-") === 0) return true;
+        var nonLeadPrefixes = ["SRPL/", "PROJ-", "QT-", "SO-", "DN-"];
+        for (var i = 0; i < nonLeadPrefixes.length; i++) {
+          if (id.toUpperCase().indexOf(nonLeadPrefixes[i].toUpperCase()) === 0)
+            return false;
+        }
+        return id.indexOf("/") === -1;
+      }
+
+      if (projectId && projectId !== "" && projectId !== "undefined") {
+        window.sbOpenDetail(projectId);
+      } else if (leadId && isLeadId(leadId)) {
+        window.sbOpenLeadDetail(leadId);
+      } else if (leadId && !isLeadId(leadId)) {
+        var doctypeMap = {
+          "Sales Order": "Sales Order",
+          Proposal: "Quotation",
+          "Site Survey": "Site Survey",
+          Dispatch: "Delivery Note",
+          Synchronization: "Liaisoning And Synchronization",
+        };
+        var doctype = doctypeMap[stage] || "Lead";
+        frappe.set_route("Form", doctype, leadId);
+      } else {
+        frappe.set_route("List", "Lead");
+      }
+
+      setTimeout(function () {
+        var si = dom.querySelector("#sb-search");
+        if (si) {
+          si.value = "";
+          si.blur();
+        }
+        var dd = dom.querySelector(".sb-search-drop");
+        if (dd) {
+          dd.style.display = "none";
+          dd.innerHTML = "";
+        }
+        _sb.query = "";
+      }, 100);
+    }
+
+    /* ─── OPEN LEAD DETAIL (pipeline view from Lead ID) ──────── */
+    function sbOpenLeadDetail(leadId) {
+      var listV = dom.querySelector("#sb-list-view");
+      var detV = dom.querySelector("#sb-detail-view");
+      var back = dom.querySelector("#sb-back-btn");
+      var inner = dom.querySelector("#sb-detail-inner");
+
+      if (listV) listV.style.display = "none";
+      if (detV) detV.style.display = "block";
+      if (back) back.style.display = "block";
+      if (inner)
+        inner.innerHTML =
+          '<div class="sb-loading-row" style="padding:60px">' +
+          '<i class="fa fa-spinner fa-spin"></i> Loading pipeline details...</div>';
+
+      try {
+        sessionStorage.setItem("sb_last_lead", leadId);
+      } catch (e) {}
+
+      frappe.call({
+        method: "project_test",
+        args: { action: "get_lead_detail", lead_id: leadId },
+        callback: function (r) {
+          if (r && r.message && !r.message.error) {
+            sbRenderDetail(r.message, r.message.project.name);
+          } else {
+            var msg =
+              r && r.message && r.message.error
+                ? r.message.error
+                : "Unknown error";
+            if (inner)
+              inner.innerHTML =
+                '<div style="text-align:center;padding:60px;color:#dc3545">' +
+                '<i class="fa fa-exclamation-circle"></i> ' +
+                msg +
+                "</div>";
+          }
+        },
+      });
+    }
+
+    /* ─── OPEN / CLOSE DETAIL ─────────────────────────────────── */
+    function sbOpenDetail(pid) {
+      var listV = dom.querySelector("#sb-list-view");
+      var detV = dom.querySelector("#sb-detail-view");
+      var back = dom.querySelector("#sb-back-btn");
+      var inner = dom.querySelector("#sb-detail-inner");
+      if (listV) listV.style.display = "none";
+      if (detV) detV.style.display = "block";
+      if (back) back.style.display = "block";
+      if (inner)
+        inner.innerHTML =
+          '<div class="sb-loading-row" style="padding:60px"><i class="fa fa-spinner fa-spin"></i> Loading project details...</div>';
+      try {
+        sessionStorage.setItem("sb_last_project", pid);
+      } catch (e) {}
+      frappe.call({
+        method: "project_test",
+        args: { action: "get_project_detail", project_id: pid },
+        callback: function (r) {
+          if (r && r.message && !r.message.error) {
+            sbRenderDetail(r.message, pid);
+          } else {
+            var msg =
+              r && r.message && r.message.error
+                ? r.message.error
+                : "Unknown error";
+            if (inner)
+              inner.innerHTML =
+                '<div style="text-align:center;padding:60px;color:#dc3545"><i class="fa fa-exclamation-circle"></i> ' +
+                msg +
+                "</div>";
+          }
+        },
+      });
+    }
+    function sbOpenDetailNoReload(pid) {
+      var listV = dom.querySelector("#sb-list-view");
+      var detV = dom.querySelector("#sb-detail-view");
+      var back = dom.querySelector("#sb-back-btn");
+      if (listV) listV.style.display = "none";
+      if (detV) detV.style.display = "block";
+      if (back) back.style.display = "block";
+      sbOpenDetail(pid);
+    }
+    function sbShowList() {
+      var listV = dom.querySelector("#sb-list-view");
+      var detV = dom.querySelector("#sb-detail-view");
+      var back = dom.querySelector("#sb-back-btn");
+      if (listV) listV.style.display = "block";
+      if (detV) detV.style.display = "none";
+      if (back) back.style.display = "none";
+      var items = dom.querySelectorAll(".sb-nav-item");
+      for (var i = 0; i < items.length; i++)
+        items[i].classList.remove("sb-active");
+      var dash = dom.querySelector("#sb-nav-dash");
+      if (dash) dash.classList.add("sb-active");
+      try {
+        sessionStorage.removeItem("sb_last_project");
+      } catch (e) {}
+    }
+
+    /* ─── RENDER DETAIL ───────────────────────────────────────── */
+    function sbRenderDetail(data, pid) {
+      var proj = data.project || {};
+      var stages = data.stages || [];
+      var kd = data.key_dates || {};
+      var fups = data.followups || [];
+      var pays = data.payments || [];
+      var team = data.team || [];
+      var phSurvey = data.photos_survey || [];
+      var phDelivery = data.photos_delivery || [];
+      var phDone = data.photos_completed || [];
+      var delay = data.delay_data || {};
+      var pentries = data.payment_entries || [];
+      var inner = dom.querySelector("#sb-detail-inner");
+      if (!inner) return;
+
+      var sbadge = "db-open";
+      var stxt = "&#9672; Open";
+      if (proj.status === "Completed") {
+        sbadge = "db-complete";
+        stxt = "&#10003; Completed";
+      } else if (proj.status === "Delayed") {
+        sbadge = "db-delayed";
+        stxt = "&#9888; Delayed";
+      } else if (proj.status === "Cancelled") {
+        sbadge = "db-cancelled";
+        stxt = "&#10005; Cancelled";
+      }
+
+      var ftBadge = "";
+      if (
+        proj.finance_type &&
+        proj.finance_type !== "N/A" &&
+        proj.finance_type !== "NO"
+      ) {
+        ftBadge =
+          '<span class="sb-d-badge db-cash">' + proj.finance_type + "</span>";
+      }
+
+      /* Pipeline — now with TAT badge + SLA-breach red coloring */
+      var pipeHtml = '<div class="sb-stages">';
+      var stgIcons = [
+        "&#128100;",
+        "&#128205;",
+        "&#128196;",
+        "&#128203;",
+        "&#128666;",
+        "&#128295;",
+        "&#128260;",
+      ];
+      for (var si = 0; si < stages.length; si++) {
+        var sg = stages[si];
+        var breached = !!sg.sla_breached;
+        var sCls = sg.done
+          ? "stg-done" + (breached ? " stg-breached" : "")
+          : sg.current
+            ? "stg-current"
+            : "stg-disabled";
+        var ico = sg.done ? "&#10003;" : stgIcons[si] || si + 1;
+        var nav =
+          "window.sbStageNav('" +
+          sg.label +
+          "'," +
+          (sg.done ? "true" : "false") +
+          ",'" +
+          (proj.lead_id || "") +
+          "','" +
+          (proj.so_id || "") +
+          "','" +
+          (proj.survey_id || "") +
+          "','" +
+          (proj.quotation_id || "") +
+          "','" +
+          (proj.installation_id || "") +
+          "','" +
+          (proj.sync_id || "") +
+          "','" +
+          (proj.dispatch_id || "") +
+          "')";
+        var tatDays = _sbStageStdTat[sg.label] || null;
+        var tatHtml = tatDays
+          ? '<div class="sb-stg-tat">TAT ' + tatDays + "d</div>"
+          : "";
+        pipeHtml +=
+          '<div class="sb-stage ' +
+          sCls +
+          '" onclick="' +
+          nav +
+          '" title="' +
+          sg.label +
+          '">' +
+          '<div class="sb-stg-circle">' +
+          ico +
+          "</div>" +
+          '<div class="sb-stg-name">' +
+          sg.label +
+          "</div>" +
+          '<div class="sb-stg-sub">' +
+          (sg.sub || "") +
+          "</div>" +
+          (sg.done && sg.completed_date
+            ? '<div class="sb-stg-sub" style="margin-top:2px">' +
+              sbDateSpan(sg.completed_date, sg.end_date) +
+              "</div>"
+            : "") +
+          tatHtml +
+          "</div>";
+      }
+      pipeHtml += "</div>";
+
+      /* Key Dates — colored green/red where a due comparison is possible */
+      var kdPairs = [
+        ["Lead Generated", kd["Lead Generated"] || "Pending"],
+        ["Survey Completed", kd["Survey Completed"] || "Pending"],
+        ["Proposal Sent", kd["Proposal Sent"] || "Pending"],
+        ["Sales Order", kd["Sales Order"] || "Pending"],
+        ["Dispatch Done", kd["Dispatch Done"] || "Pending"],
+        ["Install Started", kd["Install Started"] || "Pending"],
+        ["Sync Process", kd["Sync Process"] || "Pending"],
+      ];
+      var kdHtml = "";
+      for (var ki = 0; ki < kdPairs.length; ki++) {
+        var kv = kdPairs[ki][1];
+        if (kv === "Pending" || kv === "N/A" || kv === "N/A (Skipped)") {
+          kdHtml +=
+            '<div class="sb-date-row"><div class="sb-date-key">' +
+            kdPairs[ki][0] +
+            '</div><div class="sb-date-val sb-fna">' +
+            kv +
+            "</div></div>";
+        } else {
+          kdHtml +=
+            '<div class="sb-date-row"><div class="sb-date-key">' +
+            kdPairs[ki][0] +
+            '</div><div class="sb-date-val">' +
+            sbDueSpan(kv, true) +
+            "</div></div>";
+        }
+      }
+
+      /* CRM Follow-ups */
+      var fupHtml = "";
+      var stageGroups = {};
+      for (var fi = 0; fi < fups.length; fi++) {
+        var fu = fups[fi];
+        var fstage = fu.stage || "General";
+        if (!stageGroups[fstage]) stageGroups[fstage] = [];
+        stageGroups[fstage].push(fu);
+      }
+      var stageOrder = [
+        "Lead",
+        "Site Survey",
+        "Proposal",
+        "Sales Order",
+        "Project",
+      ];
+      var hasFups = false;
+      for (var sox = 0; sox < stageOrder.length; sox++) {
+        var sn = stageOrder[sox];
+        var srows = stageGroups[sn];
+        if (!srows || srows.length === 0) continue;
+        hasFups = true;
+        fupHtml +=
+          '<tr><td colspan="5"><div class="sb-fu-stage-hdr">&#128198; ' +
+          sn +
+          "</div></td></tr>";
+        for (var fj = 0; fj < srows.length; fj++) {
+          var fu2 = srows[fj];
+          var fuDate = fu2.added_on
+            ? String(fu2.added_on).substr(0, 10)
+            : "\u2014";
+          var fuNote =
+            (fu2.note || "\u2014").substr(0, 80) +
+            (fu2.note && fu2.note.length > 80 ? "..." : "");
+          var who = fu2.added_by_name || fu2.added_by || "\u2014";
+          fupHtml +=
+            "<tr onclick=\"window.sbGoForm('Lead','" +
+            (proj.lead_id || "") +
+            '\')" style="cursor:pointer">' +
+            '<td style="color:#5e64ff">' +
+            (fj + 1) +
+            "</td>" +
+            '<td style="white-space:nowrap">' +
+            fuDate +
+            "</td>" +
+            "<td>" +
+            fuNote +
+            "</td>" +
+            '<td style="color:#5e64ff;font-weight:500">' +
+            who +
+            "</td>" +
+            '<td><span class="sb-tbl-badge ' +
+            (fu2.fu_type === "Delay Alert" ? "tbg-warn" : "tbg-prog") +
+            '">' +
+            (fu2.fu_type || "Note") +
+            "</span></td>" +
+            "</tr>";
+        }
+      }
+      if (!hasFups)
+        fupHtml =
+          '<tr><td colspan="5" style="text-align:center;color:#aaa;padding:14px">No follow-up records found.</td></tr>';
+
+      /* Payment Schedule — due date now colored (red if overdue & pending) */
+      var payHtml = "";
+      if (pays.length > 0) {
+        for (var pi = 0; pi < pays.length; pi++) {
+          var py = pays[pi];
+          var out = py.outstanding || 0;
+          var pbg =
+            out > 0
+              ? '<span class="sb-tbl-badge tbg-late">Pending</span>'
+              : '<span class="sb-tbl-badge tbg-done">Paid</span>';
+          payHtml +=
+            "<tr onclick=\"window.sbGoForm('Sales Order','" +
+            (proj.so_id || "") +
+            "')\">" +
+            "<td>" +
+            (py.invoice_portion || "\u2014") +
+            "</td>" +
+            "<td>" +
+            sbFmtINR(py.payment_amount) +
+            "</td>" +
+            '<td style="white-space:nowrap">' +
+            sbDueSpan(py.due_date, out <= 0) +
+            "</td>" +
+            "<td>" +
+            pbg +
+            "</td><td>" +
+            sbFmtINR(out) +
+            "</td></tr>";
+        }
+      } else {
+        payHtml =
+          '<tr><td colspan="5" style="text-align:center;color:#aaa;padding:14px">No payment schedule found.</td></tr>';
+      }
+
+      /* Payment Entries */
+      var peHtml = "";
+      if (pentries.length > 0) {
+        for (var pei = 0; pei < pentries.length; pei++) {
+          var pe = pentries[pei];
+          peHtml +=
+            "<tr onclick=\"window.sbGoForm('Payment Entry','" +
+            (pe.name || "") +
+            "')\">" +
+            '<td style="color:#5e64ff;cursor:pointer">' +
+            (pe.name || "\u2014") +
+            "</td>" +
+            "<td>" +
+            (pe.date || "\u2014") +
+            "</td>" +
+            '<td style="font-weight:600">' +
+            sbFmtINR(pe.amount) +
+            "</td>" +
+            '<td><span class="sb-tbl-badge tbg-done">' +
+            (pe.mode || "N/A") +
+            "</span></td>" +
+            "<td>" +
+            (pe.type || "Receive") +
+            "</td></tr>";
+        }
+      } else {
+        peHtml =
+          '<tr><td colspan="5" style="text-align:center;color:#aaa;padding:14px">No payment entries found.</td></tr>';
+      }
+
+      /* Team */
+      var teamHtml = '<div class="sb-team-section">';
+      if (proj.project_manager && proj.project_manager !== "N/A") {
+        teamHtml +=
+          '<div class="sb-pm-row"><div class="sb-avatar sb-avatar-pm">' +
+          sbInitials(proj.project_manager) +
+          "</div>" +
+          '<div><div class="sb-pm-label">Project Manager</div><div class="sb-pm-name">' +
+          proj.project_manager +
+          "</div></div></div>";
+      }
+      if (team.length > 0)
+        teamHtml += '<div class="sb-team-separator">Team Members</div>';
+      teamHtml += '<div class="sb-team-wrap">';
+      if (team.length > 0) {
+        for (var ti = 0; ti < team.length; ti++) {
+          var tm = team[ti];
+          teamHtml +=
+            "<div class=\"sb-member\" onclick=\"window.sbGoForm('User','" +
+            (tm.user || "") +
+            "')\">" +
+            '<div class="sb-avatar">' +
+            sbInitials(tm.full_name || tm.user) +
+            "</div>" +
+            '<div><div class="sb-member-name">' +
+            (tm.full_name || tm.user || "\u2014") +
+            "</div>" +
+            '<div class="sb-member-role">' +
+            (tm.role || "Staff") +
+            "</div></div></div>";
+        }
+      } else {
+        teamHtml +=
+          '<div style="color:#aaa;font-size:12px">No team members assigned.</div>';
+      }
+      teamHtml += "</div></div>";
+
+      /* Photos */
+      window._sbGallery = {
+        survey: phSurvey,
+        delivery: phDelivery,
+        done: phDone,
+      };
+      function mkPhotoSection(title, photos, emoji, galleryKey) {
+        var html =
+          '<div class="sb-photo-section"><div class="sb-photo-section-title">' +
+          title +
+          '</div><div class="sb-photos-wrap">';
+        if (photos.length > 0) {
+          var ph = photos[0];
+          var thumb = ph.file_url
+            ? '<img src="' +
+              ph.file_url +
+              '" alt="photo" onerror="this.parentNode.innerHTML=\'' +
+              emoji +
+              "'\">"
+            : emoji;
+          var countBadge =
+            photos.length > 1
+              ? '<div style="position:absolute;bottom:4px;right:4px;background:rgba(26,38,65,0.75);color:#fff;font-size:10px;font-weight:700;padding:2px 6px;border-radius:4px;">+' +
+                (photos.length - 1) +
+                "</div>"
+              : "";
+          html +=
+            '<div class="sb-photo-box" onclick="window.sbOpenGallery(\'' +
+            galleryKey +
+            "')\">" +
+            '<div class="sb-photo-thumb" style="position:relative">' +
+            thumb +
+            countBadge +
+            "</div>" +
+            '<div class="sb-photo-lbl">' +
+            (ph.file_name || "Photo").substr(0, 18) +
+            "</div></div>";
+        } else {
+          html +=
+            '<div style="color:#aaa;font-size:12px;padding:8px 0">No photos attached.</div>';
+        }
+        html += "</div></div>";
+        return html;
+      }
+      var phHtml =
+        mkPhotoSection(
+          "&#128247; Site Survey Photos",
+          phSurvey,
+          "&#128205;",
+          "survey",
+        ) +
+        mkPhotoSection(
+          "&#128666; Material Delivery Photos",
+          phDelivery,
+          "&#128666;",
+          "delivery",
+        ) +
+        mkPhotoSection("&#9728; Completion Photos", phDone, "&#9728;", "done");
+
+      var pdDays = delay.purchase_delay || 0;
+      var idDays = delay.install_delay || 0;
+      var sdDays = delay.sync_delay || 0;
+      var tdDays = delay.total_delay || 0;
+
+      inner.innerHTML =
+        '<div class="sb-d-topbar">' +
+        '<div class="sb-d-title">Project Dashboard</div>' +
+        '<span class="sb-d-badge ' +
+        sbadge +
+        '">' +
+        stxt +
+        "</span>" +
+        (proj.plant_category
+          ? '<span style="margin-left:6px;padding:4px 10px;border-radius:12px;font-size:11px;font-weight:600;background:#f4ecf7;color:#9b59b6;border:1px solid #d7b8e8;">' +
+            proj.plant_category +
+            "</span>"
+          : "") +
+        ftBadge +
+        '<div class="sb-d-meta">' +
+        "<span>Project ID: <strong>" +
+        pid +
+        "</strong></span>" +
+        (proj.so_id
+          ? "<span>Sales Order: <strong class=\"sb-flink\" onclick=\"window.sbGoForm('Sales Order','" +
+            proj.so_id +
+            "')\">" +
+            proj.so_id +
+            "</strong></span>"
+          : "") +
+        "<span>Capacity: <strong>" +
+        sbCapacity(proj.solar_capacity) +
+        "</strong></span>" +
+        "<span>Customer: <strong>" +
+        (proj.customer || "N/A") +
+        "</strong></span>" +
+        "</div>" +
+        "<button class=\"sb-d-open-btn\" onclick=\"window.sbGoForm('Project','" +
+        pid +
+        "')\">&#128193; Open Project</button>" +
+        '<button class="sb-d-dl-btn" onclick="window.sbPrintProject(\'' +
+        pid +
+        "')\">&#8681; Download Report</button>" +
+        "</div>" +
+        '<div class="sb-pipeline">' +
+        pipeHtml +
+        "</div>" +
+        (tdDays > 0
+          ? '<div class="sb-alerts-bar"><div class="sb-alerts-title">&#9888; DELAY ALERTS (' +
+            tdDays +
+            " Total Days)</div>" +
+            (pdDays > 0
+              ? '<div class="sb-alert-item">Purchase/Dispatch delayed by <strong>' +
+                pdDays +
+                " days</strong></div>"
+              : "") +
+            (idDays > 0
+              ? '<div class="sb-alert-item">Installation delayed by <strong>' +
+                idDays +
+                " days</strong></div>"
+              : "") +
+            (sdDays > 0
+              ? '<div class="sb-alert-item">Synchronization delayed by <strong>' +
+                sdDays +
+                " days</strong></div>"
+              : "") +
+            "<span class=\"sb-view-analysis\" onclick=\"window.sbGoForm('Project','" +
+            pid +
+            "')\">View Delay Analysis &#8250;</span></div>"
+          : "") +
+        '<div class="sb-d-grid">' +
+        '<div class="sb-card c2" data-card="info">' +
+        '<div class="sb-card-title"><span class="sb-card-icon">&#129333;</span> Customer &amp; Project Info</div>' +
+        sbFld(
+          "Customer Name",
+          "<span class=\"sb-flink\" onclick=\"window.sbGoForm('Customer','" +
+            (proj.customer || "") +
+            "')\">" +
+            (proj.customer || "N/A") +
+            "</span>",
+        ) +
+        sbFld(
+          "Address",
+          proj.address && proj.address !== "N/A"
+            ? proj.address
+            : '<span class="sb-fna">Not Available</span>',
+        ) +
+        sbFld(
+          "Finance Type",
+          proj.finance_type && proj.finance_type !== "N/A"
+            ? proj.finance_type
+            : '<span class="sb-fna">Cash / Not Set</span>',
+        ) +
+        sbFld("Project Type", proj.project_type || "N/A") +
+        sbFld("Total Capacity", sbCapacity(proj.solar_capacity)) +
+        sbFld(
+          "Expected Close",
+          sbDueSpan(proj.expected_end_date, proj.status === "Completed"),
+        ) +
+        sbFld("Total Days to Complete", proj.total_days_to_complete || "N/A") +
+        sbFld(
+          "Project Manager",
+          proj.project_manager && proj.project_manager !== "N/A"
+            ? proj.project_manager
+            : '<span class="sb-fna">Not Assigned</span>',
+        ) +
+        sbFld("Contact", proj.contact_mobile || "N/A") +
+        "</div>" +
+        /* Project Status + Quick Summary cards removed per request —
+       this slot now shows Payment Schedule + Payment Received directly. */
+        '<div class="sb-card" data-card="pay-sched">' +
+        '<div class="sb-card-title"><span class="sb-card-icon">&#128179;</span> Payment Schedule' +
+        '<span class="sb-flink" style="font-size:11px;font-weight:400;margin-left:auto" onclick="window.sbGoForm(\'Sales Order\',\'' +
+        (proj.so_id || "") +
+        "')\">View All</span>" +
+        "</div>" +
+        '<div style="overflow-x:auto"><table class="sb-mini-tbl"><thead><tr><th>%</th><th>Amount</th><th>Due Date</th><th>Status</th><th>Outstanding</th></tr></thead><tbody>' +
+        payHtml +
+        "</tbody></table></div>" +
+        "</div>" +
+        '<div class="sb-card" data-card="pay-recv">' +
+        '<div class="sb-card-title"><span class="sb-card-icon">&#128200;</span> Payment Received' +
+        '<span class="sb-flink" style="font-size:11px;font-weight:400;margin-left:auto" onclick="window.sbGoForm(\'Payment Entry\',\'\')">View All</span>' +
+        "</div>" +
+        '<div style="overflow-x:auto"><table class="sb-mini-tbl"><thead><tr><th>Entry</th><th>Date</th><th>Amount</th><th>Mode</th><th>Type</th></tr></thead><tbody>' +
+        peHtml +
+        "</tbody></table></div>" +
+        "</div>" +
+        '<div class="sb-card" data-card="key-dates">' +
+        '<div class="sb-card-title"><span class="sb-card-icon">&#128197;</span> Key Dates</div>' +
+        "<div>" +
+        kdHtml +
+        "</div>" +
+        "</div>" +
+        '<div class="sb-card c3" data-card="crm">' +
+        '<div class="sb-card-title"><span class="sb-card-icon">&#128172;</span> CRM Follow-ups</div>' +
+        '<div class="sb-fu-scroll"><table class="sb-mini-tbl"><thead><tr><th>#</th><th>Date</th><th>Note</th><th>By</th><th>Type</th></tr></thead><tbody>' +
+        fupHtml +
+        "</tbody></table></div>" +
+        "</div>" +
+        '<div class="sb-card c2" data-card="team">' +
+        '<div class="sb-card-title"><span class="sb-card-icon">&#128101;</span> Team Involved</div>' +
+        teamHtml +
+        "</div>" +
+        '<div class="sb-card c2" data-card="delay">' +
+        '<div class="sb-card-title"><span class="sb-card-icon">&#128201;</span> Delay Impact Analysis' +
+        '<span class="sb-flink" style="font-size:11px;font-weight:400;margin-left:auto" onclick="window.sbGoForm(\'Project\',\'' +
+        pid +
+        "')\">View Details &#8599;</span>" +
+        "</div>" +
+        '<div style="overflow-x:auto"><table class="sb-mini-tbl"><thead><tr><th>ID</th><th>Customer</th><th>Stage</th><th>Status</th><th>End Date</th></tr></thead>' +
+        "<tbody><tr onclick=\"window.sbGoForm('Project','" +
+        pid +
+        '\')" style="cursor:pointer">' +
+        '<td class="sb-flink">' +
+        pid +
+        "</td><td>" +
+        (proj.customer || "\u2014") +
+        "</td><td>" +
+        (data.current_stage || "N/A") +
+        "</td>" +
+        "<td>" +
+        (tdDays > 0
+          ? '<span class="sb-tbl-badge tbg-warn">Delayed ' + tdDays + "d</span>"
+          : '<span class="sb-tbl-badge tbg-done">On Track</span>') +
+        "</td>" +
+        "<td>" +
+        sbDueSpan(proj.expected_end_date, proj.status === "Completed") +
+        "</td>" +
+        "</tr></tbody></table></div>" +
+        "</div>" +
+        '<div class="sb-card c2" data-card="progress">' +
+        '<div class="sb-card-title"><span class="sb-card-icon">&#128247;</span> Progress Photos Tracking</div>' +
+        '<table class="sb-mini-tbl"><thead><tr><th>Stage</th><th>Standard Days</th><th>Date</th></tr></thead><tbody>' +
+        "<tr><td>Material Dispatch</td><td>6 days</td><td>" +
+        (kd["Dispatch Done"] && kd["Dispatch Done"] !== "Pending"
+          ? sbDueSpan(kd["Dispatch Done"], true)
+          : '<span class="sb-tbl-badge tbg-warn">Not Available</span>') +
+        "</td></tr>" +
+        "<tr><td>Installation</td><td>5 days</td><td>" +
+        (kd["Install Started"] && kd["Install Started"] !== "Pending"
+          ? sbDueSpan(kd["Install Started"], idDays === 0)
+          : '<span class="sb-tbl-badge tbg-warn">Not Available</span>') +
+        "</td></tr>" +
+        "<tr><td>Synchronization</td><td>6 days</td><td>" +
+        (kd["Sync Process"] && kd["Sync Process"] !== "Pending"
+          ? sbDueSpan(kd["Sync Process"], sdDays === 0)
+          : '<span class="sb-tbl-badge tbg-warn">Not Available</span>') +
+        "</td></tr>" +
+        "</tbody></table>" +
+        "</div>" +
+        '<div class="sb-card c4" data-card="photos">' +
+        '<div class="sb-card-title"><span class="sb-card-icon">&#128444;</span> Progress Photos</div>' +
+        '<div class="sb-photo-card-wrap">' +
+        phHtml +
+        "</div>" +
+        "</div>" +
+        "</div>";
+    }
+
+    /* ─── HTML HELPERS ────────────────────────────────────────── */
+    function sbFld(label, value) {
+      return (
+        '<div class="sb-field"><div class="sb-flabel">' +
+        label +
+        '</div><div class="sb-fvalue">' +
+        value +
+        "</div></div>"
+      );
+    }
+    function sbSumIt(lbl, val, fn) {
+      return (
+        '<div class="sb-sum-item" onclick="' +
+        fn +
+        '"><div class="sb-sum-val">' +
+        val +
+        '</div><div class="sb-sum-lbl">' +
+        lbl +
+        "</div></div>"
+      );
+    }
+
+    /* ─── sbGoCRM ─────────────────────────────────────────────── */
+    function sbGoCRM(stage, parentId) {
+      sbShowModal(
+        stage + " Follow-ups",
+        '<div style="padding:40px;text-align:center;color:#aaa"><i class="fa fa-spinner fa-spin"></i> Loading...</div>',
+      );
+      frappe.call({
+        method: "project_test",
+        args: {
+          action: "get_stage_followups",
+          stage: stage,
+          parent_id: parentId || "",
+        },
+        callback: function (r) {
+          if (!r.message || r.message.length === 0) {
+            sbShowModal(
+              stage + " Follow-ups",
+              '<div style="padding:40px;color:#aaa;text-align:center">No follow-up records found.</div>',
+            );
+            return;
+          }
+          var doctypeMap = {
+            Lead: "Lead",
+            "Site Survey": "Site Survey",
+            Quotation: "Quotation",
+            "Sales Order": "Sales Order",
+            Project: "Project",
+          };
+          var linkDoctype = doctypeMap[stage] || "Lead";
+          var html =
+            '<div class="sb-fu-scroll"><table class="sb-mini-tbl"><thead><tr><th>Date</th><th>Lead / Customer</th><th>Note</th><th>By</th></tr></thead><tbody>';
+          for (var i = 0; i < r.message.length; i++) {
+            var row = r.message[i];
+            var rowDate = (row.added_on || "").substr(0, 10);
+            var rowName = row.parent_name || row.parent || "\u2014";
+            var rowNote = row.note || "";
+            var rowBy = row.added_by_name || row.added_by || "\u2014";
+            var rowParent = row.parent || "";
+            html +=
+              '<tr style="cursor:pointer" onclick="window.sbGoForm(\'' +
+              linkDoctype +
+              "','" +
+              rowParent +
+              '\')" title="Open ' +
+              linkDoctype +
+              ": " +
+              rowParent +
+              '">' +
+              '<td style="white-space:nowrap;color:#8a96b0">' +
+              rowDate +
+              "</td>" +
+              '<td style="font-weight:600;color:#1a2641">' +
+              rowName +
+              "</td>" +
+              '<td style="max-width:260px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="' +
+              rowNote +
+              '">' +
+              rowNote +
+              "</td>" +
+              '<td style="white-space:nowrap;color:#5e64ff;font-weight:500">' +
+              rowBy +
+              "</td>" +
+              "</tr>";
+          }
+          html +=
+            '</tbody></table></div><div style="padding:10px 0 0;font-size:11px;color:#aaa;text-align:right">Click any row to open the ' +
+            linkDoctype +
+            " form</div>";
+          sbShowModal(stage + " Follow-ups (" + r.message.length + ")", html);
+        },
+      });
+    }
+
+    function sbGoForm(doctype, name) {
+      if (name && name !== "N/A" && name !== "")
+        frappe.set_route("Form", doctype, name);
+      else frappe.set_route("List", doctype);
+    }
+
+    /* ─── STAGE NAV ───────────────────────────────────────────── */
+    window.sbStageNav = function (
+      stageName,
+      isDone,
+      leadId,
+      soId,
+      surveyId,
+      quotId,
+      installId,
+      syncId,
+      dispatchId,
+    ) {
+      if (!isDone) return;
+      if (stageName === "Lead") sbGoForm("Lead", leadId);
+      else if (stageName === "Survey") sbGoForm("Site Survey", surveyId);
+      else if (stageName === "Proposal") sbGoForm("Quotation", quotId);
+      else if (stageName === "Sales Order") sbGoForm("Sales Order", soId);
+      else if (stageName === "Dispatch") {
+        if (dispatchId && dispatchId !== "undefined" && dispatchId !== "")
+          frappe.set_route("Form", "Delivery Note", dispatchId);
+        else frappe.set_route("List", "Delivery Note");
+      } else if (stageName === "Installation") sbGoForm("Project", installId);
+      else if (stageName === "Synchronization")
+        sbGoForm("Liaisoning And Synchronization", syncId);
+    };
+
+    /* ─── MODAL ───────────────────────────────────────────────── */
+    function sbShowModal(title, content) {
+      var modal = dom.querySelector("#sb-modal");
+      var mt = dom.querySelector("#sb-modal-title");
+      var mb = dom.querySelector("#sb-modal-body");
+      if (modal) modal.style.display = "flex";
+      if (mt) mt.textContent = title;
+      if (mb) mb.innerHTML = content;
+    }
+    function sbCloseModal() {
+      var modal = dom.querySelector("#sb-modal");
+      if (modal) modal.style.display = "none";
+    }
+
+    /* ─── PHOTO GALLERY ───────────────────────────────────────── */
+    function sbOpenGallery(key) {
+      var photos = window._sbGallery[key] || [];
+      if (photos.length === 0) return;
+      var titles = {
+        survey: "Site Survey Photos",
+        delivery: "Material Delivery Photos",
+        done: "Completion Photos",
+      };
+      var html =
+        '<div style="display:flex;flex-wrap:wrap;gap:14px;padding:10px;">';
+      for (var i = 0; i < photos.length; i++) {
+        var ph = photos[i];
+        html +=
+          '<div style="display:flex;flex-direction:column;align-items:center;cursor:pointer;" onclick="window.open(\'' +
+          (ph.file_url || "#") +
+          "','_blank')\">" +
+          '<div class="sb-photo-thumb" style="width:120px;height:90px;"><img src="' +
+          ph.file_url +
+          '" style="width:100%;height:100%;object-fit:cover;" onerror="this.style.display=\'none\'"></div>' +
+          '<div style="font-size:10px;color:#8a96b0;margin-top:6px;text-align:center;width:120px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' +
+          (ph.file_name || "Photo") +
+          "</div></div>";
+      }
+      html += "</div>";
+      sbShowModal(titles[key] + " (" + photos.length + ")", html);
+    }
+
+    /* ─── ACTIONS ─────────────────────────────────────────────── */
+    function sbDownloadReport() {
+      if (!_sb.filtered || !_sb.filtered.length) {
+        frappe.msgprint("No data to download.");
+        return;
+      }
+      var headers = [
+        "Project ID",
+        "Customer",
+        "Capacity",
+        "Status",
+        "End Date",
+        "Pending Payment (INR)",
+      ];
+      var rows = [headers.join(",")];
+      for (var i = 0; i < _sb.filtered.length; i++) {
+        var p = _sb.filtered[i];
+        rows.push(
+          [
+            '"' + (p.name || "") + '"',
+            '"' + (p.customer || "") + '"',
+            '"' + (p.solar_capacity || "") + '"',
+            '"' + (p.status || "") + '"',
+            '"' + (p.expected_end_date || "") + '"',
+            p.pending_payment || 0,
+          ].join(","),
+        );
+      }
+      var blob = new Blob(["\uFEFF" + rows.join("\n")], {
+        type: "text/csv;charset=utf-8;",
+      });
+      var url = URL.createObjectURL(blob);
+      var a = document.createElement("a");
+      a.href = url;
+      a.setAttribute(
+        "download",
+        "Sadbhav_Projects_" + new Date().toISOString().slice(0, 10) + ".csv",
+      );
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      setTimeout(function () {
+        URL.revokeObjectURL(url);
+      }, 200);
+    }
+    function sbPrintProject(pid) {
+      window.open(
+        "/printview?doctype=Project&name=" +
+          encodeURIComponent(pid) +
+          "&format=Sadbhav%20Project%20Report&no_letterhead=0",
+        "_blank",
+      );
+    }
+    function sbNewProject() {
+      frappe.set_route("Form", "Project", "new-project-1");
+    }
+    function sbShowPaymentsModal() {
+      frappe.set_route("query-report", "Accounts Receivable");
+    }
+    function sbFocusSearch() {
+      var s = dom.querySelector("#sb-search");
+      if (s) {
+        s.focus();
+        window.sbShowAllInSearch();
+      }
+    }
+    function sbNa(field) {
+      sbShowModal(
+        field,
+        '<div style="padding:20px;color:#aaa;font-style:italic">The field "' +
+          field +
+          '" is not available.</div>',
+      );
+    }
+    function sbViewCalendar() {
+      frappe.set_route("Calendar", "Project");
+    }
+
+    function sbProjectMenu(id) {
+      sbShowModal(
+        "Project \u2014 " + id,
+        '<div style="padding:14px;display:flex;flex-direction:column;gap:8px">' +
+          "<button onclick=\"window.sbOpenDetail('" +
+          id +
+          '\');window.sbCloseModal()" style="padding:10px 14px;background:#f0f1f5;border:1px solid #e4e6ef;border-radius:6px;cursor:pointer;text-align:left;font-size:13px">&#128202; View Dashboard</button>' +
+          "<button onclick=\"window.sbGoForm('Project','" +
+          id +
+          '\');window.sbCloseModal()" style="padding:10px 14px;background:#5e64ff;border:none;border-radius:6px;cursor:pointer;text-align:left;font-size:13px;color:#fff">&#128193; Open Project Form</button>' +
+          "<button onclick=\"window.sbGoCRM('Project', '" +
+          id +
+          '\');window.sbCloseModal()" style="padding:10px 14px;background:#f0f1f5;border:1px solid #e4e6ef;border-radius:6px;cursor:pointer;text-align:left;font-size:13px">&#128172; CRM Follow-ups</button>' +
+          '<button onclick="window.sbCloseModal()" style="padding:10px 14px;background:#fff;border:1px solid #e4e6ef;border-radius:6px;cursor:pointer;text-align:left;font-size:13px;color:#dc3545">&#10005; Close</button>' +
+          "</div>",
+      );
+    }
+
+    /* ─── WINDOW EXPORTS ──────────────────────────────────────── */
+    window.sbKpiRoute = sbKpiRoute;
+    window.sbFilterCategory = sbFilterCategory;
+    window.sbRenderCategoryFilter = sbRenderCategoryFilter;
+    window.sbInit = sbInit;
+    window.sbLoadDashboard = sbLoadDashboard;
+    window.sbGo = sbGo;
+    window.sbGoCRM = sbGoCRM;
+    window.sbGoForm = sbGoForm;
+    window.sbStageNav = sbStageNav;
+    window.sbToggleCRMMenu = sbToggleCRMMenu;
+    window.sbToggleSidebar = sbToggleSidebar;
+    window.sbShowList = sbShowList;
+    window.sbOpenDetail = sbOpenDetail;
+    window.sbFilter = sbFilter;
+    window.sbSearch = sbSearch;
+    window.sbRenderSearchDrop = sbRenderSearchDrop;
+    window.sbShowAllInSearch = sbShowAllInSearch;
+    window.sbSelectFromSearch = sbSelectFromSearch;
+    window.sbOpenLeadDetail = sbOpenLeadDetail;
+    window.sbShowModal = sbShowModal;
+    window.sbCloseModal = sbCloseModal;
+    window.sbNewProject = sbNewProject;
+    window.sbShowPaymentsModal = sbShowPaymentsModal;
+    window.sbDownloadReport = sbDownloadReport;
+    window.sbPrintProject = sbPrintProject;
+    window.sbFocusSearch = sbFocusSearch;
+    window.sbNa = sbNa;
+    window.sbViewCalendar = sbViewCalendar;
+    window.sbProjectMenu = sbProjectMenu;
+    window.sbOpenGallery = sbOpenGallery;
+
+    /* ─── START ───────────────────────────────────────────────── */
+    sbInit();
+  </script>
+</html>

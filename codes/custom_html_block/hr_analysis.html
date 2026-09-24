@@ -1,0 +1,4651 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+
+    <style>
+      /* ── ROOT VARIABLES ──────────────────────────────────────── */
+      #hrd-root {
+        --hrd-green: #28a745;
+        --hrd-green-lt: #d4edda;
+        --hrd-green-dk: #155724;
+        --hrd-red: #dc3545;
+        --hrd-red-lt: #f8d7da;
+        --hrd-red-dk: #721c24;
+        --hrd-orange: #fd7e14;
+        --hrd-orange-lt: #ffe8d1;
+        --hrd-orange-dk: #7d3c07;
+        --hrd-blue: #4b7bec;
+        --hrd-blue-lt: #dbeafe;
+        --hrd-blue-dk: #1e3a8a;
+        --hrd-yellow: #ffc107;
+        --hrd-yellow-lt: #fff3cd;
+        --hrd-yellow-dk: #856404;
+        --hrd-purple: #6f42c1;
+        --hrd-purple-lt: #e8deff;
+        --hrd-gray: #6c757d;
+        --hrd-gray-lt: #e9ecef;
+        --hrd-border: #dee2e6;
+        --hrd-text: #2c3e50;
+        --hrd-text-sm: #6c757d;
+        --hrd-bg: #f4f6f9;
+        --hrd-white: #ffffff;
+        --hrd-card-bg: #ffffff;
+        --hrd-radius: 6px;
+        --hrd-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        font-size: 13px;
+        color: var(--hrd-text);
+        background: var(--hrd-bg);
+        padding: 16px;
+        box-sizing: border-box;
+      }
+      #hrd-root *,
+      #hrd-root *::before,
+      #hrd-root *::after {
+        box-sizing: border-box;
+      }
+
+      /* ── HEADER BAR ───────────────────────────────────────────── */
+      .hrd-header-bar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        background: linear-gradient(
+          120deg,
+          #1e3a8a 0%,
+          #4b7bec 60%,
+          #6f42c1 100%
+        );
+        border-radius: var(--hrd-radius);
+        padding: 12px 18px;
+        margin-bottom: 10px;
+        box-shadow: 0 3px 14px rgba(75, 123, 236, 0.35);
+        color: #fff;
+      }
+      .hrd-hb-left {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex: 1;
+      }
+      .hrd-hb-right {
+        flex: 1;
+        text-align: right;
+      }
+      .hrd-hb-icon {
+        font-size: 26px;
+        line-height: 1;
+        flex-shrink: 0;
+      }
+      .hrd-company-name {
+        font-size: 16px;
+        font-weight: 700;
+        color: #fff;
+        line-height: 1.2;
+      }
+      .hrd-hb-sub {
+        font-size: 11px;
+        color: rgba(255, 255, 255, 0.65);
+        margin-top: 2px;
+      }
+      .hrd-clock-display {
+        font-size: 22px;
+        font-weight: 700;
+        color: #fff;
+        letter-spacing: 2px;
+        font-variant-numeric: tabular-nums;
+        line-height: 1.1;
+      }
+      .hrd-full-date {
+        font-size: 11px;
+        color: rgba(255, 255, 255, 0.75);
+        margin-top: 3px;
+      }
+
+      /* ── FILTERS BAR ──────────────────────────────────────────── */
+      .hrd-filters-bar {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 8px;
+        background: var(--hrd-white);
+        border: 1px solid var(--hrd-border);
+        border-radius: var(--hrd-radius);
+        padding: 8px 12px;
+        margin-bottom: 8px;
+        box-shadow: var(--hrd-shadow);
+      }
+      .hrd-filter-label {
+        font-size: 11px;
+        font-weight: 600;
+        color: var(--hrd-text-sm);
+        white-space: nowrap;
+      }
+      .hrd-select {
+        height: 28px;
+        padding: 0 8px;
+        border: 1px solid var(--hrd-border);
+        border-radius: 4px;
+        background: var(--hrd-gray-lt);
+        font-size: 12px;
+        color: var(--hrd-text);
+        cursor: pointer;
+        appearance: auto;
+        outline: none;
+      }
+      .hrd-select:focus {
+        border-color: var(--hrd-blue);
+      }
+      .hrd-btn {
+        height: 28px;
+        padding: 0 12px;
+        border-radius: 4px;
+        font-size: 12px;
+        font-weight: 600;
+        cursor: pointer;
+        border: 1px solid transparent;
+        transition: opacity 0.15s;
+      }
+      .hrd-btn:hover {
+        opacity: 0.85;
+      }
+      .hrd-btn-primary {
+        background: var(--hrd-blue);
+        color: #fff;
+      }
+      .hrd-btn-ghost {
+        background: var(--hrd-gray-lt);
+        color: var(--hrd-gray);
+        border-color: var(--hrd-border);
+      }
+      .hrd-btn-sm {
+        height: 26px;
+        padding: 0 10px;
+        font-size: 12px;
+      }
+      .hrd-refresh-info {
+        font-size: 11px;
+        color: var(--hrd-text-sm);
+      }
+
+      /* ── QUICK ACTIONS BAR ────────────────────────────────────── */
+      .hrd-quick-bar {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 8px;
+        background: var(--hrd-white);
+        border: 1px solid var(--hrd-border);
+        border-radius: var(--hrd-radius);
+        padding: 8px 12px;
+        margin-bottom: 8px;
+        box-shadow: var(--hrd-shadow);
+      }
+      .hrd-qa-btns {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+      }
+      .hrd-qa-btn {
+        padding: 4px 10px;
+        border-radius: 4px;
+        font-size: 12px;
+        font-weight: 500;
+        cursor: pointer;
+        border: 1px solid transparent;
+        transition: all 0.15s;
+      }
+      .hrd-qa-btn:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+      }
+      .hrd-qa-blue {
+        background: var(--hrd-blue-lt);
+        color: var(--hrd-blue-dk);
+        border-color: var(--hrd-blue);
+      }
+      .hrd-qa-green {
+        background: var(--hrd-green-lt);
+        color: var(--hrd-green-dk);
+        border-color: var(--hrd-green);
+      }
+      .hrd-qa-yellow {
+        background: var(--hrd-yellow-lt);
+        color: var(--hrd-yellow-dk);
+        border-color: var(--hrd-yellow);
+      }
+
+      /* ══════════════════════════════════════════════════════════
+   KPI CARDS — compact, centered
+══════════════════════════════════════════════════════════ */
+      .hrd-kpi-row {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 8px;
+        margin-bottom: 8px;
+      }
+      .hrd-kpi-card {
+        background: var(--hrd-white);
+        border: 1px solid var(--hrd-border);
+        border-top: 3px solid transparent;
+        border-radius: var(--hrd-radius);
+        padding: 10px 10px 8px;
+        cursor: pointer;
+        transition:
+          transform 0.15s,
+          box-shadow 0.15s;
+        box-shadow: var(--hrd-shadow);
+        text-align: center; /* center all content */
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      .hrd-kpi-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+      }
+
+      .hrd-kpi-icon {
+        font-size: 18px;
+        margin-bottom: 4px;
+        line-height: 1;
+      }
+      .hrd-kpi-val {
+        font-size: 22px;
+        font-weight: 700;
+        line-height: 1;
+        margin-bottom: 3px;
+      }
+      .hrd-kpi-label {
+        font-size: 10px;
+        color: var(--hrd-text-sm);
+        margin-bottom: 2px;
+      }
+      .hrd-kpi-sub {
+        font-size: 10px;
+        color: var(--hrd-text-sm);
+        margin-bottom: 6px;
+        min-height: 13px;
+      }
+      .hrd-kpi-drill {
+        font-size: 10px;
+        font-weight: 600;
+        padding: 2px 7px;
+        border-radius: 3px;
+        display: inline-block;
+      }
+
+      .hrd-kpi-split {
+        display: flex;
+        align-items: baseline;
+        gap: 0;
+        font-size: 18px;
+        font-weight: 700;
+        line-height: 1;
+        margin-bottom: 3px;
+        justify-content: center;
+      }
+
+      /* KPI color themes */
+      .hrd-kpi-blue {
+        border-top-color: var(--hrd-blue);
+      }
+      .hrd-kpi-blue .hrd-kpi-val {
+        color: var(--hrd-blue);
+      }
+      .hrd-kpi-blue .hrd-kpi-drill {
+        background: var(--hrd-blue-lt);
+        color: var(--hrd-blue-dk);
+      }
+      .hrd-kpi-teal {
+        border-top-color: #0d9488;
+      }
+      .hrd-kpi-teal .hrd-kpi-val {
+        color: #0d9488;
+      }
+      .hrd-kpi-teal .hrd-kpi-drill {
+        background: #e0f2fe;
+        color: #0d9488;
+      }
+      .hrd-kpi-orange {
+        border-top-color: var(--hrd-orange);
+      }
+      .hrd-kpi-orange .hrd-kpi-val {
+        color: var(--hrd-orange);
+      }
+      .hrd-kpi-orange .hrd-kpi-drill {
+        background: var(--hrd-orange-lt);
+        color: var(--hrd-orange-dk);
+      }
+      .hrd-kpi-red {
+        border-top-color: var(--hrd-red);
+      }
+      .hrd-kpi-red .hrd-kpi-val {
+        color: var(--hrd-red);
+      }
+      .hrd-kpi-red .hrd-kpi-drill {
+        background: var(--hrd-red-lt);
+        color: var(--hrd-red-dk);
+      }
+      .hrd-kpi-purple {
+        border-top-color: var(--hrd-purple);
+      }
+      .hrd-kpi-purple .hrd-kpi-val {
+        color: var(--hrd-purple);
+      }
+      .hrd-kpi-purple .hrd-kpi-drill {
+        background: var(--hrd-purple-lt);
+        color: var(--hrd-purple);
+      }
+
+      /* ── SECONDARY KPI ROW (in overview tab) ──────────────────── */
+      .hrd-kpi-row-2 {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+        margin-bottom: 10px;
+      }
+      .hrd-kpi-sm {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        background: var(--hrd-white);
+        border: 1px solid var(--hrd-border);
+        border-radius: var(--hrd-radius);
+        padding: 10px 12px;
+        cursor: pointer;
+        transition:
+          transform 0.15s,
+          box-shadow 0.15s;
+        box-shadow: var(--hrd-shadow);
+      }
+      .hrd-kpi-sm:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      }
+      .hrd-kpi-sm-icon {
+        font-size: 20px;
+        flex-shrink: 0;
+      }
+      .hrd-kpi-sm-val {
+        font-size: 20px;
+        font-weight: 700;
+        line-height: 1;
+      }
+      .hrd-kpi-sm-label {
+        font-size: 11px;
+        color: var(--hrd-text-sm);
+        margin-top: 2px;
+      }
+      .hrd-kpi-sm-teal {
+        border-left: 3px solid #0d9488;
+      }
+      .hrd-kpi-sm-teal .hrd-kpi-sm-val {
+        color: #0d9488;
+      }
+      .hrd-kpi-sm-amber {
+        border-left: 3px solid #d97706;
+      }
+      .hrd-kpi-sm-amber .hrd-kpi-sm-val {
+        color: #d97706;
+      }
+      .hrd-kpi-sm-rose {
+        border-left: 3px solid #e11d48;
+      }
+      .hrd-kpi-sm-rose .hrd-kpi-sm-val {
+        color: #e11d48;
+      }
+
+      /* ── ALERT / CELEBRATION BANNERS ─────────────────────────── */
+      .hrd-alerts-bar {
+        background: var(--hrd-yellow-lt);
+        border: 1px solid var(--hrd-yellow);
+        border-radius: var(--hrd-radius);
+        padding: 8px 14px;
+        margin-bottom: 8px;
+        font-size: 12px;
+        color: var(--hrd-yellow-dk);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+      .hrd-alert-item {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+      }
+      .hrd-alert-dot {
+        font-size: 13px;
+      }
+      .hrd-alert-clickable {
+        cursor: pointer;
+        padding: 3px 6px;
+        border-radius: 4px;
+        transition: background 0.15s;
+      }
+      .hrd-alert-clickable:hover {
+        background: rgba(0, 0, 0, 0.08);
+        text-decoration: underline;
+      }
+
+      /* Replace existing celebration bar styles with these */
+      .hrd-celebrations-bar {
+        background: linear-gradient(135deg, #fffbeb, #fefce8);
+        border: 1px solid #fcd34d;
+        border-radius: var(--hrd-radius);
+        padding: 10px 14px;
+        margin-bottom: 10px;
+        display: flex;
+        flex-direction: column; /* Force rows for different types */
+        gap: 8px;
+        box-shadow: 0 1px 4px rgba(252, 211, 77, 0.3);
+      }
+      .hrd-celeb-row {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+      .hrd-celeb-title {
+        font-weight: 700;
+        font-size: 12px;
+        color: #92400e;
+        margin-right: 4px;
+      }
+      .hrd-celebration-item {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        font-size: 12px;
+        color: #92400e;
+        background: rgba(255, 255, 255, 0.6);
+        border-radius: 20px;
+        padding: 3px 10px;
+        border: 1px solid #fcd34d;
+      }
+
+      /* ══════════════════════════════════════════════════════════
+   ATTENDANCE LOG CARD
+══════════════════════════════════════════════════════════ */
+      .hrd-checkin-inline-card {
+        border-top: 3px solid #0d9488;
+        margin-bottom: 10px;
+      }
+
+      .hrd-ci-topbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 8px;
+        padding: 8px 12px;
+        border-bottom: 1px solid var(--hrd-border);
+        background: #fafbfc;
+      }
+      .hrd-ci-topbar-left {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+      .hrd-ci-topbar-right {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        flex-wrap: wrap;
+      }
+
+      /* Toggle buttons */
+      .hrd-ci-toggle-group {
+        display: flex;
+        border: 1px solid var(--hrd-border);
+        border-radius: 5px;
+        overflow: hidden;
+      }
+      .hrd-ci-tog {
+        padding: 4px 14px;
+        font-size: 12px;
+        font-weight: 600;
+        cursor: pointer;
+        border: none;
+        background: var(--hrd-gray-lt);
+        color: var(--hrd-text-sm);
+        transition: all 0.15s;
+        white-space: nowrap;
+      }
+      .hrd-ci-tog.active {
+        background: var(--hrd-blue);
+        color: #fff;
+      }
+      .hrd-ci-tog:not(.active):hover {
+        background: var(--hrd-blue-lt);
+        color: var(--hrd-blue-dk);
+      }
+
+      /* Time filter pills */
+      .hrd-ci-tf-group {
+        display: flex;
+        border: 1px solid var(--hrd-border);
+        border-radius: 5px;
+        overflow: hidden;
+      }
+      .hrd-ci-tf {
+        padding: 4px 10px;
+        font-size: 11px;
+        font-weight: 500;
+        cursor: pointer;
+        border: none;
+        background: var(--hrd-gray-lt);
+        color: var(--hrd-text-sm);
+        transition: all 0.15s;
+        white-space: nowrap;
+      }
+      .hrd-ci-tf.active {
+        background: #0d9488;
+        color: #fff;
+        font-weight: 700;
+      }
+      .hrd-ci-tf:not(.active):hover {
+        background: #e0f2f1;
+        color: #0d9488;
+      }
+
+      /* CSV dropdown */
+      .hrd-ci-csv-wrap {
+        position: relative;
+      }
+      .hrd-ci-csv-menu {
+        position: absolute;
+        right: 0;
+        top: calc(100% + 4px);
+        background: #fff;
+        border: 1px solid var(--hrd-border);
+        border-radius: 6px;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+        z-index: 999;
+        min-width: 180px;
+        overflow: hidden;
+      }
+      .hrd-ci-csv-item {
+        display: block;
+        width: 100%;
+        text-align: left;
+        padding: 8px 12px;
+        font-size: 12px;
+        font-weight: 500;
+        cursor: pointer;
+        border: none;
+        background: none;
+        color: var(--hrd-text);
+        transition: background 0.12s;
+      }
+      .hrd-ci-csv-item:hover {
+        background: var(--hrd-blue-lt);
+        color: var(--hrd-blue-dk);
+      }
+
+      /* ══════════════════════════════════════════════════════════
+   COMPACT PILL BADGES — like screenshot 2
+══════════════════════════════════════════════════════════ */
+      .hrd-ci-badges-wrap {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 14px;
+        border-bottom: 1px solid var(--hrd-border);
+        background: #fafbfc;
+        flex-wrap: wrap;
+      }
+
+      .hrd-ci-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        padding: 5px 12px;
+        border-radius: 20px;
+        border: 1px solid transparent;
+        cursor: pointer;
+        font-size: 12px;
+        font-weight: 600;
+        transition: all 0.15s;
+        white-space: nowrap;
+        background: none;
+        opacity: 0.7;
+      }
+      .hrd-ci-pill:hover {
+        opacity: 0.9;
+        transform: translateY(-1px);
+      }
+      .hrd-ci-pill.active {
+        opacity: 1;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+      }
+
+      .hrd-ci-pill-icon {
+        font-size: 12px;
+      }
+      .hrd-ci-pill-val {
+        font-size: 15px;
+        font-weight: 800;
+        line-height: 1;
+      }
+      .hrd-ci-pill-lbl {
+        font-size: 11px;
+        font-weight: 500;
+      }
+
+      /* Pill color themes */
+      .hrd-ci-pill-blue {
+        background: #eff6ff;
+        color: var(--hrd-blue-dk);
+        border-color: #bfdbfe;
+      }
+      .hrd-ci-pill-blue.active {
+        background: var(--hrd-blue-lt);
+        border-color: var(--hrd-blue);
+        color: var(--hrd-blue-dk);
+      }
+
+      .hrd-ci-pill-green {
+        background: #f0fdf4;
+        color: var(--hrd-green-dk);
+        border-color: #bbf7d0;
+      }
+      .hrd-ci-pill-green.active {
+        background: var(--hrd-green-lt);
+        border-color: var(--hrd-green);
+        color: var(--hrd-green-dk);
+      }
+
+      .hrd-ci-pill-orange {
+        background: #fff7ed;
+        color: var(--hrd-orange-dk);
+        border-color: #fed7aa;
+      }
+      .hrd-ci-pill-orange.active {
+        background: var(--hrd-orange-lt);
+        border-color: var(--hrd-orange);
+        color: var(--hrd-orange-dk);
+      }
+
+      .hrd-ci-pill-red {
+        background: #fff1f2;
+        color: var(--hrd-red-dk);
+        border-color: #fecdd3;
+      }
+      .hrd-ci-pill-red.active {
+        background: var(--hrd-red-lt);
+        border-color: var(--hrd-red);
+        color: var(--hrd-red-dk);
+      }
+
+      /* Scrollable table area */
+      .hrd-ci-table-scroll {
+        height: 400px;
+        overflow-y: auto;
+        overflow-x: auto;
+      }
+      .hrd-ci-table-scroll .hrd-table thead th {
+        position: sticky;
+        top: 0;
+        z-index: 2;
+        background: #f7f9fc;
+        box-shadow: 0 1px 0 var(--hrd-border);
+      }
+      .hrd-ci-late-row td {
+        background-color: #fff5f5 !important;
+      }
+
+      /* ── TAB NAVIGATION ───────────────────────────────────────── */
+      .hrd-tabs-nav {
+        display: flex;
+        gap: 3px;
+        flex-wrap: wrap;
+        background: var(--hrd-white);
+        border: 1px solid var(--hrd-border);
+        border-radius: var(--hrd-radius);
+        padding: 5px 8px;
+        margin-bottom: 10px;
+        box-shadow: var(--hrd-shadow);
+      }
+      .hrd-tab-btn {
+        padding: 6px 12px;
+        border-radius: 5px;
+        font-size: 12px;
+        font-weight: 500;
+        cursor: pointer;
+        border: 1px solid transparent;
+        background: transparent;
+        color: var(--hrd-text-sm);
+        transition: all 0.18s;
+        white-space: nowrap;
+      }
+      .hrd-tab-btn:hover {
+        background: var(--hrd-blue-lt);
+        color: var(--hrd-blue-dk);
+        border-color: var(--hrd-blue);
+      }
+      .hrd-tab-btn.active {
+        background: var(--hrd-blue);
+        color: #fff;
+        border-color: var(--hrd-blue);
+        font-weight: 600;
+        box-shadow: 0 2px 6px rgba(75, 123, 236, 0.3);
+      }
+
+      .hrd-tab-panel {
+        display: none;
+      }
+      .hrd-tab-panel.active {
+        display: block;
+      }
+
+      /* ── SECTION TITLE ────────────────────────────────────────── */
+      .hrd-section-title {
+        font-size: 13px;
+        font-weight: 700;
+        color: var(--hrd-text);
+        margin: 12px 0 8px;
+        padding-left: 10px;
+        border-left: 3px solid var(--hrd-blue);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+
+      /* ── CARDS ────────────────────────────────────────────────── */
+      .hrd-card {
+        background: var(--hrd-card-bg);
+        border: 1px solid var(--hrd-border);
+        border-radius: var(--hrd-radius);
+        box-shadow: var(--hrd-shadow);
+        overflow: hidden;
+        margin-bottom: 10px;
+      }
+      .hrd-card-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 9px 12px;
+        border-bottom: 1px solid var(--hrd-border);
+        background: #fafbfc;
+      }
+      .hrd-card-title {
+        font-weight: 600;
+        font-size: 12px;
+      }
+      .hrd-link-btn {
+        font-size: 11px;
+        color: var(--hrd-blue);
+        background: var(--hrd-blue-lt);
+        border: 1px solid var(--hrd-blue);
+        border-radius: 4px;
+        padding: 2px 8px;
+        cursor: pointer;
+        font-weight: 500;
+        transition: all 0.15s;
+        white-space: nowrap;
+      }
+      .hrd-link-btn:hover {
+        background: var(--hrd-blue);
+        color: #fff;
+      }
+
+      /* ── ROW LAYOUT ───────────────────────────────────────────── */
+      .hrd-row {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 0;
+        align-items: flex-start;
+      }
+      .hrd-flex-1 {
+        flex: 1;
+        min-width: 0;
+      }
+      .hrd-flex-2 {
+        flex: 2;
+        min-width: 0;
+      }
+
+      /* ── HEATMAP ──────────────────────────────────────────────── */
+      .hrd-legend {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+        padding: 7px 12px;
+        border-bottom: 1px solid var(--hrd-border);
+        background: #fafbfc;
+      }
+      .hrd-leg-item {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        font-size: 11px;
+        color: var(--hrd-text-sm);
+      }
+      .hrd-leg-dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 2px;
+        flex-shrink: 0;
+      }
+      .hrd-heatmap-wrap {
+        padding: 10px 12px;
+        overflow-x: auto;
+      }
+      .hrd-heatmap {
+        display: table;
+        border-spacing: 3px;
+      }
+      .hrd-hm-row {
+        display: table-row;
+      }
+      .hrd-hm-label {
+        display: table-cell;
+        font-size: 10px;
+        color: var(--hrd-text-sm);
+        padding-right: 8px;
+        white-space: nowrap;
+        vertical-align: middle;
+        min-width: 58px;
+      }
+      .hrd-hm-cell {
+        display: table-cell;
+        width: 20px;
+        height: 14px;
+        border-radius: 2px;
+        cursor: pointer;
+        vertical-align: middle;
+      }
+      .hrd-hm-cell:hover {
+        outline: 2px solid var(--hrd-blue);
+        outline-offset: 1px;
+      }
+      .hrd-hm-header {
+        display: table-cell;
+        width: 20px;
+        font-size: 9px;
+        color: var(--hrd-text-sm);
+        text-align: center;
+        vertical-align: middle;
+      }
+      .hrd-hm-p {
+        background: var(--hrd-green);
+      }
+      .hrd-hm-h {
+        background: var(--hrd-yellow);
+      }
+      .hrd-hm-l {
+        background: var(--hrd-blue);
+      }
+      .hrd-hm-a {
+        background: var(--hrd-red);
+      }
+      .hrd-hm-w {
+        background: #dee2e6;
+      }
+
+      /* ── DONUT ────────────────────────────────────────────────── */
+      .hrd-donut-wrap {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 16px 12px 8px;
+      }
+      .hrd-donut-svg {
+        width: 120px;
+        height: 120px;
+      }
+      .hrd-today-pills {
+        display: flex;
+        justify-content: center;
+        gap: 6px;
+        padding: 0 12px 10px;
+        flex-wrap: wrap;
+      }
+      .hrd-today-pill {
+        flex: 1;
+        min-width: 60px;
+        text-align: center;
+        padding: 7px 5px;
+        border-radius: var(--hrd-radius);
+      }
+      .hrd-today-pill .hrd-pill-val {
+        font-size: 18px;
+        font-weight: 700;
+      }
+      .hrd-today-pill .hrd-pill-lbl {
+        font-size: 10px;
+        margin-top: 2px;
+      }
+
+      /* ── GENERAL TABLE ────────────────────────────────────────── */
+      .hrd-table-wrap {
+        overflow-x: auto;
+      }
+      .hrd-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 12px;
+      }
+      .hrd-table th {
+        background: #f7f9fc;
+        border-bottom: 1px solid var(--hrd-border);
+        padding: 7px 10px;
+        font-size: 11px;
+        font-weight: 600;
+        color: var(--hrd-text-sm);
+        text-align: left;
+        white-space: nowrap;
+      }
+      .hrd-table td {
+        padding: 7px 10px;
+        border-bottom: 1px solid #f0f0f0;
+        vertical-align: middle;
+        white-space: nowrap;
+      }
+      .hrd-table tr:last-child td {
+        border-bottom: none;
+      }
+      .hrd-table tr:hover td {
+        background: #f7f9fc;
+      }
+      .hrd-loading-cell {
+        text-align: center;
+        color: var(--hrd-text-sm);
+        padding: 18px;
+        font-style: italic;
+      }
+
+      /* ── STATUS TAGS ──────────────────────────────────────────── */
+      .hrd-tag {
+        display: inline-block;
+        padding: 2px 7px;
+        border-radius: 3px;
+        font-size: 11px;
+        font-weight: 500;
+        white-space: nowrap;
+      }
+      .hrd-tag-green {
+        background: var(--hrd-green-lt);
+        color: var(--hrd-green-dk);
+      }
+      .hrd-tag-red {
+        background: var(--hrd-red-lt);
+        color: var(--hrd-red-dk);
+      }
+      .hrd-tag-orange {
+        background: var(--hrd-orange-lt);
+        color: var(--hrd-orange-dk);
+      }
+      .hrd-tag-blue {
+        background: var(--hrd-blue-lt);
+        color: var(--hrd-blue-dk);
+      }
+      .hrd-tag-yellow {
+        background: var(--hrd-yellow-lt);
+        color: var(--hrd-yellow-dk);
+      }
+      .hrd-tag-gray {
+        background: var(--hrd-gray-lt);
+        color: var(--hrd-gray);
+      }
+      .hrd-tag-purple {
+        background: var(--hrd-purple-lt);
+        color: var(--hrd-purple);
+      }
+
+      .hrd-act-link {
+        font-size: 11px;
+        color: var(--hrd-blue);
+        cursor: pointer;
+        text-decoration: none;
+        background: none;
+        border: none;
+        padding: 0;
+      }
+      .hrd-act-link:hover {
+        text-decoration: underline;
+      }
+
+      .hrd-summary-strip {
+        background: var(--hrd-blue-lt);
+        border-top: 1px solid var(--hrd-border);
+        padding: 6px 12px;
+        font-size: 11px;
+        color: var(--hrd-blue-dk);
+        display: flex;
+        gap: 18px;
+        flex-wrap: wrap;
+      }
+      .hrd-summary-strip strong {
+        font-weight: 700;
+      }
+
+      /* ── PAYROLL ──────────────────────────────────────────────── */
+      .hrd-payroll-summary {
+        padding: 12px;
+      }
+      .hrd-payroll-kpis {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+        margin-bottom: 12px;
+      }
+      .hrd-payroll-kpi {
+        border-radius: 5px;
+        padding: 7px 10px;
+      }
+      .hrd-payroll-kpi .hrd-pk-lbl {
+        font-size: 10px;
+        color: var(--hrd-text-sm);
+        margin-bottom: 3px;
+      }
+      .hrd-payroll-kpi .hrd-pk-val {
+        font-size: 14px;
+        font-weight: 700;
+      }
+      .hrd-payroll-kpi-clickable {
+        cursor: pointer;
+        transition:
+          transform 0.15s,
+          box-shadow 0.15s;
+      }
+      .hrd-payroll-kpi-clickable:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
+      }
+      .hrd-pk-sub {
+        font-size: 10px;
+        color: var(--hrd-text-sm);
+        margin-top: 2px;
+      }
+      .hrd-payroll-bars {
+        display: flex;
+        flex-direction: column;
+        gap: 7px;
+      }
+      .hrd-pb-row {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 11px;
+      }
+      .hrd-pb-name {
+        width: 100px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        color: var(--hrd-text-sm);
+      }
+      .hrd-pb-track {
+        flex: 1;
+        height: 7px;
+        background: var(--hrd-gray-lt);
+        border-radius: 4px;
+        overflow: hidden;
+      }
+      .hrd-pb-fill {
+        height: 100%;
+        background: var(--hrd-blue);
+        border-radius: 4px;
+        transition: width 0.5s;
+      }
+      .hrd-pb-val {
+        font-size: 10px;
+        color: var(--hrd-text-sm);
+        width: 70px;
+        text-align: right;
+      }
+
+      /* ── LEAVES ───────────────────────────────────────────────── */
+      .hrd-leave-bal-wrap {
+        overflow-x: auto;
+      }
+      .hrd-upcoming-wrap {
+        padding: 10px 12px;
+      }
+      .hrd-upcoming-list {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+      }
+      .hrd-upcoming-row {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 6px 0;
+        border-bottom: 1px solid #f0f0f0;
+        flex-wrap: wrap;
+      }
+      .hrd-upcoming-row:last-child {
+        border-bottom: none;
+      }
+
+      /* ── RECRUITMENT ──────────────────────────────────────────── */
+      .hrd-recruitment {
+        padding: 10px 12px;
+      }
+      .hrd-pipe-funnel {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 6px;
+        margin-bottom: 12px;
+      }
+      .hrd-pipe-stage {
+        background: var(--hrd-gray-lt);
+        border-radius: 5px;
+        padding: 8px 6px;
+        text-align: center;
+        cursor: pointer;
+        transition: transform 0.15s;
+      }
+      .hrd-pipe-stage:hover {
+        transform: translateY(-2px);
+      }
+      .hrd-pipe-num {
+        font-size: 20px;
+        font-weight: 700;
+      }
+      .hrd-pipe-lbl {
+        font-size: 10px;
+        color: var(--hrd-text-sm);
+        margin-top: 2px;
+      }
+      .hrd-open-roles {
+        border-top: 1px solid var(--hrd-border);
+        padding-top: 8px;
+      }
+      .hrd-open-role-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 4px 0;
+        border-bottom: 1px dashed #eee;
+        font-size: 12px;
+      }
+      .hrd-open-role-row:last-child {
+        border-bottom: none;
+      }
+
+      /* ── PERFORMANCE ──────────────────────────────────────────── */
+      .hrd-performance {
+        padding: 10px 12px;
+      }
+      .hrd-progress-bar-wrap {
+        margin-bottom: 10px;
+      }
+      .hrd-progress-label {
+        font-size: 11px;
+        color: var(--hrd-text-sm);
+        margin-bottom: 5px;
+      }
+      .hrd-progress-track {
+        height: 7px;
+        background: var(--hrd-gray-lt);
+        border-radius: 4px;
+        overflow: hidden;
+      }
+      .hrd-progress-fill {
+        height: 100%;
+        border-radius: 4px;
+        transition: width 0.5s;
+      }
+      .hrd-appraisal-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 5px 0;
+        border-bottom: 1px dashed #eee;
+        font-size: 12px;
+      }
+      .hrd-appraisal-row:last-child {
+        border-bottom: none;
+      }
+
+      /* ── GRIEVANCES ───────────────────────────────────────────── */
+      .hrd-grievances {
+        padding: 10px 12px;
+      }
+      .hrd-grievance-card {
+        border-radius: 5px;
+        padding: 9px 10px;
+        margin-bottom: 7px;
+        border: 1px solid transparent;
+      }
+      .hrd-grievance-card:last-child {
+        margin-bottom: 0;
+      }
+      .hrd-gc-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 4px;
+      }
+      .hrd-gc-title {
+        font-weight: 600;
+        font-size: 12px;
+      }
+      .hrd-gc-meta {
+        font-size: 10px;
+        color: var(--hrd-text-sm);
+        margin-bottom: 4px;
+      }
+      .hrd-gc-open {
+        background: var(--hrd-red-lt);
+        border-color: var(--hrd-red);
+      }
+      .hrd-gc-inprog {
+        background: var(--hrd-yellow-lt);
+        border-color: var(--hrd-yellow);
+      }
+      .hrd-gc-done {
+        background: var(--hrd-green-lt);
+        border-color: var(--hrd-green);
+      }
+
+      /* ── QUICK REPORTS ────────────────────────────────────────── */
+      .hrd-report-category {
+        margin-bottom: 18px;
+      }
+      .hrd-report-cat-title {
+        font-size: 11px;
+        font-weight: 700;
+        color: var(--hrd-text-sm);
+        text-transform: uppercase;
+        letter-spacing: 0.6px;
+        padding-bottom: 6px;
+        margin-bottom: 8px;
+        border-bottom: 2px solid var(--hrd-border);
+      }
+      .hrd-reports-grid {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+      .hrd-report-btn {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 3px;
+        padding: 9px 11px;
+        border-radius: var(--hrd-radius);
+        font-size: 12px;
+        font-weight: 600;
+        cursor: pointer;
+        border: 1px solid transparent;
+        transition:
+          transform 0.15s,
+          box-shadow 0.15s;
+        text-align: left;
+        line-height: 1.4;
+        min-width: 130px;
+      }
+      .hrd-report-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
+      }
+      .hrd-report-btn span {
+        font-size: 10px;
+        font-weight: 400;
+      }
+      .hrd-rep-blue {
+        background: var(--hrd-blue-lt);
+        color: var(--hrd-blue-dk);
+        border-color: var(--hrd-blue);
+      }
+      .hrd-rep-green {
+        background: var(--hrd-green-lt);
+        color: var(--hrd-green-dk);
+        border-color: var(--hrd-green);
+      }
+      .hrd-rep-orange {
+        background: var(--hrd-orange-lt);
+        color: var(--hrd-orange-dk);
+        border-color: var(--hrd-orange);
+      }
+      .hrd-rep-purple {
+        background: var(--hrd-purple-lt);
+        color: var(--hrd-purple);
+        border-color: var(--hrd-purple);
+      }
+      .hrd-rep-yellow {
+        background: var(--hrd-yellow-lt);
+        color: var(--hrd-yellow-dk);
+        border-color: var(--hrd-yellow);
+      }
+      .hrd-rep-red {
+        background: var(--hrd-red-lt);
+        color: var(--hrd-red-dk);
+        border-color: var(--hrd-red);
+      }
+
+      /* ── FOOTER ───────────────────────────────────────────────── */
+      .hrd-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 11px;
+        color: var(--hrd-text-sm);
+        border-top: 1px solid var(--hrd-border);
+        padding-top: 8px;
+        margin-top: 6px;
+      }
+
+      /* ── LOADING / SKELETON ───────────────────────────────────── */
+      .hrd-loading {
+        text-align: center;
+        color: var(--hrd-text-sm);
+        padding: 18px;
+        font-size: 12px;
+        font-style: italic;
+      }
+      .hrd-skeleton {
+        animation: hrd-shimmer 1.5s infinite;
+      }
+      @keyframes hrd-shimmer {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.6;
+        }
+      }
+
+      /* ── TOOLTIP ──────────────────────────────────────────────── */
+      .hrd-tooltip {
+        position: relative;
+      }
+      .hrd-tooltip::after {
+        content: attr(data-tip);
+        position: absolute;
+        bottom: 120%;
+        left: 50%;
+        transform: translateX(-50%);
+        background: #333;
+        color: #fff;
+        font-size: 10px;
+        white-space: nowrap;
+        padding: 4px 8px;
+        border-radius: 4px;
+        pointer-events: none;
+        opacity: 0;
+        transition: opacity 0.2s;
+        z-index: 100;
+      }
+      .hrd-tooltip:hover::after {
+        opacity: 1;
+      }
+
+      /* ── RESPONSIVE ───────────────────────────────────────────── */
+      @media (max-width: 1100px) {
+        .hrd-kpi-row {
+          grid-template-columns: repeat(3, 1fr);
+        }
+        .hrd-kpi-row-2 {
+          grid-template-columns: repeat(3, 1fr);
+        }
+        .hrd-row {
+          flex-direction: column;
+        }
+      }
+      @media (max-width: 900px) {
+        .hrd-kpi-row {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        .hrd-tabs-nav {
+          gap: 3px;
+        }
+        .hrd-tab-btn {
+          padding: 5px 9px;
+          font-size: 11px;
+        }
+        .hrd-kpi-row-2 {
+          grid-template-columns: 1fr 1fr;
+        }
+      }
+      @media (max-width: 768px) {
+        .hrd-header-bar {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 8px;
+        }
+        .hrd-hb-right {
+          text-align: left;
+        }
+        .hrd-kpi-row {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        .hrd-kpi-row-2 {
+          grid-template-columns: 1fr;
+        }
+        .hrd-ci-topbar {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+      }
+
+      /* ============================================================
+   ADD THESE STYLES TO YOUR EXISTING CSS FILE
+   (append at the end of the CSS, before the closing comment)
+   ============================================================ */
+
+      /* ══════════════════════════════════════════════════════════
+   DAILY SNAPSHOT — Main KPI Cards with Sub-Pills
+══════════════════════════════════════════════════════════ */
+      .hrd-daily-main-card {
+        background: var(--hrd-white);
+        border: 1px solid var(--hrd-border);
+        border-radius: var(--hrd-radius);
+        padding: 12px 14px 14px;
+        box-shadow: var(--hrd-shadow);
+        transition: box-shadow 0.15s;
+      }
+      .hrd-daily-main-card:hover {
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
+      }
+
+      /* top accent stripe per theme */
+      .hrd-daily-present {
+        border-top: 3px solid var(--hrd-green);
+      }
+      .hrd-daily-absent {
+        border-top: 3px solid var(--hrd-red);
+      }
+
+      /* Card header row: label left, big number right */
+      /* Card header row: label left, big number right */
+      .hrd-daily-mc-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 8px; /* Reduced since subtitle is gone */
+        cursor: pointer; /* Makes it obvious it can be clicked */
+        transition: opacity 0.2s;
+      }
+      .hrd-daily-mc-head:hover {
+        opacity: 0.8;
+      }
+
+      .hrd-daily-mc-title {
+        font-size: 16px;
+        font-weight: 800;
+        color: var(--hrd-text);
+        letter-spacing: 0.3px;
+      }
+      .hrd-daily-mc-sub {
+        display: none;
+      } /* Ensuring subtitle is hidden if it ever reappears */
+
+      /* Individual sub-pill button */
+      .hrd-dsp {
+        flex: 1;
+        min-width: 60px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 2px;
+        padding: 4px 6px; /* Decreased padding to reduce height */
+        border-radius: 6px;
+        border: 1.5px solid transparent;
+        cursor: pointer;
+        background: none;
+        font-family: inherit;
+        transition: all 0.15s;
+        opacity: 0.72;
+      }
+
+      .hrd-dsp-val {
+        font-size: 18px;
+        font-weight: 800;
+        line-height: 1;
+      }
+
+      .hrd-daily-mc-total {
+        font-size: 30px;
+        font-weight: 800;
+        line-height: 1;
+      }
+      .hrd-daily-present-total {
+        color: var(--hrd-green);
+      }
+      .hrd-daily-absent-total {
+        color: var(--hrd-red);
+      }
+
+      /* Sub-pill row */
+      .hrd-daily-sub-pills {
+        display: flex;
+        gap: 6px;
+        flex-wrap: wrap;
+      }
+
+      /* Individual sub-pill button */
+      .hrd-dsp {
+        flex: 1;
+        min-width: 60px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 3px;
+        padding: 7px 8px;
+        border-radius: 6px;
+        border: 1.5px solid transparent;
+        cursor: pointer;
+        background: none;
+        font-family: inherit;
+        transition: all 0.15s;
+        opacity: 0.72;
+      }
+      .hrd-dsp:hover {
+        opacity: 1;
+        transform: translateY(-1px);
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+      }
+      .hrd-dsp.active {
+        opacity: 1;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+      }
+
+      .hrd-dsp-val {
+        font-size: 19px;
+        font-weight: 800;
+        line-height: 1;
+      }
+      .hrd-dsp-lbl {
+        font-size: 10px;
+        font-weight: 600;
+        white-space: nowrap;
+      }
+
+      /* Colour themes for each sub-pill */
+      .hrd-dsp-green {
+        background: #f0fdf4;
+        color: var(--hrd-green-dk);
+        border-color: #bbf7d0;
+      }
+      .hrd-dsp-green.active {
+        background: #dcfce7;
+        border-color: var(--hrd-green);
+      }
+
+      .hrd-dsp-yellow {
+        background: var(--hrd-yellow-lt);
+        color: var(--hrd-yellow-dk);
+        border-color: #fde68a;
+      }
+      .hrd-dsp-yellow.active {
+        background: #fef08a;
+        border-color: var(--hrd-yellow);
+      }
+
+      .hrd-dsp-blue {
+        background: var(--hrd-blue-lt);
+        color: var(--hrd-blue-dk);
+        border-color: #bfdbfe;
+      }
+      .hrd-dsp-blue.active {
+        background: #bfdbfe;
+        border-color: var(--hrd-blue);
+      }
+
+      .hrd-dsp-red {
+        background: #fff1f2;
+        color: var(--hrd-red-dk);
+        border-color: #fecdd3;
+      }
+      .hrd-dsp-red.active {
+        background: #fecaca;
+        border-color: var(--hrd-red);
+      }
+
+      .hrd-dsp-orange {
+        background: var(--hrd-orange-lt);
+        color: var(--hrd-orange-dk);
+        border-color: #fed7aa;
+      }
+      .hrd-dsp-orange.active {
+        background: #fdba74;
+        border-color: var(--hrd-orange);
+      }
+    </style>
+  </head>
+  <body>
+    <div id="hrd-root">
+      <div class="hrd-header-bar">
+        <div class="hrd-hb-left">
+          <span class="hrd-hb-icon">&#127970;</span>
+          <div>
+            <div class="hrd-company-name" id="hrd-company-name">
+              Loading&hellip;
+            </div>
+            <div class="hrd-hb-sub">HR Operations Dashboard</div>
+          </div>
+        </div>
+        <div class="hrd-hb-right">
+          <div id="hrd-clock" class="hrd-clock-display">--:--:--</div>
+          <div id="hrd-full-date" class="hrd-full-date">&mdash;</div>
+        </div>
+      </div>
+
+      <div
+        id="hrd-celebrations-bar"
+        class="hrd-celebrations-bar"
+        style="display: none"
+      ></div>
+
+      <div
+        class="hrd-kpi-row"
+        id="hrd-kpi-row"
+        style="grid-template-columns: repeat(4, 1fr)"
+      >
+        <div
+          class="hrd-kpi-card hrd-kpi-blue hrd-skeleton"
+          id="kpi-card-total"
+          style="padding: 8px"
+        >
+          <div class="hrd-kpi-icon" style="font-size: 16px">&#128100;</div>
+          <div class="hrd-kpi-val" id="kpi-total" style="font-size: 18px">
+            —
+          </div>
+          <div class="hrd-kpi-label">Total Employees</div>
+          <div class="hrd-kpi-drill">&#8599; Active List</div>
+        </div>
+        <div
+          class="hrd-kpi-card hrd-kpi-orange hrd-skeleton"
+          id="kpi-card-attendance-req"
+          style="padding: 8px"
+        >
+          <div class="hrd-kpi-icon" style="font-size: 16px">&#128197;</div>
+          <div
+            class="hrd-kpi-val"
+            id="kpi-attendance-req"
+            style="font-size: 18px"
+          >
+            —
+          </div>
+          <div class="hrd-kpi-label">Pending Attendance</div>
+          <div class="hrd-kpi-drill">&#8599; Requests</div>
+        </div>
+        <div
+          class="hrd-kpi-card hrd-kpi-red hrd-skeleton"
+          id="kpi-card-pending-leave"
+          style="padding: 8px"
+        >
+          <div class="hrd-kpi-icon" style="font-size: 16px">&#9203;</div>
+          <div
+            class="hrd-kpi-val"
+            id="kpi-pending-leaves"
+            style="font-size: 18px"
+          >
+            —
+          </div>
+          <div class="hrd-kpi-label">Pending Leaves</div>
+          <div class="hrd-kpi-drill">&#8599; Applications</div>
+        </div>
+        <div
+          class="hrd-kpi-card hrd-kpi-purple hrd-skeleton"
+          id="kpi-card-expenses"
+          style="padding: 8px"
+        >
+          <div class="hrd-kpi-icon" style="font-size: 16px">&#129534;</div>
+          <div class="hrd-kpi-val" id="kpi-expenses" style="font-size: 18px">
+            —
+          </div>
+          <div class="hrd-kpi-label">Pending Expenses</div>
+          <div class="hrd-kpi-drill">&#8599; Claims</div>
+        </div>
+      </div>
+
+      <!-- ═══════════════════════════════════════════════════════════
+         DAILY ATTENDANCE SNAPSHOT — 2 Main KPIs with Sub-Pills
+    ════════════════════════════════════════════════════════════ -->
+      <div class="hrd-card" id="hrd-daily-snapshot-section">
+        <div class="hrd-card-head">
+          <span class="hrd-card-title"
+            >&#128197; Daily Attendance Snapshot</span
+          >
+          <div style="display: flex; gap: 8px; align-items: center">
+            <span style="font-size: 11px; color: var(--hrd-text-sm)"
+              >Date:</span
+            >
+            <input
+              type="date"
+              id="hrd-daily-date"
+              class="hrd-select"
+              style="height: 24px; font-size: 11px"
+              onchange="hrdLoadDailySnapshot()"
+            />
+          </div>
+        </div>
+
+        <div
+          class="hrd-row"
+          style="
+            padding: 10px 12px;
+            gap: 10px;
+            border-bottom: 1px solid var(--hrd-border);
+            margin-bottom: 0;
+          "
+        >
+          <div class="hrd-daily-main-card hrd-daily-present hrd-flex-1">
+            <div
+              class="hrd-daily-mc-head"
+              onclick="hrdShowDailyTable('present', 'All Present')"
+              title="View all present employees"
+            >
+              <div class="hrd-daily-mc-title">&#9989; Present Employees</div>
+              <div
+                class="hrd-daily-mc-total hrd-daily-present-total"
+                id="kpi-present-count"
+              >
+                —
+              </div>
+            </div>
+            <div class="hrd-daily-sub-pills">
+              <button
+                class="hrd-dsp hrd-dsp-green active"
+                id="dsp-present"
+                onclick="hrdShowDailyTable('present', 'Present')"
+              >
+                <span class="hrd-dsp-val" id="dsub-present-count">—</span>
+                <span class="hrd-dsp-lbl">Present</span>
+              </button>
+              <button
+                class="hrd-dsp hrd-dsp-yellow"
+                id="dsp-halfday"
+                onclick="hrdShowDailyTable('present', 'Half Day')"
+              >
+                <span class="hrd-dsp-val" id="dsub-halfday-count">—</span>
+                <span class="hrd-dsp-lbl">Half Day</span>
+              </button>
+              <button
+                class="hrd-dsp hrd-dsp-blue"
+                id="dsp-wfh"
+                onclick="hrdShowDailyTable('present', 'Work From Home')"
+              >
+                <span class="hrd-dsp-val" id="dsub-wfh-count">—</span>
+                <span class="hrd-dsp-lbl">WFH</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="hrd-daily-main-card hrd-daily-absent hrd-flex-1">
+            <div
+              class="hrd-daily-mc-head"
+              onclick="hrdShowDailyTable('absent', 'All Absent')"
+              title="View all absent employees"
+            >
+              <div class="hrd-daily-mc-title">&#10060; Absent Employees</div>
+              <div
+                class="hrd-daily-mc-total hrd-daily-absent-total"
+                id="kpi-absent-count"
+              >
+                —
+              </div>
+            </div>
+            <div class="hrd-daily-sub-pills">
+              <button
+                class="hrd-dsp hrd-dsp-red"
+                id="dsp-absent"
+                onclick="hrdShowDailyTable('absent', 'Absent')"
+              >
+                <span class="hrd-dsp-val" id="dsub-absent-count">—</span>
+                <span class="hrd-dsp-lbl">Absent</span>
+              </button>
+              <button
+                class="hrd-dsp hrd-dsp-orange"
+                id="dsp-onleave"
+                onclick="hrdShowDailyTable('absent', 'On Leave')"
+              >
+                <span class="hrd-dsp-val" id="dsub-leave-count">—</span>
+                <span class="hrd-dsp-lbl">On Leave</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div
+          id="hrd-daily-table-wrap"
+          style="display: none; padding: 0 12px 10px; background: #fafbfc"
+        >
+          <div
+            style="
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+              padding: 10px 0;
+            "
+          >
+            <span
+              id="hrd-daily-table-title"
+              style="font-weight: 600; font-size: 12px"
+            ></span>
+            <div>
+              <button class="hrd-link-btn" onclick="hrdDownloadDailyCsv()">
+                &#128229; CSV
+              </button>
+              <button class="hrd-link-btn" onclick="hrdCloseDailyTable()">
+                &#10005; Close
+              </button>
+            </div>
+          </div>
+          <div
+            class="hrd-ci-table-scroll"
+            style="
+              border: 1px solid var(--hrd-border);
+              border-radius: var(--hrd-radius);
+              background: #fff;
+            "
+          >
+            <div id="hrd-daily-tbody">
+              <div class="hrd-loading">
+                Select a category to view data&hellip;
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- ── END DAILY SNAPSHOT ── -->
+
+      <div
+        class="hrd-card hrd-checkin-inline-card"
+        id="hrd-checkin-inline-section"
+      >
+        <div class="hrd-ci-topbar">
+          <div class="hrd-ci-topbar-left">
+            <span class="hrd-card-title" style="font-size: 13px"
+              >&#128336; Attendance Log</span
+            >
+            <div class="hrd-ci-toggle-group">
+              <button
+                class="hrd-ci-tog active"
+                id="hrd-ci-btn-in"
+                onclick="hrdSwitchCheckin('in')"
+              >
+                &#10003; Check-In
+              </button>
+              <button
+                class="hrd-ci-tog"
+                id="hrd-ci-btn-out"
+                onclick="hrdSwitchCheckin('out')"
+              >
+                &#8987; Check-Out
+              </button>
+            </div>
+          </div>
+          <div class="hrd-ci-topbar-right">
+            <div style="display: flex; align-items: center; gap: 5px">
+              <span style="font-size: 11px; color: var(--hrd-text-sm)"
+                >Date:</span
+              >
+              <input
+                type="date"
+                id="hrd-ci-single-date"
+                class="hrd-select"
+                style="height: 26px; font-size: 11px"
+                onchange="hrdCiApplySingleDate()"
+              />
+            </div>
+            <div class="hrd-ci-csv-wrap" style="margin-left: 8px">
+              <button class="hrd-link-btn" onclick="hrdToggleCsvMenu(event)">
+                &#8659; CSV &#9660;
+              </button>
+              <div
+                id="hrd-ci-csv-menu"
+                class="hrd-ci-csv-menu"
+                style="display: none"
+              >
+                <div id="hrd-csv-menu-in">
+                  <button
+                    class="hrd-ci-csv-item"
+                    onclick="hrdDownloadCsvByCategory('in', 'all')"
+                  >
+                    &#128229; All Checked In
+                  </button>
+                  <button
+                    class="hrd-ci-csv-item"
+                    onclick="hrdDownloadCsvByCategory('in', 'ontime')"
+                  >
+                    &#128229; On Time Only
+                  </button>
+                  <button
+                    class="hrd-ci-csv-item"
+                    onclick="hrdDownloadCsvByCategory('in', 'late')"
+                  >
+                    &#128229; Late Only
+                  </button>
+                  <button
+                    class="hrd-ci-csv-item"
+                    onclick="hrdDownloadCsvByCategory('in', 'absent')"
+                  >
+                    &#128229; Not Checked In
+                  </button>
+                </div>
+                <div id="hrd-csv-menu-out" style="display: none">
+                  <button
+                    class="hrd-ci-csv-item"
+                    onclick="hrdDownloadCsvByCategory('out', 'all')"
+                  >
+                    &#128228; All Checked Out
+                  </button>
+                  <button
+                    class="hrd-ci-csv-item"
+                    onclick="hrdDownloadCsvByCategory('out', 'ontime')"
+                  >
+                    &#128228; On Time Only
+                  </button>
+                  <button
+                    class="hrd-ci-csv-item"
+                    onclick="hrdDownloadCsvByCategory('out', 'early')"
+                  >
+                    &#128228; Early Leave Only
+                  </button>
+                  <button
+                    class="hrd-ci-csv-item"
+                    onclick="hrdDownloadCsvByCategory('out', 'notout')"
+                  >
+                    &#128228; Not Checked Out
+                  </button>
+                </div>
+
+                <button
+                  class="hrd-ci-csv-item"
+                  onclick="hrdDownloadCsv('both')"
+                  style="border-top: 1px solid var(--hrd-border)"
+                >
+                  &#128202; Both (Combined)
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="hrd-ci-badges-wrap" class="hrd-ci-badges-wrap">
+          <button
+            class="hrd-ci-pill hrd-ci-pill-blue active"
+            id="hrd-ci-b-all"
+            onclick="hrdCiBadgeFilter('all')"
+          >
+            <span class="hrd-ci-pill-icon">&#9654;</span
+            ><span class="hrd-ci-pill-val" id="hrd-ci-total-val">—</span
+            ><span class="hrd-ci-pill-lbl">Checked In</span>
+          </button>
+          <button
+            class="hrd-ci-pill hrd-ci-pill-green"
+            id="hrd-ci-b-ontime"
+            onclick="hrdCiBadgeFilter('ontime')"
+          >
+            <span class="hrd-ci-pill-icon">&#10003;</span
+            ><span class="hrd-ci-pill-val" id="hrd-ci-ontime-val">—</span
+            ><span class="hrd-ci-pill-lbl">On Time</span>
+          </button>
+          <button
+            class="hrd-ci-pill hrd-ci-pill-orange"
+            id="hrd-ci-b-late"
+            onclick="hrdCiBadgeFilter('late')"
+          >
+            <span class="hrd-ci-pill-icon">&#9650;</span
+            ><span class="hrd-ci-pill-val" id="hrd-ci-late-val">—</span
+            ><span class="hrd-ci-pill-lbl">Late</span>
+          </button>
+          <button
+            class="hrd-ci-pill hrd-ci-pill-red"
+            id="hrd-ci-b-absent"
+            onclick="hrdCiBadgeFilter('absent')"
+          >
+            <span class="hrd-ci-pill-icon">&#10007;</span
+            ><span class="hrd-ci-pill-val" id="hrd-ci-absent-val">—</span
+            ><span class="hrd-ci-pill-lbl">Not Checked In</span>
+          </button>
+        </div>
+
+        <div
+          id="hrd-co-badges-wrap"
+          class="hrd-ci-badges-wrap"
+          style="display: none"
+        >
+          <button
+            class="hrd-ci-pill hrd-ci-pill-blue active"
+            id="hrd-co-b-all"
+            onclick="hrdCoBadgeFilter('all')"
+          >
+            <span class="hrd-ci-pill-icon">&#9654;</span
+            ><span class="hrd-ci-pill-val" id="hrd-co-total-val">—</span
+            ><span class="hrd-ci-pill-lbl">Checked Out</span>
+          </button>
+          <button
+            class="hrd-ci-pill hrd-ci-pill-green"
+            id="hrd-co-b-ontime"
+            onclick="hrdCoBadgeFilter('ontime')"
+          >
+            <span class="hrd-ci-pill-icon">&#10003;</span
+            ><span class="hrd-ci-pill-val" id="hrd-co-ontime-val">—</span
+            ><span class="hrd-ci-pill-lbl">On Time</span>
+          </button>
+          <button
+            class="hrd-ci-pill hrd-ci-pill-orange"
+            id="hrd-co-b-early"
+            onclick="hrdCoBadgeFilter('early')"
+          >
+            <span class="hrd-ci-pill-icon">&#8678;</span
+            ><span class="hrd-ci-pill-val" id="hrd-co-early-val">—</span
+            ><span class="hrd-ci-pill-lbl">Early Leave</span>
+          </button>
+          <button
+            class="hrd-ci-pill hrd-ci-pill-red"
+            id="hrd-co-b-notout"
+            onclick="hrdCoBadgeFilter('notout')"
+          >
+            <span class="hrd-ci-pill-icon">&#10007;</span
+            ><span class="hrd-ci-pill-val" id="hrd-co-notout-val">—</span
+            ><span class="hrd-ci-pill-lbl">Not Checked Out</span>
+          </button>
+        </div>
+
+        <div id="hrd-checkin-inline-body" class="hrd-ci-table-scroll">
+          <div class="hrd-loading">Loading check-in data&hellip;</div>
+        </div>
+        <div
+          id="hrd-checkout-inline-body"
+          class="hrd-ci-table-scroll"
+          style="display: none"
+        >
+          <div class="hrd-loading">Loading check-out data&hellip;</div>
+        </div>
+      </div>
+
+      <div style="text-align: right; margin-bottom: 12px">
+        <button
+          class="hrd-btn hrd-btn-ghost hrd-btn-sm"
+          onclick="hrdToggleTopControls()"
+          id="hrd-toggle-controls-btn"
+          style="
+            background: #fff;
+            border: 1px solid var(--hrd-border);
+            box-shadow: var(--hrd-shadow);
+            color: var(--hrd-blue);
+            font-weight: 600;
+          "
+        >
+          &#9881; Show Filters &amp; Actions
+        </button>
+      </div>
+
+      <div id="hrd-top-controls" style="display: none; margin-bottom: 15px">
+        <div class="hrd-filters-bar" style="margin-bottom: 8px">
+          <span class="hrd-filter-label">&#127760; Filters:</span>
+          <select id="hrd-f-month" class="hrd-select">
+            <option value="1">January</option>
+            <option value="2">February</option>
+            <option value="3">March</option>
+            <option value="4">April</option>
+            <option value="5">May</option>
+            <option value="6">June</option>
+            <option value="7">July</option>
+            <option value="8">August</option>
+            <option value="9">September</option>
+            <option value="10">October</option>
+            <option value="11">November</option>
+            <option value="12">December</option>
+          </select>
+          <select id="hrd-f-year" class="hrd-select">
+            <option value="2024">2024</option>
+            <option value="2025">2025</option>
+            <option value="2026">2026</option>
+          </select>
+          <select id="hrd-f-dept" class="hrd-select">
+            <option value="">Department: All</option>
+          </select>
+          <select id="hrd-f-branch" class="hrd-select">
+            <option value="">Branch: All</option>
+          </select>
+          <button class="hrd-btn hrd-btn-primary" onclick="hrdApplyFilters()">
+            Apply
+          </button>
+          <button class="hrd-btn hrd-btn-ghost" onclick="hrdResetFilters()">
+            Reset
+          </button>
+          <button
+            class="hrd-btn hrd-btn-ghost hrd-btn-sm"
+            onclick="hrdRefreshAll()"
+            title="Refresh all data"
+          >
+            &#8635; Refresh
+          </button>
+          <span
+            id="hrd-last-sync"
+            class="hrd-refresh-info"
+            style="margin-left: 4px"
+            >—</span
+          >
+        </div>
+        <div class="hrd-quick-bar" style="margin-bottom: 0">
+          <span class="hrd-filter-label">Quick Actions:</span>
+          <div class="hrd-qa-btns">
+            <button
+              class="hrd-qa-btn hrd-qa-blue"
+              onclick="hrdNewDoc('Employee')"
+            >
+              &#128100; New Employee
+            </button>
+            <button
+              class="hrd-qa-btn hrd-qa-green"
+              onclick="hrdRoute('attendance')"
+            >
+              &#128205; Mark Attendance
+            </button>
+            <button
+              class="hrd-qa-btn hrd-qa-yellow"
+              onclick="hrdNewDoc('Payroll Entry')"
+            >
+              &#128176; Run Payroll
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="hrd-tabs-nav">
+        <button
+          class="hrd-tab-btn active"
+          onclick="hrdSwitchTab('overview', this)"
+        >
+          &#128200; Overview
+        </button>
+        <button class="hrd-tab-btn" onclick="hrdSwitchTab('attendance', this)">
+          &#128197; Attendance &amp; Team
+        </button>
+        <button class="hrd-tab-btn" onclick="hrdSwitchTab('leaves', this)">
+          &#127807; Leaves
+        </button>
+        <button class="hrd-tab-btn" onclick="hrdSwitchTab('payroll', this)">
+          &#128176; Payroll
+        </button>
+        <button class="hrd-tab-btn" onclick="hrdSwitchTab('expenses', this)">
+          &#129534; Expenses &amp; Timesheets
+        </button>
+        <button class="hrd-tab-btn" onclick="hrdSwitchTab('recruitment', this)">
+          &#127919; Recruitment &amp; Performance
+        </button>
+        <button class="hrd-tab-btn" onclick="hrdSwitchTab('reports', this)">
+          &#128196; Reports
+        </button>
+      </div>
+
+      <div class="hrd-tab-panel active" id="tab-overview">
+        <div class="hrd-section-title">&#128200; Today&rsquo;s Snapshot</div>
+        <div class="hrd-kpi-row-2">
+          <div
+            class="hrd-kpi-sm hrd-kpi-sm-teal"
+            onclick="hrdNavToTab('recruitment')"
+          >
+            <div class="hrd-kpi-sm-icon">&#128100;</div>
+            <div class="hrd-kpi-sm-body">
+              <div class="hrd-kpi-sm-val" id="kpi-onboarding">—</div>
+              <div class="hrd-kpi-sm-label">Active Onboardings</div>
+            </div>
+          </div>
+          <div
+            class="hrd-kpi-sm hrd-kpi-sm-amber"
+            onclick="hrdOpenUpcomingSeparations()"
+          >
+            <div class="hrd-kpi-sm-icon">&#9203;</div>
+            <div class="hrd-kpi-sm-body">
+              <div class="hrd-kpi-sm-val" id="kpi-separations">—</div>
+              <div class="hrd-kpi-sm-label">Upcoming Separations</div>
+            </div>
+          </div>
+          <div
+            class="hrd-kpi-sm hrd-kpi-sm-rose"
+            onclick="hrdOpenIncompleteEmployees()"
+          >
+            <div class="hrd-kpi-sm-icon">&#128196;</div>
+            <div class="hrd-kpi-sm-body">
+              <div class="hrd-kpi-sm-val" id="kpi-docs">—</div>
+              <div class="hrd-kpi-sm-label">Incomplete Documents</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="hrd-tab-panel" id="tab-attendance">
+        <div class="hrd-row">
+          <div class="hrd-card hrd-flex-1">
+            <div class="hrd-card-head">
+              <span class="hrd-card-title"
+                >Monthly Attendance Distribution</span
+              >
+              <button class="hrd-link-btn" onclick="hrdAttendanceDetailToday()">
+                &#8599; Detail
+              </button>
+            </div>
+            <div id="hrd-donut-wrap" class="hrd-donut-wrap">
+              <div class="hrd-loading">Loading...</div>
+            </div>
+            <div id="hrd-today-summary" class="hrd-today-pills"></div>
+          </div>
+        </div>
+        <div class="hrd-row">
+          <div class="hrd-card hrd-flex-1">
+            <div class="hrd-card-head">
+              <span class="hrd-card-title">Monthly Attendance Heatmap</span>
+              <div>
+                <button
+                  class="hrd-link-btn"
+                  onclick="hrdDownloadHeatmapExcel()"
+                  style="margin-right: 8px"
+                >
+                  &#128229; Excel
+                </button>
+                <button
+                  class="hrd-link-btn"
+                  onclick="hrdRoute('Monthly Attendance Sheet')"
+                >
+                  &#8599; Full Report
+                </button>
+              </div>
+            </div>
+            <div class="hrd-legend">
+              <span class="hrd-leg-item"
+                ><span class="hrd-leg-dot" style="background: #28a745"></span
+                >Present</span
+              >
+              <span class="hrd-leg-item"
+                ><span class="hrd-leg-dot" style="background: #ffc107"></span
+                >Half Day</span
+              >
+              <span class="hrd-leg-item"
+                ><span class="hrd-leg-dot" style="background: #4b7bec"></span>On
+                Leave</span
+              >
+              <span class="hrd-leg-item"
+                ><span class="hrd-leg-dot" style="background: #dc3545"></span
+                >Absent</span
+              >
+              <span class="hrd-leg-item"
+                ><span class="hrd-leg-dot" style="background: #dee2e6"></span
+                >Weekend/Holiday</span
+              >
+            </div>
+            <div id="hrd-heatmap" class="hrd-heatmap-wrap">
+              <div class="hrd-loading">Loading heatmap...</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="hrd-tab-panel" id="tab-leaves">
+        <div class="hrd-row">
+          <div class="hrd-card hrd-flex-2">
+            <div class="hrd-card-head">
+              <span class="hrd-card-title">Leave Requests &mdash; Active</span>
+              <button
+                class="hrd-link-btn"
+                onclick="hrdRoute('leave-application')"
+              >
+                &#8599; All Leave Applications
+              </button>
+            </div>
+            <div class="hrd-table-wrap">
+              <table class="hrd-table" id="hrd-leave-table">
+                <thead>
+                  <tr>
+                    <th>Employee</th>
+                    <th>Leave Type</th>
+                    <th>From</th>
+                    <th>To</th>
+                    <th>Days</th>
+                    <th>Status</th>
+                    <th>Approver</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody id="hrd-leave-tbody">
+                  <tr>
+                    <td colspan="8" class="hrd-loading-cell">Loading...</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div id="hrd-leave-summary" class="hrd-summary-strip"></div>
+          </div>
+          <div class="hrd-card hrd-flex-1">
+            <div class="hrd-card-head">
+              <span class="hrd-card-title">&#9888; Low Leave Balance</span>
+              <button
+                class="hrd-link-btn"
+                onclick="hrdReport('Employee Leave Balance')"
+              >
+                &#8599; Full Report
+              </button>
+            </div>
+            <div id="hrd-leave-balance-overview" class="hrd-leave-bal-wrap">
+              <div class="hrd-loading">Loading...</div>
+            </div>
+          </div>
+        </div>
+        <div class="hrd-card" style="margin-top: 0">
+          <div class="hrd-card-head">
+            <span class="hrd-card-title"
+              >&#128197; Upcoming Approved Leaves &mdash; Next 14 Days</span
+            >
+          </div>
+          <div id="hrd-upcoming-leaves" class="hrd-upcoming-wrap">
+            <div class="hrd-loading">Loading...</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="hrd-tab-panel" id="tab-payroll">
+        <div class="hrd-row">
+          <div class="hrd-card hrd-flex-2">
+            <div class="hrd-card-head">
+              <span class="hrd-card-title"
+                >Payroll Summary &mdash; <span id="hrd-payroll-month"></span
+              ></span>
+              <button class="hrd-link-btn" onclick="hrdRoute('salary-slip')">
+                &#8599; Salary Slips
+              </button>
+            </div>
+            <div id="hrd-payroll-summary" class="hrd-payroll-summary">
+              <div class="hrd-loading">Loading payroll...</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="hrd-tab-panel" id="tab-expenses">
+        <div class="hrd-row">
+          <div class="hrd-card hrd-flex-1">
+            <div class="hrd-card-head">
+              <span class="hrd-card-title">Expense Claims</span>
+              <button class="hrd-link-btn" onclick="hrdRoute('expense-claim')">
+                &#8599; All Claims
+              </button>
+            </div>
+            <div class="hrd-table-wrap">
+              <table class="hrd-table" id="hrd-expense-table">
+                <thead>
+                  <tr>
+                    <th>Employee</th>
+                    <th>Type</th>
+                    <th>Amount</th>
+                    <th>Status</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody id="hrd-expense-tbody">
+                  <tr>
+                    <td colspan="5" class="hrd-loading-cell">Loading...</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div id="hrd-expense-footer" class="hrd-summary-strip"></div>
+          </div>
+          <div class="hrd-card hrd-flex-1">
+            <div class="hrd-card-head">
+              <span class="hrd-card-title">Timesheets &mdash; This Week</span>
+              <button class="hrd-link-btn" onclick="hrdRoute('timesheet')">
+                &#8599; All Timesheets
+              </button>
+            </div>
+            <div class="hrd-table-wrap">
+              <table class="hrd-table" id="hrd-timesheet-table">
+                <thead>
+                  <tr>
+                    <th>Employee</th>
+                    <th>Period</th>
+                    <th>Total Hrs</th>
+                    <th>Billable</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody id="hrd-ts-tbody">
+                  <tr>
+                    <td colspan="5" class="hrd-loading-cell">Loading...</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="hrd-tab-panel" id="tab-recruitment">
+        <div class="hrd-row">
+          <div class="hrd-card hrd-flex-1">
+            <div class="hrd-card-head">
+              <span class="hrd-card-title">&#127919; Recruitment Pipeline</span>
+              <button class="hrd-link-btn" onclick="hrdRoute('job-opening')">
+                &#8599; Job Openings
+              </button>
+            </div>
+            <div id="hrd-recruitment" class="hrd-recruitment">
+              <div class="hrd-loading">Loading...</div>
+            </div>
+          </div>
+          <div class="hrd-card hrd-flex-1">
+            <div class="hrd-card-head">
+              <span class="hrd-card-title"
+                >&#11088; Performance &amp; Appraisals</span
+              >
+              <button class="hrd-link-btn" onclick="hrdRoute('appraisal')">
+                &#8599; Appraisals
+              </button>
+            </div>
+            <div id="hrd-performance" class="hrd-performance">
+              <div class="hrd-loading">Loading...</div>
+            </div>
+          </div>
+          <div class="hrd-card hrd-flex-1">
+            <div class="hrd-card-head">
+              <span class="hrd-card-title">&#128172; Grievances</span>
+              <button
+                class="hrd-link-btn"
+                onclick="hrdRoute('employee-grievance')"
+              >
+                &#8599; Grievances
+              </button>
+            </div>
+            <div id="hrd-grievances" class="hrd-grievances">
+              <div class="hrd-loading">Loading...</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="hrd-tab-panel" id="tab-reports">
+        <div class="hrd-section-title">Quick Reports</div>
+        <div class="hrd-report-category">
+          <div class="hrd-report-cat-title">
+            &#128101; People &amp; Attendance
+          </div>
+          <div class="hrd-reports-grid">
+            <button
+              class="hrd-report-btn hrd-rep-blue"
+              onclick="hrdReport('Monthly Attendance Sheet')"
+            >
+              &#128197; Monthly Attendance<span>Attendance</span>
+            </button>
+            <button
+              class="hrd-report-btn hrd-rep-blue"
+              onclick="hrdReport('Employee Analytics')"
+            >
+              &#128101; Employee Analytics<span>People</span>
+            </button>
+            <button
+              class="hrd-report-btn hrd-rep-blue"
+              onclick="
+                hrdReport('Employee Hours Utilization Based On Timesheet')
+              "
+            >
+              &#9200; Hours Utilization<span>Timesheets</span>
+            </button>
+          </div>
+        </div>
+        <div class="hrd-report-category">
+          <div class="hrd-report-cat-title">&#127807; Leaves</div>
+          <div class="hrd-reports-grid">
+            <button
+              class="hrd-report-btn hrd-rep-green"
+              onclick="hrdReport('Employee Leave Balance')"
+            >
+              &#127807; Leave Balance<span>Leaves</span>
+            </button>
+            <button
+              class="hrd-report-btn hrd-rep-green"
+              onclick="hrdReport('Leave Ledger')"
+            >
+              &#128196; Leave Ledger<span>Leaves</span>
+            </button>
+          </div>
+        </div>
+        <div class="hrd-report-category">
+          <div class="hrd-report-cat-title">&#128176; Payroll</div>
+          <div class="hrd-reports-grid">
+            <button
+              class="hrd-report-btn hrd-rep-orange"
+              onclick="hrdReport('Salary Register')"
+            >
+              &#128176; Salary Register<span>Payroll</span>
+            </button>
+            <button
+              class="hrd-report-btn hrd-rep-orange"
+              onclick="hrdReport('Bank Remittance')"
+            >
+              &#127974; Bank Remittance<span>Payroll</span>
+            </button>
+          </div>
+        </div>
+        <div class="hrd-report-category">
+          <div class="hrd-report-cat-title">
+            &#127919; Recruitment &amp; Performance
+          </div>
+          <div class="hrd-reports-grid">
+            <button
+              class="hrd-report-btn hrd-rep-purple"
+              onclick="hrdReport('Recruitment Analytics')"
+            >
+              &#127919; Recruitment Analytics<span>Recruitment</span>
+            </button>
+            <button
+              class="hrd-report-btn hrd-rep-yellow"
+              onclick="hrdReport('Appraisal Overview')"
+            >
+              &#11088; Appraisal Overview<span>Performance</span>
+            </button>
+          </div>
+        </div>
+        <div class="hrd-report-category">
+          <div class="hrd-report-cat-title">&#129534; Expenses</div>
+          <div class="hrd-reports-grid">
+            <button
+              class="hrd-report-btn hrd-rep-red"
+              onclick="hrdReport('Unpaid Expense Claim')"
+            >
+              &#129534; Unpaid Expenses<span>Expenses</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="hrd-footer">
+        <span>HR Operations Dashboard</span>
+        <span id="hrd-footer-sync"></span>
+      </div>
+    </div>
+  </body>
+
+  <script>
+    (function () {
+      "use strict";
+
+      var HRD = {
+        filters: {
+          month: new Date().getMonth() + 1,
+          year: new Date().getFullYear(),
+          department: "",
+          branch: "",
+        },
+        clockInterval: null,
+        lastKpi: {},
+        currentHeatmapData: [],
+
+        // Attendance Log State (Single Date)
+        ciMode: "in",
+        ciDate: "",
+        ciFilter: "all",
+        coFilter: "all",
+        checkinData: [],
+        checkoutData: [],
+        ciNotIn: [],
+        coNotOut: [],
+
+        // Daily Snapshot State
+        dailyMode: "present", // "present" | "absent"
+        dailySubFilter: "Present", // sub-status: "Present"|"Half Day"|"Work From Home"|"Absent"|"On Leave"
+        dailyDate: "",
+        dailyData: [],
+      };
+
+      /* ══════════════════════════════════════════════════════════
+     TAB SWITCHING
+  ══════════════════════════════════════════════════════════ */
+      window.hrdSwitchTab = function (tabId, btn) {
+        root_element.querySelectorAll(".hrd-tab-panel").forEach(function (p) {
+          p.classList.remove("active");
+        });
+        root_element.querySelectorAll(".hrd-tab-btn").forEach(function (b) {
+          b.classList.remove("active");
+        });
+        var panel = root_element.querySelector("#tab-" + tabId);
+        if (panel) panel.classList.add("active");
+        if (btn) btn.classList.add("active");
+      };
+
+      window.hrdNavToTab = function (tabId) {
+        var btn = root_element.querySelector(
+          ".hrd-tab-btn[onclick*=\"'" + tabId + "'\"]",
+        );
+        hrdSwitchTab(tabId, btn);
+      };
+
+      /* ══════════════════════════════════════════════════════════
+     INIT
+  ══════════════════════════════════════════════════════════ */
+      function hrdInit() {
+        var d = new Date();
+        root_element.querySelector("#hrd-f-month").value = d.getMonth() + 1;
+        root_element.querySelector("#hrd-f-year").value = d.getFullYear();
+        var pMonth = root_element.querySelector("#hrd-payroll-month");
+        if (pMonth) pMonth.textContent = hrdMonthYearLabel();
+
+        // Init Attendance Log to Today
+        HRD.ciDate = frappe.datetime.get_today();
+        var ciDateInput = root_element.querySelector("#hrd-ci-single-date");
+        if (ciDateInput) ciDateInput.value = HRD.ciDate;
+
+        // Init Daily Snapshot to Yesterday
+        var yesterday = frappe.datetime.add_days(HRD.ciDate, -1);
+        HRD.dailyDate = yesterday;
+        var dailyDateInput = root_element.querySelector("#hrd-daily-date");
+        if (dailyDateInput) dailyDateInput.value = HRD.dailyDate;
+
+        hrdStartClock();
+        hrdBindKpiCards();
+        hrdRefreshAll();
+      }
+
+      /* ══════════════════════════════════════════════════════════
+     CLOCK
+  ══════════════════════════════════════════════════════════ */
+      function hrdStartClock() {
+        function tick() {
+          var now = new Date();
+          var hh = String(now.getHours()).padStart(2, "0");
+          var mm = String(now.getMinutes()).padStart(2, "0");
+          var ss = String(now.getSeconds()).padStart(2, "0");
+          var clockEl = root_element.querySelector("#hrd-clock");
+          var dateEl = root_element.querySelector("#hrd-full-date");
+          if (clockEl) clockEl.textContent = hh + ":" + mm + ":" + ss;
+          if (dateEl)
+            dateEl.textContent = now.toLocaleDateString("en-IN", {
+              weekday: "long",
+              day: "numeric",
+              month: "long",
+              year: "numeric",
+            });
+        }
+        tick();
+        HRD.clockInterval = setInterval(tick, 1000);
+      }
+
+      /* ══════════════════════════════════════════════════════════
+     TOGGLE TOP CONTROLS
+  ══════════════════════════════════════════════════════════ */
+      window.hrdToggleTopControls = function () {
+        var ctrl = root_element.querySelector("#hrd-top-controls");
+        var btn = root_element.querySelector("#hrd-toggle-controls-btn");
+        if (ctrl.style.display === "none") {
+          ctrl.style.display = "block";
+          btn.innerHTML = "&#10005; Hide Filters & Actions";
+        } else {
+          ctrl.style.display = "none";
+          btn.innerHTML = "&#9881; Show Filters & Actions";
+        }
+      };
+
+      /* ══════════════════════════════════════════════════════════
+     KPI DRILL-DOWNS
+  ══════════════════════════════════════════════════════════ */
+      function hrdBindKpiCards() {
+        var today = frappe.datetime.get_today();
+        var drillMap = {
+          "kpi-card-total": function () {
+            frappe.route_options = { status: "Active" };
+            frappe.set_route("List", "Employee");
+          },
+          "kpi-card-attendance-req": function () {
+            frappe.route_options = { docstatus: 0 };
+            frappe.set_route("List", "Attendance Request");
+          },
+          "kpi-card-pending-leave": function () {
+            frappe.route_options = { status: "Open" };
+            frappe.set_route("List", "Leave Application");
+          },
+          "kpi-card-expenses": function () {
+            frappe.route_options = {
+              approval_status: ["in", ["Draft", "Pending"]],
+            };
+            frappe.set_route("List", "Expense Claim");
+          },
+        };
+        Object.keys(drillMap).forEach(function (id) {
+          var card = root_element.querySelector("#" + id);
+          if (card) card.addEventListener("click", drillMap[id]);
+        });
+      }
+
+      /* ══════════════════════════════════════════════════════════
+     REFRESH ALL
+  ══════════════════════════════════════════════════════════ */
+      window.hrdRefreshAll = function () {
+        hrdLoadOverview();
+        hrdLoadDailySnapshot();
+        hrdLoadCheckinInline();
+        if (HRD.ciMode === "out") hrdLoadCheckoutInline();
+        hrdLoadAttendance();
+        hrdLoadLeaves();
+        hrdLoadPayroll();
+        hrdLoadExpenses();
+        hrdLoadRecruitment();
+
+        var syncEl = root_element.querySelector("#hrd-last-sync");
+        var footerEl = root_element.querySelector("#hrd-footer-sync");
+        var ts = "Refreshed: " + new Date().toLocaleTimeString();
+        if (syncEl) syncEl.textContent = ts;
+        if (footerEl) footerEl.textContent = ts;
+      };
+
+      /* ══════════════════════════════════════════════════════════
+     FILTERS
+  ══════════════════════════════════════════════════════════ */
+      window.hrdApplyFilters = function () {
+        HRD.filters.month = parseInt(
+          root_element.querySelector("#hrd-f-month").value,
+        );
+        HRD.filters.year = parseInt(
+          root_element.querySelector("#hrd-f-year").value,
+        );
+        HRD.filters.department =
+          root_element.querySelector("#hrd-f-dept").value;
+        HRD.filters.branch = root_element.querySelector("#hrd-f-branch").value;
+        var pMonth = root_element.querySelector("#hrd-payroll-month");
+        if (pMonth) pMonth.textContent = hrdMonthYearLabel();
+        hrdRefreshAll();
+      };
+
+      window.hrdResetFilters = function () {
+        var d = new Date();
+        root_element.querySelector("#hrd-f-month").value = d.getMonth() + 1;
+        root_element.querySelector("#hrd-f-year").value = d.getFullYear();
+        root_element.querySelector("#hrd-f-dept").value = "";
+        root_element.querySelector("#hrd-f-branch").value = "";
+        HRD.filters = {
+          month: d.getMonth() + 1,
+          year: d.getFullYear(),
+          department: "",
+          branch: "",
+        };
+        hrdRefreshAll();
+      };
+
+      function hrdPopulateDropdowns(departments, branches) {
+        var deptSel = root_element.querySelector("#hrd-f-dept");
+        var branchSel = root_element.querySelector("#hrd-f-branch");
+        var curDept = deptSel.value;
+        var curBranch = branchSel.value;
+        deptSel.innerHTML = '<option value="">Department: All</option>';
+        branchSel.innerHTML = '<option value="">Branch: All</option>';
+        (departments || []).forEach(function (d) {
+          var o = document.createElement("option");
+          o.value = d;
+          o.textContent = d;
+          deptSel.appendChild(o);
+        });
+        (branches || []).forEach(function (b) {
+          var o = document.createElement("option");
+          o.value = b;
+          o.textContent = b;
+          branchSel.appendChild(o);
+        });
+        deptSel.value = curDept;
+        branchSel.value = curBranch;
+      }
+
+      function hrdRenderCelebrations(celebrations) {
+        var bar = root_element.querySelector("#hrd-celebrations-bar");
+        var bdays = (celebrations && celebrations.birthdays) || [];
+        var annivs = (celebrations && celebrations.anniversaries) || [];
+        if (bdays.length === 0 && annivs.length === 0) {
+          bar.style.display = "none";
+          return;
+        }
+        bar.style.display = "flex";
+        var html =
+          '<span style="font-weight:700;font-size:12px;color:#92400e;margin-right:8px">&#127881; Today:</span>';
+        bdays.forEach(function (b) {
+          html +=
+            '<span class="hrd-celebration-item">&#127874; <strong>' +
+            hrdEsc(b.employee_name) +
+            "</strong>&nbsp;Birthday</span>";
+        });
+        annivs.forEach(function (a) {
+          html +=
+            '<span class="hrd-celebration-item">&#127881; <strong>' +
+            hrdEsc(a.employee_name) +
+            "</strong>&nbsp;" +
+            a.years +
+            " Year" +
+            (a.years > 1 ? "s" : "") +
+            " Anniversary</span>";
+        });
+        bar.innerHTML = html;
+      }
+
+      /* ══════════════════════════════════════════════════════════
+     SECTION 1 — OVERVIEW KPIs
+  ══════════════════════════════════════════════════════════ */
+      function hrdLoadOverview() {
+        frappe.call({
+          method: "hr_dashboard_api",
+          args: {
+            action: "overview",
+            month: HRD.filters.month,
+            year: HRD.filters.year,
+            department: HRD.filters.department,
+            branch: HRD.filters.branch,
+          },
+          callback: function (r) {
+            if (!r || !r.message) return;
+            var d = r.message;
+            var cnEl = root_element.querySelector("#hrd-company-name");
+            if (cnEl) cnEl.textContent = d.company_name || "—";
+
+            // Inside hrdLoadOverview()
+            hrdSetKPI("kpi-total", d.kpi.total_employees);
+            hrdSetKPI("kpi-attendance-req", d.kpi.pending_attendance); // MUST match this exactly
+            hrdSetKPI("kpi-pending-leaves", d.kpi.pending_leaves);
+            hrdSetKPI("kpi-expenses", d.kpi.pending_expenses);
+
+            var onbEl = root_element.querySelector("#kpi-onboarding");
+            var sepEl = root_element.querySelector("#kpi-separations");
+            var docEl = root_element.querySelector("#kpi-docs");
+            if (onbEl) onbEl.textContent = d.kpi.active_onboardings || "0";
+            if (sepEl) sepEl.textContent = d.kpi.upcoming_separations || "0";
+            if (docEl) docEl.textContent = d.kpi.incomplete_docs || "0";
+
+            hrdRenderCelebrations(d.celebrations || {});
+            hrdPopulateDropdowns(d.departments || [], d.branches || []);
+
+            root_element
+              .querySelectorAll(".hrd-kpi-card")
+              .forEach(function (c) {
+                c.classList.remove("hrd-skeleton");
+              });
+          },
+        });
+      }
+
+      function hrdSetKPI(id, val) {
+        var el = root_element.querySelector("#" + id);
+        if (el) el.textContent = val !== null && val !== undefined ? val : "0";
+      }
+
+      /* ══════════════════════════════════════════════════════════
+     DAILY SNAPSHOT — 2 Main KPIs with Sub-Pills
+     Present → (Present | Half Day | WFH)
+     Absent  → (Absent  | On Leave)
+  ══════════════════════════════════════════════════════════ */
+
+      // Safely extract HH:MM from a full datetime string
+      function formatTimeOnly(dtStr) {
+        if (!dtStr || dtStr === "None" || dtStr === "null") return "00:00";
+        var str = String(dtStr).trim();
+        if (str.indexOf(" ") !== -1) {
+          var timePart = str.split(" ")[1];
+          return timePart.substring(0, 5);
+        }
+        if (str.length >= 5) return str.substring(0, 5);
+        return str;
+      }
+
+      window.hrdLoadDailySnapshot = function () {
+        var dDate = root_element.querySelector("#hrd-daily-date").value;
+        if (dDate) HRD.dailyDate = dDate;
+
+        frappe.call({
+          method: "hr_dashboard_api",
+          args: {
+            action: "daily_counts",
+            date: HRD.dailyDate,
+            department: HRD.filters.department,
+            branch: HRD.filters.branch,
+          },
+          callback: function (r) {
+            if (!r || !r.message) return;
+            var m = r.message;
+
+            // Main totals
+            hrdSetKPI("kpi-present-count", m.present_total);
+            hrdSetKPI("kpi-absent-count", m.absent_total);
+
+            // Present sub-pills
+            hrdSetKPI("dsub-present-count", m.present_count);
+            hrdSetKPI("dsub-halfday-count", m.half_day_count);
+            hrdSetKPI("dsub-wfh-count", m.wfh_count);
+
+            // Absent sub-pills
+            hrdSetKPI("dsub-absent-count", m.absent_count);
+            hrdSetKPI("dsub-leave-count", m.leave_count);
+          },
+        });
+
+        // Refresh table if currently open
+        var wrap = root_element.querySelector("#hrd-daily-table-wrap");
+        if (wrap && wrap.style.display !== "none") {
+          hrdLoadDailyTable();
+        }
+      };
+
+      // Called when any sub-pill is clicked
+      // Called when any sub-pill OR the main header is clicked
+      window.hrdShowDailyTable = function (mode, subFilter) {
+        HRD.dailyMode = mode;
+        HRD.dailySubFilter = subFilter;
+
+        // Reset active states on sub-pills
+        [
+          "dsp-present",
+          "dsp-halfday",
+          "dsp-wfh",
+          "dsp-absent",
+          "dsp-onleave",
+        ].forEach(function (id) {
+          var el = root_element.querySelector("#" + id);
+          if (el) el.classList.remove("active");
+        });
+
+        // Add active state only if clicking a specific sub-pill (not "All")
+        var pillMap = {
+          "present|Present": "dsp-present",
+          "present|Half Day": "dsp-halfday",
+          "present|Work From Home": "dsp-wfh",
+          "absent|Absent": "dsp-absent",
+          "absent|On Leave": "dsp-onleave",
+        };
+        var activeId = pillMap[mode + "|" + subFilter];
+        if (activeId) {
+          var activeEl = root_element.querySelector("#" + activeId);
+          if (activeEl) activeEl.classList.add("active");
+        }
+
+        // Show the table panel
+        var wrap = root_element.querySelector("#hrd-daily-table-wrap");
+        var title = root_element.querySelector("#hrd-daily-table-title");
+        if (wrap) wrap.style.display = "block";
+
+        var titleMap = {
+          "All Present": "&#9989; All Present Employees",
+          "All Absent": "&#10060; All Absent Employees",
+          Present: "&#128065; Present Employees",
+          "Half Day": "&#128065; Half Day Employees",
+          "Work From Home": "&#128065; Work From Home Employees",
+          Absent: "&#128065; Absent Employees",
+          "On Leave": "&#128065; Employees On Leave",
+        };
+        if (title)
+          title.innerHTML = titleMap[subFilter] || "&#128065; " + subFilter;
+
+        hrdLoadDailyTable();
+      };
+
+      window.hrdCloseDailyTable = function () {
+        var wrap = root_element.querySelector("#hrd-daily-table-wrap");
+        if (wrap) wrap.style.display = "none";
+      };
+
+      window.hrdLoadDailyTable = function () {
+        var tbody = root_element.querySelector("#hrd-daily-tbody");
+        tbody.innerHTML = '<div class="hrd-loading">Loading list&hellip;</div>';
+
+        frappe.call({
+          method: "hr_dashboard_api",
+          args: {
+            action: "daily_list",
+            mode: HRD.dailyMode,
+            sub_status: HRD.dailySubFilter,
+            date: HRD.dailyDate,
+            department: HRD.filters.department,
+            branch: HRD.filters.branch,
+          },
+          callback: function (r) {
+            if (!r || !r.message) {
+              tbody.innerHTML = '<div class="hrd-loading">No data found.</div>';
+              return;
+            }
+            HRD.dailyData = r.message.data || [];
+            hrdRenderDailyTable(
+              HRD.dailyData,
+              HRD.dailyMode,
+              HRD.dailySubFilter,
+            );
+          },
+        });
+      };
+
+      function hrdRenderDailyTable(data, mode, subFilter) {
+        var tbody = root_element.querySelector("#hrd-daily-tbody");
+        if (!data.length) {
+          tbody.innerHTML =
+            '<div class="hrd-loading" style="padding:30px">No records found for this date.</div>';
+          return;
+        }
+
+        // Both Present and Absent share identical columns
+        var html =
+          '<table class="hrd-table hrd-ci-table">' +
+          "<thead><tr>" +
+          "<th>Employee ID</th><th>Employee Name</th><th>Status</th>" +
+          "<th>Check-In</th><th>Check-Out</th><th>Working Hours</th>" +
+          "</tr></thead><tbody>";
+
+        data.forEach(function (row) {
+          var inTimeStr = formatTimeOnly(row.in_time);
+          var outTimeStr = formatTimeOnly(row.out_time);
+
+          var isLate = row.late_entry === 1;
+          var isEarly = row.early_exit === 1;
+
+          var inCell =
+            isLate && inTimeStr !== "00:00"
+              ? '<td style="color:var(--hrd-red);font-weight:700">' +
+                hrdEsc(inTimeStr) +
+                "</td>"
+              : "<td>" + hrdEsc(inTimeStr) + "</td>";
+
+          var outCell =
+            isEarly && outTimeStr !== "00:00"
+              ? '<td style="color:var(--hrd-red);font-weight:700">' +
+                hrdEsc(outTimeStr) +
+                "</td>"
+              : "<td>" + hrdEsc(outTimeStr) + "</td>";
+
+          var statusText =
+            row.status || (mode === "present" ? "Present" : "Absent");
+          if (statusText === "Leave") statusText = "On Leave";
+
+          var statusCls = "hrd-tag-gray";
+          if (statusText === "Present") statusCls = "hrd-tag-green";
+          else if (statusText === "Half Day") statusCls = "hrd-tag-yellow";
+          else if (statusText === "Work From Home") statusCls = "hrd-tag-blue";
+          else if (statusText === "On Leave") statusCls = "hrd-tag-orange";
+          else if (statusText === "Absent") statusCls = "hrd-tag-red";
+
+          html +=
+            "<tr>" +
+            '<td style="font-weight:600;font-size:11px;color:var(--hrd-text-sm)">' +
+            hrdEsc(row.employee) +
+            "</td>" +
+            '<td style="font-weight:500">' +
+            hrdEsc(row.employee_name) +
+            "</td>" +
+            '<td><span class="hrd-tag ' +
+            statusCls +
+            '">' +
+            hrdEsc(statusText) +
+            "</span></td>" +
+            inCell +
+            outCell +
+            "<td>" +
+            hrdFormatWorkingHours(row.working_hours) +
+            "</td>" +
+            "</tr>";
+        });
+
+        tbody.innerHTML = html + "</tbody></table>";
+      }
+
+      window.hrdDownloadDailyCsv = function () {
+        if (!HRD.dailyData.length) {
+          frappe.msgprint("No data to download.");
+          return;
+        }
+
+        // Both Present and Absent download the same column format
+        var csv =
+          '"Employee ID","Employee Name","Status","Check-In","Check-Out","Working Hours","Late Entry","Early Exit"\n';
+
+        HRD.dailyData.forEach(function (r) {
+          var inT = formatTimeOnly(r.in_time);
+          var outT = formatTimeOnly(r.out_time);
+          var st =
+            r.status === "Leave"
+              ? "On Leave"
+              : r.status ||
+                (HRD.dailyMode === "present" ? "Present" : "Absent");
+
+          csv += hrdCsvRow([
+            r.employee,
+            r.employee_name,
+            st,
+            inT,
+            outT,
+            hrdFormatWorkingHours(r.working_hours),
+            r.late_entry === 1 ? "Yes" : "No",
+            r.early_exit === 1 ? "Yes" : "No",
+          ]);
+        });
+
+        var capSub = HRD.dailySubFilter.replace(/\s+/g, "_");
+        downloadFile(
+          csv,
+          capSub + "_List_" + HRD.dailyDate + ".csv",
+          "text/csv;charset=utf-8;",
+        );
+      };
+
+      /* ══════════════════════════════════════════════════════════
+     ATTENDANCE LOG (SINGLE DATE)
+  ══════════════════════════════════════════════════════════ */
+      window.hrdSwitchCheckin = function (mode) {
+        HRD.ciMode = mode;
+        var btnIn = root_element.querySelector("#hrd-ci-btn-in");
+        var btnOut = root_element.querySelector("#hrd-ci-btn-out");
+        var bodyIn = root_element.querySelector("#hrd-checkin-inline-body");
+        var bodyOut = root_element.querySelector("#hrd-checkout-inline-body");
+        var badgeIn = root_element.querySelector("#hrd-ci-badges-wrap");
+        var badgeOut = root_element.querySelector("#hrd-co-badges-wrap");
+        var csvIn = root_element.querySelector("#hrd-csv-menu-in");
+        var csvOut = root_element.querySelector("#hrd-csv-menu-out");
+
+        if (mode === "in") {
+          btnIn.classList.add("active");
+          btnOut.classList.remove("active");
+          bodyIn.style.display = "";
+          bodyOut.style.display = "none";
+          badgeIn.style.display = "";
+          badgeOut.style.display = "none";
+          csvIn.style.display = "";
+          csvOut.style.display = "none";
+        } else {
+          btnOut.classList.add("active");
+          btnIn.classList.remove("active");
+          bodyOut.style.display = "";
+          bodyIn.style.display = "none";
+          badgeOut.style.display = "";
+          badgeIn.style.display = "none";
+          csvOut.style.display = "";
+          csvIn.style.display = "none";
+          if (!HRD.checkoutData.length) hrdLoadCheckoutInline();
+        }
+      };
+
+      window.hrdCiApplySingleDate = function () {
+        var selectedDate = root_element.querySelector(
+          "#hrd-ci-single-date",
+        ).value;
+        if (!selectedDate) return;
+        HRD.ciDate = selectedDate;
+        HRD.ciFilter = "all";
+        HRD.coFilter = "all";
+        hrdResetPillActive("in");
+        hrdResetPillActive("out");
+        hrdLoadCheckinInline();
+        if (HRD.ciMode === "out") hrdLoadCheckoutInline();
+      };
+
+      window.hrdCiBadgeFilter = function (filter) {
+        HRD.ciFilter = filter;
+        ["all", "ontime", "late", "absent"].forEach(function (f) {
+          var el = root_element.querySelector("#hrd-ci-b-" + f);
+          if (el) el.classList.toggle("active", f === filter);
+        });
+        hrdRenderCheckinTable(HRD.checkinData, filter);
+      };
+
+      window.hrdCoBadgeFilter = function (filter) {
+        HRD.coFilter = filter;
+        ["all", "ontime", "early", "notout"].forEach(function (f) {
+          var el = root_element.querySelector("#hrd-co-b-" + f);
+          if (el) el.classList.toggle("active", f === filter);
+        });
+        hrdRenderCheckoutTable(HRD.checkoutData, filter);
+      };
+
+      function hrdResetPillActive(type) {
+        if (type === "in") {
+          ["all", "ontime", "late", "absent"].forEach(function (f) {
+            var el = root_element.querySelector("#hrd-ci-b-" + f);
+            if (el) el.classList.toggle("active", f === "all");
+          });
+        } else {
+          ["all", "ontime", "early", "notout"].forEach(function (f) {
+            var el = root_element.querySelector("#hrd-co-b-" + f);
+            if (el) el.classList.toggle("active", f === "all");
+          });
+        }
+      }
+
+      function hrdLoadCheckinInline() {
+        var body = root_element.querySelector("#hrd-checkin-inline-body");
+        if (!body) return;
+        body.innerHTML =
+          '<div class="hrd-loading">Loading check-in data&hellip;</div>';
+
+        frappe.call({
+          method: "hr_dashboard_api",
+          args: {
+            action: "checkin_details",
+            from_date: HRD.ciDate,
+            to_date: HRD.ciDate,
+            department: HRD.filters.department,
+            branch: HRD.filters.branch,
+          },
+          callback: function (r) {
+            if (!r || !r.message) {
+              body.innerHTML =
+                '<div class="hrd-loading">No data available</div>';
+              return;
+            }
+            var m = r.message;
+            HRD.checkinData = m.data || [];
+            HRD.ciNotIn = m.not_checked_in || [];
+
+            hrdSetPillVal("hrd-ci-total-val", m.total || 0);
+            hrdSetPillVal("hrd-ci-ontime-val", m.ontime_count || 0);
+            hrdSetPillVal("hrd-ci-late-val", m.late_count || 0);
+            hrdSetPillVal("hrd-ci-absent-val", m.not_in_count || 0);
+
+            hrdRenderCheckinTable(HRD.checkinData, HRD.ciFilter);
+          },
+        });
+      }
+
+      function hrdRenderCheckinTable(data, filter) {
+        var body = root_element.querySelector("#hrd-checkin-inline-body");
+        if (!body) return;
+
+        if (filter === "absent") {
+          if (!HRD.ciNotIn.length) {
+            body.innerHTML =
+              '<div class="hrd-loading" style="padding:30px">&#10003; All employees checked in for this date.</div>';
+            return;
+          }
+          var h2 =
+            '<table class="hrd-table hrd-ci-table"><thead><tr><th>Employee ID</th><th>Employee Name</th><th>Department</th><th>Status</th></tr></thead><tbody>';
+          HRD.ciNotIn.forEach(function (e) {
+            h2 +=
+              '<tr><td style="font-weight:600;font-size:11px;color:var(--hrd-text-sm)">' +
+              hrdEsc(e.employee) +
+              "</td>" +
+              '<td style="font-weight:500">' +
+              hrdEsc(e.employee_name) +
+              "</td>" +
+              '<td style="font-size:11px;color:var(--hrd-text-sm)">' +
+              hrdEsc(e.department || "—") +
+              "</td>" +
+              '<td><span class="hrd-tag hrd-tag-red">&#9679; Not Checked In</span></td></tr>';
+          });
+          body.innerHTML = h2 + "</tbody></table>";
+          return;
+        }
+
+        var rows;
+        if (filter === "ontime")
+          rows = data.filter(function (r) {
+            return r.late_entry !== 1;
+          });
+        else if (filter === "late")
+          rows = data.filter(function (r) {
+            return r.late_entry === 1;
+          });
+        else rows = data;
+
+        if (!rows.length) {
+          body.innerHTML =
+            '<div class="hrd-loading" style="padding:30px">No records for the selected filter.</div>';
+          return;
+        }
+
+        var html =
+          '<table class="hrd-table hrd-ci-table"><thead><tr>' +
+          "<th>Employee ID</th><th>Employee Name</th><th>Check-In Time</th><th>Late By</th><th>Area</th><th>Status</th>" +
+          "</tr></thead><tbody>";
+
+        rows.forEach(function (row) {
+          var isLate = row.late_entry === 1;
+          var rowCls = isLate ? ' class="hrd-ci-late-row"' : "";
+          var tag = isLate
+            ? '<span class="hrd-tag hrd-tag-red">&#9679; Late</span>'
+            : '<span class="hrd-tag hrd-tag-green">&#10003; On Time</span>';
+          var lateByCell = isLate ? (row.late_minutes || 0) + " min" : "\u2014";
+          html +=
+            "<tr" +
+            rowCls +
+            ">" +
+            '<td style="font-weight:600;font-size:11px;color:var(--hrd-text-sm)">' +
+            hrdEsc(row.employee) +
+            "</td>" +
+            '<td style="font-weight:500">' +
+            hrdEsc(row.employee_name) +
+            "</td>" +
+            "<td>" +
+            hrdEsc(row.time) +
+            "</td>" +
+            "<td>" +
+            lateByCell +
+            "</td>" +
+            "<td>" +
+            hrdEsc(row.custom_area_name || "\u2014") +
+            "</td>" +
+            "<td>" +
+            tag +
+            "</td></tr>";
+        });
+        body.innerHTML = html + "</tbody></table>";
+      }
+
+      function hrdLoadCheckoutInline() {
+        var body = root_element.querySelector("#hrd-checkout-inline-body");
+        if (!body) return;
+        body.innerHTML =
+          '<div class="hrd-loading">Loading check-out data&hellip;</div>';
+
+        frappe.call({
+          method: "hr_dashboard_api",
+          args: {
+            action: "checkout_details",
+            from_date: HRD.ciDate,
+            to_date: HRD.ciDate,
+            department: HRD.filters.department,
+            branch: HRD.filters.branch,
+          },
+          callback: function (r) {
+            if (!r || !r.message) {
+              body.innerHTML =
+                '<div class="hrd-loading">No data available</div>';
+              return;
+            }
+            var m = r.message;
+            HRD.checkoutData = m.data || [];
+            HRD.coNotOut = m.not_checked_out || [];
+
+            hrdSetPillVal("hrd-co-total-val", m.total || 0);
+            hrdSetPillVal("hrd-co-ontime-val", m.ontime_count || 0);
+            hrdSetPillVal("hrd-co-early-val", m.early_count || 0);
+            hrdSetPillVal("hrd-co-notout-val", m.not_out_count || 0);
+
+            hrdRenderCheckoutTable(HRD.checkoutData, HRD.coFilter);
+          },
+        });
+      }
+
+      function hrdRenderCheckoutTable(data, filter) {
+        var body = root_element.querySelector("#hrd-checkout-inline-body");
+        if (!body) return;
+
+        if (filter === "notout") {
+          if (!HRD.coNotOut.length) {
+            body.innerHTML =
+              '<div class="hrd-loading" style="padding:30px">&#10003; All employees checked out for this date.</div>';
+            return;
+          }
+          var h2 =
+            '<table class="hrd-table hrd-ci-table"><thead><tr><th>Employee ID</th><th>Employee Name</th><th>Department</th><th>Status</th></tr></thead><tbody>';
+          HRD.coNotOut.forEach(function (e) {
+            h2 +=
+              '<tr><td style="font-weight:600;font-size:11px;color:var(--hrd-text-sm)">' +
+              hrdEsc(e.employee) +
+              "</td>" +
+              '<td style="font-weight:500">' +
+              hrdEsc(e.employee_name) +
+              "</td>" +
+              '<td style="font-size:11px;color:var(--hrd-text-sm)">' +
+              hrdEsc(e.department || "—") +
+              "</td>" +
+              '<td><span class="hrd-tag hrd-tag-red">&#9679; Not Checked Out</span></td></tr>';
+          });
+          body.innerHTML = h2 + "</tbody></table>";
+          return;
+        }
+
+        var rows;
+        if (filter === "ontime")
+          rows = data.filter(function (r) {
+            return !r.early_exit;
+          });
+        else if (filter === "early")
+          rows = data.filter(function (r) {
+            return !!r.early_exit;
+          });
+        else rows = data;
+
+        if (!rows.length) {
+          body.innerHTML =
+            '<div class="hrd-loading" style="padding:30px">No records for the selected filter.</div>';
+          return;
+        }
+
+        var html =
+          '<table class="hrd-table hrd-ci-table"><thead><tr>' +
+          "<th>Employee ID</th><th>Employee Name</th><th>Check-Out Time</th><th>Early By</th><th>Area</th><th>Status</th>" +
+          "</tr></thead><tbody>";
+
+        rows.forEach(function (row) {
+          var isEarly = !!row.early_exit;
+          var rowCls = isEarly ? ' class="hrd-ci-late-row"' : "";
+          var tag = isEarly
+            ? '<span class="hrd-tag hrd-tag-orange">&#8678; Early Leave</span>'
+            : '<span class="hrd-tag hrd-tag-green">&#10003; On Time</span>';
+          var earlyByCell = isEarly
+            ? (row.early_minutes || 0) + " min"
+            : "\u2014";
+
+          html +=
+            "<tr" +
+            rowCls +
+            ">" +
+            '<td style="font-weight:600;font-size:11px;color:var(--hrd-text-sm)">' +
+            hrdEsc(row.employee) +
+            "</td>" +
+            '<td style="font-weight:500">' +
+            hrdEsc(row.employee_name) +
+            "</td>" +
+            "<td>" +
+            hrdEsc(row.time) +
+            "</td>" +
+            "<td>" +
+            earlyByCell +
+            "</td>" +
+            "<td>" +
+            hrdEsc(row.custom_area_name || "\u2014") +
+            "</td>" +
+            "<td>" +
+            tag +
+            "</td></tr>";
+        });
+        body.innerHTML = html + "</tbody></table>";
+      }
+
+      window.hrdDownloadCsv = function (type) {
+        root_element.querySelector("#hrd-ci-csv-menu").style.display = "none";
+        var dateLabel = HRD.ciDate;
+
+        if (type === "in") {
+          if (!HRD.checkinData.length) {
+            frappe.msgprint("No check-in data available.");
+            return;
+          }
+          var csv =
+            '"Employee ID","Employee Name","Check-In Time","Late By (min)","Area","Status"\n';
+          HRD.checkinData.forEach(function (r) {
+            csv += hrdCsvRow([
+              r.employee,
+              r.employee_name,
+              r.time,
+              r.late_entry === 1 ? r.late_minutes || 0 : "",
+              r.custom_area_name,
+              r.late_entry === 1 ? "Late" : "On Time",
+            ]);
+          });
+          downloadFile(
+            csv,
+            "CheckIn_" + dateLabel + ".csv",
+            "text/csv;charset=utf-8;",
+          );
+        } else if (type === "out") {
+          if (!HRD.checkoutData.length) {
+            frappe.msgprint("No check-out data available.");
+            return;
+          }
+          var csv2 =
+            '"Employee ID","Employee Name","Check-Out Time","Early By (min)","Area","Status"\n';
+          HRD.checkoutData.forEach(function (r) {
+            csv2 += hrdCsvRow([
+              r.employee,
+              r.employee_name,
+              r.time,
+              r.early_exit ? r.early_minutes || 0 : "",
+              r.custom_area_name,
+              r.early_exit ? "Early Leave" : "On Time",
+            ]);
+          });
+          downloadFile(
+            csv2,
+            "CheckOut_" + dateLabel + ".csv",
+            "text/csv;charset=utf-8;",
+          );
+        } else if (type === "both") {
+          var map = {};
+          HRD.checkinData.forEach(function (r) {
+            map[r.employee] = {
+              employee: r.employee,
+              employee_name: r.employee_name,
+              ci_time: r.time || "",
+              ci_area: r.custom_area_name || "",
+              co_time: "",
+              co_area: "",
+            };
+          });
+          HRD.checkoutData.forEach(function (r) {
+            if (!map[r.employee]) {
+              map[r.employee] = {
+                employee: r.employee,
+                employee_name: r.employee_name,
+                ci_time: "",
+                ci_area: "",
+                co_time: "",
+                co_area: "",
+              };
+            }
+            map[r.employee].co_time = r.time || "";
+            map[r.employee].co_area = r.custom_area_name || "";
+          });
+          var csv3 =
+            '"Employee ID","Employee Name","Check-In Time","Check-In Area","Check-Out Time","Check-Out Area"\n';
+          Object.keys(map).forEach(function (k) {
+            var v = map[k];
+            csv3 += hrdCsvRow([
+              v.employee,
+              v.employee_name,
+              v.ci_time,
+              v.ci_area,
+              v.co_time,
+              v.co_area,
+            ]);
+          });
+          downloadFile(
+            csv3,
+            "Attendance_Combined_" + dateLabel + ".csv",
+            "text/csv;charset=utf-8;",
+          );
+        }
+      };
+
+      window.hrdDownloadCsvByCategory = function (type, category) {
+        root_element.querySelector("#hrd-ci-csv-menu").style.display = "none";
+        var dateLabel = HRD.ciDate;
+
+        if (type === "in") {
+          if (category === "absent") {
+            if (!HRD.ciNotIn.length) {
+              frappe.msgprint("No 'Not Checked In' records for this date.");
+              return;
+            }
+            var csvA = '"Employee ID","Employee Name","Department","Status"\n';
+            HRD.ciNotIn.forEach(function (e) {
+              csvA += hrdCsvRow([
+                e.employee,
+                e.employee_name,
+                e.department,
+                "Not Checked In",
+              ]);
+            });
+            downloadFile(
+              csvA,
+              "CheckIn_NotCheckedIn_" + dateLabel + ".csv",
+              "text/csv;charset=utf-8;",
+            );
+            return;
+          }
+
+          var rows;
+          if (category === "ontime")
+            rows = HRD.checkinData.filter(function (r) {
+              return r.late_entry !== 1;
+            });
+          else if (category === "late")
+            rows = HRD.checkinData.filter(function (r) {
+              return r.late_entry === 1;
+            });
+          else rows = HRD.checkinData; // "all"
+
+          if (!rows.length) {
+            frappe.msgprint("No records found for this category.");
+            return;
+          }
+
+          var csv =
+            '"Employee ID","Employee Name","Check-In Time","Late By (min)","Penalty","Area","Status"\n';
+          rows.forEach(function (r) {
+            csv += hrdCsvRow([
+              r.employee,
+              r.employee_name,
+              r.time,
+              r.late_entry === 1 ? r.late_minutes || 0 : "",
+              r.late_entry === 1 ? r.penalty_amount || 0 : "",
+              r.custom_area_name,
+              r.late_entry === 1 ? "Late" : "On Time",
+            ]);
+          });
+          var labelIn =
+            category === "all"
+              ? "All"
+              : category === "ontime"
+                ? "OnTime"
+                : "Late";
+          downloadFile(
+            csv,
+            "CheckIn_" + labelIn + "_" + dateLabel + ".csv",
+            "text/csv;charset=utf-8;",
+          );
+        } else if (type === "out") {
+          if (category === "notout") {
+            if (!HRD.coNotOut.length) {
+              frappe.msgprint("No 'Not Checked Out' records for this date.");
+              return;
+            }
+            var csvB = '"Employee ID","Employee Name","Department","Status"\n';
+            HRD.coNotOut.forEach(function (e) {
+              csvB += hrdCsvRow([
+                e.employee,
+                e.employee_name,
+                e.department,
+                "Not Checked Out",
+              ]);
+            });
+            downloadFile(
+              csvB,
+              "CheckOut_NotCheckedOut_" + dateLabel + ".csv",
+              "text/csv;charset=utf-8;",
+            );
+            return;
+          }
+
+          var rowsO;
+          if (category === "ontime")
+            rowsO = HRD.checkoutData.filter(function (r) {
+              return !r.early_exit;
+            });
+          else if (category === "early")
+            rowsO = HRD.checkoutData.filter(function (r) {
+              return !!r.early_exit;
+            });
+          else rowsO = HRD.checkoutData; // "all"
+
+          if (!rowsO.length) {
+            frappe.msgprint("No records found for this category.");
+            return;
+          }
+
+          var csv2 =
+            '"Employee ID","Employee Name","Check-Out Time","Early By (min)","Area","Status"\n';
+          rowsO.forEach(function (r) {
+            csv2 += hrdCsvRow([
+              r.employee,
+              r.employee_name,
+              r.time,
+              r.early_exit ? r.early_minutes || 0 : "",
+              r.custom_area_name,
+              r.early_exit ? "Early Leave" : "On Time",
+            ]);
+          });
+          var labelOut =
+            category === "all"
+              ? "All"
+              : category === "ontime"
+                ? "OnTime"
+                : "EarlyLeave";
+          downloadFile(
+            csv2,
+            "CheckOut_" + labelOut + "_" + dateLabel + ".csv",
+            "text/csv;charset=utf-8;",
+          );
+        }
+      };
+
+      function hrdCsvRow(fields) {
+        return (
+          fields
+            .map(function (f) {
+              return '"' + String(f || "").replace(/"/g, '""') + '"';
+            })
+            .join(",") + "\n"
+        );
+      }
+
+      window.hrdToggleCsvMenu = function (e) {
+        if (e) e.stopPropagation();
+        var menu = root_element.querySelector("#hrd-ci-csv-menu");
+        menu.style.display = menu.style.display === "none" ? "block" : "none";
+      };
+      document.addEventListener("click", function () {
+        var m = root_element
+          ? root_element.querySelector("#hrd-ci-csv-menu")
+          : null;
+        if (m) m.style.display = "none";
+      });
+
+      function hrdSetPillVal(id, val) {
+        var el = root_element.querySelector("#" + id);
+        if (el) el.textContent = val;
+      }
+
+      /* ══════════════════════════════════════════════════════════
+     REMAINING SECTIONS
+  ══════════════════════════════════════════════════════════ */
+      function hrdLoadAttendance() {
+        frappe.call({
+          method: "hr_dashboard_api",
+          args: {
+            action: "attendance",
+            month: HRD.filters.month,
+            year: HRD.filters.year,
+            department: HRD.filters.department,
+            branch: HRD.filters.branch,
+          },
+          callback: function (r) {
+            if (!r || !r.message) return;
+            HRD.currentHeatmapData = r.message.heatmap || [];
+            hrdRenderHeatmap(HRD.currentHeatmapData);
+            hrdRenderDonut(r.message.monthly_counts || {});
+          },
+        });
+      }
+
+      function hrdRenderHeatmap(rows) {
+        var wrap = root_element.querySelector("#hrd-heatmap");
+        if (!rows || rows.length === 0) {
+          wrap.innerHTML = '<div class="hrd-loading">No attendance data</div>';
+          return;
+        }
+        var daysInMonth = new Date(
+          HRD.filters.year,
+          HRD.filters.month,
+          0,
+        ).getDate();
+        var html =
+          '<div class="hrd-heatmap"><div class="hrd-hm-row"><div class="hrd-hm-label"></div>';
+        for (var dd = 1; dd <= daysInMonth; dd++)
+          html += '<div class="hrd-hm-header">' + dd + "</div>";
+        html += "</div>";
+        rows.forEach(function (emp) {
+          html +=
+            '<div class="hrd-hm-row"><div class="hrd-hm-label">' +
+            hrdEsc(emp.employee_id) +
+            " " +
+            hrdEsc(emp.employee_name || "") +
+            "</div>";
+          for (var dd2 = 1; dd2 <= daysInMonth; dd2++) {
+            var dayData = emp.days[dd2] || { status: "w" };
+            var s = dayData.status;
+            var tip =
+              emp.employee_id +
+              " \u00B7 " +
+              hrdPadDate(dd2) +
+              " \u00B7 " +
+              hrdStatusLabel(s);
+            if (dayData.in) tip += " (In: " + dayData.in + ")";
+            html +=
+              '<div class="hrd-hm-cell hrd-hm-' +
+              s +
+              ' hrd-tooltip" data-tip="' +
+              tip +
+              '"' +
+              " onclick=\"hrdOpenAttendance('" +
+              emp.employee_id +
+              "','" +
+              hrdPadDate(dd2) +
+              "')\"></div>";
+          }
+          html += "</div>";
+        });
+        wrap.innerHTML = html + "</div>";
+      }
+
+      function hrdRenderDonut(counts) {
+        var present = counts.present || 0;
+        var leave = counts.on_leave || 0;
+        var absent = counts.absent || 0;
+        var half = counts.half_day || 0;
+        var total = present + leave + absent + half || 1;
+        var colors = ["#28A745", "#4B7BEC", "#DC3545", "#FFC107"];
+        var vals = [present, leave, absent, half];
+        var labels = ["Present Days", "Leave Days", "Absent Days", "Half Days"];
+        var r = 48,
+          cx = 60,
+          cy = 60,
+          stroke = 16;
+        var circ = 2 * Math.PI * r,
+          offset = 0;
+        var svg = '<svg class="hrd-donut-svg" viewBox="0 0 120 120">';
+        vals.forEach(function (v, i) {
+          var dash = circ * (v / total),
+            gap = circ - dash;
+          svg +=
+            '<circle cx="' +
+            cx +
+            '" cy="' +
+            cy +
+            '" r="' +
+            r +
+            '" fill="none" stroke="' +
+            colors[i] +
+            '" stroke-width="' +
+            stroke +
+            '"' +
+            ' stroke-dasharray="' +
+            dash +
+            " " +
+            gap +
+            '" stroke-dashoffset="' +
+            ((-offset * circ) / total + circ / 4) +
+            '" />';
+          offset += v;
+        });
+        svg +=
+          '<text x="60" y="56" text-anchor="middle" font-size="14" font-weight="bold" fill="#2C3E50">' +
+          total +
+          "</text>" +
+          '<text x="60" y="70" text-anchor="middle" font-size="9" fill="#6C757D">Total Days</text></svg>';
+        root_element.querySelector("#hrd-donut-wrap").innerHTML = svg;
+        var pillsHtml = vals
+          .map(function (v, i) {
+            return (
+              '<div class="hrd-today-pill" style="background:' +
+              colors[i] +
+              '22">' +
+              '<div class="hrd-pill-val" style="color:' +
+              colors[i] +
+              '">' +
+              v +
+              "</div>" +
+              '<div class="hrd-pill-lbl" style="color:' +
+              colors[i] +
+              '">' +
+              labels[i] +
+              "</div></div>"
+            );
+          })
+          .join("");
+        root_element.querySelector("#hrd-today-summary").innerHTML = pillsHtml;
+      }
+
+      window.hrdDownloadHeatmapExcel = function () {
+        if (!HRD.currentHeatmapData || !HRD.currentHeatmapData.length) {
+          frappe.msgprint("No data to export");
+          return;
+        }
+        var daysInMonth = new Date(
+          HRD.filters.year,
+          HRD.filters.month,
+          0,
+        ).getDate();
+        var html =
+          '<html xmlns:x="urn:schemas-microsoft-com:office:excel"><head><meta charset="utf-8"></head><body><table border="1"><thead><tr>' +
+          '<th style="background:#f0f0f0;">Employee ID</th><th style="background:#f0f0f0;">Employee Name</th>';
+        for (var d = 1; d <= daysInMonth; d++)
+          html +=
+            '<th style="background:#f0f0f0;">' +
+            d +
+            " " +
+            hrdMonthYearLabel() +
+            "</th>";
+        html += "</tr></thead><tbody>";
+        var colorMap = {
+          p: "#D4EDDA",
+          h: "#FFF3CD",
+          l: "#DBEAFE",
+          a: "#F8D7DA",
+          w: "#E9ECEF",
+        };
+        var labelMap = {
+          p: "Present",
+          h: "Half Day",
+          l: "On Leave",
+          a: "Absent",
+          w: "Weekend",
+        };
+        HRD.currentHeatmapData.forEach(function (emp) {
+          html +=
+            "<tr><td>" +
+            emp.employee_id +
+            "</td><td>" +
+            emp.employee_name +
+            "</td>";
+          for (var d2 = 1; d2 <= daysInMonth; d2++) {
+            var dayData = emp.days[d2] || { status: "w" };
+            var bg = colorMap[dayData.status] || "#FFFFFF";
+            var text = labelMap[dayData.status] || dayData.status;
+            if (
+              (dayData.status === "p" || dayData.status === "h") &&
+              dayData.in
+            ) {
+              text = dayData.in + " - " + (dayData.out || "Missing Out");
+            }
+            html +=
+              '<td style="background-color:' + bg + ';">' + text + "</td>";
+          }
+          html += "</tr>";
+        });
+        html += "</tbody></table></body></html>";
+        downloadFile(
+          html,
+          "Attendance_Heatmap_" +
+            HRD.filters.year +
+            "_" +
+            HRD.filters.month +
+            ".xls",
+          "application/vnd.ms-excel",
+        );
+      };
+
+      window.hrdOpenAttendance = function (emp, date) {
+        frappe.route_options = { employee: emp, attendance_date: date };
+        frappe.set_route("List", "Attendance");
+      };
+      window.hrdAttendanceDetailToday = function () {
+        frappe.route_options = { attendance_date: frappe.datetime.get_today() };
+        frappe.set_route("List", "Attendance");
+      };
+
+      function hrdLoadLeaves() {
+        frappe.call({
+          method: "hr_dashboard_api",
+          args: {
+            action: "leaves",
+            month: HRD.filters.month,
+            year: HRD.filters.year,
+            department: HRD.filters.department,
+            branch: HRD.filters.branch,
+          },
+          callback: function (r) {
+            if (!r || !r.message) return;
+            var d = r.message;
+            hrdRenderLeaveTable(d.leave_applications || []);
+            hrdRenderLeaveSummary(d.leave_summary || {});
+            hrdRenderLeaveBalanceOverview(d.leave_balance_overview || []);
+            hrdRenderUpcomingLeaves(d.upcoming_leaves || []);
+          },
+        });
+      }
+
+      function hrdRenderLeaveTable(leaves) {
+        var tbody = root_element.querySelector("#hrd-leave-tbody");
+        if (!leaves || leaves.length === 0) {
+          tbody.innerHTML =
+            '<tr><td colspan="8" class="hrd-loading-cell">No leave requests found</td></tr>';
+          return;
+        }
+        tbody.innerHTML = leaves
+          .map(function (l) {
+            return (
+              "<tr>" +
+              "<td>" +
+              hrdEsc(l.employee_name || l.employee) +
+              ' <span style="font-size:10px;color:var(--hrd-text-sm)">(' +
+              hrdEsc(l.employee) +
+              ")</span></td>" +
+              "<td>" +
+              hrdEsc(l.leave_type) +
+              "</td><td>" +
+              hrdEsc(l.from_date) +
+              "</td><td>" +
+              hrdEsc(l.to_date) +
+              "</td>" +
+              '<td style="text-align:center">' +
+              l.total_leave_days +
+              "</td>" +
+              "<td>" +
+              hrdLeaveStatusTag(l.status) +
+              "</td>" +
+              '<td style="font-size:11px;color:var(--hrd-text-sm)">' +
+              hrdEsc(l.leave_approver_name || l.leave_approver || "\u2014") +
+              "</td>" +
+              "<td><button class=\"hrd-act-link\" onclick=\"frappe.set_route('Form','Leave Application','" +
+              hrdEsc(l.name) +
+              "')\">&#8599; Open</button></td></tr>"
+            );
+          })
+          .join("");
+      }
+
+      function hrdLeaveStatusTag(s) {
+        var m = {
+          Open: ["hrd-tag-yellow", "\u23F3 Pending"],
+          Approved: ["hrd-tag-green", "\u2713 Approved"],
+          Rejected: ["hrd-tag-red", "\u2715 Rejected"],
+        };
+        var v = m[s] || ["hrd-tag-gray", s];
+        return '<span class="hrd-tag ' + v[0] + '">' + v[1] + "</span>";
+      }
+
+      function hrdRenderLeaveSummary(s) {
+        var el = root_element.querySelector("#hrd-leave-summary");
+        if (!el) return;
+      }
+
+      function hrdRenderLeaveBalanceOverview(list) {
+        var el = root_element.querySelector("#hrd-leave-balance-overview");
+        if (!list || list.length === 0) {
+          el.innerHTML = '<div class="hrd-loading">No data</div>';
+          return;
+        }
+        list = list.slice().sort(function (a, b) {
+          return (b.total || 0) - (a.total || 0);
+        });
+        var html =
+          '<table class="hrd-table"><thead><tr><th>Employee</th><th>CL</th><th>SL</th><th>PL</th><th>Total</th></tr></thead><tbody>';
+        list.forEach(function (e) {
+          var tc =
+            e.total < 20
+              ? "color:var(--hrd-red);font-weight:700"
+              : e.total < 30
+                ? "color:var(--hrd-orange);font-weight:600"
+                : "";
+          html +=
+            "<tr><td>" +
+            hrdEsc(e.employee_name) +
+            '<div style="font-size:10px;color:var(--hrd-text-sm)">' +
+            hrdEsc(e.department || "") +
+            "</div></td>" +
+            '<td style="text-align:center">' +
+            e.cl +
+            '</td><td style="text-align:center">' +
+            e.sl +
+            "</td>" +
+            '<td style="text-align:center">' +
+            e.pl +
+            '</td><td style="text-align:center;' +
+            tc +
+            '">' +
+            e.total +
+            "</td></tr>";
+        });
+        el.innerHTML = html + "</tbody></table>";
+      }
+
+      function hrdRenderUpcomingLeaves(leaves) {
+        var el = root_element.querySelector("#hrd-upcoming-leaves");
+        if (!leaves || leaves.length === 0) {
+          el.innerHTML =
+            '<div style="padding:14px;font-size:12px;color:var(--hrd-text-sm);text-align:center">No approved leaves in the next 14 days</div>';
+          return;
+        }
+        var html = '<div class="hrd-upcoming-list">';
+        leaves.forEach(function (l) {
+          html +=
+            '<div class="hrd-upcoming-row">' +
+            '<span class="hrd-tag hrd-tag-blue" style="min-width:70px;text-align:center">' +
+            hrdEsc(l.leave_type.replace(" Leave", "")) +
+            "</span>" +
+            '<span style="font-weight:600;font-size:12px">' +
+            hrdEsc(l.employee_name) +
+            "</span>" +
+            '<span style="font-size:11px;color:var(--hrd-text-sm)">' +
+            hrdEsc(l.from_date) +
+            " \u2192 " +
+            hrdEsc(l.to_date) +
+            "</span>" +
+            '<span class="hrd-tag hrd-tag-gray">' +
+            l.total_leave_days +
+            " day" +
+            (l.total_leave_days > 1 ? "s" : "") +
+            "</span></div>";
+        });
+        el.innerHTML = html + "</div>";
+      }
+
+      function hrdLoadPayroll() {
+        frappe.call({
+          method: "hr_dashboard_api",
+          args: {
+            action: "payroll",
+            month: HRD.filters.month,
+            year: HRD.filters.year,
+            department: HRD.filters.department,
+            branch: HRD.filters.branch,
+          },
+          callback: function (r) {
+            if (!r || !r.message) return;
+            hrdRenderPayroll(
+              r.message.payroll_summary || {},
+              r.message.salary_bars || [],
+            );
+          },
+        });
+      }
+
+      function hrdRenderPayroll(p, bars) {
+        var el = root_element.querySelector("#hrd-payroll-summary");
+        var submitted = p.submitted || 0;
+        var total_emp = p.total_employees || 0;
+        var monthStart =
+          HRD.filters.year +
+          "-" +
+          String(HRD.filters.month).padStart(2, "0") +
+          "-01";
+        var kpis = [
+          {
+            label: "Total Payroll",
+            val: "\u20B9" + hrdFmt(p.total_payroll || 0),
+            cls: "hrd-tag-green",
+            sub: "from " + submitted + " submitted slips",
+            action:
+              "frappe.route_options={start_date:'" +
+              monthStart +
+              "',docstatus:'1'};frappe.set_route('List','Salary Slip')",
+          },
+          {
+            label: "Slips Generated",
+            val: (p.slips_generated || 0) + " / " + total_emp,
+            cls: "hrd-tag-blue",
+            sub: "all statuses",
+            action:
+              "frappe.route_options={start_date:'" +
+              monthStart +
+              "'};frappe.set_route('List','Salary Slip')",
+          },
+          {
+            label: "Submitted",
+            val: submitted + " / " + total_emp,
+            cls: submitted < total_emp ? "hrd-tag-orange" : "hrd-tag-green",
+            sub:
+              submitted < total_emp
+                ? total_emp - submitted + " pending"
+                : "All done \u2713",
+            action:
+              "frappe.route_options={start_date:'" +
+              monthStart +
+              "',docstatus:'1'};frappe.set_route('List','Salary Slip')",
+          },
+        ];
+        var html = '<div class="hrd-payroll-kpis">';
+        kpis.forEach(function (k) {
+          html +=
+            '<div class="hrd-payroll-kpi ' +
+            k.cls +
+            ' hrd-payroll-kpi-clickable" onclick="' +
+            k.action +
+            '">' +
+            '<div class="hrd-pk-lbl">' +
+            k.label +
+            '</div><div class="hrd-pk-val">' +
+            k.val +
+            '</div><div class="hrd-pk-sub">' +
+            k.sub +
+            "</div></div>";
+        });
+        html += '</div><div class="hrd-payroll-bars">';
+        var maxSal =
+          Math.max.apply(
+            null,
+            bars.map(function (e) {
+              return e.base || 0;
+            }),
+          ) || 1;
+        bars.forEach(function (e) {
+          var pct = Math.round(((e.base || 0) / maxSal) * 100);
+          html +=
+            '<div class="hrd-pb-row"><div class="hrd-pb-name hrd-tooltip" data-tip="' +
+            hrdEsc(e.employee_name) +
+            '">' +
+            hrdEsc(e.employee_name) +
+            "</div>" +
+            '<div class="hrd-pb-track"><div class="hrd-pb-fill" style="width:' +
+            pct +
+            '%"></div></div>' +
+            '<div class="hrd-pb-val">\u20B9' +
+            hrdFmt(e.base || 0) +
+            "</div></div>";
+        });
+        el.innerHTML = html + "</div>";
+      }
+
+      function hrdLoadExpenses() {
+        frappe.call({
+          method: "hr_dashboard_api",
+          args: {
+            action: "expenses",
+            month: HRD.filters.month,
+            year: HRD.filters.year,
+            department: HRD.filters.department,
+            branch: HRD.filters.branch,
+          },
+          callback: function (r) {
+            if (!r || !r.message) return;
+            hrdRenderExpenses(r.message.expenses || []);
+            hrdRenderTimesheets(r.message.timesheets || []);
+          },
+        });
+      }
+
+      function hrdRenderExpenses(expenses) {
+        var tbody = root_element.querySelector("#hrd-expense-tbody");
+        if (!tbody) return;
+        if (!expenses || expenses.length === 0) {
+          tbody.innerHTML =
+            '<tr><td colspan="5" class="hrd-loading-cell">No expense claims this month</td></tr>';
+          return;
+        }
+        var stMap = {
+          Approved: ["hrd-tag-green", "&#10003; Approved"],
+          Draft: ["hrd-tag-yellow", "&#9203; Pending"],
+          Rejected: ["hrd-tag-red", "&#10007; Rejected"],
+          Paid: ["hrd-tag-blue", "&#128179; Paid"],
+        };
+        tbody.innerHTML = expenses
+          .map(function (e) {
+            var stV = stMap[e.approval_status] || [
+              "hrd-tag-gray",
+              e.approval_status || "\u2014",
+            ];
+            return (
+              "<tr><td>" +
+              hrdEsc(e.employee_name || e.employee) +
+              "</td><td>" +
+              hrdEsc(e.expense_type || "\u2014") +
+              "</td>" +
+              "<td>\u20B9" +
+              hrdFmt(e.total_claimed_amount || 0) +
+              "</td>" +
+              '<td><span class="hrd-tag ' +
+              stV[0] +
+              '">' +
+              stV[1] +
+              "</span></td>" +
+              "<td><button class=\"hrd-act-link\" onclick=\"frappe.set_route('Form','Expense Claim','" +
+              hrdEsc(e.name) +
+              "')\">&#8599; Open</button></td></tr>"
+            );
+          })
+          .join("");
+        var total = expenses.reduce(function (s, e) {
+          return s + (e.total_claimed_amount || 0);
+        }, 0);
+        var approved = expenses
+          .filter(function (e) {
+            return e.approval_status === "Approved";
+          })
+          .reduce(function (s, e) {
+            return s + (e.total_claimed_amount || 0);
+          }, 0);
+        var paid = expenses
+          .filter(function (e) {
+            return e.approval_status === "Paid";
+          })
+          .reduce(function (s, e) {
+            return s + (e.total_claimed_amount || 0);
+          }, 0);
+        var pending = expenses
+          .filter(function (e) {
+            return e.approval_status === "Draft";
+          })
+          .reduce(function (s, e) {
+            return s + (e.total_claimed_amount || 0);
+          }, 0);
+        var footerEl = root_element.querySelector("#hrd-expense-footer");
+        if (footerEl)
+          footerEl.innerHTML =
+            "<span>Total: <strong>\u20B9" +
+            hrdFmt(total) +
+            "</strong></span>" +
+            "<span>Approved: <strong>\u20B9" +
+            hrdFmt(approved) +
+            "</strong></span>" +
+            "<span>Paid: <strong>\u20B9" +
+            hrdFmt(paid) +
+            "</strong></span>" +
+            "<span>Pending: <strong>\u20B9" +
+            hrdFmt(pending) +
+            "</strong></span>";
+      }
+
+      function hrdRenderTimesheets(timesheets) {
+        var tbody = root_element.querySelector("#hrd-ts-tbody");
+        if (!timesheets || timesheets.length === 0) {
+          tbody.innerHTML =
+            '<tr><td colspan="5" class="hrd-loading-cell">No timesheets this week</td></tr>';
+          return;
+        }
+        var stMap = {
+          Submitted: ["hrd-tag-green", "&#10003; Submitted"],
+          Draft: ["hrd-tag-yellow", "&#9203; Draft"],
+          Cancelled: ["hrd-tag-red", "&#10007; Cancelled"],
+        };
+        tbody.innerHTML = timesheets
+          .map(function (t) {
+            var stV = stMap[t.status] || ["hrd-tag-gray", t.status || "\u2014"];
+            return (
+              "<tr><td>" +
+              hrdEsc(t.employee_name || t.employee) +
+              "</td>" +
+              '<td style="font-size:11px;color:var(--hrd-text-sm)">' +
+              hrdEsc(t.period) +
+              "</td>" +
+              "<td>" +
+              (t.total_hours || "\u2014") +
+              " hrs</td><td>" +
+              (t.total_billable_hours || "\u2014") +
+              " hrs</td>" +
+              '<td><span class="hrd-tag ' +
+              stV[0] +
+              '">' +
+              stV[1] +
+              "</span></td></tr>"
+            );
+          })
+          .join("");
+      }
+
+      function hrdLoadRecruitment() {
+        frappe.call({
+          method: "hr_dashboard_api",
+          args: {
+            action: "recruitment",
+            month: HRD.filters.month,
+            year: HRD.filters.year,
+            department: HRD.filters.department,
+            branch: HRD.filters.branch,
+          },
+          callback: function (r) {
+            if (!r || !r.message) return;
+            hrdRenderRecruitment(r.message.recruitment || {});
+            hrdRenderPerformance(r.message.performance || {});
+            hrdRenderGrievances(r.message.grievances || []);
+          },
+        });
+      }
+
+      function hrdRenderRecruitment(rec) {
+        var el = root_element.querySelector("#hrd-recruitment");
+        var stages = [
+          {
+            label: "Applied",
+            val: rec.applied || 0,
+            color: "var(--hrd-blue)",
+            dt: "Job Applicant",
+            st: "Open",
+          },
+          {
+            label: "Interviewed",
+            val: rec.interviewed || 0,
+            color: "var(--hrd-orange)",
+            dt: "Interview",
+            st: "Cleared",
+          },
+          {
+            label: "Offered",
+            val: rec.offered || 0,
+            color: "var(--hrd-purple)",
+            dt: "Job Offer",
+            st: "Awaiting Response",
+          },
+          {
+            label: "Joined",
+            val: rec.joined || 0,
+            color: "var(--hrd-green)",
+            dt: "Job Offer",
+            st: "Accepted",
+          },
+        ];
+        var funnel = stages
+          .map(function (s) {
+            var oc =
+              "frappe.route_options={status:'" +
+              s.st +
+              "'};frappe.set_route('List','" +
+              s.dt +
+              "')";
+            return (
+              '<div class="hrd-pipe-stage hrd-tooltip" data-tip="View ' +
+              s.label +
+              '" onclick="' +
+              oc +
+              '">' +
+              '<div class="hrd-pipe-num" style="color:' +
+              s.color +
+              '">' +
+              s.val +
+              "</div>" +
+              '<div class="hrd-pipe-lbl">' +
+              s.label +
+              "</div></div>"
+            );
+          })
+          .join("");
+        var roles =
+          (rec.open_roles || [])
+            .map(function (r) {
+              return (
+                '<div class="hrd-open-role-row"><span>' +
+                hrdEsc(r.job_title) +
+                '</span><span class="hrd-tag hrd-tag-orange">' +
+                r.vacancies +
+                " open</span></div>"
+              );
+            })
+            .join("") ||
+          '<div style="font-size:11px;color:var(--hrd-text-sm);padding:5px 0">No open positions</div>';
+        el.innerHTML =
+          '<div class="hrd-pipe-funnel">' +
+          funnel +
+          "</div>" +
+          '<div class="hrd-open-roles"><div style="font-weight:600;font-size:12px;margin-bottom:5px">Open Positions</div>' +
+          roles +
+          "</div>";
+      }
+
+      function hrdRenderPerformance(perf) {
+        var el = root_element.querySelector("#hrd-performance");
+        var pct = perf.completion_pct || 0;
+        var appraisals = (perf.recent_appraisals || [])
+          .map(function (a) {
+            var sc =
+              a.score >= 4
+                ? "hrd-tag-green"
+                : a.score >= 3
+                  ? "hrd-tag-yellow"
+                  : "hrd-tag-red";
+            return (
+              '<div class="hrd-appraisal-row"><span>' +
+              hrdEsc(a.employee_name) +
+              '</span><span class="hrd-tag ' +
+              sc +
+              '">' +
+              a.score +
+              "/5</span></div>"
+            );
+          })
+          .join("");
+        var training = (perf.upcoming_trainings || [])
+          .map(function (t) {
+            return (
+              '<div style="font-size:11px;padding:4px 0;border-bottom:1px dashed #eee"><strong>' +
+              hrdEsc(t.name) +
+              "</strong>" +
+              '<div style="font-size:10px;color:var(--hrd-text-sm)">' +
+              hrdEsc(t.dates) +
+              " &middot; " +
+              (t.participants || 0) +
+              " participants</div></div>"
+            );
+          })
+          .join("");
+        el.innerHTML =
+          '<div class="hrd-progress-bar-wrap"><div class="hrd-progress-label">Appraisal Cycle ' +
+          HRD.filters.year +
+          " &mdash; " +
+          pct +
+          "% (" +
+          (perf.completed || 0) +
+          "/" +
+          (perf.total || 0) +
+          ")</div>" +
+          '<div class="hrd-progress-track"><div class="hrd-progress-fill" style="width:' +
+          pct +
+          '%;background:var(--hrd-purple)"></div></div></div>' +
+          (appraisals
+            ? '<div style="font-size:11px;font-weight:600;margin-bottom:5px">Recent Appraisals</div>' +
+              appraisals
+            : '<div class="hrd-loading">No appraisals found</div>') +
+          (training
+            ? '<div style="font-size:11px;font-weight:600;margin:8px 0 4px">Upcoming Training</div>' +
+              training
+            : "");
+      }
+
+      function hrdRenderGrievances(grievances) {
+        var el = root_element.querySelector("#hrd-grievances");
+        if (!grievances || grievances.length === 0) {
+          el.innerHTML = '<div class="hrd-loading">No active grievances</div>';
+          return;
+        }
+        var clsMap = {
+          Open: "hrd-gc-open",
+          "In Progress": "hrd-gc-inprog",
+          Resolved: "hrd-gc-done",
+        };
+        var stTagMap = {
+          Open: ["hrd-tag-red", "&#9679; Open"],
+          "In Progress": ["hrd-tag-yellow", "&#10227; In Progress"],
+          Resolved: ["hrd-tag-green", "&#10003; Resolved"],
+        };
+        var priMap = {
+          High: "hrd-tag-red",
+          Medium: "hrd-tag-yellow",
+          Low: "hrd-tag-green",
+        };
+        el.innerHTML = grievances
+          .map(function (g) {
+            var stT = stTagMap[g.status] || ["hrd-tag-gray", g.status];
+            return (
+              '<div class="hrd-grievance-card ' +
+              (clsMap[g.status] || "hrd-gc-done") +
+              '" style="cursor:pointer" onclick="frappe.set_route(\'List\',\'Employee Grievance\')">' +
+              '<div class="hrd-gc-head"><span class="hrd-gc-title">' +
+              hrdEsc(g.grievance_subject || g.grievance_type || g.name) +
+              '</span><span class="hrd-tag ' +
+              stT[0] +
+              '">' +
+              stT[1] +
+              "</span></div>" +
+              '<div class="hrd-gc-meta">' +
+              hrdEsc(g.employee_name || g.employee) +
+              "</div>" +
+              '<span class="hrd-tag ' +
+              (priMap[g.priority] || "hrd-tag-gray") +
+              '">' +
+              hrdEsc(g.priority) +
+              " Priority</span></div>"
+            );
+          })
+          .join("");
+      }
+
+      /* ══════════════════════════════════════════════════════════
+     ROUTING & UTILITIES
+  ══════════════════════════════════════════════════════════ */
+      window.hrdRoute = function (route) {
+        var m = {
+          "Monthly Attendance Sheet": [
+            "query-report",
+            "Monthly Attendance Sheet",
+          ],
+          attendance: ["List", "Attendance"],
+          employee: ["List", "Employee"],
+          "leave-application": ["List", "Leave Application"],
+          "expense-claim": ["List", "Expense Claim"],
+          timesheet: ["List", "Timesheet"],
+          "salary-slip": ["List", "Salary Slip"],
+          "job-opening": ["List", "Job Opening"],
+          appraisal: ["List", "Appraisal"],
+          "employee-grievance": ["List", "Employee Grievance"],
+        };
+        if (m[route]) frappe.set_route.apply(frappe, m[route]);
+        else frappe.set_route(route);
+      };
+
+      window.hrdReport = function (name) {
+        frappe.set_route("query-report", name);
+      };
+      window.hrdNewDoc = function (dt) {
+        frappe.new_doc(dt);
+      };
+
+      window.hrdOpenUpcomingSeparations = function () {
+        var today = frappe.datetime.get_today();
+        var d = new Date();
+        d.setDate(d.getDate() + 30);
+        var thirtyAhead = d.toISOString().split("T")[0];
+        frappe.route_options = {
+          status: "Active",
+          relieving_date: ["between", [today, thirtyAhead]],
+        };
+        frappe.set_route("List", "Employee");
+      };
+
+      window.hrdOpenIncompleteEmployees = function () {
+        frappe.route_options = {
+          status: "Active",
+          pan_number: ["is", "not set"],
+        };
+        frappe.set_route("List", "Employee");
+      };
+
+      function hrdFormatWorkingHours(decHours) {
+        var n = parseFloat(decHours);
+        if (!n || isNaN(n) || n <= 0) return "0 hrs 0 mins";
+
+        var wholeHrs = Math.floor(n);
+        var mins = Math.round((n - wholeHrs) * 60);
+
+        if (mins >= 60) {
+          mins = mins - 60;
+          wholeHrs = wholeHrs + 1;
+        }
+
+        return wholeHrs + " hrs " + mins + " mins";
+      }
+
+      function downloadFile(content, fileName, mimeType) {
+        var blob = new Blob([content], { type: mimeType });
+        var link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = fileName;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      }
+
+      function hrdEsc(str) {
+        return str
+          ? String(str)
+              .replace(/&/g, "&amp;")
+              .replace(/</g, "&lt;")
+              .replace(/>/g, "&gt;")
+              .replace(/"/g, "&quot;")
+          : "";
+      }
+      function hrdFmt(n) {
+        return n ? Number(n).toLocaleString("en-IN") : "0";
+      }
+      function hrdMonthYearLabel() {
+        var m = [
+          "",
+          "January",
+          "February",
+          "March",
+          "April",
+          "May",
+          "June",
+          "July",
+          "August",
+          "September",
+          "October",
+          "November",
+          "December",
+        ];
+        return m[HRD.filters.month] + " " + HRD.filters.year;
+      }
+      function hrdPadDate(d) {
+        return (
+          HRD.filters.year +
+          "-" +
+          String(HRD.filters.month).padStart(2, "0") +
+          "-" +
+          String(d).padStart(2, "0")
+        );
+      }
+      function hrdStatusLabel(s) {
+        return (
+          {
+            p: "Present",
+            h: "Half Day",
+            l: "On Leave",
+            a: "Absent",
+            w: "Weekend/Holiday",
+          }[s] || s
+        );
+      }
+
+      /* ── BOOT ─────────────────────────────────────────────────── */
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", hrdInit);
+      } else {
+        setTimeout(hrdInit, 100);
+      }
+    })();
+  </script>
+</html>

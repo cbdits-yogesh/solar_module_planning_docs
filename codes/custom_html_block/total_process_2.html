@@ -1,0 +1,2692 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+
+    <style>
+      .solar-complete-dashboard {
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          "Helvetica Neue", Arial, sans-serif;
+        padding: 15px;
+        background: #f5f7fa;
+        border-radius: 8px;
+        min-height: 400px;
+      }
+
+      /* ── Compact Header ─────────────────────────────────────────────────────── */
+      .dashboard-header-compact {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px 18px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 8px;
+        margin-bottom: 12px;
+        box-shadow: 0 2px 8px rgba(102, 126, 234, 0.25);
+      }
+      .header-title-section {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        gap: 20px;
+      }
+      .dashboard-header-compact h2 {
+        font-size: 18px;
+        font-weight: 700;
+        color: white;
+        margin: 0;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+      }
+      .header-stats-inline {
+        display: flex;
+        gap: 15px;
+        align-items: center;
+      }
+      .stat-inline {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 4px 10px;
+        background: rgba(255, 255, 255, 0.15);
+        border-radius: 12px;
+        backdrop-filter: blur(10px);
+      }
+      .stat-inline-icon {
+        font-size: 16px;
+      }
+      .stat-inline-content {
+        display: flex;
+        flex-direction: column;
+      }
+      .stat-inline-value {
+        font-size: 14px;
+        font-weight: 700;
+        color: white;
+        line-height: 1;
+      }
+      .stat-inline-label {
+        font-size: 9px;
+        color: rgba(255, 255, 255, 0.8);
+        text-transform: uppercase;
+        letter-spacing: 0.3px;
+        line-height: 1;
+      }
+      .header-actions-compact {
+        display: flex;
+        gap: 6px;
+      }
+      .action-btn-sm {
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(255, 255, 255, 0.2);
+        color: white;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        border-radius: 6px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        backdrop-filter: blur(10px);
+      }
+      .action-btn-sm:hover {
+        background: rgba(255, 255, 255, 0.3);
+        transform: translateY(-1px);
+      }
+      .action-btn-sm.toggle-filter-btn.active {
+        background: rgba(255, 255, 255, 0.4);
+      }
+
+      /* ── Filter Section ─────────────────────────────────────────────────────── */
+      .filter-section-compact {
+        background: white;
+        border-radius: 8px;
+        padding: 12px;
+        margin-bottom: 12px;
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+        max-height: 280px;
+        overflow: hidden;
+        transition: all 0.3s ease;
+      }
+      .filter-section-compact.collapsed {
+        max-height: 0;
+        padding: 0 12px;
+        margin-bottom: 0;
+      }
+      .filter-inline-grid {
+        display: grid;
+        grid-template-columns: 2fr 1fr 1fr auto auto auto;
+        gap: 8px;
+        align-items: center;
+      }
+      .filter-input-sm {
+        padding: 8px 12px;
+        border: 1px solid #e0e0e0;
+        border-radius: 6px;
+        font-size: 13px;
+        color: #2c3e50;
+        transition: all 0.3s ease;
+      }
+      .filter-input-sm:focus {
+        outline: none;
+        border-color: #667eea;
+        box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.1);
+      }
+      .filter-quick-btns {
+        display: flex;
+        gap: 4px;
+      }
+      .quick-btn-sm {
+        padding: 6px 10px;
+        background: #f8f9fa;
+        border: 1px solid #e0e0e0;
+        border-radius: 4px;
+        font-size: 11px;
+        font-weight: 600;
+        color: #495057;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        white-space: nowrap;
+      }
+      .quick-btn-sm:hover,
+      .quick-btn-sm.active {
+        background: #667eea;
+        border-color: #667eea;
+        color: white;
+      }
+      .filter-apply-btn,
+      .filter-clear-btn {
+        padding: 8px 14px;
+        border: none;
+        border-radius: 6px;
+        font-size: 12px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        white-space: nowrap;
+      }
+      .filter-apply-btn {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+      }
+      .filter-apply-btn:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+      }
+      .filter-clear-btn {
+        background: white;
+        color: #dc3545;
+        border: 1px solid #dc3545;
+      }
+      .filter-clear-btn:hover {
+        background: #dc3545;
+        color: white;
+      }
+      .active-filters-inline {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        margin-top: 10px;
+      }
+      .active-filters-inline:empty {
+        display: none;
+      }
+      .filter-tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 4px 10px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border-radius: 12px;
+        font-size: 11px;
+        font-weight: 600;
+      }
+      .filter-tag-remove {
+        background: rgba(255, 255, 255, 0.3);
+        border: none;
+        border-radius: 50%;
+        width: 16px;
+        height: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        color: white;
+        padding: 0;
+      }
+      .filter-controls-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        align-items: center;
+        margin-top: 10px;
+        padding-top: 10px;
+        border-top: 1px solid #f0f0f0;
+      }
+      .toggle-group {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+      }
+      .toggle-group-label {
+        font-size: 11px;
+        font-weight: 600;
+        color: #6c757d;
+        white-space: nowrap;
+      }
+      .toggle-btn {
+        padding: 5px 11px;
+        background: #f8f9fa;
+        border: 1px solid #e0e0e0;
+        border-radius: 4px;
+        font-size: 11px;
+        font-weight: 600;
+        color: #495057;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        white-space: nowrap;
+      }
+      .toggle-btn:hover {
+        background: #e9ecef;
+      }
+      .toggle-btn.active {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-color: #667eea;
+        color: white;
+      }
+
+      /* ── Pagination Info ────────────────────────────────────────────────────── */
+      .pagination-info-inline {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 8px 12px;
+        background: white;
+        border-radius: 6px;
+        margin-bottom: 12px;
+        font-size: 12px;
+        color: #6c757d;
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+      }
+      .pagination-info-inline strong {
+        color: #2c3e50;
+        font-weight: 700;
+      }
+
+      /* ── Loading & Empty States ──────────────────────────────────────────────── */
+      .loading-state,
+      .empty-state {
+        text-align: center;
+        padding: 40px 20px;
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+      }
+      .spinner {
+        width: 40px;
+        height: 40px;
+        border: 3px solid #e9ecef;
+        border-top: 3px solid #667eea;
+        border-radius: 50%;
+        margin: 0 auto 15px;
+        animation: spin 1s linear infinite;
+      }
+      @keyframes spin {
+        from {
+          transform: rotate(0deg);
+        }
+        to {
+          transform: rotate(360deg);
+        }
+      }
+      .empty-state h3 {
+        margin: 12px 0 5px;
+        font-size: 16px;
+        color: #95a5a6;
+      }
+      .empty-state p {
+        margin: 0;
+        font-size: 13px;
+        color: #95a5a6;
+      }
+
+      /* ── Lead Cards ─────────────────────────────────────────────────────────── */
+      .complete-leads-container {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+      .complete-lead-card {
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+        overflow: hidden;
+        transition: all 0.3s ease;
+        border-left: 3px solid var(--stage-color);
+        animation: fadeInUp 0.3s ease-out backwards;
+      }
+      .complete-lead-card:hover {
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.12);
+      }
+      .complete-lead-card:nth-child(1) {
+        animation-delay: 0.02s;
+      }
+      .complete-lead-card:nth-child(2) {
+        animation-delay: 0.04s;
+      }
+      .complete-lead-card:nth-child(3) {
+        animation-delay: 0.06s;
+      }
+      .complete-lead-card:nth-child(4) {
+        animation-delay: 0.08s;
+      }
+      .complete-lead-card:nth-child(5) {
+        animation-delay: 0.1s;
+      }
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(15px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      /* Stage Colors */
+      .complete-lead-card[data-stage="0"] {
+        --stage-color: #95a5a6;
+        --stage-color-light: #ecf0f1;
+      }
+      .complete-lead-card[data-stage="1"] {
+        --stage-color: #3498db;
+        --stage-color-light: #ebf5fb;
+      }
+      .complete-lead-card[data-stage="2"] {
+        --stage-color: #9b59b6;
+        --stage-color-light: #f4ecf7;
+      }
+      .complete-lead-card[data-stage="3"] {
+        --stage-color: #f39c12;
+        --stage-color-light: #fef5e7;
+      }
+      .complete-lead-card[data-stage="4"] {
+        --stage-color: #e67e22;
+        --stage-color-light: #fef1e7;
+      }
+      .complete-lead-card[data-stage="5"] {
+        --stage-color: #16a085;
+        --stage-color-light: #e8f6f3;
+      }
+      .complete-lead-card[data-stage="6"] {
+        --stage-color: #27ae60;
+        --stage-color-light: #eafaf1;
+      }
+
+      .card-header-compact {
+        padding: 10px 15px;
+        background: linear-gradient(to right, var(--stage-color-light), white);
+        cursor: pointer;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+        border-bottom: 1px solid #f0f0f0;
+      }
+      .card-header-left {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        min-width: 0;
+      }
+      .lead-basic-info {
+        flex: 1;
+        min-width: 0;
+      }
+      .lead-name-compact {
+        font-size: 14px;
+        font-weight: 600;
+        color: #2c3e50;
+        margin: 0 0 3px 0;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .lead-name-compact a {
+        color: #2c3e50;
+        text-decoration: none;
+      }
+      .lead-name-compact a:hover {
+        color: var(--stage-color);
+      }
+      .lead-meta-compact {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 11px;
+        color: #6c757d;
+        flex-wrap: wrap;
+      }
+      .meta-item {
+        display: flex;
+        align-items: center;
+        gap: 3px;
+      }
+      .meta-item svg {
+        width: 12px;
+        height: 12px;
+        opacity: 0.7;
+      }
+      .stage-badge-compact {
+        padding: 3px 10px;
+        border-radius: 10px;
+        font-size: 10px;
+        font-weight: 600;
+        color: white;
+        background: var(--stage-color);
+        white-space: nowrap;
+        text-transform: uppercase;
+        letter-spacing: 0.3px;
+      }
+      .capacity-badge-compact {
+        padding: 3px 8px;
+        border-radius: 10px;
+        font-size: 10px;
+        font-weight: 600;
+        background: linear-gradient(135deg, #ffd89b 0%, #19547b 100%);
+        color: white;
+        white-space: nowrap;
+      }
+      .last-activity-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 3px;
+        padding: 2px 7px;
+        background: rgba(102, 126, 234, 0.12);
+        border: 1px solid rgba(102, 126, 234, 0.25);
+        border-radius: 8px;
+        font-size: 10px;
+        font-weight: 600;
+        color: #667eea;
+        white-space: nowrap;
+      }
+      .expand-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        background: var(--stage-color);
+        color: white;
+        flex-shrink: 0;
+      }
+      .expand-icon svg {
+        width: 14px;
+        height: 14px;
+        transition: transform 0.3s ease;
+      }
+      .complete-lead-card.expanded .expand-icon svg {
+        transform: rotate(180deg);
+      }
+
+      /* Card Body */
+      .card-body-expandable {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.4s ease-out;
+      }
+      .complete-lead-card.expanded .card-body-expandable {
+        max-height: 8000px;
+      }
+      .card-body-inner {
+        padding: 15px;
+      }
+      .service-overview-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 12px;
+      }
+
+      /* ── Service Cards ──────────────────────────────────────────────────────── */
+      .service-card {
+        background: var(--service-bg);
+        border-radius: 10px;
+        padding: 12px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        transition: all 0.3s ease;
+      }
+      .service-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.12);
+      }
+      .service-card.lead-card {
+        --service-bg: #eef5ff;
+        --highlight-color: #3498db;
+      }
+      .service-card.survey-card {
+        --service-bg: #e8daef;
+        --highlight-color: #9b59b6;
+      }
+      .service-card.quotation-card {
+        --service-bg: #fff3cd;
+        --highlight-color: #f39c12;
+      }
+      .service-card.order-card {
+        --service-bg: #ffe4d4;
+        --highlight-color: #e67e22;
+      }
+      .service-card.material-card {
+        --service-bg: #d4edda;
+        --highlight-color: #16a085;
+      }
+      .service-card.project-card {
+        --service-bg: #d1f2eb;
+        --highlight-color: #27ae60;
+      }
+
+      .service-card-header {
+        font-size: 14px;
+        font-weight: 700;
+        color: #2c3e50;
+        margin: 0 0 10px 0;
+        padding-bottom: 6px;
+        border-bottom: 2px solid rgba(0, 0, 0, 0.08);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 10px;
+      }
+      .service-card-title {
+        font-size: 14px;
+        font-weight: 700;
+        color: #2c3e50;
+      }
+      .service-card-id-icon {
+        width: 28px;
+        height: 28px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: white;
+        border-radius: 50%;
+        border: 1px solid rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+        cursor: pointer;
+        text-decoration: none;
+        flex-shrink: 0;
+      }
+      .service-card-id-icon:hover {
+        transform: translateY(-2px) scale(1.1);
+        box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+        border-color: var(--highlight-color);
+        background: var(--highlight-color);
+      }
+      .service-card-id-icon:hover svg {
+        color: white;
+      }
+      .service-card-id-icon svg {
+        width: 14px;
+        height: 14px;
+        color: var(--highlight-color);
+        transition: all 0.3s ease;
+      }
+      .service-card-body {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
+      .service-data-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 12px;
+      }
+      .service-data-label {
+        color: #6c757d;
+        font-weight: 500;
+        font-size: 11px;
+      }
+      .service-data-value {
+        color: #2c3e50;
+        font-weight: 600;
+        text-align: right;
+        font-size: 11px;
+      }
+      .service-data-value a {
+        color: #667eea;
+        text-decoration: none;
+        font-weight: 700;
+      }
+      .service-data-value a:hover {
+        text-decoration: underline;
+      }
+      .service-data-value.highlight {
+        color: var(--highlight-color);
+        font-weight: 700;
+      }
+
+      /* ── Liaisoning Card ─────────────────────────────────────────────────────── */
+      .service-card.liaison-card {
+        --service-bg: #eaf4fb;
+        --highlight-color: #1a6fa8;
+      }
+      .service-card.liaison-card .delay-log-item {
+        --dl-accent: #1a6fa8;
+      }
+      .service-card.liaison-card .delay-log-category {
+        background: #1a6fa8;
+      }
+
+      /* Liaisoning Status Badges */
+      .liaison-status-badge {
+        display: inline-block;
+        padding: 3px 10px;
+        border-radius: 10px;
+        font-size: 10px;
+        font-weight: 700;
+        text-transform: uppercase;
+        color: white;
+        letter-spacing: 0.3px;
+        white-space: nowrap;
+      }
+      .liaison-status-new {
+        background: #95a5a6;
+      }
+      .liaison-status-overdue {
+        background: #e74c3c;
+      }
+      .liaison-status-docs {
+        background: #3498db;
+      }
+      .liaison-status-registered {
+        background: #9b59b6;
+      }
+      .liaison-status-agreement {
+        background: #f39c12;
+      }
+      .liaison-status-division {
+        background: #e67e22;
+      }
+      .liaison-status-inprocess {
+        background: #16a085;
+      }
+      .liaison-status-sync {
+        background: #2980b9;
+      }
+      .liaison-status-completed {
+        background: #27ae60;
+      }
+
+      /* Liaisoning timeline steps */
+      .liaison-timeline {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        margin-top: 8px;
+        padding-top: 8px;
+        border-top: 1px solid rgba(0, 0, 0, 0.08);
+      }
+      .liaison-step {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 4px 6px;
+        border-radius: 5px;
+        background: white;
+        border-left: 3px solid #e0e0e0;
+        font-size: 11px;
+        transition: all 0.2s;
+      }
+      .liaison-step.done {
+        border-left-color: #27ae60;
+        background: #f0fdf4;
+      }
+      .liaison-step.done .liaison-step-dot {
+        background: #27ae60;
+      }
+      .liaison-step.pending {
+        border-left-color: #e0e0e0;
+      }
+      .liaison-step.pending .liaison-step-dot {
+        background: #bdc3c7;
+      }
+      .liaison-step-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        flex-shrink: 0;
+      }
+      .liaison-step-label {
+        color: #6c757d;
+        font-size: 10px;
+        flex: 1;
+      }
+      .liaison-step.done .liaison-step-label {
+        color: #27ae60;
+        font-weight: 600;
+      }
+      .liaison-step-date {
+        color: #2c3e50;
+        font-weight: 600;
+        font-size: 10px;
+        white-space: nowrap;
+      }
+
+      /* ── TAT Badges ─────────────────────────────────────────────────────────── */
+      .card-tat-badge {
+        padding: 4px 10px;
+        border-radius: 12px;
+        font-size: 10px;
+        font-weight: 700;
+        white-space: nowrap;
+        text-transform: uppercase;
+        letter-spacing: 0.3px;
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+      }
+      .card-tat-badge.tat-green {
+        background: #27ae60;
+        color: white;
+      }
+      .card-tat-badge.tat-blue {
+        background: #3498db;
+        color: white;
+      }
+      .card-tat-badge.tat-red {
+        background: #e74c3c;
+        color: white;
+      }
+
+      /* Survey Status */
+      .survey-status-badge {
+        display: inline-block;
+        padding: 2px 8px;
+        border-radius: 10px;
+        font-size: 9px;
+        font-weight: 700;
+        text-transform: uppercase;
+        color: white;
+        letter-spacing: 0.3px;
+      }
+      .survey-status-badge.status-completed {
+        background: #27ae60;
+      }
+      .survey-status-badge.status-overdue {
+        background: #e74c3c;
+      }
+      .survey-status-badge.status-open {
+        background: #3498db;
+      }
+
+      /* ── Payment Schedule ────────────────────────────────────────────────────── */
+      .payment-schedule-inline {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        margin-top: 6px;
+      }
+      .payment-pill {
+        padding: 4px 10px;
+        background: white;
+        border-radius: 12px;
+        font-size: 11px;
+        font-weight: 600;
+        border: 1px solid rgba(0, 0, 0, 0.1);
+      }
+      .payment-pill.paid {
+        color: #27ae60;
+        border-color: #27ae60;
+      }
+      .payment-pill.pending {
+        color: #e67e22;
+        border-color: #e67e22;
+      }
+
+      /* ── Followups ───────────────────────────────────────────────────────────── */
+      .followups-compact {
+        margin-top: 8px;
+        padding-top: 8px;
+        border-top: 1px solid rgba(0, 0, 0, 0.1);
+      }
+      .followups-compact-title {
+        font-size: 10px;
+        font-weight: 700;
+        color: #2c3e50;
+        margin-bottom: 5px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+      .followup-item-compact {
+        background: white;
+        padding: 5px 6px;
+        border-radius: 4px;
+        margin-bottom: 4px;
+        font-size: 10px;
+        border-left: 2px solid var(--highlight-color);
+        line-height: 1.3;
+      }
+      .followup-item-compact:last-child {
+        margin-bottom: 0;
+      }
+      .followup-header-compact {
+        font-weight: 600;
+        color: #495057;
+        margin-bottom: 2px;
+        font-size: 9px;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+      }
+      .followup-user-icon {
+        width: 14px;
+        height: 14px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--highlight-color);
+        color: white;
+        border-radius: 50%;
+        font-size: 7px;
+        font-weight: 700;
+      }
+      .followup-text-compact {
+        color: #2c3e50;
+        line-height: 1.3;
+        font-size: 10px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+      }
+      .followup-more-indicator {
+        text-align: center;
+        margin-top: 4px;
+        font-size: 9px;
+        color: #6c757d;
+        font-weight: 600;
+        cursor: pointer;
+        padding: 2px;
+        border-radius: 3px;
+        transition: all 0.3s ease;
+      }
+      .followup-more-indicator:hover {
+        background: rgba(0, 0, 0, 0.05);
+        color: var(--highlight-color);
+      }
+
+      /* ── Delay Log Section ───────────────────────────────────────────────────── */
+      .delay-log-section {
+        margin-top: 8px;
+        padding-top: 8px;
+        border-top: 1px solid rgba(0, 0, 0, 0.1);
+      }
+      .delay-log-title {
+        font-size: 10px;
+        font-weight: 700;
+        color: #2c3e50;
+        margin-bottom: 5px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+      }
+      .delay-log-item {
+        border-left: 3px solid var(--dl-accent, #e67e22);
+        padding: 6px 8px;
+        margin-bottom: 4px;
+        border-radius: 0 4px 4px 0;
+        font-size: 10px;
+        line-height: 1.4;
+      }
+      .delay-log-item:nth-child(odd) {
+        background: #fff8f0;
+      }
+      .delay-log-item:nth-child(even) {
+        background: #fff3e8;
+      }
+      .delay-log-item:last-child {
+        margin-bottom: 0;
+      }
+      .delay-log-meta {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 5px;
+        margin-bottom: 3px;
+      }
+      .delay-log-user {
+        font-weight: 700;
+        color: #2c3e50;
+        font-size: 10px;
+        display: flex;
+        align-items: center;
+        gap: 3px;
+      }
+      .delay-log-category {
+        padding: 1px 7px;
+        border-radius: 8px;
+        font-size: 9px;
+        font-weight: 700;
+        color: white;
+        background: var(--dl-accent, #e67e22);
+        white-space: nowrap;
+      }
+      .delay-log-time {
+        color: #95a5a6;
+        font-size: 9px;
+        margin-left: auto;
+      }
+      .delay-log-remark {
+        color: #2c3e50;
+        line-height: 1.4;
+        font-size: 10px;
+      }
+      /* per-card accent overrides */
+      .service-card.lead-card .delay-log-item {
+        --dl-accent: #3498db;
+      }
+      .service-card.survey-card .delay-log-item {
+        --dl-accent: #9b59b6;
+      }
+      .service-card.quotation-card .delay-log-item {
+        --dl-accent: #f39c12;
+      }
+      .service-card.order-card .delay-log-item {
+        --dl-accent: #e67e22;
+      }
+      .service-card.material-card .delay-log-item {
+        --dl-accent: #16a085;
+      }
+      .service-card.project-card .delay-log-item {
+        --dl-accent: #27ae60;
+      }
+      .service-card.lead-card .delay-log-category {
+        background: #3498db;
+      }
+      .service-card.survey-card .delay-log-category {
+        background: #9b59b6;
+      }
+      .service-card.quotation-card .delay-log-category {
+        background: #f39c12;
+      }
+      .service-card.order-card .delay-log-category {
+        background: #e67e22;
+      }
+      .service-card.material-card .delay-log-category {
+        background: #16a085;
+      }
+      .service-card.project-card .delay-log-category {
+        background: #27ae60;
+      }
+
+      /* ── Task Table ──────────────────────────────────────────────────────────── */
+      .task-table-container {
+        margin-top: 8px;
+        padding-top: 8px;
+        border-top: 1px solid rgba(0, 0, 0, 0.1);
+      }
+      .task-table-wrapper {
+        overflow: auto;
+        margin-top: 6px;
+        border-radius: 6px;
+        border: 1px solid rgba(0, 0, 0, 0.1);
+        max-height: 250px;
+      }
+      .task-table-wrapper::-webkit-scrollbar {
+        height: 5px;
+        width: 5px;
+      }
+      .task-table-wrapper::-webkit-scrollbar-track {
+        background: rgba(0, 0, 0, 0.05);
+        border-radius: 3px;
+      }
+      .task-table-wrapper::-webkit-scrollbar-thumb {
+        background: #27ae60;
+        border-radius: 3px;
+      }
+      .task-table-wrapper::-webkit-scrollbar-thumb:hover {
+        background: #1e8449;
+      }
+      .task-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 9px;
+        background: white;
+        min-width: 600px;
+      }
+      .task-table thead {
+        background: rgba(39, 174, 96, 0.1);
+      }
+      .task-table th {
+        padding: 5px 6px;
+        text-align: left;
+        font-weight: 700;
+        color: #2c3e50;
+        border-bottom: 2px solid rgba(0, 0, 0, 0.1);
+        font-size: 8px;
+        text-transform: uppercase;
+        letter-spacing: 0.3px;
+        white-space: nowrap;
+      }
+      .task-table tbody tr {
+        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        transition: background 0.2s ease;
+      }
+      .task-table tbody tr:hover {
+        background: rgba(39, 174, 96, 0.05);
+      }
+      .task-table td {
+        padding: 5px 6px;
+        color: #2c3e50;
+        font-size: 9px;
+        font-weight: 500;
+        border-right: 1px solid rgba(0, 0, 0, 0.05);
+        white-space: nowrap;
+      }
+      .task-table td:last-child {
+        border-right: none;
+      }
+      .task-status-badge-table {
+        display: inline-block;
+        padding: 2px 5px;
+        border-radius: 6px;
+        font-size: 7px;
+        font-weight: 700;
+        text-transform: uppercase;
+        color: white;
+        white-space: nowrap;
+        letter-spacing: 0.3px;
+      }
+      .task-status-badge-table.status-open {
+        background: #3498db;
+      }
+      .task-status-badge-table.status-working {
+        background: #f39c12;
+      }
+      .task-status-badge-table.status-pending {
+        background: #9b59b6;
+      }
+      .task-status-badge-table.status-completed {
+        background: #27ae60;
+      }
+      .task-status-badge-table.status-cancelled {
+        background: #95a5a6;
+      }
+      .task-status-badge-table.status-overdue {
+        background: #e74c3c;
+      }
+
+      /* ── Pagination Controls ─────────────────────────────────────────────────── */
+      .pagination-controls {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 8px;
+        padding: 15px;
+        background: white;
+        border-radius: 8px;
+        margin-top: 12px;
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+      }
+      .pagination-btn {
+        padding: 6px 12px;
+        background: white;
+        border: 1px solid #e0e0e0;
+        border-radius: 6px;
+        font-size: 12px;
+        font-weight: 600;
+        color: #495057;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+      }
+      .pagination-btn:hover:not(:disabled) {
+        background: #667eea;
+        border-color: #667eea;
+        color: white;
+      }
+      .pagination-btn:disabled {
+        opacity: 0.3;
+        cursor: not-allowed;
+      }
+      .pagination-pages {
+        display: flex;
+        gap: 4px;
+      }
+      .page-number-btn {
+        width: 32px;
+        height: 32px;
+        padding: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: white;
+        border: 1px solid #e0e0e0;
+        border-radius: 6px;
+        font-size: 12px;
+        font-weight: 600;
+        color: #495057;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+      .page-number-btn:hover,
+      .page-number-btn.active {
+        background: #667eea;
+        border-color: #667eea;
+        color: white;
+      }
+      .page-ellipsis {
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #6c757d;
+        font-weight: 700;
+      }
+
+      /* ── Responsive ─────────────────────────────────────────────────────────── */
+      @media (max-width: 968px) {
+        .filter-inline-grid {
+          grid-template-columns: 1fr 1fr;
+        }
+        .filter-quick-btns {
+          grid-column: 1 / -1;
+        }
+        .service-overview-grid {
+          grid-template-columns: 1fr;
+        }
+        .header-stats-inline {
+          display: none;
+        }
+        .dashboard-header-compact {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 10px;
+        }
+        .header-actions-compact {
+          width: 100%;
+          justify-content: flex-end;
+        }
+        .filter-controls-row {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+      }
+
+      /* ── WO Items Toggle Button ──────────────────────────────────────────────── */
+      .wo-items-toggle-btn {
+        background: #eef3ff;
+        border: 1px solid #c5d3f0;
+        color: #2c5282;
+        font-size: 11px;
+        padding: 4px 14px;
+        border-radius: 12px;
+        cursor: pointer;
+        font-weight: 600;
+        margin-top: 6px;
+        display: block;
+        width: 100%;
+        text-align: center;
+        transition: all 0.2s ease;
+      }
+      .wo-items-toggle-btn:hover {
+        background: #dce8ff;
+      }
+      .wo-items-toggle-btn.expanded {
+        background: #fff3e0;
+        border-color: #e67e22;
+        color: #c05c00;
+      }
+
+      .card-header-compact.header-overdue {
+        background: linear-gradient(
+          to right,
+          rgba(231, 76, 60, 0.08),
+          white
+        ) !important;
+        border-left: 3px solid #e74c3c !important;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="solar-complete-dashboard">
+      <!-- Compact Header -->
+      <div class="dashboard-header-compact">
+        <div class="header-title-section">
+          <h2>Sales Pipeline</h2>
+          <div class="header-stats-inline" id="header-stats-inline"></div>
+        </div>
+        <div class="header-actions-compact">
+          <button
+            class="action-btn-sm"
+            id="collapse-all-btn"
+            title="Collapse All"
+          >
+            <svg
+              width="14"
+              height="14"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <polyline points="18 15 12 9 6 15"></polyline>
+            </svg>
+          </button>
+          <button class="action-btn-sm" id="expand-all-btn" title="Expand All">
+            <svg
+              width="14"
+              height="14"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </button>
+          <button class="action-btn-sm" id="refresh-btn" title="Refresh">
+            <svg
+              width="14"
+              height="14"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path
+                d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"
+              />
+            </svg>
+          </button>
+          <button
+            class="action-btn-sm toggle-filter-btn"
+            id="toggle-filter-btn"
+            title="Toggle Filters"
+          >
+            <svg
+              width="14"
+              height="14"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <polygon
+                points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"
+              ></polygon>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Compact Filter Section -->
+      <div class="filter-section-compact collapsed" id="filter-section">
+        <div class="filter-inline-grid">
+          <input
+            type="text"
+            class="filter-input-sm"
+            id="customer-name-filter"
+            placeholder="Customer name..."
+            list="customer-list"
+          />
+          <datalist id="customer-list"></datalist>
+          <input
+            type="date"
+            class="filter-input-sm"
+            id="from-date-filter"
+            placeholder="From date"
+          />
+          <input
+            type="date"
+            class="filter-input-sm"
+            id="to-date-filter"
+            placeholder="To date"
+          />
+          <div class="filter-quick-btns">
+            <button class="quick-btn-sm" data-period="today">Today</button>
+            <button class="quick-btn-sm" data-period="week">Week</button>
+            <button class="quick-btn-sm" data-period="month">Month</button>
+          </div>
+          <button class="filter-apply-btn" id="apply-filters-btn">
+            <svg
+              width="14"
+              height="14"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+            Apply
+          </button>
+          <button class="filter-clear-btn" id="clear-filters-btn">
+            <svg
+              width="14"
+              height="14"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+            Clear
+          </button>
+        </div>
+        <!-- Date Type + Sort Toggle Row -->
+        <div class="filter-controls-row">
+          <div class="toggle-group">
+            <span class="toggle-group-label">📅 Date By:</span>
+            <button
+              class="toggle-btn date-type-btn active"
+              data-type="creation"
+            >
+              Creation Date
+            </button>
+            <button class="toggle-btn date-type-btn" data-type="actual">
+              Actual Date
+            </button>
+          </div>
+          <div class="toggle-group">
+            <span class="toggle-group-label">⬆ Sort By:</span>
+            <button
+              class="toggle-btn sort-btn active"
+              data-sort="last_activity"
+            >
+              🕐 Recent Activity
+            </button>
+            <button class="toggle-btn sort-btn" data-sort="date">
+              📅 Date
+            </button>
+          </div>
+        </div>
+        <div class="active-filters-inline" id="active-filters"></div>
+      </div>
+
+      <!-- Pagination Info Inline -->
+      <div class="pagination-info-inline" id="pagination-info"></div>
+
+      <!-- Loading State -->
+      <div id="loading-state" class="loading-state">
+        <div class="spinner"></div>
+        <p>Loading data...</p>
+      </div>
+
+      <!-- Leads Container -->
+      <div id="complete-leads-container" class="complete-leads-container"></div>
+
+      <!-- Pagination Controls -->
+      <div class="pagination-controls" id="pagination-controls"></div>
+
+      <!-- Empty State -->
+      <div id="empty-state" class="empty-state" style="display: none">
+        <svg
+          width="48"
+          height="48"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="#95a5a6"
+          stroke-width="1"
+        >
+          <circle cx="12" cy="12" r="10" />
+          <line x1="12" y1="8" x2="12" y2="12" />
+          <line x1="12" y1="16" x2="12.01" y2="16" />
+        </svg>
+        <h3>No Leads Found</h3>
+        <p>Try adjusting your filters</p>
+      </div>
+    </div>
+  </body>
+
+  <script>
+    (function () {
+      // ── Global State ──────────────────────────────────────────────────────────
+      let currentFilters = {};
+      let customerOptions = [];
+      let currentPage = 1;
+      let pageSize = 50;
+      let totalRecords = 0;
+      let totalPages = 0;
+      let currentDateType = "creation";
+      let currentSortBy = "last_activity";
+
+      // ── WO Items Store ────────────────────────────────────────────────────────
+      window._woDashItems = {};
+      window._woDashCounter = 0;
+
+      // ── Init ──────────────────────────────────────────────────────────────────
+      function init() {
+        loadFilterOptions();
+        loadCompleteDashboardData();
+        attachEventListeners();
+        preventGlobalSearchInterference();
+      }
+
+      // ── Event Listeners ───────────────────────────────────────────────────────
+      function attachEventListeners() {
+        const bind = (sel, ev, fn) => {
+          const el = root_element.querySelector(sel);
+          if (el) el.addEventListener(ev, fn);
+        };
+        bind("#toggle-filter-btn", "click", toggleFilters);
+        bind("#apply-filters-btn", "click", applyFilters);
+        bind("#clear-filters-btn", "click", clearFilters);
+        bind("#refresh-btn", "click", refreshCompleteDashboard);
+        bind("#expand-all-btn", "click", expandAll);
+        bind("#collapse-all-btn", "click", collapseAll);
+
+        root_element.querySelectorAll(".quick-btn-sm").forEach((btn) => {
+          btn.addEventListener("click", function () {
+            setQuickFilter(this.getAttribute("data-period"), this);
+          });
+        });
+
+        root_element.querySelectorAll(".date-type-btn").forEach((btn) => {
+          btn.addEventListener("click", function () {
+            root_element
+              .querySelectorAll(".date-type-btn")
+              .forEach((b) => b.classList.remove("active"));
+            this.classList.add("active");
+            currentDateType = this.getAttribute("data-type");
+            loadCompleteDashboardData(1);
+          });
+        });
+
+        root_element.querySelectorAll(".sort-btn").forEach((btn) => {
+          btn.addEventListener("click", function () {
+            root_element
+              .querySelectorAll(".sort-btn")
+              .forEach((b) => b.classList.remove("active"));
+            this.classList.add("active");
+            currentSortBy = this.getAttribute("data-sort");
+            loadCompleteDashboardData(1);
+          });
+        });
+      }
+
+      // ── Prevent Global Search Interference ───────────────────────────────────
+      function preventGlobalSearchInterference() {
+        root_element
+          .querySelectorAll('input[type="text"], input[type="date"]')
+          .forEach((input) => {
+            ["keydown", "keyup", "keypress", "input", "focus", "click"].forEach(
+              (ev) => {
+                input.addEventListener(
+                  ev,
+                  (e) => {
+                    e.stopPropagation();
+                    e.stopImmediatePropagation();
+                  },
+                  true,
+                );
+              },
+            );
+            input.setAttribute("data-dashboard-input", "true");
+            input.setAttribute("data-no-global-search", "true");
+          });
+
+        const filterSection = root_element.querySelector(
+          ".filter-section-compact",
+        );
+        if (filterSection) {
+          ["keydown", "keyup", "keypress", "input"].forEach((ev) => {
+            filterSection.addEventListener(
+              ev,
+              (e) => e.stopPropagation(),
+              true,
+            );
+          });
+        }
+
+        const dashboardContainer = root_element.querySelector(
+          ".solar-complete-dashboard",
+        );
+        if (dashboardContainer) {
+          dashboardContainer.addEventListener(
+            "keydown",
+            (e) => {
+              if (e.target.tagName === "INPUT") e.stopPropagation();
+            },
+            true,
+          );
+        }
+      }
+
+      // ── Filter Options ────────────────────────────────────────────────────────
+      function loadFilterOptions() {
+        frappe.call({
+          method:
+            "manoj.custom_dash_and_report.total_process_dash2.get_filter_options",
+          callback: function (r) {
+            if (r.message) {
+              customerOptions = r.message.customers || [];
+              populateCustomerDatalist();
+            }
+          },
+        });
+      }
+
+      function populateCustomerDatalist() {
+        const datalist = root_element.querySelector("#customer-list");
+        if (!datalist) return;
+        datalist.innerHTML = "";
+        customerOptions.forEach((customer) => {
+          const option = document.createElement("option");
+          option.value = customer;
+          datalist.appendChild(option);
+        });
+      }
+
+      // ── Load Data ─────────────────────────────────────────────────────────────
+      function loadCompleteDashboardData(page = 1) {
+        const loadingState = root_element.querySelector("#loading-state");
+        const leadsContainer = root_element.querySelector(
+          "#complete-leads-container",
+        );
+        const emptyState = root_element.querySelector("#empty-state");
+        const paginationInfo = root_element.querySelector("#pagination-info");
+        const paginationControls = root_element.querySelector(
+          "#pagination-controls",
+        );
+
+        if (loadingState) loadingState.style.display = "block";
+        if (leadsContainer) leadsContainer.innerHTML = "";
+        if (emptyState) emptyState.style.display = "none";
+        if (paginationInfo) paginationInfo.style.display = "none";
+        if (paginationControls) paginationControls.style.display = "none";
+
+        window._woDashItems = {};
+        window._woDashCounter = 0;
+        currentPage = page;
+
+        frappe.call({
+          method:
+            "manoj.custom_dash_and_report.total_process_dash2.get_complete_dashboard_data",
+          args: {
+            filters: JSON.stringify(currentFilters),
+            page: currentPage,
+            page_size: pageSize,
+            date_type: currentDateType,
+            sort_by: currentSortBy,
+          },
+          callback: function (r) {
+            if (loadingState) loadingState.style.display = "none";
+            if (r.message && r.message.data && r.message.data.length > 0) {
+              const result = r.message;
+              totalRecords = result.pagination.total_records;
+              totalPages = result.pagination.total_pages;
+              renderHeaderStats(result.global_counts);
+              renderPaginationInfo(result.pagination);
+              renderCompleteLeads(result.data);
+              renderPaginationControls(result.pagination);
+            } else {
+              if (emptyState) emptyState.style.display = "block";
+              renderHeaderStats(null);
+            }
+          },
+          error: function (r) {
+            if (loadingState) loadingState.style.display = "none";
+            if (emptyState) emptyState.style.display = "block";
+            frappe.msgprint({
+              title: __("Error"),
+              indicator: "red",
+              message: __("Failed to load dashboard data."),
+            });
+            console.error("Dashboard Error:", r);
+          },
+        });
+      }
+
+      // ── Header Stats ──────────────────────────────────────────────────────────
+      function renderHeaderStats(globalCounts) {
+        const headerStats = root_element.querySelector("#header-stats-inline");
+        if (!headerStats) return;
+        const counts = globalCounts || {};
+        const stats = [
+          {
+            icon: "👥",
+            label: "Leads",
+            value: counts.total_leads || totalRecords || 0,
+          },
+          { icon: "📋", label: "Surveys", value: counts.total_surveys || 0 },
+          { icon: "📄", label: "Quotes", value: counts.total_quotes || 0 },
+          { icon: "🛒", label: "Orders", value: counts.total_orders || 0 },
+          { icon: "🚀", label: "Projects", value: counts.total_projects || 0 },
+        ];
+        headerStats.innerHTML = "";
+        stats.forEach((stat) => {
+          const statDiv = document.createElement("div");
+          statDiv.className = "stat-inline";
+          statDiv.innerHTML = `
+        <div class="stat-inline-icon">${stat.icon}</div>
+        <div class="stat-inline-content">
+          <div class="stat-inline-value">${stat.value}</div>
+          <div class="stat-inline-label">${stat.label}</div>
+        </div>`;
+          headerStats.appendChild(statDiv);
+        });
+      }
+
+      // ── Pagination Info ───────────────────────────────────────────────────────
+      function renderPaginationInfo(pagination) {
+        const paginationInfo = root_element.querySelector("#pagination-info");
+        if (!paginationInfo) return;
+        paginationInfo.style.display = "flex";
+        paginationInfo.innerHTML = `
+      <div>Showing <strong>${pagination.showing_from}</strong> to
+      <strong>${pagination.showing_to}</strong> of
+      <strong>${pagination.total_records}</strong> leads</div>
+      <div>Page <strong>${pagination.current_page}</strong> of
+      <strong>${pagination.total_pages}</strong></div>`;
+      }
+
+      // ── Pagination Controls ───────────────────────────────────────────────────
+      function renderPaginationControls(pagination) {
+        const paginationControls = root_element.querySelector(
+          "#pagination-controls",
+        );
+        if (!paginationControls || pagination.total_pages <= 1) return;
+        paginationControls.style.display = "flex";
+        paginationControls.innerHTML = "";
+
+        const prevBtn = document.createElement("button");
+        prevBtn.className = "pagination-btn";
+        prevBtn.disabled = pagination.current_page === 1;
+        prevBtn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg>Prev`;
+        prevBtn.addEventListener("click", () =>
+          loadCompleteDashboardData(pagination.current_page - 1),
+        );
+        paginationControls.appendChild(prevBtn);
+
+        const pagesContainer = document.createElement("div");
+        pagesContainer.className = "pagination-pages";
+        generatePageNumbers(
+          pagination.current_page,
+          pagination.total_pages,
+        ).forEach((pageNum) => {
+          if (pageNum === "...") {
+            const ellipsis = document.createElement("div");
+            ellipsis.className = "page-ellipsis";
+            ellipsis.textContent = "...";
+            pagesContainer.appendChild(ellipsis);
+          } else {
+            const pageBtn = document.createElement("button");
+            pageBtn.className = "page-number-btn";
+            if (pageNum === pagination.current_page)
+              pageBtn.classList.add("active");
+            pageBtn.textContent = pageNum;
+            pageBtn.addEventListener("click", () =>
+              loadCompleteDashboardData(pageNum),
+            );
+            pagesContainer.appendChild(pageBtn);
+          }
+        });
+        paginationControls.appendChild(pagesContainer);
+
+        const nextBtn = document.createElement("button");
+        nextBtn.className = "pagination-btn";
+        nextBtn.disabled = pagination.current_page === pagination.total_pages;
+        nextBtn.innerHTML = `Next<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>`;
+        nextBtn.addEventListener("click", () =>
+          loadCompleteDashboardData(pagination.current_page + 1),
+        );
+        paginationControls.appendChild(nextBtn);
+      }
+
+      function generatePageNumbers(current, total) {
+        const pages = [];
+        if (total <= 7) {
+          for (let i = 1; i <= total; i++) pages.push(i);
+        } else {
+          pages.push(1);
+          if (current > 3) pages.push("...");
+          for (
+            let i = Math.max(2, current - 1);
+            i <= Math.min(total - 1, current + 1);
+            i++
+          )
+            pages.push(i);
+          if (current < total - 2) pages.push("...");
+          pages.push(total);
+        }
+        return pages;
+      }
+
+      // ── Filter UI ─────────────────────────────────────────────────────────────
+      function toggleFilters() {
+        root_element
+          .querySelector("#filter-section")
+          ?.classList.toggle("collapsed");
+        root_element
+          .querySelector("#toggle-filter-btn")
+          ?.classList.toggle("active");
+      }
+
+      function setQuickFilter(period, btnElement) {
+        const today = new Date();
+        const fromInput = root_element.querySelector("#from-date-filter");
+        const toInput = root_element.querySelector("#to-date-filter");
+        root_element
+          .querySelectorAll(".quick-btn-sm")
+          .forEach((b) => b.classList.remove("active"));
+        if (btnElement) btnElement.classList.add("active");
+        let fromDate = new Date(today);
+        if (period === "week") fromDate.setDate(today.getDate() - 7);
+        if (period === "month") fromDate.setMonth(today.getMonth() - 1);
+        if (period === "year") fromDate.setFullYear(today.getFullYear() - 1);
+        if (fromInput) fromInput.value = fromDate.toISOString().split("T")[0];
+        if (toInput) toInput.value = today.toISOString().split("T")[0];
+      }
+
+      function applyFilters() {
+        const customerName =
+          root_element.querySelector("#customer-name-filter")?.value.trim() ||
+          "";
+        const fromDate =
+          root_element.querySelector("#from-date-filter")?.value || "";
+        const toDate =
+          root_element.querySelector("#to-date-filter")?.value || "";
+        currentFilters = {};
+        if (customerName) currentFilters.customer_name = customerName;
+        if (fromDate) currentFilters.from_date = fromDate;
+        if (toDate) currentFilters.to_date = toDate;
+        updateActiveFiltersDisplay();
+        loadCompleteDashboardData(1);
+        frappe.show_alert(
+          { message: __("Filters applied"), indicator: "green" },
+          2,
+        );
+      }
+
+      function clearFilters() {
+        [
+          "#customer-name-filter",
+          "#from-date-filter",
+          "#to-date-filter",
+        ].forEach((sel) => {
+          const el = root_element.querySelector(sel);
+          if (el) el.value = "";
+        });
+        root_element
+          .querySelectorAll(".quick-btn-sm")
+          .forEach((b) => b.classList.remove("active"));
+        currentFilters = {};
+        updateActiveFiltersDisplay();
+        loadCompleteDashboardData(1);
+        frappe.show_alert(
+          { message: __("Filters cleared"), indicator: "blue" },
+          2,
+        );
+      }
+
+      function updateActiveFiltersDisplay() {
+        const activeFiltersDiv = root_element.querySelector("#active-filters");
+        if (!activeFiltersDiv) return;
+        activeFiltersDiv.innerHTML = "";
+        if (!Object.keys(currentFilters).length) return;
+        if (currentFilters.customer_name)
+          activeFiltersDiv.appendChild(
+            createFilterTag(
+              "Customer",
+              currentFilters.customer_name,
+              "customer_name",
+            ),
+          );
+        if (currentFilters.from_date) {
+          const f = new Date(currentFilters.from_date).toLocaleDateString(
+            "en-IN",
+            { day: "2-digit", month: "short", year: "numeric" },
+          );
+          activeFiltersDiv.appendChild(createFilterTag("From", f, "from_date"));
+        }
+        if (currentFilters.to_date) {
+          const f = new Date(currentFilters.to_date).toLocaleDateString(
+            "en-IN",
+            { day: "2-digit", month: "short", year: "numeric" },
+          );
+          activeFiltersDiv.appendChild(createFilterTag("To", f, "to_date"));
+        }
+      }
+
+      function createFilterTag(label, value, filterKey) {
+        const tag = document.createElement("div");
+        tag.className = "filter-tag";
+        tag.innerHTML = `
+      <span>${label}: ${value}</span>
+      <button class="filter-tag-remove" data-filter-key="${filterKey}">
+        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>`;
+        tag
+          .querySelector(".filter-tag-remove")
+          .addEventListener("click", function (e) {
+            e.stopPropagation();
+            removeFilter(this.getAttribute("data-filter-key"));
+          });
+        return tag;
+      }
+
+      function removeFilter(filterKey) {
+        delete currentFilters[filterKey];
+        const map = {
+          customer_name: "#customer-name-filter",
+          from_date: "#from-date-filter",
+          to_date: "#to-date-filter",
+        };
+        const el = root_element.querySelector(map[filterKey]);
+        if (el) el.value = "";
+        updateActiveFiltersDisplay();
+        loadCompleteDashboardData(1);
+      }
+
+      function refreshCompleteDashboard() {
+        loadCompleteDashboardData(currentPage);
+      }
+
+      function expandAll() {
+        root_element
+          .querySelectorAll(".complete-lead-card")
+          .forEach((c) => c.classList.add("expanded"));
+      }
+
+      function collapseAll() {
+        root_element
+          .querySelectorAll(".complete-lead-card")
+          .forEach((c) => c.classList.remove("expanded"));
+      }
+
+      // ── Last Activity Badge ───────────────────────────────────────────────────
+      function getLastActivityLabel(lead) {
+        if (!lead.last_activity_date) return "";
+        const date = new Date(lead.last_activity_date);
+        const now = new Date();
+        const ms = now - date;
+        const mins = Math.floor(ms / 60000);
+        const hours = Math.floor(ms / 3600000);
+        const days = Math.floor(ms / 86400000);
+        let label;
+        if (mins < 1) label = "Just now";
+        else if (mins < 60) label = `${mins}m ago`;
+        else if (hours < 24) label = `${hours}h ago`;
+        else if (days < 7) label = `${days}d ago`;
+        else
+          label = date.toLocaleDateString("en-IN", {
+            day: "2-digit",
+            month: "short",
+          });
+        return `<span class="last-activity-badge" title="Last activity: ${date.toLocaleString("en-IN")}">🕐 ${label}</span>`;
+      }
+
+      // ── Render Leads ──────────────────────────────────────────────────────────
+      function renderCompleteLeads(leads) {
+        const leadsContainer = root_element.querySelector(
+          "#complete-leads-container",
+        );
+        if (!leadsContainer) return;
+        leads.forEach((lead, index) =>
+          leadsContainer.appendChild(createCompactLeadCard(lead, index)),
+        );
+      }
+
+      function getStageNumber(lead) {
+        if (lead.project_status === "Completed") return 6;
+        if (lead.project_name) return 5;
+        if (lead.sales_order) return 4;
+        if (lead.quotation_id) return 3;
+        if (lead.completed_date) return 2;
+        if (lead.survey_date) return 1;
+        return 0;
+      }
+
+      function getStageName(n) {
+        return (
+          [
+            "New Lead",
+            "Survey Scheduled",
+            "Survey Done",
+            "Quotation",
+            "Sales Order",
+            "In Progress",
+            "Completed",
+          ][n] || "Unknown"
+        );
+      }
+
+      function createCompactLeadCard(lead, index) {
+        const card = document.createElement("div");
+        const stageNum = getStageNumber(lead);
+        card.className = "complete-lead-card";
+        card.setAttribute("data-stage", stageNum);
+
+        const formatDate = (d) =>
+          d
+            ? new Date(d).toLocaleDateString("en-IN", {
+                day: "2-digit",
+                month: "short",
+                year: "numeric",
+              })
+            : "-";
+        const stripHTML = (h) => {
+          const d = document.createElement("div");
+          d.innerHTML = h || "";
+          return d.textContent || d.innerText || "-";
+        };
+        const activityBadge =
+          currentSortBy === "last_activity" ? getLastActivityLabel(lead) : "";
+
+        const ps = lead.pipeline_stage || {};
+        const stageColor = ps.color || "var(--stage-color)";
+        const stageLabel = ps.label || getStageName(stageNum);
+        const stageIcon = ps.icon || "";
+        const isOverdue = ps.is_overdue || false;
+
+        card.innerHTML = `
+      <div class="card-header-compact${isOverdue ? " header-overdue" : ""}">
+        <div class="card-header-left">
+          <div class="lead-basic-info">
+            <h4 class="lead-name-compact">
+              <a href="/app/lead/${lead.id}" target="_blank">${stripHTML(lead.lead_name) || "Unnamed Lead"}</a>
+            </h4>
+            <div class="lead-meta-compact">
+              <div class="meta-item">
+                <svg fill="currentColor" viewBox="0 0 24 24"><path d="M6.62 10.79a15.053 15.053 0 006.59 6.59l2.2-2.2a1 1 0 011.11-.27 11.36 11.36 0 004.57.9 1 1 0 011 1V20a1 1 0 01-1 1A17 17 0 013 4a1 1 0 011-1h3.5a1 1 0 011 1 11.36 11.36 0 00.9 4.57 1 1 0 01-.27 1.11l-2.2 2.2z"/></svg>
+                ${lead.mobile_no || "N/A"}
+              </div>
+              <div class="meta-item">
+                <svg fill="currentColor" viewBox="0 0 24 24"><path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20a2 2 0 002 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10z"/></svg>
+                ${formatDate(lead.creation_date)}
+              </div>
+              ${lead.capacity ? `<div class="capacity-badge-compact">⚡ ${lead.capacity} kW</div>` : ""}
+              ${activityBadge}
+            </div>
+          </div>
+          <span class="stage-badge-compact" style="background:${stageColor};">${stageIcon} ${stageLabel}</span>
+        </div>
+        <div class="expand-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </div>
+      </div>
+      <div class="card-body-expandable">
+        <div class="card-body-inner">
+          ${createServiceOverviewGrid(lead, formatDate, stripHTML)}
+        </div>
+      </div>`;
+
+        card
+          .querySelector(".card-header-compact")
+          .addEventListener("click", () => card.classList.toggle("expanded"));
+
+        card.addEventListener("click", function (e) {
+          const btn = e.target.closest(".wo-items-toggle-btn");
+          if (!btn) return;
+          e.stopPropagation();
+          const tableId = btn.getAttribute("data-woid");
+          const expanded = btn.getAttribute("data-expanded") === "1";
+          const tbody = card.querySelector("#" + tableId + "_body");
+          const items = window._woDashItems[tableId];
+          const SHOW = 5;
+          if (!tbody || !items || !items.length) return;
+          if (!expanded) {
+            tbody.innerHTML = items.map((it, i) => woItemRow(it, i)).join("");
+            btn.textContent = "▲ Show less";
+            btn.setAttribute("data-expanded", "1");
+            btn.classList.add("expanded");
+          } else {
+            tbody.innerHTML = items
+              .slice(0, SHOW)
+              .map((it, i) => woItemRow(it, i))
+              .join("");
+            btn.textContent = `▼ Show all ${items.length} items`;
+            btn.setAttribute("data-expanded", "0");
+            btn.classList.remove("expanded");
+          }
+        });
+
+        return card;
+      }
+
+      // ── Service Grid ──────────────────────────────────────────────────────────
+      function createServiceOverviewGrid(lead, formatDate, stripHTML) {
+        let html = '<div class="service-overview-grid">';
+        html += createLeadServiceCard(lead, formatDate, stripHTML);
+        if (lead.survey_date || lead.completed_date)
+          html += createSurveyServiceCard(lead, formatDate);
+        if (lead.quotation_id)
+          html += createQuotationServiceCard(lead, formatDate);
+        if (lead.sales_order) html += createOrderServiceCard(lead, formatDate);
+        if (lead.bom_bos_request_date || lead.material_dispatch_date)
+          html += createMaterialServiceCard(lead, formatDate);
+        if (lead.project_name)
+          html += createProjectServiceCard(lead, formatDate);
+        if (lead.liaison_name)
+          html += createLiaisoningServiceCard(lead, formatDate);
+        html += "</div>";
+        return html;
+      }
+
+      // ── TAT Badges ────────────────────────────────────────────────────────────
+      function calculateTATBadge(tatString, label) {
+        if (!tatString) return "";
+        let tatClass, tatText, icon;
+        if (tatString.toLowerCase().includes("same day")) {
+          tatClass = "tat-green";
+          tatText = "Same Day";
+          icon = "✓";
+        } else {
+          const match = tatString.match(/(-?\d+)\s*days?/i);
+          if (match) {
+            const days = parseInt(match[1]);
+            if (days <= 0) {
+              tatClass = "tat-green";
+              tatText = "Same Day";
+              icon = "✓";
+            } else if (days <= 2) {
+              tatClass = "tat-blue";
+              tatText = `${days} day${days > 1 ? "s" : ""}`;
+              icon = "◷";
+            } else {
+              tatClass = "tat-red";
+              tatText = `${days} days`;
+              icon = "⚠";
+            }
+          } else {
+            tatClass = "tat-blue";
+            tatText = tatString;
+            icon = "◷";
+          }
+        }
+        return `<div class="card-tat-badge ${tatClass}" title="TAT: ${label}"><span>${icon}</span><span>${label}: ${tatText}</span></div>`;
+      }
+
+      function calculateProjectTAT(lead, tasks) {
+        if (
+          !lead.project_name ||
+          !lead.expected_start_date ||
+          !lead.expected_end_date
+        )
+          return "";
+        const expectedStart = new Date(lead.expected_start_date);
+        const expectedEnd = new Date(lead.expected_end_date);
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const expectedDuration = Math.ceil(
+          (expectedEnd - expectedStart) / 86400000,
+        );
+        const projectCompleted = lead.project_status === "Completed";
+        let tatClass, tatText, icon;
+
+        if (projectCompleted) {
+          let lastDate = null;
+          (tasks || []).forEach((t) => {
+            if (t.actual_ed) {
+              const d = new Date(t.actual_ed);
+              if (!lastDate || d > lastDate) lastDate = d;
+            }
+          });
+          if (lastDate) {
+            const ad = Math.ceil((lastDate - expectedStart) / 86400000);
+            if (lastDate <= expectedEnd) {
+              tatClass = "tat-green";
+              tatText = `${ad}d`;
+              icon = "✓";
+            } else {
+              const od = Math.ceil((lastDate - expectedEnd) / 86400000);
+              tatClass = "tat-red";
+              tatText = `+${od}d late`;
+              icon = "⚠";
+            }
+          } else {
+            tatClass = "tat-green";
+            tatText = `${expectedDuration}d`;
+            icon = "✓";
+          }
+        } else {
+          if (today > expectedEnd) {
+            const od = Math.ceil((today - expectedEnd) / 86400000);
+            tatClass = "tat-red";
+            tatText = `+${od}d overdue`;
+            icon = "⚠";
+          } else if (today >= expectedStart) {
+            const de = Math.ceil((today - expectedStart) / 86400000);
+            tatClass = "tat-blue";
+            tatText = `${de}/${expectedDuration}d`;
+            icon = "◷";
+          } else {
+            tatClass = "tat-blue";
+            tatText = `${expectedDuration}d planned`;
+            icon = "◷";
+          }
+        }
+        if (!tatText) return "";
+        return `<div class="card-tat-badge ${tatClass}" title="Project TAT"><span>${icon}</span><span>${tatText}</span></div>`;
+      }
+
+      // ── Delay Log Renderer ────────────────────────────────────────────────────
+      function renderDelayLogs(delayLogs) {
+        if (!delayLogs || !delayLogs.length) return "";
+        const stripHTML = (h) => {
+          const d = document.createElement("div");
+          d.innerHTML = h || "";
+          return d.textContent || d.innerText || "";
+        };
+        return `
+      <div class="delay-log-section">
+        <div class="delay-log-title">⚠️ Delay / Remarks (${delayLogs.length})</div>
+        ${delayLogs
+          .map((log) => {
+            const initials = (log.user || "U")
+              .split(" ")
+              .map((w) => w[0])
+              .join("")
+              .toUpperCase()
+              .substring(0, 2);
+            const timeStr = log.log_time
+              ? formatFollowupDate(log.log_time)
+              : "";
+            const remark = stripHTML(log.remark || "");
+            return `
+            <div class="delay-log-item">
+              <div class="delay-log-meta">
+                <div class="delay-log-user">
+                  <span class="followup-user-icon">${initials}</span>
+                  <strong>${log.user || "Unknown"}</strong>
+                </div>
+                ${log.category ? `<span class="delay-log-category">${log.category}</span>` : ""}
+                ${timeStr ? `<span class="delay-log-time">${timeStr}</span>` : ""}
+              </div>
+              <div class="delay-log-remark">${remark || "-"}</div>
+            </div>`;
+          })
+          .join("")}
+      </div>`;
+      }
+
+      // ── Lead Card ─────────────────────────────────────────────────────────────
+      function createLeadServiceCard(lead, formatDate, stripHTML) {
+        const followups = parseFollowups(lead.lead_followups);
+        const delayLogs = lead.lead_delay_logs || [];
+        return `
+      <div class="service-card lead-card">
+        <h3 class="service-card-header">
+          <span class="service-card-title">Lead Details</span>
+          <a href="/app/lead/${lead.id}" target="_blank" class="service-card-id-icon" title="${lead.id}">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+              <polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/>
+            </svg>
+          </a>
+        </h3>
+        <div class="service-card-body">
+          <div class="service-data-row"><span class="service-data-label">Customer Name</span><span class="service-data-value">${stripHTML(lead.lead_name) || "-"}</span></div>
+          <div class="service-data-row"><span class="service-data-label">Contact</span><span class="service-data-value">${lead.mobile_no || "-"}</span></div>
+          <div class="service-data-row"><span class="service-data-label">Location</span><span class="service-data-value">${lead.location || "-"}</span></div>
+          <div class="service-data-row"><span class="service-data-label">Enquiry Date</span><span class="service-data-value">${formatDate(lead.creation_date)}</span></div>
+        </div>
+        ${followups.length > 0 ? createLeadFollowupsSection(followups) : ""}
+        ${renderDelayLogs(delayLogs)}
+      </div>`;
+      }
+
+      function createLeadFollowupsSection(followups) {
+        if (!followups || !followups.length) return "";
+        const display = followups.slice(0, 2);
+        return `
+      <div class="followups-compact">
+        <div class="followups-compact-title">📝 Followups (${followups.length})</div>
+        ${display
+          .map((f) => {
+            const match = f.match(/^(.+?)\s*\((.+?)\):\s*(.+)$/);
+            if (match) {
+              const userName = match[1].trim();
+              const dateTime = match[2].trim();
+              const noteText = match[3].trim();
+              const initials = userName
+                .split(" ")
+                .map((w) => w[0])
+                .join("")
+                .toUpperCase()
+                .substring(0, 2);
+              return `
+              <div class="followup-item-compact">
+                <div class="followup-header-compact">
+                  <span class="followup-user-icon">${initials}</span>
+                  <strong>${userName}</strong>
+                  <span style="color:#95a5a6;font-weight:400;">• ${formatFollowupDate(dateTime)}</span>
+                </div>
+                <div class="followup-text-compact">${noteText}</div>
+              </div>`;
+            }
+            return `<div class="followup-item-compact"><div class="followup-text-compact">${f}</div></div>`;
+          })
+          .join("")}
+        ${followups.length > 2 ? `<div class="followup-more-indicator">+${followups.length - 2} more</div>` : ""}
+      </div>`;
+      }
+
+      function formatFollowupDate(dateStr) {
+        try {
+          const date = new Date(dateStr.replace(" ", "T"));
+          const now = new Date();
+          const ms = now - date;
+          const mins = Math.floor(ms / 60000);
+          const hours = Math.floor(ms / 3600000);
+          const days = Math.floor(ms / 86400000);
+          if (mins < 1) return "Just now";
+          if (mins < 60) return `${mins}m ago`;
+          if (hours < 24) return `${hours}h ago`;
+          if (days < 7) return `${days}d ago`;
+          return date.toLocaleDateString("en-IN", {
+            day: "2-digit",
+            month: "short",
+            year:
+              date.getFullYear() !== now.getFullYear() ? "numeric" : undefined,
+          });
+        } catch (e) {
+          return dateStr;
+        }
+      }
+
+      function parseFollowups(raw) {
+        if (!raw) return [];
+        return raw
+          .split("\n")
+          .map((s) => s.trim())
+          .filter(Boolean);
+      }
+
+      // ── Survey Card ───────────────────────────────────────────────────────────
+      function createSurveyServiceCard(lead, formatDate) {
+        const tatBadge = calculateTATBadge(lead.tat_enquiry_to_survey, "E→S");
+        const delayLogs = lead.survey_delay_logs || [];
+        let surveyStatusHTML = "";
+        if (lead.survey_status) {
+          const map = {
+            Completed: "status-completed",
+            Overdue: "status-overdue",
+            Open: "status-open",
+          };
+          surveyStatusHTML = `<span class="survey-status-badge ${map[lead.survey_status] || "status-open"}">${lead.survey_status}</span>`;
+        }
+        return `
+      <div class="service-card survey-card">
+        <h3 class="service-card-header">
+          <span class="service-card-title">Site Survey</span>
+          <div style="display:flex;align-items:center;gap:8px;">
+            ${surveyStatusHTML}${tatBadge}
+            ${
+              lead.site_survey_id
+                ? `
+            <a href="/app/site-survey/${lead.site_survey_id}" target="_blank" class="service-card-id-icon" title="${lead.site_survey_id}">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+                <polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/>
+              </svg>
+            </a>`
+                : ""
+            }
+          </div>
+        </h3>
+        <div class="service-card-body">
+          ${lead.survey_date ? `<div class="service-data-row"><span class="service-data-label">Survey Date</span><span class="service-data-value">${formatDate(lead.survey_date)}</span></div>` : ""}
+          ${lead.surveyed_by_full_name ? `<div class="service-data-row"><span class="service-data-label">Surveyed By</span><span class="service-data-value">${lead.surveyed_by_full_name}</span></div>` : ""}
+          ${lead.capacity ? `<div class="service-data-row"><span class="service-data-label">Capacity</span><span class="service-data-value highlight">${lead.capacity} kW</span></div>` : ""}
+          ${lead.plant_category ? `<div class="service-data-row"><span class="service-data-label">Category</span><span class="service-data-value">${lead.plant_category}</span></div>` : ""}
+          ${lead.completed_date ? `<div class="service-data-row"><span class="service-data-label">Completed</span><span class="service-data-value">${formatDate(lead.completed_date)}</span></div>` : ""}
+        </div>
+        ${renderDelayLogs(delayLogs)}
+      </div>`;
+      }
+
+      // ── Proposal Card ─────────────────────────────────────────────────────────
+      function createQuotationServiceCard(lead, formatDate) {
+        const tatBadge = calculateTATBadge(lead.tat_survey_to_proposal, "S→P");
+        const delayLogs = lead.quotation_delay_logs || [];
+        return `
+      <div class="service-card quotation-card">
+        <h3 class="service-card-header">
+          <span class="service-card-title">Proposal</span>
+          <div style="display:flex;align-items:center;gap:8px;">
+            ${tatBadge}
+            <a href="/app/quotation/${lead.quotation_id}" target="_blank" class="service-card-id-icon" title="${lead.quotation_id}">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+                <polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/>
+              </svg>
+            </a>
+          </div>
+        </h3>
+        <div class="service-card-body">
+          ${lead.transaction_date ? `<div class="service-data-row"><span class="service-data-label">Date</span><span class="service-data-value">${formatDate(lead.transaction_date)}</span></div>` : ""}
+          ${lead.proposal_given_by ? `<div class="service-data-row"><span class="service-data-label">Given By</span><span class="service-data-value">${lead.proposal_given_by}</span></div>` : ""}
+          ${lead.custom_bom_creater ? `<div class="service-data-row"><span class="service-data-label">BOM By</span><span class="service-data-value">${lead.custom_bom_creater}</span></div>` : ""}
+          ${lead.custom_sign_quot ? `<div class="service-data-row"><span class="service-data-label">Signed</span><span class="service-data-value">${lead.custom_sign_quot}</span></div>` : ""}
+        </div>
+        ${lead.proposal_followups ? createFollowupsInCard(parseFollowups(lead.proposal_followups), "Proposal") : ""}
+        ${renderDelayLogs(delayLogs)}
+      </div>`;
+      }
+
+      function createFollowupsInCard(followups, cardType) {
+        if (!followups || !followups.length) return "";
+        const display = followups.slice(0, 2);
+        return `
+      <div class="followups-compact">
+        <div class="followups-compact-title">📝 ${cardType} Followups (${followups.length})</div>
+        ${display
+          .map((f) => {
+            const match = f.match(
+              /^(.+?)\s*\((.+?)\)\s*(?:\[(.+?)\])?:\s*(.+)$/,
+            );
+            if (match) {
+              const userName = match[1].trim();
+              const dateTime = match[2].trim();
+              const comm = match[3] ? ` [${match[3].trim()}]` : "";
+              const noteText = match[4].trim();
+              const initials = userName
+                .split(" ")
+                .map((w) => w[0])
+                .join("")
+                .toUpperCase()
+                .substring(0, 2);
+              return `
+              <div class="followup-item-compact">
+                <div class="followup-header-compact">
+                  <span class="followup-user-icon">${initials}</span>
+                  <strong>${userName}</strong>
+                  <span style="color:#95a5a6;font-weight:400;">• ${formatFollowupDate(dateTime)}${comm}</span>
+                </div>
+                <div class="followup-text-compact">${noteText}</div>
+              </div>`;
+            }
+            return `<div class="followup-item-compact"><div class="followup-text-compact">${f}</div></div>`;
+          })
+          .join("")}
+        ${followups.length > 2 ? `<div class="followup-more-indicator">+${followups.length - 2} more</div>` : ""}
+      </div>`;
+      }
+
+      // ── Order Card ────────────────────────────────────────────────────────────
+      function createOrderServiceCard(lead, formatDate) {
+        const delayLogs = lead.so_delay_logs || [];
+        const payments = lead.payment_schedule || [];
+        const fmt = (n) =>
+          n
+            ? "₹" +
+              parseFloat(n).toLocaleString("en-IN", {
+                maximumFractionDigits: 0,
+              })
+            : "₹0";
+
+        let paymentHTML = "";
+        if (payments.length > 0) {
+          paymentHTML = `
+        <div class="payment-schedule-inline">
+          ${payments
+            .map((p) => {
+              const isPaid = parseFloat(p.outstanding || 0) === 0;
+              return `<div class="payment-pill ${isPaid ? "paid" : "pending"}">
+              ${p.payment_term || "Payment"}: ${fmt(p.invoice_portion ? ((lead.rounded_total || 0) * p.invoice_portion) / 100 : 0)}
+              ${isPaid ? " ✓" : ""}
+            </div>`;
+            })
+            .join("")}
+        </div>`;
+        }
+
+        return `
+      <div class="service-card order-card">
+        <h3 class="service-card-header">
+          <span class="service-card-title">Payment & Order</span>
+          <div style="display:flex;align-items:center;gap:8px;">
+            ${
+              lead.sales_order
+                ? `
+            <a href="/app/sales-order/${lead.sales_order}" target="_blank" class="service-card-id-icon" title="${lead.sales_order}">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+                <polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/>
+              </svg>
+            </a>`
+                : ""
+            }
+          </div>
+        </h3>
+        <div class="service-card-body">
+          ${lead.sales_order ? `<div class="service-data-row"><span class="service-data-label">Order ID</span><span class="service-data-value"><a href="/app/sales-order/${lead.sales_order}" target="_blank">${lead.sales_order}</a></span></div>` : ""}
+          ${lead.rounded_total ? `<div class="service-data-row"><span class="service-data-label">Total Amount</span><span class="service-data-value highlight">${fmt(lead.rounded_total)}</span></div>` : ""}
+          ${lead.advance_paid ? `<div class="service-data-row"><span class="service-data-label">Advance Paid</span><span class="service-data-value" style="color:#27ae60;font-weight:700;">${fmt(lead.advance_paid)}</span></div>` : ""}
+          ${lead.advance_received_date ? `<div class="service-data-row"><span class="service-data-label">Advance Date</span><span class="service-data-value">${formatDate(lead.advance_received_date)}</span></div>` : ""}
+        </div>
+        ${paymentHTML}
+        ${renderDelayLogs(delayLogs)}
+      </div>`;
+      }
+
+      // ── Material Card ─────────────────────────────────────────────────────────
+      function createMaterialServiceCard(lead, formatDate) {
+        const delayLogs = lead.wo_delay_logs || [];
+        const items = lead.wo_required_items || [];
+        const SHOW = 5;
+
+        let itemsHTML = "";
+        if (items.length > 0) {
+          const woid = "wo_" + ++window._woDashCounter;
+          window._woDashItems[woid] = items;
+          const previewRows = items
+            .slice(0, SHOW)
+            .map((it, i) => woItemRow(it, i))
+            .join("");
+          itemsHTML = `
+        <div class="task-table-container">
+          <div class="followups-compact-title">📦 Required Items (${items.length})</div>
+          <div class="task-table-wrapper">
+            <table class="task-table">
+              <thead><tr><th>Item</th><th>Qty</th><th>UOM</th></tr></thead>
+              <tbody id="${woid}_body">${previewRows}</tbody>
+            </table>
+          </div>
+          ${
+            items.length > SHOW
+              ? `
+          <div style="text-align:center;margin-top:6px;">
+            <button class="wo-items-toggle-btn" data-woid="${woid}" data-expanded="0"
+              style="padding:4px 12px;background:#3498db;color:white;border:none;border-radius:4px;font-size:11px;font-weight:700;cursor:pointer;">
+              ▼ Show all ${items.length} items
+            </button>
+          </div>`
+              : ""
+          }
+        </div>`;
+        }
+
+        return `
+      <div class="service-card material-card">
+        <h3 class="service-card-header">
+          <span class="service-card-title">Material / Dispatch</span>
+          <div style="display:flex;align-items:center;gap:8px;">
+            ${calculateTATBadge(lead.material_request_tat, "A→D")}
+            ${
+              lead.wo_name
+                ? `
+            <a href="/app/work-order/${lead.wo_name}" target="_blank" class="service-card-id-icon" title="${lead.wo_name}">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+                <polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/>
+              </svg>
+            </a>`
+                : ""
+            }
+          </div>
+        </h3>
+        <div class="service-card-body">
+          ${lead.bom_bos_request_date ? `<div class="service-data-row"><span class="service-data-label">BOM Request</span><span class="service-data-value">${formatDate(lead.bom_bos_request_date)}</span></div>` : ""}
+          ${lead.full_kitting_given_date ? `<div class="service-data-row"><span class="service-data-label">Kitting Date</span><span class="service-data-value">${formatDate(lead.full_kitting_given_date)}</span></div>` : ""}
+          ${lead.material_dispatch_date ? `<div class="service-data-row"><span class="service-data-label">Dispatch Date</span><span class="service-data-value highlight">${formatDate(lead.material_dispatch_date)}</span></div>` : ""}
+          ${lead.remark_late_dispatch ? `<div class="service-data-row"><span class="service-data-label">Late Remark</span><span class="service-data-value" style="color:#e74c3c;">${lead.remark_late_dispatch}</span></div>` : ""}
+        </div>
+        ${itemsHTML}
+        ${renderDelayLogs(delayLogs)}
+      </div>`;
+      }
+
+      // ── WO Item Row ───────────────────────────────────────────────────────────
+      function woItemRow(item, idx) {
+        return `<tr style="background:${idx % 2 === 0 ? "#fff" : "#f9fbff"};">
+      <td style="padding:4px 8px;border-bottom:1px solid #eef1f7;color:#2c3e50;">${item.item_name || "-"}</td>
+      <td style="padding:4px 8px;border-bottom:1px solid #eef1f7;text-align:right;font-weight:600;color:#2980b9;">${item.required_qty || 0}</td>
+      <td style="padding:4px 8px;border-bottom:1px solid #eef1f7;color:#7f8c8d;">${item.stock_uom || "-"}</td>
+    </tr>`;
+      }
+
+      // ── Project Card ──────────────────────────────────────────────────────────
+      function createProjectServiceCard(lead, formatDate) {
+        const tasks = lead.project_tasks || [];
+        const tatBadge = calculateProjectTAT(lead, tasks);
+        const delayLogs = lead.project_delay_logs || [];
+
+        let statusColor = "#3498db";
+        if (lead.project_status === "Completed") statusColor = "#27ae60";
+        else if (lead.project_status === "Overdue") statusColor = "#e74c3c";
+
+        return `
+      <div class="service-card project-card">
+        <h3 class="service-card-header">
+          <span class="service-card-title">Project</span>
+          <div style="display:flex;align-items:center;gap:8px;">
+            ${lead.project_status ? `<span style="padding:2px 8px;border-radius:8px;background:${statusColor};color:white;font-size:9px;font-weight:700;">${lead.project_status}</span>` : ""}
+            ${tatBadge}
+            ${
+              lead.project_name
+                ? `
+            <a href="/app/project/${lead.project_name}" target="_blank" class="service-card-id-icon" title="${lead.project_name}">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+                <polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/>
+              </svg>
+            </a>`
+                : ""
+            }
+          </div>
+        </h3>
+        <div class="service-card-body">
+          ${lead.project_name ? `<div class="service-data-row"><span class="service-data-label">Project</span><span class="service-data-value"><a href="/app/project/${lead.project_name}" target="_blank">${lead.project_name}</a></span></div>` : ""}
+          ${lead.expected_start_date ? `<div class="service-data-row"><span class="service-data-label">Start Date</span><span class="service-data-value">${formatDate(lead.expected_start_date)}</span></div>` : ""}
+          ${lead.expected_end_date ? `<div class="service-data-row"><span class="service-data-label">End Date</span><span class="service-data-value">${formatDate(lead.expected_end_date)}</span></div>` : ""}
+        </div>
+        ${tasks.length > 0 ? createProjectTasksTable(tasks, formatDate) : ""}
+        ${renderDelayLogs(delayLogs)}
+      </div>`;
+      }
+
+      function createProjectTasksTable(tasks, formatDate) {
+        return `
+      <div class="task-table-container">
+        <div class="followups-compact-title">📋 Project Tasks (${tasks.length})</div>
+        <div class="task-table-wrapper">
+          <table class="task-table">
+            <thead>
+              <tr>
+                <th>Task</th><th>Status</th><th>Exp Start</th>
+                <th>Exp End</th><th>Actual Start</th><th>Actual End</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${tasks
+                .map((t) => {
+                  const statusKey = (t.status || "")
+                    .toLowerCase()
+                    .replace(/\s+/g, "-");
+                  return `<tr>
+                  <td>${t.subject || "-"}</td>
+                  <td><span class="task-status-badge-table status-${statusKey}">${t.status || "-"}</span></td>
+                  <td>${formatDate(t.exp_start_date)}</td>
+                  <td>${formatDate(t.exp_end_date)}</td>
+                  <td>${formatDate(t.actual_sd)}</td>
+                  <td>${formatDate(t.actual_ed)}</td>
+                </tr>`;
+                })
+                .join("")}
+            </tbody>
+          </table>
+        </div>
+      </div>`;
+      }
+
+      // ── Liaisoning Card ───────────────────────────────────────────────────────
+      function createLiaisoningServiceCard(lead, formatDate) {
+        if (!lead.liaison_name) return "";
+
+        const statusClassMap = {
+          New: "liaison-status-new",
+          Overdue: "liaison-status-overdue",
+          "Docs Completed": "liaison-status-docs",
+          Registered: "liaison-status-registered",
+          "Agreement Signed": "liaison-status-agreement",
+          "Submit to Division": "liaison-status-division",
+          "In Process": "liaison-status-inprocess",
+          Synchronized: "liaison-status-sync",
+          Completed: "liaison-status-completed",
+        };
+        const statusClass =
+          statusClassMap[lead.liaisoning_status] || "liaison-status-new";
+        const statusBadge = lead.liaisoning_status
+          ? `<span class="liaison-status-badge ${statusClass}">${lead.liaisoning_status}</span>`
+          : "";
+
+        const delayLogs = lead.liaison_delay_logs || [];
+
+        const steps = [
+          { label: "DCR Certificate Upload", date: lead.dcr_crtf_dt },
+          { label: "VCA Document Preparation", date: lead.vca_doc_dt },
+          {
+            label: "Received Signed Doc (Customer)",
+            date: lead.agrmt_rcvd_customer,
+          },
+          { label: "Meter Change (CSPDCL)", date: lead.meter_change_dt },
+          { label: "Subsidy Received", date: lead.subsidy_received_dt },
+          { label: "Synchronization Done", date: lead.synchronization_don_dt },
+        ];
+
+        const completedCount = steps.filter((s) => s.date).length;
+        const progressPct = Math.round((completedCount / steps.length) * 100);
+        const progressColor =
+          progressPct === 100
+            ? "#27ae60"
+            : progressPct >= 50
+              ? "#3498db"
+              : "#e67e22";
+
+        const timelineHTML = steps
+          .map(
+            (step) => `
+      <div class="liaison-step ${step.date ? "done" : "pending"}">
+        <div class="liaison-step-dot"></div>
+        <span class="liaison-step-label">${step.label}</span>
+        <span class="liaison-step-date">${step.date ? formatDate(step.date) : "—"}</span>
+      </div>`,
+          )
+          .join("");
+
+        return `
+      <div class="service-card liaison-card">
+        <h3 class="service-card-header">
+          <span class="service-card-title">🔗 Liaisoning & Sync</span>
+          <div style="display:flex;align-items:center;gap:8px;">
+            ${statusBadge}
+            <a href="/app/liaisoning-and-synchronization/${lead.liaison_name}"
+               target="_blank" class="service-card-id-icon" title="${lead.liaison_name}">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+                <polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/>
+              </svg>
+            </a>
+          </div>
+        </h3>
+        <div class="service-card-body">
+          <div class="service-data-row">
+            <span class="service-data-label">Progress</span>
+            <span class="service-data-value" style="color:${progressColor};font-weight:700;">${completedCount}/${steps.length} steps</span>
+          </div>
+          <div style="margin:4px 0 6px 0;">
+            <div style="display:flex;justify-content:space-between;font-size:9px;color:#6c757d;margin-bottom:3px;">
+              <span>Milestone Progress</span>
+              <span style="color:${progressColor};font-weight:700;">${progressPct}%</span>
+            </div>
+            <div style="background:#f0f0f0;border-radius:10px;height:6px;overflow:hidden;">
+              <div style="width:${progressPct}%;background:${progressColor};height:100%;border-radius:10px;transition:width 0.4s ease;"></div>
+            </div>
+          </div>
+        </div>
+        <div class="liaison-timeline">${timelineHTML}</div>
+        ${renderDelayLogs(delayLogs)}
+      </div>`;
+      }
+
+      // ── Start ─────────────────────────────────────────────────────────────────
+      init();
+    })();
+  </script>
+</html>

@@ -1,0 +1,963 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+
+    <style>
+      /* ═══════════════════════════════════════════════
+   STANDALONE SNAPSHOT DASHBOARD - SOLAR TECH THEME
+   ═══════════════════════════════════════════════ */
+
+      .director-snapshot-standalone {
+        position: relative;
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", "Inter", sans-serif;
+        background: transparent;
+        padding: 10px 0;
+        width: 100%;
+      }
+
+      /* ── MAIN CONTAINER (Clear Sky Gradient) ── */
+      .snapshot-section {
+        background: linear-gradient(135deg, #e0f2fe 0%, #f0f9ff 100%);
+        border-radius: 12px;
+        padding: 20px 24px;
+        box-shadow: 0 8px 24px rgba(2, 132, 199, 0.08);
+        border: 1px solid #bae6fd;
+        width: 100%;
+        box-sizing: border-box;
+      }
+
+      /* ── HEADER ── */
+      .snapshot-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+      }
+
+      .sh-left {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .sh-title {
+        font-size: 17px;
+        font-weight: 800;
+        color: #0369a1; /* Deep Ocean Blue */
+        margin: 0;
+        letter-spacing: 0.5px;
+      }
+
+      .sh-date-badge {
+        background: #ffffff;
+        color: #0284c7;
+        font-size: 12px;
+        font-weight: 700;
+        padding: 4px 12px;
+        border-radius: 6px;
+        border: 1px solid #7dd3fc;
+        box-shadow: 0 2px 4px rgba(2, 132, 199, 0.06);
+      }
+
+      /* ── ROW LAYOUT (Forced Single Line, NO Scrollbar) ── */
+      .snap-tiles-row {
+        display: flex;
+        flex-wrap: nowrap;
+        gap: 8px; /* Slightly tighter gap to ensure fit */
+        overflow: hidden; /* COMPLETELY HIDES SCROLLBAR */
+        width: 100%;
+      }
+
+      /* ── SOLAR TILES ── */
+      .snap-tile {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-top: 3px solid #f59e0b; /* Solar Amber Accent */
+        border-radius: 8px;
+        padding: 16px 4px; /* Reduced side padding to guarantee fit */
+        cursor: pointer;
+        flex: 1 1 0; /* CRITICAL: Forces all tiles to shrink and share space equally */
+        min-width: 0; /* CRITICAL: Allows tiles to shrink below their content size if needed */
+        transition: all 0.25s ease;
+        text-align: center;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+      }
+
+      .snap-tile:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 10px 20px rgba(245, 158, 11, 0.15); /* Amber glow on hover */
+        border-color: #fbd38d;
+      }
+
+      /* Give Finance just a tiny fraction more room for the Rupee symbol */
+      .snap-tile-wide {
+        flex: 1.15 1 0;
+      }
+
+      /* O&M Tile Inactive State */
+      .snap-tile[data-snap="onm"]:hover {
+        transform: none;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+        border-color: #e2e8f0;
+      }
+
+      /* ── TILE CONTENT ── */
+      .snap-icon {
+        font-size: 20px;
+        margin-bottom: 10px;
+        filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+      }
+
+      /* Bright Solar Orange for Data */
+      .snap-count {
+        font-size: 20px;
+        font-weight: 800;
+        color: #ea580c;
+        line-height: 1;
+        margin-bottom: 6px;
+        font-variant-numeric: tabular-nums;
+      }
+
+      .snap-amount {
+        font-size: 15px;
+      }
+
+      .snap-label {
+        font-size: 10px;
+        color: #475569;
+        font-weight: 700;
+        letter-spacing: 0.2px;
+        text-transform: uppercase;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis; /* Adds '...' if screen is incredibly small, but usually won't trigger */
+        width: 100%;
+      }
+
+      /* ═══════════════════════════════════════════════
+   CLEAN TECH TABLE UI (For Drill-downs)
+   ═══════════════════════════════════════════════ */
+      /* ═══════════════════════════════════════════════
+   PREMIUM TABLE UI (For Drill-downs)
+   ═══════════════════════════════════════════════ */
+      .simple-modal-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(15, 23, 42, 0.6);
+        z-index: 999999;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 24px;
+        backdrop-filter: blur(4px);
+        animation: fadeIn 0.2s ease-out;
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+
+      .simple-modal-box {
+        background: #ffffff;
+        border-radius: 12px;
+        width: 98%;
+        max-width: 1400px; /* Increased to fit all columns without scrolling */
+        max-height: 85vh;
+        display: flex;
+        flex-direction: column;
+        box-shadow: 0 20px 40px -10px rgba(2, 132, 199, 0.2);
+        overflow: hidden;
+        animation: slideUp 0.25s ease-out;
+      }
+      @keyframes slideUp {
+        from {
+          transform: translateY(20px);
+          opacity: 0;
+        }
+        to {
+          transform: translateY(0);
+          opacity: 1;
+        }
+      }
+
+      .simple-modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 20px 28px;
+        border-bottom: 1px solid #e0f2fe;
+        background: #f8fafc;
+      }
+      .simple-modal-title {
+        font-size: 17px;
+        font-weight: 800;
+        color: #0369a1;
+        margin: 0;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .simple-modal-close {
+        background: #f1f5f9;
+        border: none;
+        font-size: 18px;
+        color: #64748b;
+        cursor: pointer;
+        border-radius: 8px;
+        padding: 6px 12px;
+        transition: all 0.2s;
+      }
+      .simple-modal-close:hover {
+        background: #fee2e2;
+        color: #ef4444;
+      }
+
+      .simple-modal-body {
+        padding: 24px 28px;
+        overflow-y: auto;
+        flex: 1;
+        background: #ffffff;
+      }
+
+      .simple-search {
+        width: 100%;
+        max-width: 360px;
+        padding: 12px 18px;
+        border: 1px solid #bae6fd;
+        border-radius: 8px;
+        font-size: 13px;
+        outline: none;
+        margin-bottom: 20px;
+        transition: all 0.2s;
+        background: #f0f9ff;
+        color: #0f172a;
+      }
+      .simple-search:focus {
+        border-color: #0284c7;
+        box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15);
+        background: #ffffff;
+      }
+
+      .simple-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 13px;
+        background: #ffffff;
+      }
+      .simple-table th {
+        padding: 14px 16px;
+        font-size: 11px;
+        font-weight: 800;
+        color: #0284c7;
+        background: #f0f9ff;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        border-bottom: 2px solid #bae6fd;
+        white-space: nowrap;
+        position: sticky;
+        top: 0;
+        z-index: 10;
+      }
+      .simple-table td {
+        padding: 14px 16px;
+        border-bottom: 1px solid #f1f5f9;
+        color: #334155;
+        font-weight: 500;
+        white-space: nowrap;
+      }
+      .simple-table tr:hover td {
+        background: #f8fafc;
+      }
+
+      /* ── BADGES & LOADING ── */
+      .badge {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 5px 10px;
+        border-radius: 6px;
+        font-size: 10px;
+        font-weight: 800;
+        text-transform: uppercase;
+        white-space: nowrap;
+        letter-spacing: 0.5px;
+      }
+      .badge-success {
+        background: #dcfce7;
+        color: #16a34a;
+      }
+      .badge-warning {
+        background: #fef3c7;
+        color: #d97706;
+      }
+      .badge-danger {
+        background: #fee2e2;
+        color: #dc2626;
+      }
+      .badge-info {
+        background: #e0f2fe;
+        color: #0284c7;
+      }
+
+      .loading-overlay {
+        display: none;
+        position: absolute;
+        inset: 0;
+        background: rgba(255, 255, 255, 0.9);
+        z-index: 9999;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        gap: 16px;
+        border-radius: 12px;
+      }
+      .loading-overlay.active {
+        display: flex;
+      }
+      .loading-spinner {
+        width: 42px;
+        height: 42px;
+        border: 4px solid #bae6fd;
+        border-top-color: #f59e0b;
+        border-radius: 50%;
+        animation: spin 0.8s linear infinite;
+      }
+      .loading-text {
+        color: #f59e0b;
+        font-weight: 800;
+        margin: 0;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+        font-size: 12px;
+      }
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="director-snapshot-standalone">
+      <div class="snapshot-section">
+        <div class="snapshot-header">
+          <div class="sh-left">
+            <h2 class="sh-title">Today's Pipeline</h2>
+            <span class="sh-date-badge"
+              >📅 <span id="today-date-label"></span
+            ></span>
+          </div>
+        </div>
+
+        <div class="snap-tiles-row">
+          <div class="snap-tile" data-snap="lead">
+            <div class="snap-icon">🔥</div>
+            <div class="snap-count" id="snap-lead-count">–</div>
+            <div class="snap-label">Lead</div>
+          </div>
+          <div class="snap-tile" data-snap="survey">
+            <div class="snap-icon">📍</div>
+            <div class="snap-count" id="snap-survey-count">–</div>
+            <div class="snap-label">Survey</div>
+          </div>
+          <div class="snap-tile" data-snap="proposal">
+            <div class="snap-icon">📄</div>
+            <div class="snap-count" id="snap-proposal-count">–</div>
+            <div class="snap-label">Proposal</div>
+          </div>
+          <div class="snap-tile" data-snap="order">
+            <div class="snap-icon">🛒</div>
+            <div class="snap-count" id="snap-order-count">–</div>
+            <div class="snap-label">Sales Order</div>
+          </div>
+          <div class="snap-tile" data-snap="dispatch">
+            <div class="snap-icon">📦</div>
+            <div class="snap-count" id="snap-dispatch-count">–</div>
+            <div class="snap-label">Dispatch</div>
+          </div>
+          <div class="snap-tile" data-snap="installation">
+            <div class="snap-icon">🔧</div>
+            <div class="snap-count" id="snap-install-count">–</div>
+            <div class="snap-label">Installation</div>
+          </div>
+          <div class="snap-tile" data-snap="sync">
+            <div class="snap-icon">🔁</div>
+            <div class="snap-count" id="snap-sync-count">–</div>
+            <div class="snap-label">Sync</div>
+          </div>
+          <div class="snap-tile snap-tile-wide" data-snap="finance">
+            <div class="snap-icon">💰</div>
+            <div class="snap-count snap-amount" id="snap-finance-amount">–</div>
+            <div class="snap-label">Finance</div>
+          </div>
+          <div
+            class="snap-tile"
+            data-snap="onm"
+            style="opacity: 0.5; cursor: default; border-top-color: #cbd5e1"
+          >
+            <div class="snap-icon">⚙️</div>
+            <div class="snap-count" id="snap-onm-count">-</div>
+            <div class="snap-label">O&amp;M</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="loading-overlay" id="loading-dash">
+        <div class="loading-spinner"></div>
+        <p class="loading-text">Fetching Pipeline...</p>
+      </div>
+    </div>
+  </body>
+
+  <script>
+    (function () {
+      "use strict";
+
+      const $ = (sel) => root_element.querySelector(sel);
+      const $$ = (sel) => root_element.querySelectorAll(sel);
+
+      const $set = (sel, val) => {
+        const el = $(sel);
+        if (el) el.textContent = val;
+      };
+
+      // ═══════════════════════════════════════════════════════════════
+      //  HELPERS
+      // ═══════════════════════════════════════════════════════════════
+      function fmt(num) {
+        if (!num) return "0";
+        return parseFloat(num).toLocaleString("en-IN", {
+          maximumFractionDigits: 0,
+        });
+      }
+      function fmtDate(d) {
+        if (!d) return "—";
+        return new Date(d).toLocaleDateString("en-IN", {
+          day: "2-digit",
+          month: "short",
+          year: "numeric",
+        });
+      }
+      function showLoading() {
+        const el = $("#loading-dash");
+        if (el) el.classList.add("active");
+      }
+      function hideLoading() {
+        const el = $("#loading-dash");
+        if (el) el.classList.remove("active");
+      }
+
+      // Forces email addresses to render as Proper Names (john.doe@email.com -> John Doe)
+      function getUserFullName(email) {
+        if (!email) return "—";
+        let fullName = email;
+        if (typeof frappe !== "undefined" && frappe.user) {
+          fullName = frappe.user.full_name(email) || email;
+        }
+        if (fullName.includes("@")) {
+          fullName = fullName
+            .split("@")[0]
+            .replace(/[\.\-\_]/g, " ")
+            .replace(/\b\w/g, (l) => l.toUpperCase());
+        }
+        return fullName;
+      }
+
+      // ═══════════════════════════════════════════════════════════════
+      //  MODAL ENGINE
+      // ═══════════════════════════════════════════════════════════════
+      function openSimpleModal(title, records, columns) {
+        const prev = root_element.querySelector("#dd-modal-overlay");
+        if (prev) prev.remove();
+
+        const overlay = document.createElement("div");
+        overlay.id = "dd-modal-overlay";
+        overlay.className = "simple-modal-overlay";
+
+        const thead = columns
+          .map((c) => {
+            const align = c.c || c.redBadge ? "right" : "left";
+            return `<th style="text-align: ${align};">${c.l}</th>`;
+          })
+          .join("");
+
+        const tbody = records.length
+          ? records
+              .map((r) => {
+                const cells = columns
+                  .map((c) => {
+                    let val = r[c.k];
+                    let content = val || "—";
+                    const align = c.c || c.redBadge ? "right" : "left";
+
+                    if (c.u && val) {
+                      content = `<span style="color:#334155;font-weight:700;">${getUserFullName(val)}</span>`;
+                    } else if (c.d)
+                      content = `<span style="color:#64748b;">${fmtDate(val)}</span>`;
+                    else if (c.c)
+                      content = `<span style="color:#16a34a;font-weight:800;">₹${fmt(val)}</span>`;
+                    else if (c.route)
+                      content = `<a href="/app/${c.route}/${r.name}" target="_blank" style="color:#0284c7;font-weight:800;text-decoration:none;">${val || "—"}</a>`;
+                    else if (c.badgeStyle)
+                      content = `<span class="badge badge-info">${val || "—"}</span>`;
+                    else if (c.redBadge) {
+                      if (!val || val <= 0)
+                        content =
+                          '<span class="badge badge-success">On Time</span>';
+                      else
+                        content = `<span class="badge badge-danger">+${val} DAYS</span>`;
+                    }
+
+                    return `<td style="text-align: ${align};">${content}</td>`;
+                  })
+                  .join("");
+                return `<tr>${cells}</tr>`;
+              })
+              .join("")
+          : `<tr><td colspan="${columns.length}" style="text-align:center;padding:40px;color:#94a3b8;font-weight:600;">No records found for today.</td></tr>`;
+
+        overlay.innerHTML = `<div class="simple-modal-box">
+      <div class="simple-modal-header"><h3 class="simple-modal-title"><span style="color:#f59e0b;">●</span> ${title}</h3><button class="simple-modal-close" id="dd-close-btn">✕</button></div>
+      <div class="simple-modal-body"><input type="text" id="dd-search" placeholder="🔍 Search records..." class="simple-search"><div style="overflow-x:auto;"><table class="simple-table"><thead><tr>${thead}</tr></thead><tbody id="dd-tbody">${tbody}</tbody></table></div></div></div>`;
+
+        root_element.appendChild(overlay);
+
+        overlay
+          .querySelector("#dd-close-btn")
+          .addEventListener("click", () => overlay.remove());
+        overlay.addEventListener("click", (e) => {
+          if (e.target === overlay) overlay.remove();
+        });
+        overlay
+          .querySelector("#dd-search")
+          .addEventListener("input", function () {
+            const q = this.value.toLowerCase();
+            overlay.querySelectorAll("#dd-tbody tr").forEach((r) => {
+              r.style.display = r.textContent.toLowerCase().includes(q)
+                ? ""
+                : "none";
+            });
+          });
+      }
+
+      // ═══════════════════════════════════════════════════════════════
+      //  CORE DATA FETCHING
+      // ═══════════════════════════════════════════════════════════════
+      function setTodayDate() {
+        const today = new Date();
+        $set(
+          "#today-date-label",
+          today.toLocaleDateString("en-IN", {
+            day: "2-digit",
+            month: "short",
+            year: "numeric",
+          }),
+        );
+      }
+
+      function loadTodaySnapshot() {
+        const today = new Date().toISOString().split("T")[0];
+
+        // LEAD — count by creation date (correct, no change)
+        frappe.call({
+          method: "frappe.client.get_count",
+          args: {
+            doctype: "Lead",
+            filters: [["creation", ">=", today + " 00:00:00"]],
+          },
+          callback: (r) => {
+            $set("#snap-lead-count", r.message || 0);
+          },
+        });
+
+        // SURVEY — FIXED: now counts by completion, matching the drilldown modal exactly
+        frappe.call({
+          method: "frappe.client.get_count",
+          args: {
+            doctype: "Site Survey",
+            filters: [
+              ["completed_date", "=", today],
+              ["status", "=", "Completed"],
+            ],
+          },
+          callback: (r) => {
+            $set("#snap-survey-count", r.message || 0);
+          },
+          error: () => {
+            $set("#snap-survey-count", "0");
+          },
+        });
+
+        // PROPOSAL — kept as transaction_date (creation date); Quotation has no separate "completed" concept, only Draft/Submitted/Cancelled
+        frappe.call({
+          method: "frappe.client.get_count",
+          args: {
+            doctype: "Quotation",
+            filters: [
+              ["transaction_date", "=", today],
+              ["docstatus", "!=", 2],
+            ],
+          },
+          callback: (r) => {
+            $set("#snap-proposal-count", r.message || 0);
+          },
+        });
+
+        // SALES ORDER — kept as transaction_date (order date is the relevant event, no change)
+        frappe.call({
+          method: "frappe.client.get_count",
+          args: {
+            doctype: "Sales Order",
+            filters: [
+              ["transaction_date", "=", today],
+              ["docstatus", "!=", 2],
+            ],
+          },
+          callback: (r) => {
+            $set("#snap-order-count", r.message || 0);
+          },
+        });
+
+        // DISPATCH — kept as posting_date (dispatch date IS the event, no change)
+        frappe.call({
+          method: "frappe.client.get_count",
+          args: {
+            doctype: "Delivery Note",
+            filters: [
+              ["posting_date", "=", today],
+              ["docstatus", "=", 1],
+            ],
+          },
+          callback: (r) => {
+            $set("#snap-dispatch-count", r.message || 0);
+          },
+        });
+
+        // INSTALLATION — NOT YET CONFIRMED. Currently by inst_date. If Installation Note has a status
+        // field with a "Completed" value, tell me and I will switch this to status-based like Survey.
+        frappe.call({
+          method: "frappe.client.get_count",
+          args: {
+            doctype: "Installation Note",
+            filters: [
+              ["inst_date", "=", today],
+              ["docstatus", "!=", 2],
+            ],
+          },
+          callback: (r) => {
+            $set("#snap-install-count", r.message || 0);
+          },
+          error: () => {
+            $set("#snap-install-count", "0");
+          },
+        });
+
+        // SYNC — FIXED: now counts by actual sync completion date (synchronization_don_dt),
+        // matching what the drilldown modal itself labels as "Sync Date", instead of the old start date (posting_date)
+        frappe.call({
+          method: "frappe.client.get_count",
+          args: {
+            doctype: "Liaisoning And Synchronization",
+            filters: [["synchronization_don_dt", "=", today]],
+          },
+          callback: (r) => {
+            $set("#snap-sync-count", r.message || 0);
+          },
+          error: () => {
+            $set("#snap-sync-count", "0");
+          },
+        });
+
+        // FINANCE — kept as posting_date (payment date IS the event, no change)
+        frappe.call({
+          method: "frappe.client.get_count",
+          args: {
+            doctype: "Payment Entry",
+            fields: ["paid_amount"],
+            filters: [
+              ["posting_date", "=", today],
+              ["payment_type", "=", "Receive"],
+              ["docstatus", "=", 1],
+            ],
+            limit_page_length: 500,
+          },
+          callback: (r) => {
+            const t = (r.message || []).reduce(
+              (s, p) => s + (parseFloat(p.paid_amount) || 0),
+              0,
+            );
+            $set("#snap-finance-amount", "₹" + fmt(t));
+          },
+        });
+      }
+
+      function setupSnapshotDrilldowns() {
+        $$(".snap-tile").forEach((tile) => {
+          tile.addEventListener("click", function () {
+            const snapType = this.dataset.snap;
+            if (snapType === "onm") return;
+
+            const today = new Date().toISOString().split("T")[0];
+            showLoading();
+            let doctype, fields, filters, title, columns;
+
+            if (snapType === "lead") {
+              doctype = "Lead";
+              title = "🔥 Today's Leads";
+              fields = [
+                "name",
+                "lead_name",
+                "mobile_no",
+                "solar_capacity",
+                "creation",
+                "surveyed_by",
+                "status",
+                "tat_days",
+              ];
+              filters = [["creation", ">=", today + " 00:00:00"]];
+              columns = [
+                { k: "name", l: "ID", route: "lead" },
+                { k: "lead_name", l: "Lead Name" },
+                { k: "mobile_no", l: "Mobile" },
+                { k: "solar_capacity", l: "Capacity" },
+                { k: "creation", l: "Date Generated", d: true },
+                { k: "surveyed_by", l: "Assigned To", u: true },
+                { k: "status", l: "Status", badgeStyle: true },
+                { k: "tat_days", l: "TAT Delay", redBadge: true },
+              ];
+            } else if (snapType === "survey") {
+              doctype = "Site Survey";
+              title = "📍 Today's Surveys";
+              fields = [
+                "name",
+                "lead_name",
+                "contact_number",
+                "solar_capacity",
+                "plant_category",
+                "survey_date",
+                "completed_date",
+                "surveyed_by",
+                "status",
+                "tat_days",
+              ];
+              filters = [
+                ["completed_date", "=", today],
+                ["status", "=", "Completed"],
+              ];
+              columns = [
+                { k: "name", l: "ID", route: "site-survey" },
+                { k: "lead_name", l: "Customer" },
+                { k: "contact_number", l: "Contact" },
+                { k: "solar_capacity", l: "Capacity" },
+                { k: "plant_category", l: "Category" },
+                { k: "survey_date", l: "Survey Date", d: true },
+                { k: "completed_date", l: "Completed", d: true },
+                { k: "surveyed_by", l: "Surveyor", u: true },
+                { k: "status", l: "Status", badgeStyle: true },
+                { k: "tat_days", l: "TAT Delay", redBadge: true },
+              ];
+            } else if (snapType === "proposal") {
+              doctype = "Quotation";
+              title = "📄 Today's Proposals";
+              fields = [
+                "name",
+                "customer_name",
+                "solar_capacity",
+                "proposal_type",
+                "transaction_date",
+                "valid_till",
+                "manager",
+                "status",
+                "tat_days",
+                "grand_total",
+              ];
+              filters = [
+                ["transaction_date", "=", today],
+                ["docstatus", "!=", 2],
+              ];
+              columns = [
+                { k: "name", l: "ID", route: "quotation" },
+                { k: "customer_name", l: "Customer" },
+                { k: "solar_capacity", l: "Capacity" },
+                { k: "proposal_type", l: "Type" },
+                { k: "transaction_date", l: "Date Sent", d: true },
+                { k: "valid_till", l: "Valid Till", d: true },
+                { k: "manager", l: "Manager", u: true },
+                { k: "status", l: "Status", badgeStyle: true },
+                { k: "tat_days", l: "TAT Delay", redBadge: true },
+                { k: "grand_total", l: "Amount", c: true },
+              ];
+            } else if (snapType === "order") {
+              doctype = "Sales Order";
+              title = "🛒 Today's Sales Orders";
+              fields = [
+                "name",
+                "customer_name",
+                "solar_capacity",
+                "transaction_date",
+                "delivery_date",
+                "per_advance",
+                "status",
+                "tat_days",
+                "grand_total",
+              ];
+              filters = [
+                ["transaction_date", "=", today],
+                ["docstatus", "!=", 2],
+              ];
+              columns = [
+                { k: "name", l: "ID", route: "sales-order" },
+                { k: "customer_name", l: "Customer" },
+                { k: "solar_capacity", l: "Capacity" },
+                { k: "transaction_date", l: "Order Date", d: true },
+                { k: "delivery_date", l: "Exp. Delivery", d: true },
+                { k: "per_advance", l: "Adv %" },
+                { k: "status", l: "Status", badgeStyle: true },
+                { k: "tat_days", l: "TAT Delay", redBadge: true },
+                { k: "grand_total", l: "Amount", c: true },
+              ];
+            } else if (snapType === "dispatch") {
+              doctype = "Delivery Note";
+              title = "📦 Today's Dispatches";
+              fields = [
+                "name",
+                "customer_name",
+                "posting_date",
+                "ewaybill",
+                "transporter_name",
+                "vehicle_no",
+                "status",
+                "grand_total",
+              ];
+              filters = [
+                ["posting_date", "=", today],
+                ["docstatus", "=", 1],
+              ];
+              columns = [
+                { k: "name", l: "ID", route: "delivery-note" },
+                { k: "customer_name", l: "Customer" },
+                { k: "posting_date", l: "Dispatch Date", d: true },
+                { k: "ewaybill", l: "e-Waybill" },
+                { k: "transporter_name", l: "Transporter" },
+                { k: "vehicle_no", l: "Vehicle No" },
+                { k: "status", l: "Status", badgeStyle: true },
+                { k: "grand_total", l: "Amount", c: true },
+              ];
+            } else if (snapType === "installation") {
+              doctype = "Installation Note";
+              title = "🔧 Today's Installations";
+              fields = [
+                "name",
+                "customer_name",
+                "inst_date",
+                "inst_time",
+                "status",
+              ];
+              filters = [
+                ["inst_date", "=", today],
+                ["docstatus", "!=", 2],
+              ];
+              columns = [
+                { k: "name", l: "ID", route: "installation-note" },
+                { k: "customer_name", l: "Customer" },
+                { k: "inst_date", l: "Install Date", d: true },
+                { k: "inst_time", l: "Time" },
+                { k: "status", l: "Status", badgeStyle: true },
+              ];
+            } else if (snapType === "sync") {
+              doctype = "Liaisoning And Synchronization";
+              title = "🔁 Today's Syncs";
+              fields = [
+                "name",
+                "customer_name",
+                "solar_capacity",
+                "plant_category",
+                "posting_date",
+                "synchronization_don_dt",
+                "subsidy_received_dt",
+                "liaisoning_status",
+              ];
+              filters = [["synchronization_don_dt", "=", today]];
+              columns = [
+                { k: "name", l: "ID", route: "liaisoning-and-synchronization" },
+                { k: "customer_name", l: "Customer" },
+                { k: "solar_capacity", l: "Capacity" },
+                { k: "plant_category", l: "Category" },
+                { k: "posting_date", l: "Start Date", d: true },
+                { k: "synchronization_don_dt", l: "Sync Date", d: true },
+                { k: "subsidy_received_dt", l: "Subsidy Rcvd", d: true },
+                { k: "liaisoning_status", l: "Status", badgeStyle: true },
+              ];
+            } else if (snapType === "finance") {
+              doctype = "Payment Entry";
+              title = "💰 Today's Finance / Collections";
+              fields = [
+                "name",
+                "party_name",
+                "posting_date",
+                "mode_of_payment",
+                "paid_amount",
+              ];
+              filters = [
+                ["posting_date", "=", today],
+                ["payment_type", "=", "Receive"],
+                ["docstatus", "=", 1],
+              ];
+              columns = [
+                { k: "name", l: "Payment ID", route: "payment-entry" },
+                { k: "party_name", l: "Customer" },
+                { k: "posting_date", l: "Date", d: true },
+                { k: "mode_of_payment", l: "Mode", badgeStyle: true },
+                { k: "paid_amount", l: "Amount", c: true },
+              ];
+            }
+
+            frappe.call({
+              method: "frappe.client.get_list",
+              args: { doctype, fields, filters, limit_page_length: 500 },
+              callback: (r) => {
+                hideLoading();
+                openSimpleModal(title, r.message || [], columns);
+              },
+              error: () => {
+                hideLoading();
+                frappe.show_alert({
+                  message: "Failed to fetch records",
+                  indicator: "red",
+                });
+              },
+            });
+          });
+        });
+      }
+
+      // ═══════════════════════════════════════════════════════════════
+      //  INIT
+      // ═══════════════════════════════════════════════════════════════
+      function init() {
+        setTodayDate();
+        loadTodaySnapshot();
+        setupSnapshotDrilldowns();
+
+        // Auto-refresh logic (Runs silently every 5 minutes / 300,000 ms)
+        setInterval(function () {
+          loadTodaySnapshot();
+        }, 120000);
+      }
+
+      init();
+    })();
+  </script>
+</html>
