@@ -51,31 +51,31 @@ Stage 01 (**Lead Onboarding & Qualification**) is the primary customer entry gat
 
 ### 2.1 Enterprise User Roles Matrix
 
-| Persona / Business Actor              | Frappe System Role     | HRMS Department        | HRMS Designation              | Operational Responsibilities                                                                              |
-| :------------------------------------ | :--------------------- | :--------------------- | :---------------------------- | :-------------------------------------------------------------------------------------------------------- |
-| **Inbound Telecaller / Inside Sales** | `Lead Representative`  | Sales & Marketing      | `Inside Sales Representative` | Ingests leads, cleanses mobile number, collects electricity bill amount, logs initial qualification.      |
-| **Field Sales Executive**             | `Sales Representative` | Sales & Marketing      | `Sales Executive`             | Conducts primary customer consultation, determines estimated solar kW, and schedules site survey.         |
-| **Area Sales / BD Manager**           | `Area Sales Manager`   | Sales & Marketing      | `Area Sales Manager`          | Territory allocation, lead reassignment, overdue SLA delay review, conversion monitoring.                 |
-| **Site Survey Engineer**              | `Survey Engineer`      | Engineering Operations | `Site Survey Auditor`         | Receives survey assignment, reviews preliminary sizing data, and conducts on-site technical survey.       |
-| **Solar EPC Director / Admin**        | `Admin`, `Director`    | Executive Management   | `Managing Director`           | Supreme operational command across all lifecycles; SLA configuration, notification toggles, audit trails. |
+| Persona / Business Actor       | Frappe System Role     | HRMS Department        | HRMS Designation      | Operational Responsibilities                                                                               |
+| :----------------------------- | :--------------------- | :--------------------- | :-------------------- | :--------------------------------------------------------------------------------------------------------- |
+| **Sales Representative**       | `Sales Representative` | Sales & Marketing      | `Sales Executive`     | Ingests leads, cleanses mobile number, collects electricity bill amount, logs qualification & survey date. |
+| **Sales Department Manager**   | `Sales Manager`        | Sales & Marketing      | `Sales Manager`       | Territory allocation, lead assignment, overdue SLA review, pipeline governance, conversion monitoring.     |
+| **Site Survey Engineer**       | `Survey Engineer`      | Engineering Operations | `Site Survey Auditor` | Receives survey assignment, reviews preliminary sizing data, and conducts on-site technical survey.        |
+| **Solar EPC Director / Admin** | `Admin`                | Executive Management   | `Managing Director`   | Supreme operational command across all lifecycles; SLA configuration, notification toggles, audit trails.  |
 
 > [!IMPORTANT]
-> **Enterprise Role Hierarchy: Administrator $\rightarrow$ System Manager $\rightarrow$ Admin (Project Supreme):**
+> **Enterprise Role Hierarchy & ADR-020 Governance:**
 >
 > - **`Administrator` & `System Manager` (Framework Supreme & Developer Realm):** Frappe's native `Administrator` and `System Manager` sit at the apex of the system hierarchy (supreme over `Admin`). As intended by Frappe Framework, `System Manager` possesses full access to everything `Admin` has, plus full technical rights over source code, DocType schema builder, Client/Server Scripts, bench tooling, and developer mode. Reserved for technical developers, bench engineers, and DevOps administrators.
-> - **`Admin` (Project / Solar EPC Level Supreme Command):** Introduced specifically for **project-level operational supremacy**. Has unrestricted operational access to everything that any or all business roles have across Flow 1 and Flow 2, as well as full authority over operational governance settings (`Solar SLA Settings`, `Solar Notification Settings`, delay approvals, and manager overrides). **Does not require and is restricted from code, DocType schema customization, client/server scripts, and internal technical implementation access.**
+> - **`Admin` (Project / Solar EPC Level Supreme Command):** Introduced specifically for **project-level operational supremacy**. Has unrestricted operational access to everything that any or all business roles have across Flow 1 and Flow 2, as well as full authority over operational governance settings (`Solar SLA Settings`, `Solar Notification Settings`, delay approvals, and manager overrides). Protected by downstream dependency warnings, hard deletion blocks, and atomic cascade purges (`tabSolar Deletion Audit Log`).
+> - **Managerial Authority Inheritance:** `Sales Manager` strictly inherits all operational capabilities of `Sales Representative`.
 
 ### 2.2 Permission Hierarchy Matrix
 
-| DocType / Action               | Lead Representative | Sales Representative | Area Sales Manager | Survey Engineer |     Admin\*      |
-| :----------------------------- | :-----------------: | :------------------: | :----------------: | :-------------: | :--------------: |
-| **Lead (Read)**                |   Own / Assigned    |   Own / Territory    |  Full Department   |  Assigned Only  |   All Records    |
-| **Lead (Create)**              |         Yes         |         Yes          |        Yes         |       No        |       Yes        |
-| **Lead (Write / Update)**      |   Own / Assigned    |    Own / Assigned    |  Full Department   |   Status Only   |   All Records    |
-| **Lead (Assign Survey)**       |         No          |         Yes          |        Yes         |       No        |       Yes        |
-| **Remark-Delay Log (Write)**   |         Own         |         Own          |  Full Department   |       Own       |   Full Access    |
-| **Solar SLA Settings (Write)** |         No          |          No          |         No         |       No        | Yes (Admin Only) |
-| **Export Leads**               |         No          |          No          |     Permitted      |       No        |    Permitted     |
+| DocType / Action               | Sales Representative |  Sales Manager  | Survey Engineer |     Admin\*      |
+| :----------------------------- | :------------------: | :-------------: | :-------------: | :--------------: |
+| **Lead (Read)**                |    Own / Assigned    | Full Department |  Assigned Only  |   All Records    |
+| **Lead (Create)**              |         Yes          |       Yes       |       No        |       Yes        |
+| **Lead (Write / Update)**      |    Own / Assigned    | Full Department |   Status Only   |   All Records    |
+| **Lead (Assign Survey)**       |         Yes          |       Yes       |       No        |       Yes        |
+| **Remark-Delay Log (Write)**   |         Own          | Full Department |       Own       |   Full Access    |
+| **Solar SLA Settings (Write)** |          No          |       No        |       No        | Yes (Admin Only) |
+| **Export Leads**               |          No          |    Permitted    |       No        |    Permitted     |
 
 _\*Note: Frappe `Administrator` and `System Manager` sit above `Admin` and inherit all permissions._
 
@@ -234,7 +234,7 @@ def create_solar_lead(
     email_id: str | None = None
 ) -> dict:
     """Whitelisted endpoint to ingest and sanitize new Solar EPC Leads."""
-    frappe.only_for(["Guest", "Lead Representative", "Sales Representative", "Admin", "System Manager"])
+    frappe.only_for(["Guest", "Sales Representative", "Sales Manager", "Admin", "System Manager"])
 
     clean_mobile = LeadValidationService.sanitize_mobile(mobile_no)
     existing_lead = LeadValidationService.check_duplicate(clean_mobile)

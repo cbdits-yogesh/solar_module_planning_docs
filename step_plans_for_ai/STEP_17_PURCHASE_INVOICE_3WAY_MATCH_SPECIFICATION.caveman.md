@@ -98,7 +98,7 @@ Zero "User" Suffix rule strictly enforced:
 | Persona / Business Actor          | Frappe System Role   | HRMS Department        | HRMS Designation          | Operational Responsibilities in Step 17                                                                                                  |
 | :-------------------------------- | :------------------- | :--------------------- | :------------------------ | :--------------------------------------------------------------------------------------------------------------------------------------- |
 | **Finance Billing Executive**     | `Accounts Assistant` | Finance & Accounts     | `Accounts Assistant`      | Enters, verifies, and submits Purchase Invoices when `Accounts` is authorized department; validates GST/TDS and 3-way match.             |
-| **Finance & Accounts Head**       | `Accounts Officer`   | Finance & Accounts     | `Chief Financial Officer` | Supervises invoice verification, reviews price variance holds, submits invoices, prepares Step 18 payment disbursements.                 |
+| **Finance & Accounts Head**       | `Accounts Manager`   | Finance & Accounts     | `Chief Financial Officer` | Supervises invoice verification, reviews price variance holds, submits invoices, prepares Step 18 payment disbursements.                 |
 | **Warehouse Inward Executive**    | `Store Assistant`    | Store & Inventory      | `Store Executive`         | Enters Purchase Invoices from physical transporter challans at warehouse dock when `Store` is authorized by Admin policy.                |
 | **Warehouse Logistics Head**      | `Store Manager`      | Store & Inventory      | `Warehouse Manager`       | Reviews Store-entered invoice drafts, verifies delivery challan attachments, submits Store-entered invoices.                             |
 | **Procurement Line Executive**    | `Purchase Assistant` | Purchase & SCM         | `Purchase Executive`      | Enters Purchase Invoices directly from factory-gate vendor tax bills when `Purchase` is authorized by Admin policy.                      |
@@ -109,7 +109,7 @@ Zero "User" Suffix rule strictly enforced:
 
 ### 2.2 Permission Hierarchy Matrix
 
-| Action / Document                               | Accounts Assistant | Accounts Officer | Store Assistant | Store Manager | Purchase Assistant | Purchase Manager |   Admin\*   | System Manager |
+| Action / Document                               | Accounts Assistant | Accounts Manager | Store Assistant | Store Manager | Purchase Assistant | Purchase Manager |   Admin\*   | System Manager |
 | :---------------------------------------------- | :----------------: | :--------------: | :-------------: | :-----------: | :----------------: | :--------------: | :---------: | :------------: |
 | **Configure PI Entry Department Policy**        |         ✖          |        ✖         |        ✖        |       ✖       |         ✖          |        ✖         | ✔ (Supreme) | ✔ (Technical)  |
 | **Create / Edit PI (When Policy = 'Accounts')** |         ✔          |        ✔         |        ✖        |       ✖       |         ✖          |        ✖         | ✔ (Supreme) | ✔ (Technical)  |
@@ -296,7 +296,7 @@ stateDiagram-v2
 
 1. **Gate 1: Admin Departmental Entry Authorization Gate**
    - Fetches active policy from `Solar SCM Settings.authorized_pi_entry_department`.
-   - Validates user role: Accounts requires `Accounts Assistant`/`Accounts Officer`; Store requires `Store Assistant`/`Store Manager`; Purchase requires `Purchase Assistant`/`Purchase Manager`.
+   - Validates user role: Accounts requires `Accounts Assistant`/`Accounts Manager`; Store requires `Store Assistant`/`Store Manager`; Purchase requires `Purchase Assistant`/`Purchase Manager`.
    - Admin and System Manager hold universal override capability. Rejects unauthorized attempts with `frappe.PermissionError`.
 2. **Gate 2: Physical Receipt & Accepted Quantity Gate**
    - Asserts: $\text{Billed Qty} \le \text{Accepted Qty}$ in linked `Purchase Receipt Item`.
@@ -357,7 +357,7 @@ class PurchaseInvoiceValidationService:
 
         authorized_dept = settings.authorized_pi_entry_department or "Accounts"
         dept_role_map = {
-            "Accounts": {"Accounts Assistant", "Accounts Officer"},
+            "Accounts": {"Accounts Assistant", "Accounts Manager"},
             "Store": {"Store Assistant", "Store Manager"},
             "Purchase": {"Purchase Assistant", "Purchase Manager"}
         }
@@ -545,7 +545,7 @@ def get_pi_entry_policy():
     roles = set(frappe.get_roles(frappe.session.user))
 
     dept_role_map = {
-        "Accounts": {"Accounts Assistant", "Accounts Officer"},
+        "Accounts": {"Accounts Assistant", "Accounts Manager"},
         "Store": {"Store Assistant", "Store Manager"},
         "Purchase": {"Purchase Assistant", "Purchase Manager"}
     }

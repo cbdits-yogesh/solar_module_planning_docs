@@ -125,27 +125,27 @@ Zero "User" Suffix Rule strictly enforced.
 
 ### 2.1 Enterprise Persona & Role Definition
 
-| Persona / Business Title | Frappe System Role   | HRMS Designation                          | Operational Scope & Authority                                                                                                          |
-| :----------------------- | :------------------- | :---------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------- |
-| **Store Manager**        | `Store Manager`      | `Store Manager` / `Warehouse In-Charge`   | Apex warehouse authority. Assign/delegate dispatch tasks, validate picklists, authorize release, review SLA timers, oversee transport. |
-| **Store Assistant**      | `Store Assistant`    | `Store Assistant` / `Inventory Executive` | Warehouse operator. Execute physical picking, run 2D barcode scanner, pre-dispatch quality checks, pack items, enter manifest/E-Way.   |
-| **Project Engineer**     | `Project Engineer`   | `Project Engineer` / `Field Engineer`     | Site technical lead. Destination recipient. Unloading inspection, verify serial counts, sign digital POD.                              |
-| **Site Supervisor**      | `Site Supervisor`    | `Site Supervisor`                         | Field supervisor. Assist receive materials at site, verify carton integrity, upload receipt photos.                                    |
-| **Commercial Officer**   | `Commercial Officer` | `Commercial Officer` / `Sales Ops Lead`   | Monitor order fulfillment percentage, correlate dispatch with billing milestones.                                                      |
-| **Admin**                | `Admin`              | `Director` / `Head of Operations`         | Supreme Command. Authorize over-dispatch waivers, emergency overrides, SLA extensions, edit settings.                                  |
-| **System Manager**       | `System Manager`     | `Lead Software Architect` / `DevOps`      | Framework Supreme. Configure DocTypes, background RQ queues, APIs.                                                                     |
+| Persona / Business Title | Frappe System Role | HRMS Designation                          | Operational Scope & Authority                                                                                                          |
+| :----------------------- | :----------------- | :---------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------- |
+| **Store Manager**        | `Store Manager`    | `Store Manager` / `Warehouse In-Charge`   | Apex warehouse authority. Assign/delegate dispatch tasks, validate picklists, authorize release, review SLA timers, oversee transport. |
+| **Store Assistant**      | `Store Assistant`  | `Store Assistant` / `Inventory Executive` | Warehouse operator. Execute physical picking, run 2D barcode scanner, pre-dispatch quality checks, pack items, enter manifest/E-Way.   |
+| **Project Engineer**     | `Project Engineer` | `Project Engineer` / `Field Engineer`     | Site technical lead. Destination recipient. Unloading inspection, verify serial counts, sign digital POD.                              |
+| **Site Supervisor**      | `Site Supervisor`  | `Site Supervisor`                         | Field supervisor. Assist receive materials at site, verify carton integrity, upload receipt photos.                                    |
+| **Sales Manager**        | `Sales Manager`    | `Sales Manager` / `Sales Ops Lead`        | Monitor order fulfillment percentage, correlate dispatch with billing milestones, authority inheritance.                               |
+| **Admin**                | `Admin`            | `Director` / `Head of Operations`         | Supreme Command. Authorize over-dispatch waivers, emergency overrides, SLA extensions, edit settings.                                  |
+| **System Manager**       | `System Manager`   | `Lead Software Architect` / `DevOps`      | Framework Supreme. Configure DocTypes, background RQ queues, APIs.                                                                     |
 
 ### 2.2 Role Permission Matrix for Stage 07 Entities
 
-| Frappe System Role       |             `tabDelivery Note`             | `tabSerial and Batch Bundle` | `tabSolar Dispatch Settings` | `tabTask` (Store Task) | Actionable Stage Gates                                            |
-| :----------------------- | :----------------------------------------: | :--------------------------: | :--------------------------: | :--------------------: | :---------------------------------------------------------------- |
-| **`Store Manager`**      |     Read, Write, Create, Submit, Amend     | Read, Write, Create, Submit  |          Read Only           | Read, Write, Reassign  | Authorize Dispatch, Submit DN, Oversee Logistics                  |
-| **`Store Assistant`**    |        Read, Write, Create (Draft)         |     Read, Write, Create      |          Read Only           | Read, Write (Assigned) | Barcode Scanning, Quality Check, E-Way Bill & Transport Ingestion |
-| **`Project Engineer`**   |       Read, Write (POD Fields Only)        |          Read Only           |          Read Only           | Read, Write (Assigned) | Sign Digital POD, Confirm Site Receipt                            |
-| **`Site Supervisor`**    |       Read, Write (POD Fields Only)        |          Read Only           |          Read Only           |       Read Only        | Upload Site Receipt Photos                                        |
-| **`Commercial Officer`** |                 Read Only                  |          Read Only           |          Read Only           |       Read Only        | Monitor Order Delivery %                                          |
-| **`Admin`**              | Read, Write, Create, Submit, Cancel, Amend |         Full Control         | Full Control (Write/Config)  |      Full Control      | Override Gates, Authorize Over-Dispatch                           |
-| **`System Manager`**     |         Full System Control (Apex)         |     Full System Control      |     Full System Control      |  Full System Control   | Developer Mode, Code & Background Jobs                            |
+| Frappe System Role     |             `tabDelivery Note`             | `tabSerial and Batch Bundle` | `tabSolar Dispatch Settings` | `tabTask` (Store Task) | Actionable Stage Gates                                            |
+| :--------------------- | :----------------------------------------: | :--------------------------: | :--------------------------: | :--------------------: | :---------------------------------------------------------------- |
+| **`Store Manager`**    |     Read, Write, Create, Submit, Amend     | Read, Write, Create, Submit  |          Read Only           | Read, Write, Reassign  | Authorize Dispatch, Submit DN, Oversee Logistics                  |
+| **`Store Assistant`**  |        Read, Write, Create (Draft)         |     Read, Write, Create      |          Read Only           | Read, Write (Assigned) | Barcode Scanning, Quality Check, E-Way Bill & Transport Ingestion |
+| **`Project Engineer`** |       Read, Write (POD Fields Only)        |          Read Only           |          Read Only           | Read, Write (Assigned) | Sign Digital POD, Confirm Site Receipt                            |
+| **`Site Supervisor`**  |       Read, Write (POD Fields Only)        |          Read Only           |          Read Only           |       Read Only        | Upload Site Receipt Photos                                        |
+| **`Sales Manager`**    |                 Read Only                  |          Read Only           |          Read Only           |       Read Only        | Monitor Order Delivery %                                          |
+| **`Admin`**            | Read, Write, Create, Submit, Cancel, Amend |         Full Control         | Full Control (Write/Config)  |      Full Control      | Override Gates, Authorize Over-Dispatch                           |
+| **`System Manager`**   |         Full System Control (Apex)         |     Full System Control      |     Full System Control      |  Full System Control   | Developer Mode, Code & Background Jobs                            |
 
 ---
 
@@ -1375,7 +1375,7 @@ class TestStage07MaterialDispatch(FrappeTestCase):
 
 | Error Message Displayed                                              | Root Cause                                                                 | Operator Action to Resolve                                                                                 |
 | :------------------------------------------------------------------- | :------------------------------------------------------------------------- | :--------------------------------------------------------------------------------------------------------- |
-| `Originating Sales Order baseline is not frozen`                     | Commercial sales team has not finalized and frozen Stage 06.               | Contact Commercial Officer to submit and lock the baseline in Stage 06.                                    |
+| `Originating Sales Order baseline is not frozen`                     | Commercial sales team has not finalized and frozen Stage 06.               | Contact Sales Representative or Sales Manager to submit and lock the baseline in Stage 06.                 |
 | `Dispatched quantity exceeds frozen Sales Order BOM limit`           | Attempting to dispatch more items than contracted in the Sales Order.      | Reduce line quantity to match remaining balance, or request Admin to authorize over-dispatch waiver.       |
 | `Stock Invariant Breach: Serial does not reside in warehouse`        | Scanned barcode belongs to another warehouse or is already sold/inactive.  | Return physical unit to staging. Pick and scan a valid unit currently residing in Central Store.           |
 | `Serial '...' is already scanned in this consignment`                | Operator accidentally scanned the same physical barcode twice.             | Acknowledge duplicate warning. Proceed to scan the next unique barcode.                                    |

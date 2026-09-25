@@ -59,7 +59,7 @@ We establish an authoritative, comprehensive architectural standard for Stage 10
 │   [Phase 2 Activation: Post-Installation Grid Sync & Statutory Countdown Initiated]              │
 │   • Sets phase_2_status = "Triggered Post-Installation"                                          │
 │   • Starts Statutory 10-Day SLA Countdown Timer (Configurable in Solar SLA Settings)             │
-│   • Assigns Liaisoning Officer & Field Commissioning Specialist                                  │
+│   • Assigns Liaisoning Representative / Manager & Field Commissioning Specialist                 │
 │           │                                                                                      │
 │           ├────────────────────────────────┬─────────────────────────────────────────────┤
 │           ▼                                ▼                                             ▼

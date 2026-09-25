@@ -40,21 +40,28 @@ S05G Advance Gate (0h) ──▶ S06 SO Baseline (24h) ──▶ S07 Dispatch (4
 
 Zero "User" Suffix Rule enforced:
 
-| Persona                        | Approved Role              | HRMS Designation            | Operational Domain & Action                                    |
-| :----------------------------- | :------------------------- | :-------------------------- | :------------------------------------------------------------- |
-| **Solar EPC Director**         | `Director`                 | `Managing Director`         | Executive pipeline view; SLA settings; delay approvals.        |
-| **Project Supreme Admin**      | **`Admin`**                | `Operations VP`             | Supreme operational command; delay waivers; SLA settings.      |
-| **Lead Qualification Officer** | **`Lead Representative`**  | `Inside Sales Rep`          | Ingest lead; verify phone; assign surveyor.                    |
-| **Site Survey Specialist**     | **`Survey Engineer`**      | `Field Survey Auditor`      | 24h survey; GPS lock; upload 6 mandatory photos.               |
-| **PV CAD & BOM Designer**      | **`Design Engineer`**      | `Solar Design Engineer`     | CAD/SLD layout; dynamic BOM calculation; freeze checksum.      |
-| **Commercial Sales Exec**      | **`Sales Representative`** | `Commercial Sales Exec`     | Multi-tier proposal; PM Surya Ghar subsidy; contract.          |
-| **Commercial Operations Lead** | **`Commercial Officer`**   | `Sales Ops Executive`       | Sales Order submission; baseline SHA-256 seal.                 |
-| **Finance Officer**            | **`Accounts Assistant`**   | `Accounts Executive`        | Bank UTR / cheque verification; Customer master inception.     |
-| **Warehouse Store Lead**       | **`Store Manager`**        | `Warehouse Supervisor`      | Dispatch staging; inventory allocation; delegate task.         |
-| **Warehouse Assistant**        | **`Store Assistant`**      | `Store Assistant`           | Barcode serial scan; Delivery Note; site returns.              |
-| **Field Execution Lead**       | **`Project Engineer`**     | `Site Execution Engineer`   | Multi-zone WBS execution; daily progress reports (DPR).        |
-| **Statutory Compliance Lead**  | **`Liaisoning Officer`**   | `Statutory Compliance Exec` | DISCOM portal filing; CEIG audit; net-meter sync.              |
-| **Technical Framework Admin**  | **`System Manager`**       | `CTO`                       | Apex technical authority (all `Admin` rights + code/DocTypes). |
+| Persona                       | Approved Role                   | HRMS Designation            | Operational Domain & Action                                    |
+| :---------------------------- | :------------------------------ | :-------------------------- | :------------------------------------------------------------- |
+| **Solar EPC Director**        | `Director`                      | `Managing Director`         | Executive pipeline view; SLA settings; delay approvals.        |
+| **Project Supreme Admin**     | **`Admin`**                     | `Operations VP`             | Supreme operational command; delay waivers; SLA settings.      |
+| **Sales Representative**      | **`Sales Representative`**      | `Sales Representative`      | Ingest lead; verify phone; assign surveyor; commercial sales.  |
+| **Sales Manager**             | **`Sales Manager`**             | `Sales Manager`             | Territory oversight; supervisory inheritance; SLA escalation.  |
+| **Site Survey Specialist**    | **`Survey Engineer`**           | `Field Survey Auditor`      | 24h survey; GPS lock; upload 6 mandatory photos.               |
+| **Survey Manager**            | **`Survey Manager`**            | `Survey Manager`            | Survey validation and engineering review.                      |
+| **PV CAD & BOM Designer**     | **`Design Engineer`**           | `Solar Design Engineer`     | CAD/SLD layout; dynamic BOM calculation; freeze checksum.      |
+| **Design Manager**            | **`Design Manager`**            | `Design Manager`            | Engineering design and BOM sign-off.                           |
+| **CRM Representative**        | **`CRM Representative`**        | `CRM Representative`        | Proposal generation; subsidy documentation.                    |
+| **CRM Manager**               | **`CRM Manager`**               | `CRM Manager`               | Commercial proposal audit; margin floor review.                |
+| **Finance Staff**             | **`Accounts Assistant`**        | `Accounts Assistant`        | Bank UTR / cheque verification; Customer master inception.     |
+| **Finance Manager**           | **`Accounts Manager`**          | `Accounts Manager`          | Authorize advance clearance, waivers, and credit terms.        |
+| **Warehouse Store Lead**      | **`Store Manager`**             | `Warehouse Supervisor`      | Dispatch staging; inventory allocation; delegate task.         |
+| **Warehouse Assistant**       | **`Store Assistant`**           | `Store Assistant`           | Barcode serial scan; Delivery Note; site returns.              |
+| **Site Supervisor**           | **`Site Supervisor`**           | `Site Supervisor`           | Field supervision; material intake; zone task execution.       |
+| **Field Execution Lead**      | **`Project Engineer`**          | `Site Execution Engineer`   | Multi-zone WBS execution; daily progress reports (DPR).        |
+| **Project Manager**           | **`Project Manager`**           | `Project Manager`           | Supervisory project delivery, schedule management, milestones. |
+| **Statutory Compliance Lead** | **`Liaisoning Representative`** | `Liaisoning Representative` | DISCOM portal filing; CEIG audit; net-meter sync.              |
+| **Statutory Compliance Head** | **`Liaisoning Manager`**        | `Liaisoning Manager`        | Liaisoning governance; utility approval escalations.           |
+| **Technical Framework Admin** | **`System Manager`**            | `CTO`                       | Apex technical authority (all `Admin` rights + code/DocTypes). |
 
 ---
 
@@ -127,7 +134,7 @@ Stage 10A (Early Liaisoning) sets `discom_application_no` $\rightarrow$ marks `L
 
 ### 4.3 Project Terminal Gate
 
-Stage 10B (Grid Sync & Net Metering) confirmed by `Liaisoning Officer` $\rightarrow$ marks `Project` **`Completed`** (`custom_is_completed_flag = 1`, `status = 'Completed'`). Issues COD certificate; spawns Stage 11 O&M Asset Register.
+Stage 10B (Grid Sync & Net Metering) confirmed by `Liaisoning Representative` / `Liaisoning Manager` $\rightarrow$ marks `Project` **`Completed`** (`custom_is_completed_flag = 1`, `status = 'Completed'`). Issues COD certificate; spawns Stage 11 O&M Asset Register.
 
 ---
 

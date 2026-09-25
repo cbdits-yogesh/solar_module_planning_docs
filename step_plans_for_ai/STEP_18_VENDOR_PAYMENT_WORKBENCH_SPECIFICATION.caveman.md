@@ -86,7 +86,7 @@ Zero "User" Suffix Rule & Supreme Authority Hierarchy (`System Manager` framewor
 | **Frontline Procurement Executive**  | `Purchase Assistant` | Procurement & SCM             | `Purchase Assistant`          | Monitors milestone due dates on POs; uploads and verifies milestone prerequisite documents (Transporter LR, FAT reports); nudges Accounts.        |
 | **Procurement & SCM Lead**           | `Purchase Manager`   | Procurement & SCM             | `Purchase Manager`            | Authorizes milestone release clearances; resolves vendor payment disputes; receives instant UTR payment confirmations.                            |
 | **Accounts Payables Executive**      | `Accounts Assistant` | Finance & Accounts            | `Accounts Assistant`          | Reviews upcoming payment queues; verifies bank balances and TDS deductions; drafts and prepares `Payment Entry` vouchers.                         |
-| **Senior Accounts / Finance Lead**   | `Accounts Officer`   | Finance & Accounts            | `Accounts Officer`            | Reviews and submits `Payment Entry` vouchers; executes bank transfers; manages liquidity and cash flow horizons.                                  |
+| **Senior Accounts / Finance Lead**   | `Accounts Manager`   | Finance & Accounts            | `Finance Head`                | Reviews and submits `Payment Entry` vouchers; executes bank transfers; manages liquidity and cash flow horizons.                                  |
 | **Solar Project Field Engineer**     | `Project Engineer`   | Engineering & Site Operations | `Site Supervisor`             | Confirms on-site civil/installation readiness; verifies equipment arrival for delivery milestone clearance.                                       |
 | **Warehouse / Store Head**           | `Store Manager`      | Store & Inventory             | `Warehouse Manager`           | Confirms dock receipt and GRN clearance; confirms unquarantined material status for post-delivery disbursements.                                  |
 | **Solar EPC Director / Admin**       | `Admin`              | Executive Management          | `Managing Director`           | Project supreme operational command; authorizes high-value payments ($> ₹50\text{L}$); manages `Solar Notification Settings` and delay approvals. |
@@ -94,7 +94,7 @@ Zero "User" Suffix Rule & Supreme Authority Hierarchy (`System Manager` framewor
 
 ### 2.2 Enterprise Permission Hierarchy (CRUD & Submit Governance)
 
-| Operational Entity / Action                  |  `Purchase Assistant`   | `Purchase Manager`  |  `Accounts Assistant`   | `Accounts Officer`  | `Admin` (Project Supreme) | `System Manager` (Dev Supreme) |
+| Operational Entity / Action                  |  `Purchase Assistant`   | `Purchase Manager`  |  `Accounts Assistant`   | `Accounts Manager`  | `Admin` (Project Supreme) | `System Manager` (Dev Supreme) |
 | :------------------------------------------- | :---------------------: | :-----------------: | :---------------------: | :-----------------: | :-----------------------: | :----------------------------: |
 | **Payment Schedule (View)**                  |       Full Access       |     Full Access     |       Full Access       |     Full Access     |        Full Access        |          Full Access           |
 | **Payment Schedule (Prerequisite Sign-Off)** |   Yes (Upload LR/Doc)   |  Yes (Clear Gate)   |        View Only        |      View Only      |       Full Override       |          Full Access           |
@@ -335,7 +335,7 @@ class VendorPaymentNotificationDaemon:
     @classmethod
     def _get_stakeholder_recipients(cls, row: dict) -> set:
         users = set()
-        accounts_users = frappe.get_all("Has Role", filters={"role": ["in", ["Accounts Officer", "Accounts Assistant"]]}, fields=["parent"])
+        accounts_users = frappe.get_all("Has Role", filters={"role": ["in", ["Accounts Manager", "Accounts Assistant"]]}, fields=["parent"])
         users.update([u.parent for u in accounts_users])
 
         purchase_users = frappe.get_all("Has Role", filters={"role": ["in", ["Purchase Manager", "Purchase Assistant"]]}, fields=["parent"])
@@ -552,7 +552,7 @@ def nudge_accounts_team(milestone_id: str, urgency_note: str) -> dict:
     parent_doc.check_permission("read")
 
     sender = frappe.session.user
-    accounts_users = frappe.get_all("Has Role", filters={"role": "Accounts Officer"}, fields=["parent"])
+    accounts_users = frappe.get_all("Has Role", filters={"role": "Accounts Manager"}, fields=["parent"])
 
     subject = _("⚡ Procurement Priority Nudge: Payment Needed for {0}").format(parent_doc.supplier)
     message = _(
@@ -790,7 +790,7 @@ class TestStep18VendorPaymentWorkbench(FrappeTestCase):
 3. If vendor holds loading, click `[Nudge Accounts]` with urgency explanation.
 4. On settlement notification, confirm UTR and release factory dispatch clearance.
 
-#### For Accounts Assistant / Accounts Officer:
+#### For Accounts Assistant / Accounts Manager:
 
 1. At 08:00 AM, inspect T-1 / T-0 alerts and Accounts Upcoming Payments section.
 2. Click `[Pay Now]` to prepare payment voucher; verify bank balance and 194Q TDS deduction.
@@ -801,8 +801,8 @@ class TestStep18VendorPaymentWorkbench(FrappeTestCase):
 | Error Condition / Message                                 | Root Cause                                                                     | Operator Resolution Path                                                           |
 | :-------------------------------------------------------- | :----------------------------------------------------------------------------- | :--------------------------------------------------------------------------------- |
 | `ValidationError: Prerequisite Unsatisfied for Milestone` | Milestone requires operational doc (LR, 3-Way Match) not yet uploaded/cleared. | Purchase Assistant uploads prerequisite document or completes GRN inspection.      |
-| `PermissionError: Not Authorized to Submit Payment Entry` | User lacks `Accounts Officer` or `Admin` role.                                 | Submit voucher as Draft for approval by authorized `Accounts Officer`.             |
-| `Missing Bank Verification: Target Account Unverified`    | Supplier bank account altered within 48h or lacks verification flag.           | `Admin` and `Accounts Officer` verify bank proof and set `custom_is_verified = 1`. |
+| `PermissionError: Not Authorized to Submit Payment Entry` | User lacks `Accounts Manager` or `Admin` role.                                 | Submit voucher as Draft for approval by authorized `Accounts Manager`.             |
+| `Missing Bank Verification: Target Account Unverified`    | Supplier bank account altered within 48h or lacks verification flag.           | `Admin` and `Accounts Manager` verify bank proof and set `custom_is_verified = 1`. |
 | `TDS Deduction Missing: Supplier Exceeds ₹50L Threshold`  | Section 194Q requires 0.1% TDS on cumulative purchases $> ₹50\text{L}$.        | Add TDS deduction line to `Payment Entry` or attach Section 197 certificate.       |
 
 ### 9.3 L3 DevOps Runbook & Daemon Maintenance

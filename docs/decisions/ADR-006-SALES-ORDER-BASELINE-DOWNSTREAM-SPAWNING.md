@@ -91,7 +91,7 @@ To eliminate execution silos and achieve sub-24-hour operational kickoff, submit
 
 - Instantiates `tabLiaisoning And Synchronization` initialized in **Phase 1 (Post-SO Early Compliance)**.
 - Automatically maps consumer KYC, electricity bill details, DISCOM division, sanctioned load, and survey GPS coordinates from Stage 01/02/05.
-- Dispatches automated notification to the **`Liaisoning Officer`** to initiate DISCOM portal application and grid connectivity feasibility NOC.
+- Dispatches automated notification to the **`Liaisoning Representative`** and **`Liaisoning Manager`** to initiate DISCOM portal application and grid connectivity feasibility NOC.
 
 ### 4. Non-Bypassable Financial Advance Verification Gate
 
@@ -119,16 +119,16 @@ To align commercial cash flows with project delivery milestones:
 
 ### 6. Strict Role Governance & Zero "User" Suffix Enforcement
 
-In full accordance with [`step_plans/README.md`](file:///home/cbdits_05aug/documents/sadbhav_cloud_code/step_plans/README.md#5-enterprise-persona--role-naming-standard-zero-user-suffix-rule):
+In full accordance with [`step_plans/README.md`](../../step_plans/README.md#5-enterprise-persona--role-naming-standard-zero-user-suffix-rule) and [`ADR-020`](ADR-020-ENTERPRISE-ROLE-PERMISSION-ARCHITECTURE.md):
 
 - **Enterprise Roles:**
-  - `Commercial Officer`: Sales operations authority; validates baseline, terms, contract document.
-  - `Sales Representative` / `Area Sales Manager`: Client commercial relationship leads.
-  - `Project Engineer`: Operational site lead; manages WBS tasks and DPR logs.
-  - `Store Manager`: Warehouse authority; receives material delivery task, oversees inventory allocation.
-  - `Store Assistant`: Warehouse line staff; receives reassigned picking and dispatch tasks.
-  - `Liaisoning Officer`: Compliance lead; executes Phase 1 DISCOM filings.
-  - `Accounts Officer`: Manages milestone billing and payment tracking.
+  - `Sales Representative` / `Sales Manager`: Client commercial relationship and sales operations authority; validates baseline, terms, contract document.
+  - `CRM Representative` / `CRM Manager`: Proposal handoff and subsidy documentation alignment.
+  - `Site Supervisor` / `Project Engineer`: Operational site lead; manages WBS tasks and DPR logs.
+  - `Project Manager`: Supervisory project management and project delivery oversight.
+  - `Store Assistant` / `Store Manager`: Warehouse authority; receives material delivery task, oversees inventory allocation and picking/dispatch.
+  - `Liaisoning Representative` / `Liaisoning Manager`: Compliance lead; executes Phase 1 DISCOM filings.
+  - `Accounts Assistant` / `Accounts Manager`: Manages milestone billing and payment tracking.
   - `Admin` (Project Supreme Command): Configures `Solar Sales Order Settings`, approves baseline amendments.
   - `System Manager` (Framework Supreme / Developer): Manages technical schemas, queues, and code.
 

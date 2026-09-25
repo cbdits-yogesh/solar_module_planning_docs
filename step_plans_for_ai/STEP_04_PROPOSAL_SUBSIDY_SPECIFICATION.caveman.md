@@ -71,15 +71,17 @@ Key design parameters:
 
 Zero "User" Suffix Rule enforced:
 
-| Persona / Business Actor       | Frappe System Role     | HRMS Department           | HRMS Designation            | Operational Responsibilities                                                                                         |
-| :----------------------------- | :--------------------- | :------------------------ | :-------------------------- | :------------------------------------------------------------------------------------------------------------------- |
-| **Frontline Sales Officer**    | `Sales Representative` | Sales & Marketing         | `Sales Executive`           | Pull survey + design data, select template, set commercial pricing, generate proposals, send to client.              |
-| **Commercial Operations Lead** | `Commercial Officer`   | Commercial Operations     | `Commercial Manager`        | Audit pricing, check 70:30 GST split, verify subsidy applicability, review credit terms.                             |
-| **Regional Sales Head**        | `Area Sales Manager`   | Sales Management          | `Area Sales Manager`        | Review proposals failing margin floor; exclusive authority to approve margin floor overrides.                        |
-| **Finance & Accounts Officer** | `Accounts Assistant`   | Accounts & Finance        | `Accounts Officer`          | Review commercial milestone schedule, handle formal advance verification or finance advance waivers.                 |
-| **Solar Design Specialist**    | `Design Engineer`      | Design & Engineering      | `Solar Design Engineer`     | Upstream author; provide frozen `Survey Engineering Design`, technical ratings, dynamic BOM (`bom_hash`).            |
-| **Executive Supreme Command**  | `Admin`, `Director`    | Executive Leadership      | `Managing Director` / `CEO` | Supreme operational command; grant Goodwill / VIP advance waivers, manage `Solar Proposal Settings`, review margins. |
-| **Technical DevOps Lead**      | `System Manager`       | Technology Infrastructure | `DevOps Architect`          | Framework apex; manage DocType schemas, custom fields, Property Setters, Redis worker queues, bench CLI tooling.     |
+| Persona / Business Actor      | Frappe System Role     | HRMS Department           | HRMS Designation            | Operational Responsibilities                                                                                         |
+| :---------------------------- | :--------------------- | :------------------------ | :-------------------------- | :------------------------------------------------------------------------------------------------------------------- |
+| **CRM Representative**        | `CRM Representative`   | CRM & Proposals           | `CRM Representative`        | Pull survey + design data, select template, set commercial pricing, generate proposals, send to client.              |
+| **CRM Manager**               | `CRM Manager`          | CRM & Proposals           | `CRM Manager`               | Audit pricing, check 70:30 GST split, verify subsidy applicability, review margin floors, supervisory oversight.     |
+| **Sales Representative**      | `Sales Representative` | Sales & Marketing         | `Sales Representative`      | Lead-to-proposal handoff alignment, customer relationship management.                                                |
+| **Sales Manager**             | `Sales Manager`        | Sales & Marketing         | `Sales Manager`             | Sales operations coordination and margin review.                                                                     |
+| **Accounts Assistant**        | `Accounts Assistant`   | Accounts & Finance        | `Accounts Assistant`        | Review commercial milestone schedule, handle formal advance verification.                                            |
+| **Accounts Manager**          | `Accounts Manager`     | Accounts & Finance        | `Accounts Manager`          | Authorize finance advance waivers and credit terms.                                                                  |
+| **Solar Design Specialist**   | `Design Engineer`      | Design & Engineering      | `Solar Design Engineer`     | Upstream author; provide frozen `Survey Engineering Design`, technical ratings, dynamic BOM (`bom_hash`).            |
+| **Executive Supreme Command** | `Admin`, `Director`    | Executive Leadership      | `Managing Director` / `CEO` | Supreme operational command; grant Goodwill / VIP advance waivers, manage `Solar Proposal Settings`, review margins. |
+| **Technical DevOps Lead**     | `System Manager`       | Technology Infrastructure | `DevOps Architect`          | Framework apex; manage DocType schemas, custom fields, Property Setters, Redis worker queues, bench CLI tooling.     |
 
 > [!IMPORTANT]
 > **Authority Hierarchy:** `System Manager` (Framework Apex / Developer) $\rightarrow$ `Admin` (Project Supreme Command) $\rightarrow$ Operational Roles.
@@ -89,18 +91,18 @@ Zero "User" Suffix Rule enforced:
 
 ### 2.2 Permission Hierarchy Matrix
 
-| DocType / Action                           | Sales Representative | Commercial Officer | Area Sales Manager | Accounts Assistant |      Admin\*      |
-| :----------------------------------------- | :------------------: | :----------------: | :----------------: | :----------------: | :---------------: |
-| **Proposal / Quotation (Read)**            |    Assigned Only     |   Full Territory   |   Full Territory   |     Permitted      |    All Records    |
-| **Proposal / Quotation (Create)**          |      Permitted       |     Permitted      |     Permitted      |         No         |        Yes        |
-| **Proposal / Quotation (Write/Edit)**      |   Own (Draft Only)   |   Full Territory   |   Full Territory   |         No         |    All Records    |
-| **Proposal / Quotation (Submit)**          |      Permitted       |        Yes         |        Yes         |         No         |        Yes        |
-| **Margin Floor Override Approval**         |      Restricted      |     Restricted     |      **Yes**       |     Restricted     | **Yes (Supreme)** |
-| **Proposal Finalization (`is_finalized`)** |      Permitted       |        Yes         |        Yes         |         No         |        Yes        |
-| **Goodwill / VIP Advance Waiver**          |      Restricted      |     Restricted     |     Restricted     |     Restricted     | **Yes (CEO/MD)**  |
-| **Solar Proposal Template (Manage)**       |      Read Only       |     Read Only      |     Permitted      |     Read Only      |        Yes        |
-| **Solar Proposal Settings (Manage)**       |          No          |         No         |         No         |         No         | Yes (Admin Only)  |
-| **Remark-Delay Log (Append)**              |      Own Record      |     Permitted      |     Permitted      |     Permitted      |    Full Access    |
+| DocType / Action                           | CRM Representative |   CRM Manager   | Sales Representative | Accounts Manager |      Admin\*      |
+| :----------------------------------------- | :----------------: | :-------------: | :------------------: | :--------------: | :---------------: |
+| **Proposal / Quotation (Read)**            |   Assigned Only    | Full Department |    Assigned Only     |    Permitted     |    All Records    |
+| **Proposal / Quotation (Create)**          |     Permitted      |    Permitted    |      Permitted       |        No        |        Yes        |
+| **Proposal / Quotation (Write/Edit)**      |  Own (Draft Only)  | Full Department |   Own (Draft Only)   |        No        |    All Records    |
+| **Proposal / Quotation (Submit)**          |     Permitted      |       Yes       |      Permitted       |        No        |        Yes        |
+| **Margin Floor Override Approval**         |     Restricted     |     **Yes**     |      Restricted      |    Restricted    | **Yes (Supreme)** |
+| **Proposal Finalization (`is_finalized`)** |     Permitted      |       Yes       |      Permitted       |        No        |        Yes        |
+| **Goodwill / VIP Advance Waiver**          |     Restricted     |   Restricted    |      Restricted      |    Restricted    | **Yes (CEO/MD)**  |
+| **Solar Proposal Template (Manage)**       |     Read Only      |    Permitted    |      Read Only       |    Read Only     |        Yes        |
+| **Solar Proposal Settings (Manage)**       |         No         |       No        |          No          |        No        | Yes (Admin Only)  |
+| **Remark-Delay Log (Append)**              |     Own Record     | Full Department |      Own Record      |    Permitted     |    Full Access    |
 
 _\*Note: `Administrator` and `System Manager` inherit all permissions._
 
@@ -590,8 +592,8 @@ def grant_advance_waiver(proposal_name: str, waiver_type: str, justification: st
         if not ("Admin" in user_roles or "Director" in user_roles or "System Manager" in user_roles):
             frappe.throw(_("Goodwill / VIP waivers can only be granted by Managing Director, CEO, or Admin."), frappe.PermissionError)
     elif waiver_type == "Finance Approved Waiver":
-        if not ("Accounts Assistant" in user_roles or "Commercial Officer" in user_roles or "Admin" in user_roles):
-            frappe.throw(_("Finance waivers require Accounts or Commercial authorization."), frappe.PermissionError)
+        if not ("Accounts Manager" in user_roles or "Admin" in user_roles or "System Manager" in user_roles):
+            frappe.throw(_("Finance waivers require Accounts Manager or Admin authorization."), frappe.PermissionError)
 
     doc = frappe.get_doc("Quotation", proposal_name)
     doc.custom_advance_waiver_type = waiver_type

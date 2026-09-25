@@ -97,20 +97,20 @@ In strict compliance with the **Zero "User" Suffix Rule** and the **Supreme Comm
 
 ### 2.1 Persona & Role Definition Matrix
 
-| Business Persona / Operational Actor | Frappe System Role   | HRMS Department               | HRMS Designation Standard     | Primary Responsibility & Step Scope                                                                                                               |
-| :----------------------------------- | :------------------- | :---------------------------- | :---------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------ |
-| **Frontline Procurement Executive**  | `Purchase Assistant` | Procurement & SCM             | `Purchase Assistant`          | Monitors milestone due dates on POs; uploads and verifies milestone prerequisite documents (Transporter LR, FAT reports); nudges Accounts.        |
-| **Procurement & SCM Lead**           | `Purchase Manager`   | Procurement & SCM             | `Purchase Manager`            | Authorizes milestone release clearances; resolves vendor payment disputes; receives instant UTR payment confirmations.                            |
-| **Accounts Payables Executive**      | `Accounts Assistant` | Finance & Accounts            | `Accounts Assistant`          | Reviews upcoming payment queues; verifies bank balances and TDS deductions; drafts and prepares `Payment Entry` vouchers.                         |
-| **Senior Accounts / Finance Lead**   | `Accounts Officer`   | Finance & Accounts            | `Accounts Officer`            | Reviews and submits `Payment Entry` vouchers; executes bank transfers; manages liquidity and cash flow horizons.                                  |
-| **Solar Project Field Engineer**     | `Project Engineer`   | Engineering & Site Operations | `Site Supervisor`             | Confirms on-site civil/installation readiness; verifies equipment arrival for delivery milestone clearance.                                       |
-| **Warehouse / Store Head**           | `Store Manager`      | Store & Inventory             | `Warehouse Manager`           | Confirms dock receipt and GRN clearance; confirms unquarantined material status for post-delivery disbursements.                                  |
-| **Solar EPC Director / Admin**       | `Admin`              | Executive Management          | `Managing Director`           | Project supreme operational command; authorizes high-value payments ($> ₹50\text{L}$); manages `Solar Notification Settings` and delay approvals. |
-| **Framework Supreme / Developer**    | `System Manager`     | Information Technology        | `DevOps Engineer / Architect` | Frappe Developer Mode, Bench CLI, background RQ/Redis queue maintenance, schema fixtures, and IT plumbing. Supreme over `Admin`.                  |
+| Business Persona / Operational Actor | Frappe System Role                     | HRMS Department               | HRMS Designation Standard     | Primary Responsibility & Step Scope                                                                                                               |
+| :----------------------------------- | :------------------------------------- | :---------------------------- | :---------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **Frontline Procurement Executive**  | `Purchase Assistant`                   | Procurement & SCM             | `Purchase Assistant`          | Monitors milestone due dates on POs; uploads and verifies milestone prerequisite documents (Transporter LR, FAT reports); nudges Accounts.        |
+| **Procurement & SCM Lead**           | `Purchase Manager`                     | Procurement & SCM             | `Purchase Manager`            | Authorizes milestone release clearances; resolves vendor payment disputes; receives instant UTR payment confirmations.                            |
+| **Accounts Payables Executive**      | `Accounts Assistant`                   | Finance & Accounts            | `Accounts Assistant`          | Reviews upcoming payment queues; verifies bank balances and TDS deductions; drafts and prepares `Payment Entry` vouchers.                         |
+| **Finance Department Lead**          | `Accounts Manager`                     | Finance & Accounts            | `Finance Head / Controller`   | Reviews and submits `Payment Entry` vouchers; executes bank transfers; manages liquidity and cash flows; inherits junior authority.               |
+| **Solar Project Field Engineer**     | `Project Engineer` / `Site Supervisor` | Engineering & Site Operations | `Field Engineer / Supervisor` | Confirms on-site civil/installation readiness; verifies equipment arrival for delivery milestone clearance.                                       |
+| **Warehouse / Store Head**           | `Store Manager`                        | Store & Inventory             | `Warehouse Manager`           | Confirms dock receipt and GRN clearance; confirms unquarantined material status for post-delivery disbursements.                                  |
+| **Solar EPC Director / Admin**       | `Admin`                                | Executive Management          | `Managing Director`           | Project supreme operational command; authorizes high-value payments ($> ₹50\text{L}$); manages `Solar Notification Settings` and delay approvals. |
+| **Framework Supreme / Developer**    | `System Manager`                       | Information Technology        | `DevOps Engineer / Architect` | Frappe Developer Mode, Bench CLI, background RQ/Redis queue maintenance, schema fixtures, and IT plumbing. Supreme over `Admin`.                  |
 
 ### 2.2 Enterprise Permission Hierarchy (CRUD & Submit Governance)
 
-| Operational Entity / Action                  |  `Purchase Assistant`   | `Purchase Manager`  |  `Accounts Assistant`   | `Accounts Officer`  | `Admin` (Project Supreme) | `System Manager` (Dev Supreme) |
+| Operational Entity / Action                  |  `Purchase Assistant`   | `Purchase Manager`  |  `Accounts Assistant`   | `Accounts Manager`  | `Admin` (Project Supreme) | `System Manager` (Dev Supreme) |
 | :------------------------------------------- | :---------------------: | :-----------------: | :---------------------: | :-----------------: | :-----------------------: | :----------------------------: |
 | **Payment Schedule (View)**                  |       Full Access       |     Full Access     |       Full Access       |     Full Access     |        Full Access        |          Full Access           |
 | **Payment Schedule (Prerequisite Sign-Off)** |   Yes (Upload LR/Doc)   |  Yes (Clear Gate)   |        View Only        |      View Only      |       Full Override       |          Full Access           |
@@ -243,7 +243,7 @@ Before an obligation can be processed into a submitted `Payment Entry`, the syst
 #### Gate 3: Verified Supplier Bank Details Gate
 
 - **Assertion:** Funds must not be wired to unverified or newly altered bank accounts.
-- **Rule:** The destination bank account and IFSC code specified in `Payment Entry` must match an active, verified `Bank Account` record linked to the `Supplier` with `custom_is_verified = 1`. Any alteration within 48 hours requires dual authorization by `Admin` and `Accounts Officer`.
+- **Rule:** The destination bank account and IFSC code specified in `Payment Entry` must match an active, verified `Bank Account` record linked to the `Supplier` with `custom_is_verified = 1`. Any alteration within 48 hours requires dual authorization by `Admin` and `Accounts Manager`.
 
 ---
 
@@ -391,7 +391,7 @@ class VendorPaymentNotificationDaemon:
         """Collects email/user IDs for designated Purchase and Accounts personnel."""
         users = set()
         # 1. Accounts Team
-        accounts_users = frappe.get_all("Has Role", filters={"role": ["in", ["Accounts Officer", "Accounts Assistant"]]}, fields=["parent"])
+        accounts_users = frappe.get_all("Has Role", filters={"role": ["in", ["Accounts Manager", "Accounts Assistant"]]}, fields=["parent"])
         users.update([u.parent for u in accounts_users])
 
         # 2. Purchase Team
@@ -624,7 +624,7 @@ def nudge_accounts_team(milestone_id: str, urgency_note: str) -> dict:
     parent_doc.check_permission("read")
 
     sender = frappe.session.user
-    accounts_users = frappe.get_all("Has Role", filters={"role": "Accounts Officer"}, fields=["parent"])
+    accounts_users = frappe.get_all("Has Role", filters={"role": "Accounts Manager"}, fields=["parent"])
 
     subject = _("⚡ Procurement Priority Nudge: Payment Needed for {0}").format(parent_doc.supplier)
     message = _(
@@ -674,7 +674,7 @@ In the Vue 3 + Frappe UI SPA (`/solar`), the Procurement dashboard provides a de
 ```
 
 - **Traffic Light Indicators:** Green badge when prerequisite documents (PO, LR, GRN, 3-Way Match) are satisfied; amber when awaiting inspection report or delivery note.
-- **`[Nudge Accounts]` Action Button:** Opens a modal allowing Purchase to attach dispatch urgency notes, triggering an instant priority push notification to `Accounts Officer`.
+- **`[Nudge Accounts]` Action Button:** Opens a modal allowing Purchase to attach dispatch urgency notes, triggering an instant priority push notification to `Accounts Manager`.
 
 ### 6.2 Accounts Workspace Upcoming Payments Section (`/solar/accounts`)
 
@@ -907,7 +907,7 @@ class TestStep18VendorPaymentWorkbench(FrappeTestCase):
 3. **Expedite Critical Shipments:** If a vendor holds factory loading pending advance clearance, click `[Nudge Accounts]`, input the dispatch urgency explanation, and submit.
 4. **Receive Settlement Confirmation:** Upon Accounts executing payment, view the automated real-time popup containing the Bank UTR number. Issue the formal factory dispatch clearance to the supplier immediately.
 
-#### For Accounts Assistant / Accounts Officer:
+#### For Accounts Assistant / Accounts Manager:
 
 1. **Daily Liquidity Review:** At 08:00 AM, review automated T-1 and T-0 notification alerts and the **Upcoming Vendor Disbursements** section in the Accounts workspace.
 2. **Prepare Payment Vouchers:** Click `[Pay Now]` directly on mature obligations. Verify bank balance, payee account details, and pre-calculated TDS deductions.
@@ -918,8 +918,8 @@ class TestStep18VendorPaymentWorkbench(FrappeTestCase):
 | Error Condition / Message                                 | Root Cause                                                                                                                 | Operator Resolution Path                                                                                                         |
 | :-------------------------------------------------------- | :------------------------------------------------------------------------------------------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------- |
 | `ValidationError: Prerequisite Unsatisfied for Milestone` | The milestone requires an operational document (e.g. Transporter LR or 3-Way Match) that has not been uploaded or cleared. | Purchase Assistant must upload the required prerequisite document or complete GRN inspection before Accounts can disburse funds. |
-| `PermissionError: Not Authorized to Submit Payment Entry` | User lacks `Accounts Officer` or `Admin` role required to finalize disbursements.                                          | Submit payment voucher as Draft for approval by authorized `Accounts Officer`.                                                   |
-| `Missing Bank Verification: Target Account Unverified`    | Supplier bank account details were altered within 48 hours or lack verification flag.                                      | `Admin` and `Accounts Officer` must verify bank proof (cancelled cheque) and enable `custom_is_verified = 1`.                    |
+| `PermissionError: Not Authorized to Submit Payment Entry` | User lacks `Accounts Manager` or `Admin` role required to finalize disbursements.                                          | Submit payment voucher as Draft for approval by authorized `Accounts Manager`.                                                   |
+| `Missing Bank Verification: Target Account Unverified`    | Supplier bank account details were altered within 48 hours or lack verification flag.                                      | `Admin` and `Accounts Manager` must verify bank proof (cancelled cheque) and enable `custom_is_verified = 1`.                    |
 | `TDS Deduction Missing: Supplier Exceeds ₹50L Threshold`  | Section 194Q requires 0.1% TDS on cumulative purchases $> ₹50\text{L}$.                                                    | Add TDS deduction line to `Payment Entry` deductions table or attach Section 197 lower deduction certificate.                    |
 
 ### 9.3 L3 DevOps Runbook & Daemon Maintenance

@@ -86,14 +86,14 @@ Trigger: client finalize proposal in Stage 04 (`Quotation` aliased `Proposal`, `
 
 Follow **Zero "User" Suffix Rule** ([`step_plans/README.md`](./README.md#5-enterprise-persona--role-naming-standard-zero-user-suffix-rule)):
 
-| Persona / Business Actor       | Frappe System Role   | HRMS Department           | HRMS Designation                           | Operational Responsibilities                                                                   |
-| :----------------------------- | :------------------- | :------------------------ | :----------------------------------------- | :--------------------------------------------------------------------------------------------- |
-| **Frontline Accounts Officer** | `Accounts Assistant` | Accounts & Finance        | `Accounts Assistant` / `Junior Accountant` | Ingest bank statements, match UTR / cheque, draft `Payment Entry`, verify margin money.        |
-| **Finance Authority**          | `Accounts Officer`   | Accounts & Finance        | `Finance Lead` / `Finance Manager`         | Authorize advance verification, sign off bank loan sanction, validate corporate credit waiver. |
-| **Commercial Operations Lead** | `Commercial Officer` | Commercial Operations     | `Commercial Manager`                       | Audit proposal payment terms, coordinate with lending banks, request credit waiver.            |
-| **Regional Sales Head**        | `Area Sales Manager` | Sales Management          | `Area Sales Manager`                       | Escalate payment delays, track drop-offs, review unverified proposals past SLA.                |
-| **Executive Supreme Command**  | `Admin`, `Director`  | Executive Leadership      | `Managing Director` / `CEO`                | Supreme command; grant Goodwill VIP waiver, configure `Solar Advance Settings` + SLA timers.   |
-| **Technical DevOps Lead**      | `System Manager`     | Technology Infrastructure | `DevOps Architect`                         | Framework apex; manage DocType schemas, custom fields, Property Setters, queues, bench CLI.    |
+| Persona / Business Actor      | Frappe System Role   | HRMS Department           | HRMS Designation                           | Operational Responsibilities                                                                   |
+| :---------------------------- | :------------------- | :------------------------ | :----------------------------------------- | :--------------------------------------------------------------------------------------------- |
+| **Accounts Assistant**        | `Accounts Assistant` | Accounts & Finance        | `Accounts Assistant` / `Junior Accountant` | Ingest bank statements, match UTR / cheque, draft `Payment Entry`, verify margin money.        |
+| **Finance Authority**         | `Accounts Manager`   | Accounts & Finance        | `Finance Lead` / `Accounts Manager`        | Authorize advance verification, sign off bank loan sanction, validate corporate credit waiver. |
+| **CRM Operations Lead**       | `CRM Manager`        | CRM & Proposals           | `CRM Manager`                              | Audit proposal payment terms, coordinate with lending banks, request credit waiver.            |
+| **Regional Sales Head**       | `Sales Manager`      | Sales Management          | `Sales Manager`                            | Escalate payment delays, track drop-offs, review unverified proposals past SLA.                |
+| **Executive Supreme Command** | `Admin`, `Director`  | Executive Leadership      | `Managing Director` / `CEO`                | Supreme command; grant Goodwill VIP waiver, configure `Solar Advance Settings` + SLA timers.   |
+| **Technical DevOps Lead**     | `System Manager`     | Technology Infrastructure | `DevOps Architect`                         | Framework apex; manage DocType schemas, custom fields, Property Setters, queues, bench CLI.    |
 
 > [!IMPORTANT]
 > **Enterprise Authority Hierarchy: Administrator $\rightarrow$ System Manager $\rightarrow$ Admin (Project Supreme):**
@@ -103,17 +103,17 @@ Follow **Zero "User" Suffix Rule** ([`step_plans/README.md`](./README.md#5-enter
 
 ### 2.2 Role Permission Matrix
 
-| DocType / Action                       | Accounts Assistant | Accounts Officer | Commercial Officer | Area Sales Manager |   Admin (Project Supreme)   |
-| :------------------------------------- | :----------------: | :--------------: | :----------------: | :----------------: | :-------------------------: |
-| **Quotation / Proposal (Read)**        |     Permitted      |    Permitted     |   Full Territory   |   Full Territory   |         All Records         |
-| **Payment Entry (Create/Write)**       |     Permitted      |    Permitted     |     Restricted     |     Restricted     |         All Records         |
-| **Payment Entry (Submit)**             |     Permitted      |    Permitted     |     Restricted     |     Restricted     |         All Records         |
-| **Solar Loan Sanction (Create/Write)** |     Permitted      |    Permitted     |     Permitted      |     Restricted     |         All Records         |
-| **Solar Loan Sanction (Submit)**       |     Restricted     |     **Yes**      |     Restricted     |     Restricted     |           **Yes**           |
-| **Execute Financial Clearance**        |     Restricted     |     **Yes**      |     Restricted     |     Restricted     |      **Yes (Supreme)**      |
-| **Corporate Credit Deferred Waiver**   |     Restricted     |     **Yes**      |      **Yes**       |     Restricted     |           **Yes**           |
-| **Goodwill / VIP Customer Bypass**     |   **Restricted**   |  **Restricted**  |   **Restricted**   |   **Restricted**   | **Yes (CEO/MD/Admin Only)** |
-| **SLA Delay Log Sign-Off**             |     Permitted      |       Yes        |        Yes         |        Yes         |             Yes             |
+| DocType / Action                       | Accounts Assistant | Accounts Manager |   CRM Manager   |  Sales Manager  |   Admin (Project Supreme)   |
+| :------------------------------------- | :----------------: | :--------------: | :-------------: | :-------------: | :-------------------------: |
+| **Quotation / Proposal (Read)**        |     Permitted      |    Permitted     | Full Department | Full Department |         All Records         |
+| **Payment Entry (Create/Write)**       |     Permitted      |    Permitted     |   Restricted    |   Restricted    |         All Records         |
+| **Payment Entry (Submit)**             |     Permitted      |    Permitted     |   Restricted    |   Restricted    |         All Records         |
+| **Solar Loan Sanction (Create/Write)** |     Permitted      |    Permitted     |    Permitted    |   Restricted    |         All Records         |
+| **Solar Loan Sanction (Submit)**       |     Restricted     |     **Yes**      |   Restricted    |   Restricted    |           **Yes**           |
+| **Execute Financial Clearance**        |     Restricted     |     **Yes**      |   Restricted    |   Restricted    |      **Yes (Supreme)**      |
+| **Corporate Credit Deferred Waiver**   |     Restricted     |     **Yes**      |   Restricted    |   Restricted    |           **Yes**           |
+| **Goodwill / VIP Customer Bypass**     |   **Restricted**   |  **Restricted**  | **Restricted**  | **Restricted**  | **Yes (CEO/MD/Admin Only)** |
+| **SLA Delay Log Sign-Off**             |     Permitted      |       Yes        |       Yes       |       Yes       |             Yes             |
 
 ---
 
@@ -1101,7 +1101,7 @@ class TestStage05AdvancePayment(IntegrationTestCase):
 5. Click **"Verify & Incept Master"**.
 6. Outcome: `Payment Entry` posted; `Customer`, `Address`, `Contact` created; `Lead` set to `Converted`; Stage 06 `Sales Order` unlocked.
 
-#### SOP 2: Processing Bank Loan Sanction (Commercial Officer / Accounts Officer)
+#### SOP 2: Processing Bank Loan Sanction (Accounts Assistant / Accounts Manager)
 
 1. Collect signed Bank Loan Sanction Letter from lender portal.
 2. Verify margin money paid via `Payment Entry`.

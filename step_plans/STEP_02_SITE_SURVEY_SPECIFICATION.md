@@ -55,35 +55,37 @@ Because solar installations routinely take place across remote agricultural terr
 
 ### 2.1 Enterprise User Roles Matrix
 
-In strict compliance with the **Zero "User" Suffix Rule** ([`step_plans/README.md`](./README.md#5-enterprise-persona--role-naming-standard-zero-user-suffix-rule)), all actors are designated using functional enterprise titles:
+In strict compliance with [`ADR-020`](../docs/decisions/ADR-020-ENTERPRISE-ROLE-PERMISSION-ARCHITECTURE.md) and the **Zero "User" Suffix Rule**, all actors are designated using functional enterprise titles:
 
-| Persona / Business Actor       | Frappe System Role      | HRMS Department           | HRMS Designation             | Operational Responsibilities                                                                                          |
-| :----------------------------- | :---------------------- | :------------------------ | :--------------------------- | :-------------------------------------------------------------------------------------------------------------------- |
-| **Site Survey Auditor**        | `Survey Engineer`       | Engineering Operations    | `Site Survey Auditor`        | Field mobilization, offline mobile audit capture, GPS lock, mandatory photo/video upload, technical sign-off.         |
-| **Field Survey Assistant**     | `Survey Assistant`      | Engineering Operations    | `Field Operations Assistant` | Assists with physical roof tape measurements, shadow azimuth readings, and cable path tracing.                        |
-| **Area Sales Manager**         | `Area Sales Manager`    | Sales & Marketing         | `Area Sales Manager`         | Monitors regional survey SLA queues, reassigns surveyors, reviews delay justifications.                               |
-| **Solar PV Design Specialist** | `Solar Design Engineer` | Design & Engineering      | `CAD Design Specialist`      | Downstream consumer; reviews completed audit parameters, imports roof dimensions into CAD/PVsyst.                     |
-| **Solar EPC Director / Admin** | `Admin`, `Director`     | Executive Management      | `Managing Director`          | Supreme operational command; manages `Solar SLA Settings`, `Solar Notification Settings`, and delay reason overrides. |
-| **Technical DevOps Lead**      | `System Manager`        | Technology Infrastructure | `DevOps Architect`           | Framework apex; manages DocType schemas, Redis queues, background worker daemons, and bench CLI tooling.              |
+| Persona / Business Actor       | Frappe System Role | HRMS Department           | HRMS Designation            | Operational Responsibilities                                                                                          |
+| :----------------------------- | :----------------- | :------------------------ | :-------------------------- | :-------------------------------------------------------------------------------------------------------------------- |
+| **Site Survey Engineer**       | `Survey Engineer`  | Engineering Operations    | `Site Survey Engineer`      | Field mobilization, offline mobile audit capture, GPS lock, mandatory photo/video upload, technical audit completion. |
+| **Survey Department Manager**  | `Survey Manager`   | Engineering Operations    | `Survey Operations Manager` | Technical survey feasibility sign-off, surveyor allocation, escalation review, Stage 03 handoff approval.             |
+| **Sales Department Manager**   | `Sales Manager`    | Sales & Marketing         | `Sales Manager`             | Regional survey pipeline oversight, customer communication coordination, SLA delay review.                            |
+| **PV Design Engineer**         | `Design Engineer`  | Design & Engineering      | `Solar Design Engineer`     | Downstream consumer (Stage 03); reviews completed audit parameters, imports roof dimensions into CAD/PVsyst.          |
+| **Solar EPC Director / Admin** | `Admin`            | Executive Management      | `Managing Director`         | Supreme operational command; manages `Solar SLA Settings`, `Solar Notification Settings`, and delay reason overrides. |
+| **Technical DevOps Lead**      | `System Manager`   | Technology Infrastructure | `DevOps Architect`          | Framework apex; manages DocType schemas, Redis queues, background worker daemons, and bench CLI tooling.              |
 
 > [!IMPORTANT]
-> **Enterprise Authority Hierarchy: Administrator $\rightarrow$ System Manager $\rightarrow$ Admin (Project Supreme):**
+> **Enterprise Authority Hierarchy & ADR-020 Operational Governance:**
 >
 > - **`Administrator` & `System Manager` (Framework Supreme / Developer Realm):** Frappe's native `Administrator` and `System Manager` sit at the apex of system authority (supreme over `Admin`). As intended by Frappe Framework, `System Manager` possesses full access to everything `Admin` has, plus full technical rights over source code, DocType schema builder, Client/Server Scripts, bench tooling, and developer mode. Reserved for technical developers, bench engineers, and DevOps administrators.
-> - **`Admin` (Project / Solar EPC Level Supreme Command):** Introduced specifically for **project-level operational supremacy**. Has unrestricted operational access to everything that any or all business roles have across Flow 1 and Flow 2, as well as full authority over operational governance settings (`Solar SLA Settings`, `Solar Notification Settings`, delay approvals, and manager overrides). **Does not require and is restricted from code, DocType schema customization, client/server scripts, and internal technical implementation access.**
+> - **`Admin` (Project / Solar EPC Level Supreme Command):** Introduced specifically for **project-level operational supremacy**. Has unrestricted operational access to everything that any or all business roles have across Flow 1 and Flow 2, as well as full authority over operational governance settings (`Solar SLA Settings`, `Solar Notification Settings`, delay approvals, and manager overrides). Protected by downstream dependency warnings, hard deletion blocks, and atomic cascade purges (`tabSolar Deletion Audit Log`).
+> - **Managerial Authority Inheritance:** `Survey Manager` strictly inherits all operational capabilities of `Survey Engineer`.
+> - **Stage-Forward Lock:** Once `Survey Engineering Design` (Stage 03) is instantiated, `Site Survey` is permanently locked against cancel and amend.
 
 ### 2.2 Permission Hierarchy Matrix
 
-| DocType / Action                  | Survey Engineer | Survey Assistant | Area Sales Manager | Solar Design Engineer |     Admin\*      |
-| :-------------------------------- | :-------------: | :--------------: | :----------------: | :-------------------: | :--------------: |
-| **Site Survey (Read)**            |  Assigned Only  |  Assigned Only   |   Full Territory   |       All Valid       |   All Records    |
-| **Site Survey (Create)**          |  Auto-Spawned   |        No        |        Yes         |          No           |       Yes        |
-| **Site Survey (Write / Update)**  | Own (Unfrozen)  | Own (Draft Only) |   Full Territory   |       Read-Only       |   All Records    |
-| **Site Survey (Sign-Off/Submit)** |       Yes       |        No        |        Yes         |          No           |       Yes        |
-| **Offline Sync Endpoint (Call)**  |       Yes       |       Yes        |        Yes         |          No           |       Yes        |
-| **Site Survey Doc Table (Edit)**  |   Own Record    |    Own Record    |     Permitted      |       Read-Only       |   Full Access    |
-| **Remark-Delay Log (Append)**     |   Own Record    |        No        |     Permitted      |          No           |   Full Access    |
-| **Solar SLA Settings (Manage)**   |       No        |        No        |         No         |          No           | Yes (Admin Only) |
+| DocType / Action                  | Survey Engineer | Survey Manager  | Sales Manager  | Design Engineer |     Admin\*      |
+| :-------------------------------- | :-------------: | :-------------: | :------------: | :-------------: | :--------------: |
+| **Site Survey (Read)**            |  Assigned Only  | Full Department | Full Territory |    All Valid    |   All Records    |
+| **Site Survey (Create)**          |  Auto-Spawned   |       Yes       |      Yes       |       No        |       Yes        |
+| **Site Survey (Write / Update)**  | Own (Unfrozen)  | Full Department |  Status Only   |    Read-Only    |   All Records    |
+| **Site Survey (Sign-Off/Submit)** |  Yes (Pre-S03)  |  Yes (Pre-S03)  |       No       |       No        |       Yes        |
+| **Offline Sync Endpoint (Call)**  |       Yes       |       Yes       |      Yes       |       No        |       Yes        |
+| **Site Survey Doc Table (Edit)**  |   Own Record    | Full Department |   Read-Only    |    Read-Only    |   Full Access    |
+| **Remark-Delay Log (Append)**     |   Own Record    | Full Department |   Permitted    |       No        |   Full Access    |
+| **Solar SLA Settings (Manage)**   |       No        |       No        |       No       |       No        | Yes (Admin Only) |
 
 _\*Note: Frappe `Administrator` and `System Manager` sit above `Admin` and inherit all permissions._
 

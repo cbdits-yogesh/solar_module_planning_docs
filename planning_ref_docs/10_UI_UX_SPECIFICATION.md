@@ -15,12 +15,14 @@ _Source: Sadbhav Solar EPC Enterprise Architecture Suite_
 
 - **Default Application Destination:** The Vue 3 SPA at `/solar` serves as the universal landing destination for **all** authenticated users upon login, replacing Frappe Desk workspaces.
 - **Dynamic Role-Based Customization:** The `/solar` landing shell inspects `frappe.session.user` roles and mounts a customized dashboard layout:
-  - _Director / Executive:_ Strategic MW pipeline, high-level SLA health, financial collections, and procurement bottlenecks.
-  - _Sales Executive:_ My leads, 2h response SLA countdowns, rapid lead onboarding drawer, quotation statuses.
-  - _Survey Engineer:_ Assigned site surveys, GPS-assisted route map, 24h technical audit countdown.
-  - _Design Engineer:_ Pending engineering sizing queue, dynamic BOM generators, CAD repository.
-  - _Store Manager:_ Dispatch backlog, pending material requests, low-stock reorder warnings, GRN scanner launcher.
-  - _Accounts Officer:_ Advance payment clearance queue, joint vendor payment workbench, 3-way match verification.
+  - _Admin / Executive:_ Strategic MW pipeline, high-level SLA health, financial collections, and procurement bottlenecks.
+  - _Sales Representative / Manager:_ My leads, 2h response SLA countdowns, rapid lead onboarding drawer, survey booking.
+  - _Survey Engineer / Manager:_ Assigned site surveys, GPS-assisted route map, 24h technical audit countdown.
+  - _Design Engineer / Manager:_ Pending engineering sizing queue, dynamic BOM generators, CAD repository.
+  - _CRM Representative / Manager:_ Proposal modeling queue, subsidy calculations, margin approval drawer.
+  - _Store Assistant / Manager:_ Dispatch backlog, pending material requests, low-stock reorder warnings, GRN scanner launcher.
+  - _Accounts Assistant / Manager:_ Advance payment clearance queue, joint vendor payment workbench, 3-way match verification.
+  - _Site Supervisor / Project Manager:_ Site WBS milestone tracking, zone DPR logging, on-site material check.
 - **Root Desk/App Access Boundary:**
   - Direct root access to `/desk` or `/app` is strictly disabled. Requests to `https://<domain>/desk` or `https://<domain>/app` automatically 302-redirect to `/solar`.
   - **Permission-Gated Deep Linking:** Deep links (e.g. `/app/lead/<lead-id>`, `/app/site-survey/<id>`, `/desk/...`) remain accessible only when a user possesses explicit read/write permissions for that specific entity. Any attempt to navigate to unauthorized deep links triggers a standard `PermissionError`.

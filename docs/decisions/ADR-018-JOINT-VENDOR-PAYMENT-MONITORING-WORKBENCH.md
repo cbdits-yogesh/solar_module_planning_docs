@@ -106,7 +106,7 @@ To eliminate payment blindspots and surprise cash crunches, a scheduled daily ba
 
 1. **T-1 Day Alert (One Day Before Payment Day):**
    - Identifies all obligations where `due_date == today + 1 day` and `custom_settlement_status != 'Disbursed'`.
-   - Dispatches a synchronized reminder to **both the Purchase Team** (`Purchase Manager`, `Purchase Assistant` mapped to the project/PO) and **the Accounts Team** (`Accounts Officer`, `Accounts Assistant`).
+   - Dispatches a synchronized reminder to **both the Purchase Team** (`Purchase Manager`, `Purchase Assistant` mapped to the project/PO) and **the Accounts Team** (`Accounts Manager`, `Accounts Assistant`).
    - Alerts Purchase to verify that all physical prerequisites (e.g., test certificates, bill of lading) are in place.
    - Alerts Accounts to plan bank liquidity and queue payment vouchers for processing.
 2. **T-0 Day Alert (On Payment Day):**
@@ -124,7 +124,7 @@ To eliminate inter-departmental inquiries and communication lags:
 1. **Event-Driven Observer Hook:**  
    The platform binds a lifecycle hook (`on_submit`) to ERPNext's native `Payment Entry` (`tabPayment Entry`).
 2. **Automated Purchase Broadcast:**  
-   When an Accounts Officer submits a `Payment Entry` against a Supplier with references to a `Purchase Order` or `Purchase Invoice`, `VendorPaymentSettlementService` immediately intercepts the transaction and broadcasts a rich notification to the Purchase team:
+   When an Accounts Assistant or Accounts Manager submits a `Payment Entry` against a Supplier with references to a `Purchase Order` or `Purchase Invoice`, `VendorPaymentSettlementService` immediately intercepts the transaction and broadcasts a rich notification to the Purchase team:
    - **Disbursed Amount:** Total INR paid.
    - **Bank Transaction Reference:** UTR Number / Cheque Number / Transaction ID.
    - **Payment Mode:** RTGS, NEFT, IMPS, or Cheque.

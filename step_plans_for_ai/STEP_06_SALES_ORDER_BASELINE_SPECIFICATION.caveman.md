@@ -56,7 +56,7 @@ Trigger: Stage 05 financial advance clearance verified (`custom_advance_verified
   ┌───────────────────────┐       ┌───────────────────────┐       ┌───────────────────────┐
   │       STAGE 07:       │       │       STAGE 08:       │       │       STAGE 10:       │
   │   MATERIAL DISPATCH   │       │   INSTALLATION WBS    │       │   STATUTORY LIAISON   │
-  │  (Store Manager /     │       │   (Project Engineer / │       │   (Liaisoning Officer │
+  │  (Store Manager /     │       │   (Project Engineer / │       │  (Liaisoning Rep/Mgr  │
   │   Store Assistant)    │       │    Site Supervisor)   │       │    Phase 1 NOC Filing)│
   └───────────────────────┘       └───────────────────────┘       └───────────────────────┘
 ```
@@ -78,14 +78,14 @@ Trigger: Stage 05 financial advance clearance verified (`custom_advance_verified
 
 ### 1.3 Operational Failure Modes Eliminated
 
-| Failure Mode in Legacy / Standard ERP       | Root Cause                                                                                             | Stage 06 Engineered Resolution                                                                                                       |
-| :------------------------------------------ | :----------------------------------------------------------------------------------------------------- | :----------------------------------------------------------------------------------------------------------------------------------- |
-| **Unbudgeted Scope Creep & Margin Erosion** | Verbal requests change panels, quantities, cable runs without cost re-estimate.                        | `SalesOrderBaselineService` compute SHA-256 hash over items/rates; lock baseline (`custom_baseline_frozen = 1`) on submit.           |
-| **Store & Logistics Blindspots**            | Storekeeper get no notice until site calls demanding urgent delivery; stock shortages.                 | Atomic spawning generate **Material Delivery Task** assigned direct to **`Store Manager`** with delegation to **`Store Assistant`**. |
-| **Delayed Net-Metering DISCOM Approvals**   | Statutory applications start only after physical installation; grid energization delayed 60-90 days.   | Sales order submit auto-create `Liaisoning And Synchronization` in Phase 1; dispatch task to `Liaisoning Officer`.                   |
-| **Unfunded Project Procurement**            | Project managers create tasks and issue materials based on draft sales orders before advance verified. | Server-side gate assert `custom_advance_verified == 1`; block submit if Stage 05 gate incomplete.                                    |
-| **Manual WBS Setup Inconsistencies**        | Project engineers manually create tasks with erratic naming, missing safety checks, wrong zones.       | `ProjectSpawnerService` programmatically create standard multi-zone WBS `Task` tree with dependencies and SLAs.                      |
-| **Mismatched Invoicing Milestones**         | Finance issue arbitrary billing schedules unrelated to contract milestones; customer disputes.         | Programmatic generation of ERPNext `Payment Schedule` linked to contract advance, dispatch, structural, grid milestones.             |
+| Failure Mode in Legacy / Standard ERP       | Root Cause                                                                                             | Stage 06 Engineered Resolution                                                                                                                   |
+| :------------------------------------------ | :----------------------------------------------------------------------------------------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Unbudgeted Scope Creep & Margin Erosion** | Verbal requests change panels, quantities, cable runs without cost re-estimate.                        | `SalesOrderBaselineService` compute SHA-256 hash over items/rates; lock baseline (`custom_baseline_frozen = 1`) on submit.                       |
+| **Store & Logistics Blindspots**            | Storekeeper get no notice until site calls demanding urgent delivery; stock shortages.                 | Atomic spawning generate **Material Delivery Task** assigned direct to **`Store Manager`** with delegation to **`Store Assistant`**.             |
+| **Delayed Net-Metering DISCOM Approvals**   | Statutory applications start only after physical installation; grid energization delayed 60-90 days.   | Sales order submit auto-create `Liaisoning And Synchronization` in Phase 1; dispatch task to `Liaisoning Representative` & `Liaisoning Manager`. |
+| **Unfunded Project Procurement**            | Project managers create tasks and issue materials based on draft sales orders before advance verified. | Server-side gate assert `custom_advance_verified == 1`; block submit if Stage 05 gate incomplete.                                                |
+| **Manual WBS Setup Inconsistencies**        | Project engineers manually create tasks with erratic naming, missing safety checks, wrong zones.       | `ProjectSpawnerService` programmatically create standard multi-zone WBS `Task` tree with dependencies and SLAs.                                  |
+| **Mismatched Invoicing Milestones**         | Finance issue arbitrary billing schedules unrelated to contract milestones; customer disputes.         | Programmatic generation of ERPNext `Payment Schedule` linked to contract advance, dispatch, structural, grid milestones.                         |
 
 ---
 
@@ -95,18 +95,19 @@ Trigger: Stage 05 financial advance clearance verified (`custom_advance_verified
 
 Follow **Zero "User" Suffix Rule** ([`step_plans/README.md`](./README.md#5-enterprise-persona--role-naming-standard-zero-user-suffix-rule)):
 
-| Persona / Business Actor       | Frappe System Role     | HRMS Department           | HRMS Designation                                    | Operational Responsibilities                                                                                               |
-| :----------------------------- | :--------------------- | :------------------------ | :-------------------------------------------------- | :------------------------------------------------------------------------------------------------------------------------- |
-| **Commercial Operations Lead** | `Commercial Officer`   | Commercial Operations     | `Commercial Manager` / `Sales Operations Executive` | Draft `Sales Order`, verify Stage 05 advance clearance, validate proposal alignment, attach signed contract, submit order. |
-| **Frontline Sales Executive**  | `Sales Representative` | Sales & Marketing         | `Sales Executive` / `Technical Sales Engineer`      | Interface with client, collect signed contract, verify site expectations, monitor kickoff timeline.                        |
-| **Regional Sales Authority**   | `Area Sales Manager`   | Sales Management          | `Area Sales Manager` / `Regional Head`              | Review high-capacity commercial orders, sign off payment milestone deviations, review SLA escalations.                     |
-| **Project Operations Lead**    | `Project Engineer`     | Project Engineering       | `Project Engineer` / `Site Operations Lead`         | Receive spawned `Project` container, review zone segmentation, accept WBS execution tasks, schedule site mobilization.     |
-| **Warehouse & Inventory Head** | `Store Manager`        | Warehouse & Logistics     | `Store Manager` / `Warehouse Incharge`              | Receive spawned **Material Delivery Task**, evaluate stock against frozen BOM, reassign task to `Store Assistant`.         |
-| **Warehouse Operations Staff** | `Store Assistant`      | Warehouse & Logistics     | `Store Assistant` / `Logistics Coordinator`         | Receive delegated picking/packing tasks, prepare serialized dispatch bundles, coordinate transport.                        |
-| **Statutory Compliance Lead**  | `Liaisoning Officer`   | Legal & Liaisoning        | `Liaisoning Officer` / `Compliance Executive`       | Receive Phase 1 statutory dossier, gather DISCOM application docs, file online grid connectivity NOC.                      |
-| **Finance Authority**          | `Accounts Officer`     | Accounts & Finance        | `Finance Lead` / `Accounts Officer`                 | Reconcile advance payment entry, verify milestone payment terms, approve invoice schedules.                                |
-| **Executive Supreme Command**  | `Admin`, `Director`    | Executive Leadership      | `Managing Director` / `CEO`                         | Supreme operational command; authorize baseline amendments, configure `Solar Sales Order Settings`, override SLAs.         |
-| **Technical DevOps Lead**      | `System Manager`       | Technology Infrastructure | `DevOps Architect`                                  | Framework apex; manage DocType schemas, custom fields, Property Setters, Redis queues, bench CLI.                          |
+| Persona / Business Actor          | Frappe System Role                        | HRMS Department           | HRMS Designation                            | Operational Responsibilities                                                                                               |
+| :-------------------------------- | :---------------------------------------- | :------------------------ | :------------------------------------------ | :------------------------------------------------------------------------------------------------------------------------- |
+| **Sales Operations & Commercial** | `Sales Representative`                    | Sales & Marketing         | `Sales Representative`                      | Draft `Sales Order`, verify Stage 05 advance clearance, validate proposal alignment, attach signed contract, submit order. |
+| **Sales Authority & Oversight**   | `Sales Manager`                           | Sales Management          | `Sales Manager`                             | Review commercial orders, authorize deviations, supervisory management and authority inheritance.                          |
+| **Site Operations Lead**          | `Site Supervisor` / `Project Engineer`    | Project Engineering       | `Site Supervisor` / `Project Engineer`      | Receive spawned `Project` container, review zone segmentation, accept WBS execution tasks, schedule site mobilization.     |
+| **Project Delivery Manager**      | `Project Manager`                         | Project Management        | `Project Manager`                           | Supervisory oversight of project execution, task schedules, and milestone delivery.                                        |
+| **Warehouse & Inventory Head**    | `Store Manager`                           | Warehouse & Logistics     | `Store Manager` / `Warehouse Incharge`      | Receive spawned **Material Delivery Task**, evaluate stock against frozen BOM, reassign task to `Store Assistant`.         |
+| **Warehouse Operations Staff**    | `Store Assistant`                         | Warehouse & Logistics     | `Store Assistant` / `Logistics Coordinator` | Receive delegated picking/packing tasks, prepare serialized dispatch bundles, coordinate transport.                        |
+| **Statutory Compliance Lead**     | `Liaisoning Representative`               | Legal & Liaisoning        | `Liaisoning Representative`                 | Receive Phase 1 statutory dossier, gather DISCOM application docs, file online grid connectivity NOC.                      |
+| **Statutory Compliance Head**     | `Liaisoning Manager`                      | Legal & Liaisoning        | `Liaisoning Manager`                        | Supervisory oversight of DISCOM interactions, CEIG clearances, and grid synchronization.                                   |
+| **Finance Authority**             | `Accounts Assistant` / `Accounts Manager` | Accounts & Finance        | `Accounts Assistant` / `Accounts Manager`   | Reconcile advance payment entry, verify milestone payment terms, approve invoice schedules.                                |
+| **Executive Supreme Command**     | `Admin`, `Director`                       | Executive Leadership      | `Managing Director` / `CEO`                 | Supreme operational command; authorize baseline amendments, configure `Solar Sales Order Settings`, override SLAs.         |
+| **Technical DevOps Lead**         | `System Manager`                          | Technology Infrastructure | `DevOps Architect`                          | Framework apex; manage DocType schemas, custom fields, Property Setters, Redis queues, bench CLI.                          |
 
 > [!IMPORTANT]
 > **Enterprise Authority Hierarchy: Administrator $\rightarrow$ System Manager $\rightarrow$ Admin (Project Supreme):**
@@ -116,18 +117,18 @@ Follow **Zero "User" Suffix Rule** ([`step_plans/README.md`](./README.md#5-enter
 
 ### 2.2 Role Permission Matrix
 
-| DocType / Action                         | Commercial Officer | Project Engineer | Store Manager  | Store Assistant | Liaisoning Officer | Admin (Project Supreme) |
-| :--------------------------------------- | :----------------: | :--------------: | :------------: | :-------------: | :----------------: | :---------------------: |
-| **Sales Order (Read)**                   |    Full Access     |   Full Access    |  Full Access   |    Read Own     |      Read Own      |       All Records       |
-| **Sales Order (Create/Edit)**            |   **Permitted**    |    Restricted    |   Restricted   |   Restricted    |     Restricted     |      **Permitted**      |
-| **Sales Order (Submit / Lock Baseline)** |   **Permitted**    |    Restricted    |   Restricted   |   Restricted    |     Restricted     |       **Supreme**       |
-| **Sales Order (Amend / Cancel)**         |     Restricted     |    Restricted    |   Restricted   |   Restricted    |     Restricted     |  **Yes (Admin Only)**   |
-| **Project (Read)**                       |     Permitted      |   Full Access    |   Read Only    |    Read Only    |     Read Only      |       All Records       |
-| **WBS Execution Tasks (Read/Update)**    |     Restricted     |   **Assigned**   |   Restricted   |   Restricted    |     Restricted     |       Full Access       |
-| **Material Delivery Task (Read/Update)** |     Read Only      |    Read Only     |  **Assigned**  |  **Assigned**   |     Restricted     |       Full Access       |
-| **Task Reassignment (Store Task)**       |     Restricted     |    Restricted    | **Authorized** |   Restricted    |     Restricted     |       **Supreme**       |
-| **Liaisoning Dossier (Read/Update)**     |     Read Only      |    Read Only     |   Restricted   |   Restricted    |    **Assigned**    |       Full Access       |
-| **SLA Delay Log Sign-Off**               |     Permitted      |    Permitted     |   Permitted    |   Restricted    |     Permitted      |       **Supreme**       |
+| DocType / Action                         | Sales Representative | Sales Manager | Project Engineer / Site Supervisor | Store Manager  | Liaisoning Representative / Manager | Admin (Project Supreme) |
+| :--------------------------------------- | :------------------: | :-----------: | :--------------------------------: | :------------: | :---------------------------------: | :---------------------: |
+| **Sales Order (Read)**                   |     Full Access      |  Full Access  |            Full Access             |  Full Access   |              Read Own               |       All Records       |
+| **Sales Order (Create/Edit)**            |    **Permitted**     | **Permitted** |             Restricted             |   Restricted   |             Restricted              |      **Permitted**      |
+| **Sales Order (Submit / Lock Baseline)** |    **Permitted**     | **Permitted** |             Restricted             |   Restricted   |             Restricted              |       **Supreme**       |
+| **Sales Order (Amend / Cancel)**         |      Restricted      |  Restricted   |             Restricted             |   Restricted   |             Restricted              |  **Yes (Admin Only)**   |
+| **Project (Read)**                       |      Permitted       |   Permitted   |            Full Access             |   Read Only    |              Read Only              |       All Records       |
+| **WBS Execution Tasks (Read/Update)**    |      Restricted      |  Restricted   |            **Assigned**            |   Restricted   |             Restricted              |       Full Access       |
+| **Material Delivery Task (Read/Update)** |      Read Only       |   Read Only   |             Read Only              |  **Assigned**  |             Restricted              |       Full Access       |
+| **Task Reassignment (Store Task)**       |      Restricted      |  Restricted   |             Restricted             | **Authorized** |             Restricted              |       **Supreme**       |
+| **Liaisoning Dossier (Read/Update)**     |      Read Only       |   Read Only   |             Read Only              |   Restricted   |            **Assigned**             |       Full Access       |
+| **SLA Delay Log Sign-Off**               |      Permitted       |   Permitted   |             Permitted              |   Permitted    |              Permitted              |       **Supreme**       |
 
 ---
 
@@ -155,7 +156,7 @@ Stage 06 extend ERPNext standard `tabSales Order` (`is_submittable = 1`) with so
 | `custom_baseline_sha256`           | Baseline SHA-256 Checksum | `Data`       | -                                                                                  |    Yes    |    Index: 1    | 64-char hexadecimal hash of items, quantities, rates, and BOM specifications.   |
 | `custom_baseline_frozen`           | Baseline Frozen           | `Check`      | -                                                                                  |    Yes    |    Index: 1    | Set to 1 on submit. Lock form from edits.                                       |
 | `custom_baseline_frozen_on`        | Baseline Frozen On        | `Datetime`   | -                                                                                  |    No     |       -        | Audit timestamp when baseline sealed.                                           |
-| `custom_baseline_frozen_by`        | Baseline Frozen By        | `Link`       | `User`                                                                             |    No     |       -        | User ID of Commercial Officer submitting order.                                 |
+| `custom_baseline_frozen_by`        | Baseline Frozen By        | `Link`       | `User`                                                                             |    No     |       -        | User ID of Sales Representative or Sales Manager submitting order.              |
 | `custom_project_reference`         | Spawned Project Ref       | `Link`       | `Project`                                                                          |    No     |    Index: 1    | Downstream ERPNext `Project` container instantiated on submit.                  |
 | `custom_store_delivery_task`       | Store Delivery Task       | `Link`       | `Task`                                                                             |    No     |    Index: 1    | Downstream task assigned to `Store Manager` for logistics prep.                 |
 | `custom_liaisoning_reference`      | Liaisoning Dossier Ref    | `Link`       | `Liaisoning And Synchronization`                                                   |    No     |    Index: 1    | Downstream statutory compliance dossier instantiated on submit.                 |
@@ -194,7 +195,7 @@ Stage 06 extend ERPNext standard `tabSales Order` (`is_submittable = 1`) with so
 | :------------------------- | :--------------------- | :--------- | :-------------------------------------------------------------------------------------------------------------------------------------- | :-------: | :------------: | :---------------------------------------------------------------------- |
 | `custom_wbs_stage`         | Solar WBS Discipline   | `Select`   | `Material Logistics\nCivil & Foundations\nMMS Erection\nModule Mounting\nDC/AC Cabling\nEarthing & Safety\nTesting & Pre-Commissioning` |    Yes    |    Index: 1    | WBS category for Gantt view and progress calculation.                   |
 | `custom_zone_identifier`   | Installation Zone Name | `Data`     | -                                                                                                                                       |    No     |       -        | Physical roof/field partition (e.g. `Roof Zone 1`, `Ground Array A`).   |
-| `custom_assigned_role`     | Target Enterprise Role | `Select`   | `Store Manager\nStore Assistant\nProject Engineer\nSite Supervisor\nLiaisoning Officer`                                                 |    Yes    |    Index: 1    | Functional role responsible for task completion.                        |
+| `custom_assigned_role`     | Target Enterprise Role | `Select`   | `Store Manager\nStore Assistant\nProject Engineer\nSite Supervisor\nLiaisoning Representative\nLiaisoning Manager`                      |    Yes    |    Index: 1    | Functional role responsible for task completion.                        |
 | `custom_can_reassign`      | Delegation Allowed     | `Check`    | -                                                                                                                                       |    Yes    |       -        | If 1, assigned lead (e.g. Store Manager) can delegate task. Default: 0. |
 | `custom_reassigned_by`     | Reassigned By          | `Link`     | `User`                                                                                                                                  |    No     |       -        | Audit trail of authority who delegated task.                            |
 | `custom_reassigned_on`     | Reassigned On          | `Datetime` | -                                                                                                                                       |    No     |       -        | Timestamp when task reassigned to subordinate.                          |
@@ -240,14 +241,14 @@ Encapsulate statutory utility net-metering compliance across dual lifecycle timi
 
 Admin-governed configuration single DocType:
 
-| Fieldname                         | Label                              | Fieldtype                   | Default                      | Description                                                               |
-| :-------------------------------- | :--------------------------------- | :-------------------------- | :--------------------------- | :------------------------------------------------------------------------ |
-| `so_kickoff_sla_hours`            | Target Kickoff SLA Hours           | `Int`                       | `24`                         | Expected duration (hours) from Stage 05 clearance to Stage 06 submission. |
-| `enforce_signed_contract`         | Mandate Signed Contract PDF        | `Check`                     | `1`                          | If 1, `custom_signed_contract_doc` mandatory before submission.           |
-| `default_wbs_template`            | Default Solar WBS Template         | `Link` (`Project Template`) | `Solar Rooftop Standard WBS` | Template used by `ProjectSpawnerService` to construct tasks.              |
-| `allow_amendment_without_cancel`  | Allow Controlled In-Place Revision | `Check`                     | `0`                          | If 0, requires Admin-authorized cancellation and amendment.               |
-| `notify_store_manager_on_so`      | Auto-Alert Store Manager           | `Check`                     | `1`                          | Broadcast real-time alert to Store Manager on order submission.           |
-| `notify_liaisoning_officer_on_so` | Auto-Alert Liaisoning Officer      | `Check`                     | `1`                          | Broadcast real-time alert to Liaisoning Officer on order submission.      |
+| Fieldname                        | Label                              | Fieldtype                   | Default                      | Description                                                               |
+| :------------------------------- | :--------------------------------- | :-------------------------- | :--------------------------- | :------------------------------------------------------------------------ |
+| `so_kickoff_sla_hours`           | Target Kickoff SLA Hours           | `Int`                       | `24`                         | Expected duration (hours) from Stage 05 clearance to Stage 06 submission. |
+| `enforce_signed_contract`        | Mandate Signed Contract PDF        | `Check`                     | `1`                          | If 1, `custom_signed_contract_doc` mandatory before submission.           |
+| `default_wbs_template`           | Default Solar WBS Template         | `Link` (`Project Template`) | `Solar Rooftop Standard WBS` | Template used by `ProjectSpawnerService` to construct tasks.              |
+| `allow_amendment_without_cancel` | Allow Controlled In-Place Revision | `Check`                     | `0`                          | If 0, requires Admin-authorized cancellation and amendment.               |
+| `notify_store_manager_on_so`     | Auto-Alert Store Manager           | `Check`                     | `1`                          | Broadcast real-time alert to Store Manager on order submission.           |
+| `notify_liaisoning_team_on_so`   | Auto-Alert Liaisoning Team         | `Check`                     | `1`                          | Broadcast real-time alert to Liaisoning Team on order submission.         |
 
 ---
 
@@ -257,7 +258,7 @@ Admin-governed configuration single DocType:
 
 ```mermaid
 stateDiagram-v2
-    [*] --> Draft: Commercial Officer Create SO (from Finalized Proposal)
+    [*] --> Draft: Sales Representative / Sales Manager Create SO (from Finalized Proposal)
 
     Draft --> Under_Commercial_Review: Attach Signed Contract & Verify Milestone Terms
 
@@ -857,7 +858,7 @@ flowchart LR
 
 ### 7.3 Frappe HRMS Touchpoints
 
-- Resolve `tabUser` to active `tabEmployee` to populate designated `Project Engineer`, `Store Manager`, and `Liaisoning Officer`.
+- Resolve `tabUser` to active `tabEmployee` to populate designated `Project Engineer`, `Store Manager`, and `Liaisoning Representative`.
 
 ### 7.4 Three Project Execution Steps & 11-Stage Lead Progress Tracking
 
@@ -1088,7 +1089,7 @@ class TestSolarSalesOrder(FrappeTestCase):
 
 ### 9.1 Standard Operating Procedures (SOP)
 
-#### SOP 1: Commercial Officer — Sales Order Baseline Creation & Submission
+#### SOP 1: Sales Representative / Sales Manager — Sales Order Baseline Creation & Submission
 
 1. **Entry Trigger:** Proposal accepted in Stage 04 and Advance Payment Cleared in Stage 05 (`custom_advance_verified == 1`).
 2. **Action Steps:**

@@ -92,36 +92,32 @@ When creating specifications for subsequent stages:
 
 ---
 
-## 5. Enterprise Persona & Role Naming Standard (Zero "User" Suffix Rule)
+## 5. Enterprise Persona & Role Naming Standard (Symmetric Two-Tier Architecture — ADR-020)
 
-To maintain rigorous enterprise engineering standards and eliminate ambiguous, developer-centric nomenclature, **never use the generic `User` suffix** (such as `Lead User`, `Sales User`, `Survey User`, `Site User`, `Project User`, `Store User`) when specifying personas, Frappe system roles, or operational designations across any lifecycle step.
+In strict accordance with [`ADR-020`](../docs/decisions/ADR-020-ENTERPRISE-ROLE-PERMISSION-ARCHITECTURE.md) and the **Zero "User" Suffix Rule**, all personas, Frappe system roles, and operational designations are standardized around a **Symmetric Two-Tier Departmental Hierarchy** (Frontline Operational Role + Supervisory Managerial Role), with complete elimination of redundant and deprecated roles.
 
-### Mandatory Role Naming Nomenclature:
+### Mandatory Role Naming Nomenclature & Departmental Mapping:
 
-| Operational Domain          | Deprecated Role Pattern (Prohibited) | Approved Enterprise Role Standard | Approved Functional Variants                                  |
-| :-------------------------- | :----------------------------------- | :-------------------------------- | :------------------------------------------------------------ |
-| **Lead Management**         | `Lead User`                          | **`Lead Representative`**         | `Inside Sales Representative`, `Lead Assistant`               |
-| **Sales & Commercial**      | `Sales User`                         | **`Sales Representative`**        | `Sales Executive`, `Area Sales Manager`, `Commercial Officer` |
-| **Site Survey & Audit**     | `Site Survey User` / `Survey User`   | **`Survey Engineer`**             | `Site Survey Auditor`, `Survey Assistant`                     |
-| **PV Engineering & Design** | `Design User`                        | **`Design Engineer`**             | `Design Manager`, `CAD Design Specialist`                     |
-| **Order & Baseline**        | `Sales Order User`                   | **`Commercial Officer`**          | `Sales Operations Executive`                                  |
-| **Material Dispatch**       | -                                    | **`Store Manager`**               | `Store Assistant`                                             |
-| **Site Execution (WBS)**    | `Project User` / `Site User`         | **`Project Engineer`**            | `Site Supervisor`, `Civil/Electrical Site Engineer`           |
-| **Material Return**         | `Reconciliation User`                | **`Store Assistant`**             | `Site Auditor`, `Inventory Reconciler`                        |
-| **Liaisoning & Grid Sync**  | `Liaisoning User`                    | **`Liaisoning Officer`**          | `Statutory Compliance Representative`                         |
-| **O&M & Telemetry**         | `O&M User`                           | **`O&M Service Engineer`**        | `Solar Telemetry Specialist`, `AMC Technician`                |
-| **Store & Inventory**       | `Store User`                         | **`Store Assistant`**             | `Store Manager`, `Warehouse Supervisor`                       |
-| **Procurement & SCM**       | `Purchase User`                      | **`Procurement Representative`**  | `Purchase Executive`, `Purchase Manager`                      |
-| **Finance & Accounts**      | `Accounts User`                      | **`Accounts Assistant`**          | `Accounts Officer`, `Finance Lead`                            |
-| **Supplier Evaluation**     | `Vendor User`                        | **`Vendor Rating Auditor`**       | `Quality & SCM Auditor`                                       |
+| Operational Domain          | Deprecated Role Pattern (Prohibited)                         | Approved Frontline Role(s)                    | Approved Managerial Role | Core Operational Scope                                                          |
+| :-------------------------- | :----------------------------------------------------------- | :-------------------------------------------- | :----------------------- | :------------------------------------------------------------------------------ |
+| **Sales & Lead Ingestion**  | `Lead Representative`, `Lead User`, `Inside Sales Rep`       | **`Sales Representative`**                    | **`Sales Manager`**      | Stage 01 Lead ingestion, 10-digit mobile deduplication, 2h SLA, survey booking. |
+| **Site Survey & Audit**     | `Site Survey User`, `Survey User`, `Site Survey Auditor`     | **`Survey Engineer`**                         | **`Survey Manager`**     | Stage 02 Mobile technical audit, GPS lock, 6 mandatory photos, feasibility.     |
+| **PV Engineering & Design** | `Design User`, `CAD Design Specialist`                       | **`Design Engineer`**                         | **`Design Manager`**     | Stage 03 PV sizing, CAD/SLD, voltage drop math ($\le 2\%$), dynamic BOM freeze. |
+| **CRM & Proposals**         | `Sales Representative` (for quotes), `Commercial Officer`    | **`CRM Representative`**                      | **`CRM Manager`**        | Stage 04 Dynamic quotation modeling, 70:30 GST, PM Surya Ghar subsidy pre-fill. |
+| **Finance & Accounts**      | `Accounts Officer`, `Accounts User`, `Commercial Officer`    | **`Accounts Assistant`**                      | **`Accounts Manager`**   | Stage 05 Advance clearance ($\ge 20\%$), Step 15/17 3-way match, Step 18 pay.   |
+| **Site Execution (WBS)**    | `Commercial Officer`, `Project User`, `Site User`            | **`Site Supervisor`**, **`Project Engineer`** | **`Project Manager`**    | Stages 06–09 WBS baseline, mobile DPR, pre-comm Megger testing, site returns.   |
+| **Store & Logistics**       | `Store User`, `Inventory Reconciler`                         | **`Store Assistant`**                         | **`Store Manager`**      | Stage 08 2D barcode dispatch, Step 12 MRs, Step 16 central warehouse GRN.       |
+| **Liaisoning & Grid Sync**  | `Liaisoning Officer`, `Liaisoning User`                      | **`Liaisoning Representative`**               | **`Liaisoning Manager`** | Stage 10 DISCOM filings, CEIG/JMI statutory audit, net meter sync, COD closure. |
+| **Procurement & SCM**       | `Purchase User`, `Vendor Rating Auditor`, `Quality Engineer` | **`Purchase Assistant`**                      | **`Purchase Manager`**   | Steps 12–19 RFQ dispatch, comparison matrix, PO release, vendor rating.         |
+| **O&M & Telemetry**         | `O&M User`, `AMC Technician`                                 | **`O&M Service Engineer`**                    | **`O&M Manager`**        | Stage 11 Incident intake, mobile GPS check-in, warranty claims, asset ledger.   |
 
-All subsequent step specifications (`STEP_02` through `STEP_19`) and any future planning documents must strictly adopt this nomenclature.
+All subsequent step specifications (`STEP_01` through `STEP_19`) strictly adhere to this nomenclature.
 
 ---
 
-## 6. Enterprise Authority Hierarchy: Administrator $\rightarrow$ System Manager $\rightarrow$ Admin (Project Supreme)
+## 6. Enterprise Authority Hierarchy & Operational Safeguards (ADR-020)
 
-To guarantee clean separation between enterprise business governance and technical software plumbing while preserving Frappe Framework's intended core architecture:
+To guarantee clean separation between enterprise business governance and technical software plumbing while preserving Frappe Framework's native architecture:
 
 ```
 ┌──────────────────────────────────────────────────────────────────────────────────────────────────┐
@@ -136,18 +132,31 @@ To guarantee clean separation between enterprise business governance and technic
 │ ✔ Manage DocType schemas & Custom Fields         │ ✔ Manage `Solar Notification Settings`        │
 │ ✔ Access to Server Scripts & Client Scripts      │ ✔ Authorize stage overrides & delay reasons   │
 │ ✔ Frappe Developer Mode & System Console         │ ✔ Executive command dashboards & audits       │
-│ ✔ Bench CLI, migrations & Redis worker queues    │ ✖ RESTRICTED from source code & server scripts│
-│ ✔ Root superuser / developer administration      │ ✖ RESTRICTED from DocType schema modifications│
+│ ✔ Bench CLI, migrations & Redis worker queues    │ ✔ Atomic Cascading Purge (`CascadePurgeService`│
+│ ✔ Root superuser / developer administration      │ ✖ RESTRICTED from source code & server scripts│
+│                                                  │ ✖ RESTRICTED from DocType schema modifications│
 └──────────────────────────────────────────────────┴───────────────────────────────────────────────┘
 ```
 
-1. **`Administrator` & `System Manager` (Framework Supreme / Technical Development Realm):**
-   - Frappe's native `Administrator` and `System Manager` sit at the apex of the system hierarchy.
-   - **Supreme over `Admin`:** Possesses whatever operational and settings access `Admin` has, **plus** full technical control over DocType builders, source code, Server Scripts, Client Scripts, Custom Fields, Frappe Developer Mode, Bench CLI commands, and database administration.
-   - Reserved strictly for developers, technical architects, and infrastructure DevOps engineers.
+### Core Operational Governance Rules:
 
-2. **`Admin` (Project / Solar EPC Level Supreme Command):**
-   - Introduced specifically for **project-level operational supremacy**.
-   - Holds supreme authority over all business operations across Flow 1 (Stages 01–11) and Flow 2 (Steps 01–08), encompassing everything accessible to any or all operational roles (`Lead Representative`, `Sales Representative`, `Survey Engineer`, `Solar Design Engineer`, `Store Assistant`, `Accounts Assistant`, `Project Engineer`, `Liaisoning Officer`).
-   - Holds exclusive business authority to customize and manage operational governance: `Solar SLA Settings`, `Solar Notification Settings`, delay approvals, and escalation overrides.
-   - **Clean Business Boundary:** Because operational leadership does not require technical code or schema maintenance, `Admin` is strictly restricted from editing DocTypes, writing server/client scripts, and accessing underlying code.
+1. **Managerial Full-Authority Inheritance:**  
+   Department **`Managers`** strictly inherit 100% of the operational capabilities, permissions, and submit actions of their frontline subordinates (`Representative`, `Engineer`, `Assistant`, `Supervisor`).
+
+2. **Stage-Forward Lock & Two-Phase Amend/Cancel Protocol:**
+   - **The Lock:** Once a transaction has progressed to the next downstream stage/step, upstream documents are **permanently locked against cancel and amend**.
+   - **Manager Direct Action (Pre-Forward):** Department Managers can cancel or amend their department's documents prior to downstream progression with a mandatory written justification remark.
+   - **Junior Request-for-Approval Flow:** Frontline staff cannot unilaterally cancel or amend; they submit an Amendment/Cancellation Request with a reason to their Manager. If the process has already moved to the next step, raising the request is blocked entirely.
+
+3. **Admin Deletion Safeguards & Atomic Cascading Purge:**
+   - **Downstream Dependency Warning:** System warns Admin when dependencies exist. Direct deletion is restricted until active downstream records are resolved.
+   - **Atomic Cascading Purge (`CascadePurgeService`):** For total aborts, Admin can trigger a cascading purge requiring password re-authentication, $\ge 40$ chars justification, reverse-topological deletion, and full snapshot logging in `tabSolar Deletion Audit Log`.
+
+4. **Step 15 Refined Purchase Order Authorization Matrix:**
+   - Tier 1 (< ₹50,000): `Purchase Manager` ONLY.
+   - Tier 2 (₹50,000 to ₹5,00,000): Single active role configured by `Admin` in `Solar SCM Settings` (`Purchase Manager`, `Accounts Manager`, or `Admin`).
+   - Tier 3 (₹5,00,000 to ₹25,00,000) & Tier 4 (> ₹25,00,000): Exclusive authority of `Admin`.
+
+5. **Stage-Gated Row-Level Security (RLS):**
+   - Frontline juniors access assigned previous stage records (**Read-Only**) + assigned current stage records (**Read/Write/Create**).
+   - Department Managers access all previous stage records (**Read-Only**) + all current stage records across their department (**Read/Write/Submit/Approve**).

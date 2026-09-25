@@ -52,17 +52,17 @@ All default turnaround times are fully configurable via the **`Solar SLA Setting
 
 ### 3.2 Default SLA / TAT Baselines
 
-| Flow 1 Task / Stage                   | Responsible Role        | SLA Clock Activation Trigger     |    Default SLA / TAT    | Customization Authority |
-| :------------------------------------ | :---------------------- | :------------------------------- | :---------------------: | :---------------------: |
-| **Lead Qualification & Response**     | Sales Executive         | Lead assignment to executive     |       **2 Hours**       |    Admin / Director     |
-| **Technical Site Survey**             | Survey Engineer         | Survey assignment to engineer    |      **24 Hours**       |    Admin / Director     |
-| **Solar PV Design & BOM Freeze**      | Design Engineer         | Design task assignment           |    **24 - 48 Hours**    |    Admin / Director     |
-| **Commercial Proposal Generation**    | Sales / Design          | Proposal task assignment         |      **24 Hours**       |    Admin / Director     |
-| **Financial Advance Verification**    | Accounts Officer        | Customer confirmation logged     |      **24 Hours**       |    Admin / Director     |
-| **Material Dispatch (Delivery Note)** | Store Manager           | Sales Order submission / release |    **48 - 72 Hours**    |    Admin / Director     |
-| **Site Installation Execution**       | Site Supervisor         | Material arrival on site         | **3 - 30 Days** (By kW) |    Admin / Director     |
-| **Material Return to Store**          | Site Supervisor / Store | Installation marked complete     |    **24 - 48 Hours**    |    Admin / Director     |
-| **Liaisoning JMI & Grid Sync**        | Liaisoning Officer      | Installation marked complete     |       **10 Days**       |    Admin / Director     |
+| Flow 1 Task / Stage                   | Responsible Role          | SLA Clock Activation Trigger      |    Default SLA / TAT    | Customization Authority |
+| :------------------------------------ | :------------------------ | :-------------------------------- | :---------------------: | :---------------------: |
+| **Lead Qualification & Response**     | Sales Representative      | Lead assignment to representative |       **2 Hours**       |    Admin / Director     |
+| **Technical Site Survey**             | Survey Engineer           | Survey assignment to engineer     |      **24 Hours**       |    Admin / Director     |
+| **Solar PV Design & BOM Freeze**      | Design Engineer           | Design task assignment            |    **24 - 48 Hours**    |    Admin / Director     |
+| **Commercial Proposal Generation**    | CRM Representative        | Proposal task assignment          |      **24 Hours**       |    Admin / Director     |
+| **Financial Advance Verification**    | Accounts Assistant        | Customer confirmation logged      |      **24 Hours**       |    Admin / Director     |
+| **Material Dispatch (Delivery Note)** | Store Assistant / Mgr     | Sales Order submission / release  |    **48 - 72 Hours**    |    Admin / Director     |
+| **Site Installation Execution**       | Site Supervisor / Eng     | Material arrival on site          | **3 - 30 Days** (By kW) |    Admin / Director     |
+| **Material Return to Store**          | Store Assistant / Sup     | Installation marked complete      |    **24 - 48 Hours**    |    Admin / Director     |
+| **Liaisoning JMI & Grid Sync**        | Liaisoning Representative | Installation marked complete      |       **10 Days**       |    Admin / Director     |
 
 ---
 
@@ -122,27 +122,46 @@ flowchart TD
 
 ---
 
-## 6. Enterprise Roles Matrix (15 Distinct Roles)
+## 6. Enterprise Roles Matrix (Symmetric Two-Tier Architecture — ADR-020)
 
 > [!IMPORTANT]
-> **Enterprise Role Nomenclature Standard (Zero "User" Suffix Rule):**  
-> Across the entire platform architecture, system roles, and step specifications, generic `User` suffixes (such as `Lead User`, `Sales User`, `Survey User`, `Site User`, `Project User`, `Store User`) are strictly prohibited. All operational actors and Frappe system roles are designated with professional functional descriptors such as `Representative`, `Engineer`, `Assistant`, `Manager`, `Supervisor`, `Auditor`, and `Officer`.
+> **Enterprise Role Nomenclature Standard (Zero "User" Suffix Rule & ADR-020):**  
+> Across the entire platform architecture, system roles, and step specifications, generic `User` suffixes (such as `Lead User`, `Sales User`, `Survey User`, `Site User`, `Project User`, `Store User`) are strictly prohibited. In accordance with [`ADR-020`](../docs/decisions/ADR-020-ENTERPRISE-ROLE-PERMISSION-ARCHITECTURE.md), all operational actors and Frappe system roles are organized into a **Symmetric Two-Tier Departmental Hierarchy** (Frontline Role + Managerial Role) with Managerial Authority Inheritance, eliminating deprecated roles (`Lead Representative`, `Accounts Officer`, `Commercial Officer`, `Quality Engineer`, `Vendor Rating Auditor`, `Liaisoning Officer`).
 
-1. **Admin / Managing Director (Project-Level Supreme Command):** Supreme operational authority across all business transactions across Flow 1 and Flow 2. Exclusive business authority to configure `Solar SLA Settings` and `Solar Notification Settings`, approve delay overrides, and inspect executive dashboards. Restricted from code, DocType schema customization, client/server scripts, or internal technical implementation. _(Note: Frappe Framework's native `System Manager` and `Administrator` sit above `Admin`, possessing all developer/code rights and inheriting whatever access `Admin` possesses)._
-2. **Sales Executive / BD Manager:** Lead onboarding, initial qualification, customer engagement, proposal delivery.
-3. **Field Survey Engineer:** Mobile on-site survey execution, photo/document uploads, GPS verification (24h SLA).
-4. **Solar Design Engineer:** Solar PV sizing, CAD/SLD drawings, cable math, dynamic BOM explosion.
-5. **Sales / Commercial Manager:** Proposal reviews, subsidy verifications, margin exception governance.
-6. **Finance & Accounts Officer:** Advance verification, financial clearance gate, customer milestone billing, vendor invoice matching, and joint vendor payment scheduling.
-7. **Procurement / Purchase Manager:** Material Request review, RFQ management, quotation comparison, PO placement, vendor rating governance.
-8. **Store / Inventory Manager:** Material Request generation, stock level monitoring, low stock tracking, central warehouse GRN, delivery note dispatch, and material return receiving.
-9. **Project Manager (Solar EPC):** End-to-end WBS project execution, budget variance, material delivery tracking, timeline governance.
-10. **Site Supervisor / Field Engineer:** Daily Progress Reports (DPR), site GRN receiving, installation quality audits, material surplus reconciliation.
-11. **Liaisoning & Compliance Officer:** Early document collection & portal uploads (post-SO), statutory CEIG inspection, and post-installation JMI/grid sync (10-day SLA).
-12. **Quality & Commissioning Engineer:** Pre-commissioning punch lists, testing, Joint Meter Inspection (JMI), commissioning sign-off.
-13. **O&M Service Engineer:** Solar Asset Register maintenance, IoT telemetry monitoring, preventative AMC visits, warranty claims.
-14. **Customer / Client (Portal User):** Proposal review, advance payment submission, installation progress tracking, generation monitoring.
-15. **Executive Leadership / CXO:** Real-time KPI dashboards (pipeline value, installed capacity, margin realization, SLA compliance, vendor ratings).
+1. **Admin (Project Supreme Command):** Supreme operational authority across all business transactions across Flow 1 and Flow 2. Exclusive business authority to configure `Solar SLA Settings`, `Solar Notification Settings`, and `Solar SCM Settings`, approve delay overrides, and execute audited cascading purges (`tabSolar Deletion Audit Log`). Restricted from code, DocType schema customization, client/server scripts, or internal technical implementation. _(Note: Frappe Framework's native `System Manager` and `Administrator` sit above `Admin`, possessing all developer/code rights and inheriting whatever access `Admin` possesses)._
+2. **Sales Department:**
+   - **`Sales Representative`:** Frontline lead onboarding, mobile deduplication, 2h initial qualification SLA, site survey scheduling.
+   - **`Sales Manager`:** Sales team assignment, lead SLA monitoring, commercial sales order kickoff, regional performance review.
+3. **Site Survey Department:**
+   - **`Survey Engineer`:** Mobile on-site survey execution, 6 mandatory photo items, offline sync, GPS verification (24h SLA).
+   - **`Survey Manager`:** Technical survey feasibility sign-off, surveyor allocation, escalation review.
+4. **PV Engineering & Design Department:**
+   - **`Design Engineer`:** Solar PV string sizing, CAD/SLD drawings, parametric voltage drop math ($\le 2\%$), dynamic BOM generation.
+   - **`Design Manager`:** Engineering design approval, dynamic BOM hash freeze, structural/electrical sign-off.
+5. **CRM & Commercial Proposals Department:**
+   - **`CRM Representative`:** Proposal modeling, dynamic pricing, 70:30 solar GST splits, PM Surya Ghar central/state subsidy calculations.
+   - **`CRM Manager`:** Margin floor exception review, commercial discount approvals, proposal sign-off.
+6. **Finance & Accounts Department:**
+   - **`Accounts Assistant`:** Bank statement intake, advance UTR payment entry ($\ge 20\%$), 3-way match drafting.
+   - **`Accounts Manager`:** Advance clearance sign-off, bank loan sanction validation, customer inception approval, 3-way match sign-off, vendor payment disbursement.
+7. **Project Execution & Site Department:**
+   - **`Site Supervisor`:** Ground execution supervision, daily progress report (DPR) physical tracking, on-site material check.
+   - **`Project Engineer`:** Multi-zone structural/electrical tasks, pre-commissioning Megger/Voc testing, DPR logging.
+   - **`Project Manager`:** End-to-end WBS project baseline, budget variance, site delivery sign-off, surplus return approval, site GRN custody.
+8. **Store & Inventory Department:**
+   - **`Store Assistant`:** Material request drafting, 2D barcode scanning (SABB), material picking/packing, warehouse receipt unboxing.
+   - **`Store Manager`:** Material request sign-off, low stock reorder management, delivery note dispatch release, central warehouse GRN custody, site return stock entry.
+9. **Liaisoning & Statutory Department:**
+   - **`Liaisoning Representative`:** Early DISCOM document collection & portal uploads (post-SO), statutory CEIG inspection scheduling, field liaisoning.
+   - **`Liaisoning Manager`:** Statutory compliance sign-off, CEIG/JMI approval, net metering grid sync sign-off (10-day SLA), COD certificate closure.
+10. **Procurement & SCM Department:**
+    - **`Purchase Assistant`:** RFQ creation, supplier quotation transcription, comparison matrix drafting, PO drafting, payment workbench tracking.
+    - **`Purchase Manager`:** RFQ dispatch, landed cost comparison matrix sign-off, PO authorization (Tier 1 & 2), vendor performance rating evaluation.
+11. **O&M Service Department:**
+    - **`O&M Service Engineer`:** Field diagnostics, mobile GPS check-in, component replacement, OTP verification, lifetime maintenance ledger.
+    - **`O&M Manager`:** Service request triage, warranty dispute resolution, technician dispatch allocation, maintenance contract sign-off.
+12. **Customer / Client (Portal User):** Proposal review, advance payment submission, installation progress tracking, generation monitoring.
+13. **Executive Leadership / CXO:** Real-time KPI dashboards (pipeline value, installed capacity, margin realization, SLA compliance, vendor ratings).
 
 ---
 

@@ -79,16 +79,16 @@ The target operating model embeds 9 rigorous verification stage-gates directly i
 ### Gate 3: Commercial Proposal & Margin Governance Gate (Flow 1: Stage 04)
 
 - **Trigger:** Submitting / Dispatching `Proposal` or `Quotation`.
-- **Responsible Role:** Sales / Commercial Manager.
+- **Responsible Role:** CRM Representative & CRM Manager.
 - **Enforcement Rules:**
   1. Validates base equipment pricing against live Item master rates.
   2. Computes central/state subsidy eligibility (PM Surya Ghar / PM KUSUM).
-  3. Enforces gross margin floor: quotations falling below threshold require Commercial Manager approval.
+  3. Enforces gross margin floor: quotations falling below threshold require CRM Manager approval.
 
 ### Gate 4: Financial Clearance & Customer Master Inception Gate (Flow 1: Stage 05)
 
 - **Trigger:** Submitting / Authorizing `Sales Order`.
-- **Responsible Role:** Finance & Accounts Officer.
+- **Responsible Role:** Accounts Assistant & Accounts Manager.
 - **Enforcement Rules:**
   1. Verifies bank receipt of verified advance payment ($> 20\%$) or bank loan sanction disbursement letter.
   2. **Automatically converts the prospect into an official ERPNext `Customer` master**, generating linked billing/shipping addresses, contact persons, and DISCOM consumer profile.
@@ -97,7 +97,7 @@ The target operating model embeds 9 rigorous verification stage-gates directly i
 ### Gate 5: Material Dispatch Clearance Gate (Flow 1: Stage 07)
 
 - **Trigger:** Submitting ERPNext `Delivery Note` for site dispatch.
-- **Responsible Role:** Store / Inventory Manager.
+- **Responsible Role:** Store Assistant & Store Manager.
 - **Enforcement Rules:**
   1. Verifies items against frozen project BOM quantities and free warehouse stock.
   2. Enforces barcode serial scanning for all high-value equipment (PV modules, inverters).
@@ -106,7 +106,7 @@ The target operating model embeds 9 rigorous verification stage-gates directly i
 ### Gate 6: Installation Execution & Pre-Commissioning Punch List Gate (Flow 1: Stage 08)
 
 - **Trigger:** Submitting final installation milestone in `Project`.
-- **Responsible Role:** Site Supervisor & Project Manager.
+- **Responsible Role:** Site Supervisor, Project Engineer & Project Manager.
 - **Enforcement Rules:**
   1. Validates Daily Progress Reports (DPR) across all active site zones.
   2. Verifies structural torque audit, DC string open-circuit voltage ($V_{oc}$), short-circuit current ($I_{sc}$), and insulation resistance (Megger) test logs.
@@ -115,7 +115,7 @@ The target operating model embeds 9 rigorous verification stage-gates directly i
 ### Gate 7: Site Material Reconciliation & Return Gate (Flow 1: Stage 09)
 
 - **Trigger:** Completing site installation before formal project closeout.
-- **Responsible Role:** Site Supervisor & Store Manager.
+- **Responsible Role:** Site Supervisor, Project Engineer & Store Manager.
 - **Enforcement Rules:**
   1. Reconciles total materials dispatched via `Delivery Note` against materials installed per engineering BOM and DPR logs.
   2. If surplus, unused, or residual materials remain (panels, cable remnants, structural hardware), system mandates creation and submission of a `Stock Entry` (Purpose: **Material Return**) back to the central store warehouse.
@@ -124,7 +124,7 @@ The target operating model embeds 9 rigorous verification stage-gates directly i
 ### Gate 8: Statutory Liaisoning & Project Completion Gate (Flow 1: Stage 10)
 
 - **Trigger:** Marking `Liaisoning And Synchronization` as **Completed**.
-- **Responsible Role:** Liaisoning & Compliance Officer.
+- **Responsible Role:** Liaisoning Representative & Liaisoning Manager.
 - **Enforcement Rules:**
   1. **Dual-Timing Validation:**
      - **Phase 1 (Post-SO):** Verifies customer KYC, property documents, DISCOM application number, and grid feasibility NOC.
@@ -135,7 +135,7 @@ The target operating model embeds 9 rigorous verification stage-gates directly i
 ### Gate 9: Procurement Quotation Comparison & 3-Way Match Gate (Flow 2)
 
 - **Trigger:** Submitting `Purchase Order` and booking `Purchase Invoice`.
-- **Responsible Role:** Purchase Manager & Accounts Officer.
+- **Responsible Role:** Purchase Manager & Accounts Manager.
 - **Enforcement Rules:**
   1. PO creation requires a completed **Quotation Comparison Sheet** evaluating at least 2-3 supplier quotations on price, delivery lead time, and vendor rating.
   2. Enforces strict 3-way matching between `Purchase Order`, `Purchase Receipt` (GRN at store or site), and `Purchase Invoice`.

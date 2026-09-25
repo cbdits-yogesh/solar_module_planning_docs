@@ -56,37 +56,41 @@ In traditional solar contracting, commercial proposals and material procurement 
 
 ### 2.1 Enterprise User Roles Matrix
 
-In strict compliance with the **Zero "User" Suffix Rule** ([`step_plans/README.md`](./README.md#5-enterprise-persona--role-naming-standard-zero-user-suffix-rule)), all operational actors and system roles are designated using functional enterprise titles:
+In strict compliance with [`ADR-020`](../docs/decisions/ADR-020-ENTERPRISE-ROLE-PERMISSION-ARCHITECTURE.md) and the **Zero "User" Suffix Rule**, all operational actors and system roles are designated using functional enterprise titles:
 
-| Persona / Business Actor        | Frappe System Role   | HRMS Department           | HRMS Designation             | Operational Responsibilities                                                                                         |
-| :------------------------------ | :------------------- | :------------------------ | :--------------------------- | :------------------------------------------------------------------------------------------------------------------- |
-| **Solar Design Specialist**     | `Design Engineer`    | Design & Engineering      | `Solar Design Engineer`      | Ingests survey parameters, drafts CAD/SLD drawings, runs cable math, triggers dynamic BOM explosion, submits design. |
-| **Engineering Approver / Lead** | `Design Manager`     | Design & Engineering      | `Engineering Design Manager` | Reviews technical assumptions, verifies cable sizing and structural loadings, approves engineering design baseline.  |
-| **Site Survey Auditor**         | `Survey Engineer`    | Engineering Operations    | `Site Survey Auditor`        | Upstream contributor; clarifies physical site nuances, roof obstructions, and cable raceway constraints.             |
-| **Area Sales Manager**          | `Area Sales Manager` | Sales & Marketing         | `Area Sales Manager`         | Downstream consumer; monitors design turnaround queues and consumes frozen BOM for proposal generation.              |
-| **Solar EPC Director / Admin**  | `Admin`, `Director`  | Executive Management      | `Managing Director`          | Supreme operational command; manages `Solar SLA Settings`, file size limits, delay reason overrides, and audit logs. |
-| **Technical DevOps Lead**       | `System Manager`     | Technology Infrastructure | `DevOps Architect`           | Framework apex; manages DocType schemas, Redis queues, background worker daemons, and bench CLI tooling.             |
+| Persona / Business Actor        | Frappe System Role | HRMS Department           | HRMS Designation             | Operational Responsibilities                                                                                         |
+| :------------------------------ | :----------------- | :------------------------ | :--------------------------- | :------------------------------------------------------------------------------------------------------------------- |
+| **Solar Design Engineer**       | `Design Engineer`  | Design & Engineering      | `Solar Design Engineer`      | Ingests survey parameters, drafts CAD/SLD drawings, runs cable math, triggers dynamic BOM explosion, drafts design.  |
+| **Engineering Approver / Lead** | `Design Manager`   | Design & Engineering      | `Engineering Design Manager` | Reviews technical assumptions, verifies cable sizing and structural loadings, approves & freezes design baseline.    |
+| **Site Survey Engineer**        | `Survey Engineer`  | Engineering Operations    | `Site Survey Engineer`       | Upstream contributor; clarifies physical site nuances, roof obstructions, and cable raceway constraints.             |
+| **CRM Department Manager**      | `CRM Manager`      | Commercial & CRM          | `CRM / Commercial Manager`   | Downstream consumer; monitors design turnaround queues and consumes frozen BOM for proposal generation.              |
+| **Solar EPC Director / Admin**  | `Admin`            | Executive Management      | `Managing Director`          | Supreme operational command; manages `Solar SLA Settings`, file size limits, delay reason overrides, and audit logs. |
+| **Technical DevOps Lead**       | `System Manager`   | Technology Infrastructure | `DevOps Architect`           | Framework apex; manages DocType schemas, Redis queues, background worker daemons, and bench CLI tooling.             |
 
 > [!IMPORTANT]
-> **Enterprise Authority Hierarchy: Administrator $\rightarrow$ System Manager $\rightarrow$ Admin (Project Supreme):**
+> **Enterprise Authority Hierarchy & ADR-020 Operational Governance:**
 >
 > - **`Administrator` & `System Manager` (Framework Supreme / Developer Realm):** Frappe's native `Administrator` and `System Manager` sit at the apex of system authority (supreme over `Admin`). As intended by Frappe Framework, `System Manager` possesses full access to everything `Admin` has, plus full technical rights over source code, DocType schema builder, Client/Server Scripts, bench tooling, and developer mode. Reserved for technical developers, bench engineers, and DevOps administrators.
-> - **`Admin` (Project / Solar EPC Level Supreme Command):** Introduced specifically for **project-level operational supremacy**. Has unrestricted operational access to everything that any or all business roles have across Flow 1 and Flow 2, as well as full authority over operational governance settings (`Solar SLA Settings`, `Solar Notification Settings`, max upload limits, delay approvals, and manager overrides). **Does not require and is restricted from code, DocType schema customization, client/server scripts, and internal technical implementation access.**
+> - **`Admin` (Project / Solar EPC Level Supreme Command):** Introduced specifically for **project-level operational supremacy**. Has unrestricted operational access to everything that any or all business roles have across Flow 1 and Flow 2, as well as full authority over operational governance settings (`Solar SLA Settings`, `Solar Notification Settings`, max upload limits, delay approvals, and manager overrides). Protected by downstream dependency warnings, hard deletion blocks, and atomic cascade purges (`tabSolar Deletion Audit Log`).
+> - **Managerial Authority Inheritance:** `Design Manager` strictly inherits all operational capabilities of `Design Engineer`.
+> - **Stage-Forward Lock:** Once `Quotation` (Proposal, Stage 04) is generated from the approved BOM hash, `Survey Engineering Design` is permanently locked against cancel and amend.
 
 ### 2.2 Permission Hierarchy Matrix
 
-| DocType / Action                        | Design Engineer  | Design Manager | Survey Engineer | Area Sales Manager |     Admin\*      |
-| :-------------------------------------- | :--------------: | :------------: | :-------------: | :----------------: | :--------------: |
-| **Survey Engineering Design (Read)**    |  Assigned Only   | Full Territory |  Linked Survey  |     Permitted      |   All Records    |
-| **Survey Engineering Design (Create)**  |   Auto-Spawned   |   Permitted    |       No        |         No         |       Yes        |
-| **Survey Engineering Design (Write)**   | Own (Draft Only) | Full Territory |       No        |         No         |   All Records    |
-| **Survey Engineering Design (Approve)** |        No        |      Yes       |       No        |         No         |       Yes        |
-| **Survey Engineering Design (Submit)**  |        No        |      Yes       |       No        |         No         |       Yes        |
-| **Site Survey Design File (Upload)**    |    Own Record    |   Permitted    |       No        |         No         |   Full Access    |
-| **Cable Calculation Table (Edit)**      |    Own Record    |   Permitted    |       No        |         No         |   Full Access    |
-| **Custom Quot BOM (Edit)**              |    Own Record    |   Permitted    |       No        |         No         |   Full Access    |
-| **Remark-Delay Log (Append)**           |    Own Record    |   Permitted    |       No        |     Permitted      |   Full Access    |
-| **Solar Design Settings (Manage)**      |        No        |       No       |       No        |         No         | Yes (Admin Only) |
+| DocType / Action                        | Design Engineer  | Design Manager  | Survey Engineer | CRM Manager |     Admin\*      |
+| :-------------------------------------- | :--------------: | :-------------: | :-------------: | :---------: | :--------------: |
+| **Survey Engineering Design (Read)**    |  Assigned Only   | Full Department |  Linked Survey  |  All Valid  |   All Records    |
+| **Survey Engineering Design (Create)**  |   Auto-Spawned   |    Permitted    |       No        |     No      |       Yes        |
+| **Survey Engineering Design (Write)**   | Own (Draft Only) | Full Department |       No        |     No      |   All Records    |
+| **Survey Engineering Design (Approve)** |        No        |  Yes (Pre-S04)  |       No        |     No      |       Yes        |
+| **Survey Engineering Design (Submit)**  |        No        |  Yes (Pre-S04)  |       No        |     No      |       Yes        |
+| **Site Survey Design File (Upload)**    |    Own Record    | Full Department |       No        |     No      |   Full Access    |
+| **Cable Calculation Table (Edit)**      |    Own Record    | Full Department |       No        |     No      |   Full Access    |
+| **Custom Quot BOM (Edit)**              |    Own Record    | Full Department |       No        |     No      |   Full Access    |
+| **Remark-Delay Log (Append)**           |    Own Record    | Full Department |       No        |  Permitted  |   Full Access    |
+| **Solar Design Settings (Manage)**      |        No        |       No        |       No        |     No      | Yes (Admin Only) |
+
+_\*Note: Frappe `Administrator` and `System Manager` sit above `Admin` and inherit all permissions._
 
 _\*Note: Frappe `Administrator` and `System Manager` sit above `Admin` and inherit all permissions._
 

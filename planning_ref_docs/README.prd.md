@@ -50,7 +50,7 @@ The platform implements a **decoupled Vue 3 / Frappe UI SPA wrapper** hosted at 
 
 1. **Universal Default Landing Wrapper (`/solar`):**
    - After authentication, **every user lands by default on `/solar`**.
-   - The landing page is a **responsive Vue 3 + Frappe UI Single Page Application (SPA)** that dynamically adapts its layout, widgets, KPI tiles, and action drawers to the logged-in user's active role (`Director`, `Sales Executive`, `Site Survey User`, `Design Engineer`, `Store Manager`, `Accounts Officer`, etc.).
+   - The landing page is a **responsive Vue 3 + Frappe UI Single Page Application (SPA)** that dynamically adapts its layout, widgets, KPI tiles, and action drawers to the logged-in user's active role (`Admin`, `Sales Representative`, `Sales Manager`, `Survey Engineer`, `Design Engineer`, `CRM Representative`, `Store Manager`, `Accounts Manager`, `Project Manager`, etc.).
    - Role home pages in `hooks.py` (`role_home_page = {"*": "solar"}`) map all roles to `/solar`.
 
 2. **Direct Root `/desk` and `/app` Access Restriction:**
@@ -141,7 +141,7 @@ All lifecycle specifications reside in the dedicated [`step_plans/`](../step_pla
 - [**Stage 01: Lead Management Implementation Specification (`step_plans/STEP_01_LEAD_MANAGEMENT_SPECIFICATION.md`)**](../step_plans/STEP_01_LEAD_MANAGEMENT_SPECIFICATION.md)
 
 > [!NOTE]
-> **Enterprise Role Nomenclature & Authority Hierarchy Standards:**
+> **Enterprise Role Nomenclature & Authority Hierarchy Standards (ADR-020):**
 >
-> 1. In accordance with the enterprise naming convention established in [`step_plans/README.md`](../step_plans/README.md#5-enterprise-persona--role-naming-standard-zero-user-suffix-rule) and [`architect_docs/02_STEP_PLANNING_SPECIFICATION_BLUEPRINT.md`](../architect_docs/02_STEP_PLANNING_SPECIFICATION_BLUEPRINT.md), all specifications strictly avoid generic `User` suffixes (e.g. `Lead User`, `Sales User`, `Survey User`) in favor of descriptive functional titles such as `Lead Representative`, `Sales Representative`, `Survey Engineer`, `Survey Assistant`, `Solar Design Engineer`, `Project Engineer`, and `Store Assistant`.
-> 2. **Supreme Authority Hierarchy:** Frappe Framework's native `Administrator` and `System Manager` sit at the apex of system authority (supreme over `Admin`, possessing all developer tools and code/schema access plus whatever access `Admin` has). **`Admin`** is the dedicated **Project-level supreme operational command role**, possessing complete business operational command across all lifecycles and governance settings (`Solar SLA Settings`, `Solar Notification Settings`), but strictly restricted from code, DocTypes, and server scripts.
+> 1. In accordance with [`ADR-020`](../docs/decisions/ADR-020-ENTERPRISE-ROLE-PERMISSION-ARCHITECTURE.md) and [`step_plans/README.md`](../step_plans/README.md#5-enterprise-persona--role-naming-standard-symmetric-two-tier-architecture--adr-020), all specifications strictly enforce a **Symmetric Two-Tier Model** (`Representative`/`Engineer`/`Assistant`/`Supervisor` + `Manager`), eliminating `Lead Representative`, `Accounts Officer`, `Commercial Officer`, `Quality Engineer`, `Vendor Rating Auditor`, and `Liaisoning Officer`.
+> 2. **Supreme Authority Hierarchy & Safeguards:** Frappe Framework's native `Administrator` and `System Manager` sit at the apex of system authority (supreme over `Admin`, possessing all developer tools and code/schema access plus whatever access `Admin` has). **`Admin`** is the dedicated **Project-level supreme operational command role**, possessing complete business operational command across all lifecycles and governance settings (`Solar SLA Settings`, `Solar Notification Settings`, `Solar SCM Settings`), protected by dependency warnings, hard deletion blocks, and atomic cascade purges (`tabSolar Deletion Audit Log`), but strictly restricted from code, DocTypes, and server scripts.

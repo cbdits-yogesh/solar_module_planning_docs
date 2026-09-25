@@ -36,7 +36,7 @@ We establish an authoritative, comprehensive architectural standard for **Step 1
 
 Under this governance model:
 
-- **Purchase Manager Filling & Technical Evaluation:** The **`Purchase Manager`** (supported by the `Quality Engineer`) acts as the operational evaluator who reviews automated transactional metrics (OTD, rejections, billing deviations), evaluates qualitative service responsiveness, and submits the scorecard for executive approval.
+- **Purchase Manager Filling & Technical Evaluation:** The **`Purchase Manager`** (supported by Store and Project technical verification) acts as the operational evaluator who reviews automated transactional metrics (OTD, rejections, billing deviations), evaluates qualitative service responsiveness, and submits the scorecard for executive approval.
 - **Admin Supreme Approval Cockpit & Notification:** The **`Admin`** (Project Supreme Command) is automatically notified upon scorecard submission and holds the supreme, exclusive authority to execute one of three actions:
   1. **Approve:** Formally submits the scorecard (`docstatus = 1`), permanently freezing the evaluation and updating the supplier's tier and rolling average on `tabSupplier`.
   2. **Reject:** Rejects the evaluation with mandatory justification, leaving supplier status unchanged.
@@ -143,7 +143,7 @@ Evaluates contract price stability between Step 15 `Purchase Order` and Step 17 
 
 #### Factor 4: Service Responsiveness & SCM Collaboration (SRSC) — Default Weight: 15%
 
-Qualitatively evaluated by the **Purchase Manager** and **Quality Engineer** across four 25-point operational dimensions (Total = 100 points):
+Qualitatively evaluated by the **Purchase Manager** (with Store and Site inputs) across four 25-point operational dimensions (Total = 100 points):
 
 1. **RFQ Responsiveness & Commercial Flexibility (0–25 pts):** Speed of quotation submission, willingness to match market rates, transparency in freight/lead-time commitments.
 2. **Technical & Statutory Documentation Speed (0–25 pts):** Timeliness of Mill Test Certificates (MTC), PV module flash reports, warranty certificates, and e-way bills.

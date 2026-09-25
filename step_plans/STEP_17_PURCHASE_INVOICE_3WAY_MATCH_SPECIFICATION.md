@@ -102,23 +102,23 @@ Critically, this step implements **Admin Supreme Departmental Entry Governance**
 
 In strict adherence to the **Zero "User" Suffix Rule** ([`step_plans/README.md#5-enterprise-persona--role-naming-standard-zero-user-suffix-rule`](./README.md#5-enterprise-persona--role-naming-standard-zero-user-suffix-rule)), all operational personas are designated by descriptive functional enterprise titles:
 
-| Persona / Business Actor          | Frappe System Role   | HRMS Department        | HRMS Designation          | Operational Responsibilities in Step 17                                                                                                  |
-| :-------------------------------- | :------------------- | :--------------------- | :------------------------ | :--------------------------------------------------------------------------------------------------------------------------------------- |
-| **Finance Billing Executive**     | `Accounts Assistant` | Finance & Accounts     | `Accounts Assistant`      | Enters, verifies, and submits Purchase Invoices when `Accounts` is the authorized department; validates GST/TDS and 3-way match.         |
-| **Finance & Accounts Head**       | `Accounts Officer`   | Finance & Accounts     | `Chief Financial Officer` | Supervises invoice verification, reviews price variance holds, submits invoices, prepares Step 18 payment disbursements.                 |
-| **Warehouse Inward Executive**    | `Store Assistant`    | Store & Inventory      | `Store Executive`         | Enters Purchase Invoices from physical transporter challans at warehouse dock when `Store` is authorized by Admin policy.                |
-| **Warehouse Logistics Head**      | `Store Manager`      | Store & Inventory      | `Warehouse Manager`       | Reviews Store-entered invoice drafts, verifies delivery challan attachments, submits Store-entered invoices.                             |
-| **Procurement Line Executive**    | `Purchase Assistant` | Purchase & SCM         | `Purchase Executive`      | Enters Purchase Invoices directly from factory-gate vendor tax bills when `Purchase` is authorized by Admin policy.                      |
-| **Head of Procurement**           | `Purchase Manager`   | Purchase & SCM         | `Procurement Head`        | Manages vendor rate queries, requests Admin price variance overrides when supplier invoices legitimately deviate from contracted PO.     |
-| **Solar Project Manager**         | `Project Manager`    | Engineering Operations | `Senior Project Manager`  | Consulted on site-delivered goods verification and approves site-level variations during discrepancy reviews.                            |
-| **Solar EPC Director / Admin**    | `Admin`              | Executive Management   | `Managing Director`       | Project supreme command; manages `Solar SCM Settings.authorized_pi_entry_department`, grants price overrides, reviews SLA delay logs.    |
-| **Framework Supreme / Developer** | `System Manager`     | Information Technology | `DevOps Architect`        | Bench CLI administration, custom field fixtures, background Redis queue sizing, Developer Mode schema maintenance. Supreme over `Admin`. |
+| Persona / Business Actor          | Frappe System Role   | HRMS Department        | HRMS Designation            | Operational Responsibilities in Step 17                                                                                                  |
+| :-------------------------------- | :------------------- | :--------------------- | :-------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------- |
+| **Finance Billing Executive**     | `Accounts Assistant` | Finance & Accounts     | `Accounts Assistant`        | Enters, verifies, and submits Purchase Invoices when `Accounts` is the authorized department; validates GST/TDS and 3-way match.         |
+| **Finance Department Lead**       | `Accounts Manager`   | Finance & Accounts     | `Finance Head / Controller` | Supervises invoice verification, reviews price variance holds, submits invoices, prepares Step 18 payment disbursements; full authority. |
+| **Warehouse Inward Executive**    | `Store Assistant`    | Store & Inventory      | `Store Executive`           | Enters Purchase Invoices from physical transporter challans at warehouse dock when `Store` is authorized by Admin policy.                |
+| **Warehouse Logistics Head**      | `Store Manager`      | Store & Inventory      | `Warehouse Manager`         | Reviews Store-entered invoice drafts, verifies delivery challan attachments, submits Store-entered invoices.                             |
+| **Procurement Line Executive**    | `Purchase Assistant` | Purchase & SCM         | `Purchase Executive`        | Enters Purchase Invoices directly from factory-gate vendor tax bills when `Purchase` is authorized by Admin policy.                      |
+| **Head of Procurement**           | `Purchase Manager`   | Purchase & SCM         | `Procurement Head`          | Manages vendor rate queries, requests Admin price variance overrides when supplier invoices legitimately deviate from contracted PO.     |
+| **Solar Project Manager**         | `Project Manager`    | Engineering Operations | `Senior Project Manager`    | Consulted on site-delivered goods verification and approves site-level variations during discrepancy reviews.                            |
+| **Solar EPC Director / Admin**    | `Admin`              | Executive Management   | `Managing Director`         | Project supreme command; manages `Solar SCM Settings.authorized_pi_entry_department`, grants price overrides, reviews SLA delay logs.    |
+| **Framework Supreme / Developer** | `System Manager`     | Information Technology | `DevOps Architect`          | Bench CLI administration, custom field fixtures, background Redis queue sizing, Developer Mode schema maintenance. Supreme over `Admin`. |
 
 ### 2.2 Permission Hierarchy Matrix
 
 The table below defines the operational permission matrix across lifecycle actions. Note that operational access to create and submit Purchase Invoices is dynamically constrained by the active `Solar SCM Settings.authorized_pi_entry_department` policy:
 
-| Action / Document                               | Accounts Assistant | Accounts Officer | Store Assistant | Store Manager | Purchase Assistant | Purchase Manager |   Admin\*   | System Manager |
+| Action / Document                               | Accounts Assistant | Accounts Manager | Store Assistant | Store Manager | Purchase Assistant | Purchase Manager |   Admin\*   | System Manager |
 | :---------------------------------------------- | :----------------: | :--------------: | :-------------: | :-----------: | :----------------: | :--------------: | :---------: | :------------: |
 | **Configure PI Entry Department Policy**        |         ✖          |        ✖         |        ✖        |       ✖       |         ✖          |        ✖         | ✔ (Supreme) | ✔ (Technical)  |
 | **Create / Edit PI (When Policy = 'Accounts')** |         ✔          |        ✔         |        ✖        |       ✖       |         ✖          |        ✖         | ✔ (Supreme) | ✔ (Technical)  |
@@ -323,7 +323,7 @@ Every Purchase Invoice undergoes deterministic evaluation via `PurchaseInvoiceVa
 1. **Gate 1: Admin Departmental Entry Authorization Gate**
    - Fetches active policy from `Solar SCM Settings.authorized_pi_entry_department`.
    - Validates user role against the policy:
-     - `Accounts`: Requires `Accounts Assistant`, `Accounts Officer`, or `Admin`/`System Manager`.
+     - `Accounts`: Requires `Accounts Assistant`, `Accounts Manager`, or `Admin`/`System Manager`.
      - `Store`: Requires `Store Assistant`, `Store Manager`, or `Admin`/`System Manager`.
      - `Purchase`: Requires `Purchase Assistant`, `Purchase Manager`, or `Admin`/`System Manager`.
    - Rejects unauthorized attempts with immediate `frappe.PermissionError`.
@@ -396,7 +396,7 @@ class PurchaseInvoiceValidationService:
 
         authorized_dept = settings.authorized_pi_entry_department or "Accounts"
         dept_role_map = {
-            "Accounts": {"Accounts Assistant", "Accounts Officer"},
+            "Accounts": {"Accounts Assistant", "Accounts Manager"},
             "Store": {"Store Assistant", "Store Manager"},
             "Purchase": {"Purchase Assistant", "Purchase Manager"}
         }
@@ -601,7 +601,7 @@ def get_pi_entry_policy():
     roles = set(frappe.get_roles(frappe.session.user))
 
     dept_role_map = {
-        "Accounts": {"Accounts Assistant", "Accounts Officer"},
+        "Accounts": {"Accounts Assistant", "Accounts Manager"},
         "Store": {"Store Assistant", "Store Manager"},
         "Purchase": {"Purchase Assistant", "Purchase Manager"}
     }
@@ -871,7 +871,7 @@ class TestPurchaseInvoice3WayMatch(FrappeTestCase):
 1. **Invoice Intake:** Supplier sends GST tax invoice via email or portal. Accounts Assistant opens `/solar/procurement/invoices`.
 2. **Document Linkage:** Selects Supplier, PO reference, and GRN reference. System auto-populates accepted quantities and PO contracted rates.
 3. **Bill Validation:** Enters `bill_no`, `bill_date`, and supplier tax breakdown.
-4. **3-Way Match Check:** System runs 3-way match. If rates and quantities match, status turns green (`Matched`). Accounts Officer submits invoice.
+4. **3-Way Match Check:** System runs 3-way match. If rates and quantities match, status turns green (`Matched`). Accounts Manager or Accounts Assistant submits invoice.
 
 #### Scenario B: Admin Policy Set to `Store` (Dock Inward Model)
 

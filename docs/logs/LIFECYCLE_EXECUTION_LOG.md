@@ -61,7 +61,7 @@ It records:
   3. _Two-Tier SLA:_ 2-hour initial contact window; 24-hour survey assignment window; automated background checks every 15 minutes.
   4. _Delay Enforcement:_ Hard blocking of state transitions when `stage_status = 'Overdue'` unless a justified record is appended to `tabRemark-Delay Log`.
   5. _Pragmatic Tracer Bullet Slice:_ End-to-end 5-layer thin slice codified in [`TB-01.caveman`](../../step_plans_for_ai/tracer_bullets/STEP_01_LEAD_MANAGEMENT_TRACER_BULLET.caveman.md), proving data contracts and automated integration testing (`TestLeadTracerBullet`) across Desk script, whitelisted APIs, domain services, and `tabSite Survey` draft instantiation.
-- **Role Standard:** `Lead Representative` (Inbound), `Sales Representative` (Field), `Area Sales Manager` (Territory).
+- **Role Standard:** `Sales Representative` (Inside/Field), `Sales Manager` (Territory).
 - **Audit Verification:** ✔ Schema complete | ✔ State machine defined | ✔ SOLID services decoupled | ✔ Tracer bullet slice specified | ✔ Tests defined (zero DB commit).
 
 ---
@@ -76,7 +76,7 @@ It records:
   2. _GPS Geofencing & Photo Checklist:_ 6 mandatory photo items (roof overview, electrical DB, distribution meter, structure foundation, shadow obstacles, distribution transformer).
   3. _24-Hour Survey SLA:_ Turnaround countdown from assignment timestamp (`for_survey_assign_on`); automated escalation if breached.
   4. _Automated Downstream Instantiation:_ Survey submission programmatically instantiates `Survey Engineering Design` (Stage 03) in `Draft` state.
-- **Role Standard:** `Survey Engineer`, `Site Survey Auditor`, `Survey Assistant`.
+- **Role Standard:** `Survey Engineer`, `Survey Manager`.
 - **Audit Verification:** ✔ Schema complete | ✔ Offline IndexedDB sync specified | ✔ Verification gates enforced | ✔ Tests defined.
 
 ---
@@ -91,7 +91,7 @@ It records:
   2. _Parametric Voltage Drop Calculation:_ Real-time server-side electrical check asserting DC and AC voltage drops do not exceed 2% ($V_{drop} \le 2\%$).
   3. _Dynamic BOM Explosion:_ Parametrically explodes panels, inverters, structure rails, cables, ACDB/DCDB boxes, earthing kits, and lightning arrestors into `custom_quot_bom`.
   4. _Baseline Freeze:_ Document submission freezes BOM hash (`bom_hash`), preventing silent line-item alterations during commercial proposal generation.
-- **Role Standard:** `Design Engineer`, `CAD Design Specialist`, `Design Manager`.
+- **Role Standard:** `Design Engineer`, `Design Manager`.
 - **Audit Verification:** ✔ Schema complete | ✔ Voltage drop math validated | ✔ SHA-256 baseline freeze enforced | ✔ Tests defined.
 
 ---
@@ -106,7 +106,7 @@ It records:
   2. _70:30 Solar GST Engine:_ Enforces Ministry of Finance statutory split: 70% Goods (taxed @ 12% GST) and 30% Services/Erection (taxed @ 18% GST), producing effective composite GST rate of 13.8%.
   3. _PM Surya Ghar Subsidy Automation:_ Applies central financial assistance (CFA) brackets: ₹30,000 for 1 kW, ₹60,000 for 2 kW, ₹78,000 for $\ge 3$ kW, plus applicable state subsidies.
   4. _Gross Margin Floor Gate:_ Hard-blocks proposal submission if project gross margin falls below 18% unless authorized via manager override.
-- **Role Standard:** `Sales Representative`, `Commercial Officer`, `Area Sales Manager`.
+- **Role Standard:** `CRM Representative`, `CRM Manager`, `Sales Manager`.
 - **Audit Verification:** ✔ Tax formulas validated | ✔ Subsidy slabs verified | ✔ Margin floor gate enforced | ✔ Tests defined.
 
 ---
@@ -121,7 +121,7 @@ It records:
   2. _Clean Ledger Inception:_ Programmatically instantiates `Customer`, `Address`, and `Contact` records, establishing clean financial accounting entities.
   3. _Audit Quarantine Transition:_ Unlinks prospect from lead quarantine, locking historical lead records and preventing duplicate master creation.
   4. _Downstream Sales Order Clearance:_ Advance clearance flag (`advance_cleared = 1`) acts as hard prerequisite for Stage 06 Sales Order submission.
-- **Role Standard:** `Accounts Assistant`, `Finance Lead`, `Commercial Officer`.
+- **Role Standard:** `Accounts Assistant`, `Accounts Manager`, `Admin`.
 - **Audit Verification:** ✔ Gate criteria verified | ✔ Entity migration verified | ✔ Ledger separation enforced | ✔ Tests defined.
 
 ---
@@ -136,7 +136,7 @@ It records:
   2. _Automatic Project & WBS Container Creation:_ Programmatically instantiates ERPNext `Project` record pre-configured with multi-zone WBS task templates (Civil, Structural, Electrical, Testing).
   3. _Downstream Task Spawning:_ Automatically triggers Store Manager Material Request/Delivery task (Stage 08) and Phase 1 DISCOM Early Liaisoning file (Stage 10A).
   4. _Project Stepper Handover:_ Transitions system tracking from Pre-Sales Stepper (Progress Bar 1) to Project Execution Stepper (Progress Bar 2).
-- **Role Standard:** `Commercial Officer`, `Sales Operations Executive`.
+- **Role Standard:** `Sales Manager`, `CRM Manager`, `Project Manager`, `Admin`.
 - **Audit Verification:** ✔ Baseline freeze verified | ✔ WBS spawning verified | ✔ Cross-doctype linking verified | ✔ Tests defined.
 
 ---
@@ -200,7 +200,7 @@ It records:
   2. _10-Day Statutory SLA Countdown:_ Initiated automatically upon Stage 08 electrical testing sign-off, monitoring statutory turnaround times to prevent subsidy expiry and customer disputes.
   3. _Immutable Project Completion Anchor:_ An ERPNext `Project` cannot be marked "Completed" until official grid synchronization readings and Commercial Operation Date (COD) certificate are submitted.
   4. _Downstream O&M Boundary:_ Project completion establishes the baseline installation record and site coordinates, enabling independent Stage 11 on-demand service and warranty lifecycles.
-- **Role Standard:** `Liaisoning Officer`, `Statutory Compliance Representative`.
+- **Role Standard:** `Liaisoning Representative`, `Liaisoning Manager`, `Project Engineer`, `Project Manager`, `Admin`.
 - **Audit Verification:** ✔ Dual-timing state machine verified | ✔ 10-day statutory SLA verified | ✔ Immutable completion anchor verified | ✔ Tests defined.
 
 ---
@@ -222,7 +222,7 @@ It records:
      - **Gate 4 (Customer Closed-Loop Verification):** Document submission hard-blocked without cryptographic 6-digit customer OTP or touch-captured digital signature on glass.
   4. _Tiered Service SLAs & Mandatory Delay Logging:_ Emergency Blackout (4h response / 24h resolution), High/Degraded (12h response / 48h resolution), Routine Check (48h response / 5-day window) monitored by background daemons; overdue tickets enforce justification logging in `tabSolar Stage Delay Log`.
   5. _Immutable Master Site Ledger (`tabSolar Site Service History`):_ Append-only audit record providing a 25-year permanent historical log of all faults, component swaps, and maintenance visits for any installed solar site.
-- **Role Standard:** `Customer Care Representative`, `O&M Service Coordinator`, `O&M Service Engineer`, `Commercial Officer`, `Admin` (Project Supreme Command), `Administrator` / `System Manager`.
+- **Role Standard:** `Customer Care Representative`, `O&M Service Coordinator`, `O&M Service Engineer`, `Accounts Assistant`, `Admin` (Project Supreme Command), `Administrator` / `System Manager`.
 - **Audit Verification:** ✔ Decoupled schema complete | ✔ Dual-track warranty engine verified | ✔ 4 verification gates enforced | ✔ Mobile geofence specified | ✔ Immutable site ledger established | ✔ Tests defined (zero DB commit).
 
 ---
@@ -291,12 +291,12 @@ It records:
 - **Core Domain Services:** `PurchaseOrderValidationService`, `POAuthorizationMatrixService`, `POMilestoneTermsService`, `POSLAService`, `PODispatchBridgeService`.
 - **Reconciliation Points & Architectural Invariants:**
   1. _Rate Lock & Upstream Matrix Linkage:_ Enforces linkage to submitted `Quotation Comparison Matrix` (`docstatus = 1`, `evaluation_status = 'Award Approved'`); prevents unit rate inflation beyond evaluated landed rate.
-  2. _Multi-Tier Financial Authority Delegation Gate:_ Enforces 4 financial delegation tiers: Tier 1 ($\le ₹1\text{L}$, `Purchase Assistant` / `Purchase Manager`), Tier 2 ($₹1\text{L}-₹10\text{L}$, `Purchase Manager`), Tier 3 ($₹10\text{L}-₹50\text{L}$, `Commercial Officer`), and Tier 4 ($> ₹50\text{L}$, `Admin` / `Managing Director`).
+  2. _Multi-Tier Financial Authority Delegation Gate:_ Enforces 4 financial delegation tiers aligned with ADR-020: Tier 1 ($< ₹50\text{k}$, `Purchase Manager` only; frontline `Purchase Assistant` drafts only), Tier 2 ($₹50\text{k} - ₹5\text{L}$, single active approver role configured in `Solar SCM Settings.tier_2_approver_role`: `Purchase Manager`, `Accounts Manager`, or `Admin`), Tier 3 ($> ₹5\text{L} - ₹50\text{L}$, `Admin` only), and Tier 4 ($> ₹50\text{L}$, `Admin` only).
   3. _Solar Milestone Payment Schedule & Retention:_ Capital solar purchases strictly require structured milestone tranches (Advance, In-Transit/LR, Post-GRN Inspection, COD/PBG Retention). Generic single-bullet "Immediate" terms are hard-blocked.
   4. _Configurable / Optional Project Headroom Check:_ Automatically bypassed for Central Inventory Replenishment and Consolidated Multi-Project bulk purchases. For project-linked orders, check against Commercial Proposal / Sales Order BOM is configurable via `Solar SCM Settings` (`enforce_project_bom_ceiling`).
   5. _Multi-Location Delivery Routing for Step 16 GRN:_ Enforces delivery destination routing to Central Store (`Stores - SEPC`) or Direct Site (`Site - <Project Code> - SEPC`). Serialized items flagged with `custom_requires_barcode_serials = 1` for mandatory SABB 2D barcode scan.
   6. _24h Release & 48h Vendor Acknowledgment SLA:_ Monitored by Redis daemons with passwordless token confirmation and delay logging in `tabRemark-Delay Log`.
-- **Role Standard:** `Purchase Assistant`, `Purchase Manager`, `Commercial Officer`, `Accounts Assistant`, `Project Engineer`, `Store Manager`, `Admin`.
+- **Role Standard:** `Purchase Assistant`, `Purchase Manager`, `Accounts Assistant`, `Accounts Manager`, `Site Supervisor`, `Project Engineer`, `Project Manager`, `Store Manager`, `Admin`, `System Manager`.
 - **Audit Verification:** ✔ Schema complete | ✔ 4-tier delegation verified | ✔ Milestone schedules enforced | ✔ Configurable BOM check verified | ✔ Tests defined (zero DB commit).
 
 ---
@@ -315,7 +315,7 @@ It records:
   3. _Quality Rejection Split & Quarantine:_ Broken/damaged units routed to `Quarantine / Rejection - SEPC` with mandatory defect code and minimum 2 attached damage photographs.
   4. _Downstream Automated Touchpoints:_ Unlocks Post-GRN milestone tranche in Step 15/18 `Payment Schedule`; dispatches OTD and quality rejection metrics to Step 19 `Vendor Rating`; enables site installation consumption for Stage 08 DPR; logs module/inverter serials into Stage 11 `Solar Asset Register`.
   5. _24h SLA Countdown & Delay Governance:_ Monitored by Redis daemon; overdue transitions enforce justification entries in `tabRemark-Delay Log`.
-- **Role Standard:** `Store Assistant`, `Store Manager`, `Project Engineer`, `Project Manager`, `Purchase Assistant`, `Purchase Manager`, `Admin`.
+- **Role Standard:** `Store Assistant`, `Store Manager`, `Site Supervisor`, `Project Engineer`, `Project Manager`, `Purchase Assistant`, `Purchase Manager`, `Admin`, `System Manager`.
 - **Audit Verification:** ✔ Schema extensions complete | ✔ Tri-party stock posting logic verified | ✔ Admin barcode toggle verified | ✔ Custody approval gates enforced | ✔ Tests defined (zero DB commit).
 
 ---
@@ -332,7 +332,7 @@ It records:
   4. _Statutory Tax Alignment:_ Enforces 70:30 Goods vs Services valuation check on composite solar EPC contracts + Section 194Q TDS / 206C(1H) TCS deduction tags.
   5. _24h SLA Countdown & Delay Governance:_ Monitored by Redis daemon; overdue transitions enforce justification entries in `tabRemark-Delay Log`.
   6. _Downstream Automated Touchpoints:_ Unlocks Post-GRN/Invoice milestone payment tranche in Step 15/18 `Payment Schedule`; dispatches price variance metrics to Step 19 `Vendor Rating` (15% commercial weighting); posts liability to General Ledger (`Creditors - SEPC`).
-- **Role Standard:** `Accounts Assistant`, `Accounts Officer`, `Store Assistant`, `Store Manager`, `Purchase Assistant`, `Purchase Manager`, `Admin`, `System Manager`.
+- **Role Standard:** `Accounts Assistant`, `Accounts Manager`, `Store Assistant`, `Store Manager`, `Purchase Assistant`, `Purchase Manager`, `Admin`, `System Manager`.
 - **Audit Verification:** ✔ Schema extensions complete | ✔ Departmental entry policy gate verified | ✔ 3-Way match formulas verified | ✔ Admin price override verified | ✔ Tests defined (zero DB commit).
 
 ---
@@ -349,7 +349,7 @@ It records:
   4. _Dedicated Dual-Workspace Desks:_ Renders custom tailored upcoming payment sections on the Purchase Desk (`/solar/procurement`, focusing on milestone blockers and delivery readiness) and Accounts Desk (`/solar/accounts`, focusing on liquidity horizons, cash forecasts, and TDS deductions).
   5. _Statutory Tax Compliance & Banking Locks:_ Enforces Section 194Q TDS (0.1% on cumulative $> ₹50\text{L}$) calculations and restricts payouts strictly to verified supplier bank accounts.
   6. _Downstream Integration:_ Reconciles payment milestones to feed Step 19 `Vendor Rating` (commercial payment reliability component, 15% scorecard weighting).
-- **Role Standard:** `Purchase Assistant`, `Purchase Manager`, `Accounts Assistant`, `Accounts Officer`, `Project Engineer`, `Store Manager`, `Admin`, `System Manager`.
+- **Role Standard:** `Purchase Assistant`, `Purchase Manager`, `Accounts Assistant`, `Accounts Manager`, `Site Supervisor`, `Project Engineer`, `Project Manager`, `Store Manager`, `Admin`, `System Manager`.
 - **Audit Verification:** ✔ Schema extensions complete | ✔ Dual-timer notification logic verified | ✔ Settlement observer hook verified | ✔ Prerequisite gates enforced | ✔ Tests defined (zero DB commit).
 
 ---
@@ -374,41 +374,49 @@ It records:
   5. _Upstream Closed-Loop Feedback:_ Authoritative supplier tier and score directly feed Step 13 (`Supplier RFQ`, auto-suggesting Tier 1 and hard-blocking Blacklisted suppliers) and Step 14 (`Quotation Comparison Matrix`, where score forms 15% of landed cost evaluation).
   6. _Three Server-Side Verification Gates:_ Enforces Gate 1 (valid submitted PO/GRN/PI link), Gate 2 (mandatory qualitative service checklist and commentary $\ge 20$ chars), and Gate 3 (Admin Supreme Decision Gate: non-Admins strictly blocked from executing Approve, Reject, or Return for Re-Rate).
   7. _48-Hour TAT SLA Engine:_ Governed by background daemon; overdue sign-offs require mandatory logging in `tabRemark-Delay Log`.
-- **Role Standard:** `Purchase Manager`, `Quality Engineer` / `Vendor Rating Auditor`, `Purchase Assistant`, `Store Manager`, `Accounts Officer`, `Admin`, `System Manager`.
+- **Role Standard:** `Purchase Manager`, `Purchase Assistant`, `Store Assistant`, `Store Manager`, `Site Supervisor`, `Project Engineer`, `Project Manager`, `Accounts Manager`, `Admin`, `System Manager`.
 - **Audit Verification:** ✔ Schemas complete | ✔ Two-tier Admin approval workflow verified | ✔ Tri-action decision gateway implemented | ✔ Verification gates enforced | ✔ Closed-loop RFQ/Matrix sync specified | ✔ Tests defined (zero DB commit).
 
 ---
 
 ## 4. Cross-Stage Architecture Invariants & Standards Compliance
 
-### 4.1 Enterprise Role Nomenclature (Zero "User" Suffix Rule)
+### 4.1 Enterprise Role Nomenclature & Symmetric 2-Tier Architecture (ADR-020)
 
-All stages have been audited to ensure complete elimination of generic developer roles:
+In strict accordance with [`ADR-020`](../decisions/ADR-020-ENTERPRISE-ROLE-PERMISSION-ARCHITECTURE.md), all stages have been reconciled to enforce a symmetric Two-Tier Departmental Role Model, eliminating redundant/deprecated roles, decoupling commercial proposals to CRM, adding site supervision, and establishing Managerial Full-Authority Inheritance:
 
-- ❌ Prohibited: `Lead User`, `Survey User`, `Sales User`, `Design User`, `Project User`, `Store User`, `Liaisoning User`, `Purchase User`.
-- ✔ Approved & Reconciled:
-  - `Lead Representative` (Stage 01)
-  - `Survey Engineer` (Stage 02)
-  - `Design Engineer` (Stage 03)
-  - `Sales Representative` (Stage 04)
-  - `Accounts Assistant` (Stage 05, Step 15, Step 17)
-  - `Accounts Officer` (Step 17)
-  - `Commercial Officer` (Stage 06, Step 15)
-  - `Project Engineer` (Stage 07, 09, 14, 15)
-  - `Store Manager` (Stage 08, Step 12, Step 13, Step 14, Step 15, Step 16, Step 17)
-  - `Store Assistant` (Stage 08, Step 12, Step 13, Step 14, Step 16, Step 17)
-  - `Liaisoning Officer` (Stage 10)
-  - `Purchase Assistant` (Step 12, Step 13, Step 14, Step 15, Step 16, Step 17, Step 18, Step 19)
-  - `Purchase Manager` (Step 12, Step 13, Step 14, Step 15, Step 16, Step 17, Step 18, Step 19)
-  - `Quality Engineer` / `Vendor Rating Auditor` (Step 19)
-  - `Project Manager` (Step 16)
+- ❌ Prohibited & Deprecated Roles:
+  - `Lead Representative` (Unified into `Sales Representative` & `Sales Manager`)
+  - `Accounts Officer` (Unified into `Accounts Assistant` & `Accounts Manager`)
+  - `Commercial Officer` (Unified into `Sales Manager`, `CRM Manager`, `Project Manager`, `Accounts Manager`)
+  - `Quality Engineer` / `Vendor Rating Auditor` (Unified into `Store Manager`, `Project Engineer`, `Purchase Manager`)
+  - `Liaisoning Officer` (Upgraded to `Liaisoning Representative` & `Liaisoning Manager`)
+  - `Lead User`, `Survey User`, `Sales User`, `Design User`, `Project User`, `Store User`, `Liaisoning User`, `Purchase User`, `Accounts User`.
+- ✔ Approved & Reconciled Enterprise Roles Matrix:
+  - **Sales:** `Sales Representative` (Frontline) | `Sales Manager` (Supervisory)
+  - **Survey:** `Survey Engineer` (Frontline) | `Survey Manager` (Supervisory)
+  - **Design:** `Design Engineer` (Frontline) | `Design Manager` (Supervisory)
+  - **CRM & Proposals:** `CRM Representative` (Frontline) | `CRM Manager` (Supervisory)
+  - **Accounts & Finance:** `Accounts Assistant` (Frontline) | `Accounts Manager` (Supervisory)
+  - **Project & Site:** `Site Supervisor`, `Project Engineer` (Frontline) | `Project Manager` (Supervisory)
+  - **Store & Inventory:** `Store Assistant` (Frontline) | `Store Manager` (Supervisory)
+  - **Liaisoning & Compliance:** `Liaisoning Representative` (Frontline) | `Liaisoning Manager` (Supervisory)
+  - **Purchase & SCM:** `Purchase Assistant` (Frontline) | `Purchase Manager` (Supervisory)
+  - **O&M Service:** `O&M Service Engineer` (Frontline) | `O&M Manager` (Supervisory)
+- ✔ Operational Governance Invariants:
+  - **Managerial Inheritance:** Managers inherit 100% of their juniors' operational capabilities and submit permissions.
+  - **Stage-Forward Lock:** Once downstream stage commences, upstream documents cannot be cancelled or amended.
+  - **Junior Cancel/Amend Request Flow:** Frontline raises requests with reasons; Manager approves with remarks pre-forward stage.
+  - **Admin Deletion Safeguards:** Downstream dependency warning modal, hard deletion block with active downstream records, and Atomic Cascading Purge (`CascadePurgeService`, $\ge 40$ chars justification).
+  - **Step 15 PO Tiers:** Tier 1 (< ₹50k) `Purchase Manager` only; Tier 2 (₹50k-₹5L) Admin-configurable single role; Tier 3 & 4 `Admin` only.
+  - **Stage-Gated RLS:** Juniors have assigned previous stage read-only + assigned current stage; Managers have all previous stage read-only + all current stage.
 
 ### 4.2 Supreme Authority Standard (Admin vs System Manager)
 
 Across all specifications:
 
 - **`Administrator` & `System Manager` (Framework Supreme / Developer Realm):** Technical dev ops, bench commands, git repos, Python source code, DocType schema builders, and Redis queue workers.
-- **`Admin` (Project Supreme Command):** Operational supremacy over all EPC lifecycles (Stages 01–11 and Flow 2 SCM), exclusive governance over `Solar SLA Settings`, `Solar Notification Settings`, `Solar SCM Settings`, and delay approvals. Restricted from touching source code or schema builder forms.
+- **`Admin` (Project Supreme Command):** Operational supremacy over all EPC lifecycles (Stages 01–11 and Flow 2 SCM), exclusive governance over `Solar SLA Settings`, `Solar Notification Settings`, `Solar SCM Settings`, and delay approvals. Restricted from touching source code or schema builder forms. Emergency cancellations and deletions governed by strict audit logging in `tabSolar Deletion Audit Log`.
 
 ### 4.3 Database Schema & 3NF Data Integrity
 
@@ -416,10 +424,51 @@ Across all specifications:
 - High-frequency query columns (`mobile_no`, `project`, `sales_order`, `serial_no`, `status`, `rfq_reference`, `evaluation_status`, `custom_comparison_matrix_ref`, `custom_project_ref`, `custom_receipt_location_type`, `custom_po_reference`, `custom_grn_reference`, `custom_3way_match_status`, `custom_vendor_tier`, `custom_vendor_rating_score`, `custom_rating_status`) are backed by explicit B-Tree database indexes.
 - Critical financial and technical state snapshots utilize SHA-256 baseline hashing (`bom_hash`).
 
-### 4.4 Automated Testing & Zero-Commit Rule
+### 4.5 Role & Permission Architecture Reconciliation Log (ADR-020 Execution)
 
-- All unit and integration test specifications inherit from `frappe.tests.utils.FrappeTestCase` or `IntegrationTestCase`.
-- In strict adherence to [`architect_docs/07_AUTOMATED_TESTING_QA_CI_CD.md`](../../architect_docs/07_AUTOMATED_TESTING_QA_CI_CD.md), zero test routines execute `frappe.db.commit()`, ensuring test database isolation and automatic rollbacks.
+- **Phase 1: Canonical Architecture Decision Record (Completed & Reconciled):**
+  - Authoritative decision record [`ADR-020-ENTERPRISE-ROLE-PERMISSION-ARCHITECTURE.md`](../decisions/ADR-020-ENTERPRISE-ROLE-PERMISSION-ARCHITECTURE.md) published and accepted. Codifies 2-tier departmental symmetry, elimination of 6 deprecated roles, proposal decoupling to CRM, Site Supervisor formalization, Managerial Authority Inheritance, Stage-Forward Lock, Junior Cancel/Amend flow, Admin Deletion Safeguards (dependency warnings, hard deletion blocks, atomic cascading purge), Step 15 PO thresholds, and Stage-Gated RLS.
+- **Phase 2: Master Architecture & Planning Reference Suite (Completed & Reconciled):**
+  - [`step_plans/README.md`](../../step_plans/README.md): Sections 5 & 6 updated with ADR-020 symmetric role table and operational safeguards.
+  - [`architect_docs/02_STEP_PLANNING_SPECIFICATION_BLUEPRINT.md`](../../architect_docs/02_STEP_PLANNING_SPECIFICATION_BLUEPRINT.md): Section 2 updated with symmetric 2-tier role blueprint and managerial inheritance.
+  - [`planning_ref_docs/README.prd.md`](../../planning_ref_docs/README.prd.md): SPA landing roles and ADR-020 authority notes updated.
+  - [`planning_ref_docs/01_PROJECT_FOUNDATION_MODEL.md`](../../planning_ref_docs/01_PROJECT_FOUNDATION_MODEL.md): Sections 3.2 (SLA table) and 6 (Enterprise Roles Matrix) updated.
+  - [`planning_ref_docs/03_TO_BE_BUSINESS_PROCESS.md`](../../planning_ref_docs/03_TO_BE_BUSINESS_PROCESS.md): Gates 1–9 responsible roles updated.
+  - [`planning_ref_docs/06_FUNCTIONAL_REQUIREMENTS_SPECIFICATION.md`](../../planning_ref_docs/06_FUNCTIONAL_REQUIREMENTS_SPECIFICATION.md): `FR-005`, `FR-015`, and `FR-016` primary actors reconciled.
+  - [`planning_ref_docs/10_UI_UX_SPECIFICATION.md`](../../planning_ref_docs/10_UI_UX_SPECIFICATION.md): Section 1 dashboard role allocations updated.
+  - [`planning_ref_docs/11_MODULE_FUNCTIONAL_DOCUMENTATION.md`](../../planning_ref_docs/11_MODULE_FUNCTIONAL_DOCUMENTATION.md): `MOD-04`, `MOD-05`, `MOD-06`, `MOD-10` SOP text updated.
+- **Phase 3: Flow 1 Core Step Plans (Completed & Reconciled):**
+  - All Flow 1 specifications ([`STEP_01`](../../step_plans/STEP_01_LEAD_MANAGEMENT_SPECIFICATION.md) through [`STEP_11`](../../step_plans/STEP_11_ON_DEMAND_SOLAR_SERVICE_OM_SPECIFICATION.md)) audited and updated to 100% ADR-020 compliance.
+  - Eliminated `Lead Representative` (unified to `Sales Representative` & `Sales Manager` in `STEP_01` & `STEP_07`).
+  - Standardized `Survey Engineer` & `Survey Manager` in `STEP_02`.
+  - Standardized `Design Engineer` & `Design Manager` in `STEP_03`.
+  - Decoupled commercial proposals to `CRM Representative` & `CRM Manager` in `STEP_04`.
+  - Standardized `Accounts Assistant` & `Accounts Manager` in `STEP_05` and `STEP_11`.
+  - Excised `Commercial Officer` across `STEP_06`, `STEP_07`, `STEP_08`, `STEP_09`, `STEP_11` (reallocated to `Sales Manager`, `CRM Manager`, `Project Manager`, `Accounts Assistant`).
+  - Excised `Quality Engineer` / `Vendor Rating Auditor` in `STEP_10` (reallocated to `Project Engineer` / `Project Manager` / `Liaisoning Manager`).
+  - Upgraded `Liaisoning Officer` to `Liaisoning Representative` & `Liaisoning Manager` in `STEP_06`, `STEP_07`, `STEP_10`.
+  - Formalized `Site Supervisor` role in `STEP_06`, `STEP_07`, `STEP_08`, `STEP_09`, `STEP_10`.
+  - Reconciled all frontend routing, actor matrices, permission tables, SOP runbooks, and error troubleshooting tables.
+- **Phase 4: Flow 2 SCM Step Plans (Completed & Reconciled):**
+  - All Flow 2 specifications ([`STEP_12`](../../step_plans/STEP_12_STORE_MATERIAL_REQUEST_LOW_STOCK_SPECIFICATION.md) through [`STEP_19`](../../step_plans/STEP_19_VENDOR_RATING_SCORECARD_SPECIFICATION.md)) audited and updated to 100% ADR-020 compliance.
+  - Formalized `Site Supervisor` role across Step 12 (Direct-to-site MR creation), Step 13, Step 14, Step 16 (Site GRN gate/inspection), and Step 18.
+  - Reconciled Step 15 PO Delegation Matrix to ADR-020: Tier 1 (< ₹50k, `Purchase Manager` only; `Purchase Assistant` drafts only), Tier 2 (₹50k–₹5L, single active approver role configured in `Solar SCM Settings.tier_2_approver_role`: `Purchase Manager`, `Accounts Manager`, or `Admin`), Tier 3 (> ₹5L to ₹50L, `Admin` only), Tier 4 (> ₹50L, `Admin` only). Completely excised `Commercial Officer`.
+  - Replaced `Accounts Officer` with `Accounts Manager` across Step 16, Step 17 (3-Way Match & entry), and Step 18 (Joint Payment Workbench).
+  - Excised `Quality Engineer` / `Vendor Rating Auditor` across Step 16 and Step 19 (reallocated technical verification to `Store Manager` and `Project Engineer`).
+  - Verified Managerial Authority Inheritance, Stage-Forward Lock, Junior Cancel/Amend Request flow, and Admin Deletion Safeguards across all Flow 2 lifecycle documentation.
+- **Phase 5: Older ADRs & Token-Optimized AI Specifications (Completed & Reconciled):**
+  - All older ADRs in `docs/decisions/` (`ADR-001`, `ADR-004`, `ADR-005`, `ADR-006`, `ADR-007`, `ADR-010`, `ADR-011`, `ADR-015`, `ADR-017`, `ADR-018`, `ADR-019`) audited and brought to 100% ADR-020 compliance.
+  - Completely excised `Lead Representative`, `Accounts Officer`, `Commercial Officer`, `Quality Engineer`, `Vendor Rating Auditor`, and `Liaisoning Officer`.
+  - Updated financial delegation limits in ADR-015 to < ₹50k, ₹50k–₹5L, > ₹5L; updated UI actions, role permissions, and role buttons.
+  - All token-optimized AI specifications in `step_plans_for_ai/` (`STEP_01.caveman.md` through `STEP_19.caveman.md` and `tracer_bullets/`) audited and brought to 100% ADR-020 compliance:
+    - Unified `Sales Representative` & `Sales Manager` in `STEP_01.caveman.md`.
+    - Decoupled proposal creation to `CRM Representative` & `CRM Manager` in `STEP_04.caveman.md`.
+    - Excised `Commercial Officer` across `STEP_06.caveman.md`, `STEP_07.caveman.md`, `STEP_08.caveman.md`, `STEP_15.caveman.md`.
+    - Upgraded `Liaisoning Officer` to `Liaisoning Representative` & `Liaisoning Manager` in `STEP_10.caveman.md`.
+    - Standardized `Accounts Assistant` & `Accounts Manager` across `STEP_05.caveman.md`, `STEP_11.caveman.md`, `STEP_16.caveman.md`, `STEP_17.caveman.md`, `STEP_18.caveman.md`, and `STEP_19.caveman.md`.
+    - Excised `Quality Engineer` / `Vendor Rating Auditor` across `STEP_16.caveman.md` and `STEP_19.caveman.md` (reallocated to `Store Manager` and `Project Engineer` / `Site Supervisor`).
+    - Aligned Step 15 PO tier validation in Python services, error lookup tables, and end-user SOPs.
+    - Verified 0 occurrences of deprecated roles across entire `step_plans_for_ai/` and `docs/decisions/`.
 
 ---
 
@@ -451,6 +500,14 @@ Across all specifications:
 │  [✔] Step 17: Purchase Invoicing & 3-Way Match Validation                                        │
 │  [✔] Step 18: Joint Vendor Payment Monitoring Workbench                                          │
 │  [✔] Step 19: Vendor Performance Rating Scorecard & Multi-Tier Governance                        │
+├──────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ GOVERNANCE & SECURITY FOUNDATION: ADR-020 ARCHITECTURE                                           │
+│  [✔] ADR-020: Enterprise Role & Permission Architecture (Symmetric 2-Tier + Admin Invariants)    │
+│  [✔] Reconciled Flow 1 Master Step Plans (Steps 01 - 11)                                          │
+│  [✔] Reconciled Flow 2 SCM Master Step Plans (Steps 12 - 19)                                      │
+│  [✔] Reconciled Master Architecture Docs, Blueprints & Planning Ref Docs                         │
+│  [✔] Reconciled Older ADRs (ADR-001 through ADR-019)                                             │
+│  [✔] Reconciled Token-Optimized AI Specifications (step_plans_for_ai/ & tracer_bullets/)          │
 └──────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
@@ -459,6 +516,6 @@ Across all specifications:
 ## 6. Audit Sign-off
 
 - **Audited By:** Lead AI Software Architect & System Engineer
-- **Audit Timestamp:** 2026-09-25T10:30:00Z
-- **Reconciliation Integrity:** 100% (All 11 Stages of Flow 1 Core Solar EPC Project Execution and all 8 Steps of Flow 2 SCM Procurement Lifecycle are completely specified, cross-referenced with ADR-001 through ADR-019, master step plans, token-optimized AI caveman plans, and codebase touchpoints; Stage 11 fully reconciled as an independent, decoupled post-project service lifecycle with dual-track warranty governance, mobile GPS geofencing, serialized component reconciliation, and permanent site maintenance ledger).
+- **Audit Timestamp:** 2026-09-25T13:30:00Z
+- **Reconciliation Integrity:** 100% (Complete enterprise role reconciliation under ADR-020. All 11 Stages of Flow 1 Core Solar EPC Project Execution and all 8 Steps of Flow 2 SCM Procurement Lifecycle are completely specified, cross-referenced with ADR-001 through ADR-020, master step plans, token-optimized AI caveman plans, and codebase touchpoints; Managerial Authority Inheritance, Admin Supreme Authority with Strict Deletion Audit, Downstream Dependency Warnings & Hard Blocking, Atomic Cascading Purge (`CascadePurgeService`), Stage-Forward Lock, Junior Cancel/Amend Request workflow, Refined PO Financial Delegation Tiers, and Stage-Gated RLS fully synchronized across the entire repository).
 - **Next Operational Action:** Implementation of core Frappe DocTypes, domain services, and Vue 3 frontend components across Flow 1 and Flow 2.

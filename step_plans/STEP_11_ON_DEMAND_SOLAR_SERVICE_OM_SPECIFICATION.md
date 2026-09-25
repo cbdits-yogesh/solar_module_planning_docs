@@ -146,7 +146,7 @@ In strict accordance with the **Zero "User" Suffix Rule**, all actors are define
 | **Customer Care Representative**    | `Customer Care Representative`     | Omnichannel service intake (phone, WhatsApp, portal), symptom clarification, customer communication.                       |
 | **O&M Service Coordinator**         | `O&M Service Coordinator`          | Triage of service requests, warranty verification, dispatch scheduling, technician allocation.                             |
 | **O&M Service Engineer**            | `O&M Service Engineer`             | Field execution: GPS check-in, electrical diagnostics, root-cause logging, component replacement, customer OTP collection. |
-| **Commercial Officer**              | `Commercial Officer`               | Out-of-warranty service quotation generation, payment collection verification, OEM RMA supplier reconciliation.            |
+| **Accounts Assistant**              | `Accounts Assistant`               | Out-of-warranty service quotation billing, payment collection verification, OEM RMA supplier reconciliation.               |
 | **Admin (Project Supreme Command)** | `Admin`                            | SLA delay waivers, warranty dispute overrides, technician reallocations, operational oversight.                            |
 | **Administrator / System Manager**  | `Administrator` / `System Manager` | Technical plumbing, API routing, portal authentication, background queues, DocType schema updates.                         |
 
@@ -159,12 +159,12 @@ In strict accordance with the **Zero "User" Suffix Rule**, all actors are define
 | **`tabSolar Service Request`**      | `Customer Care Representative` |  ✔   |   ✔   |   ✔    |   ✖    |   ✖    |   ✖   |
 |                                     | `O&M Service Coordinator`      |  ✔   |   ✔   |   ✔    |   ✔    |   ✖    |   ✖   |
 |                                     | `O&M Service Engineer`         |  ✔   |   ✖   |   ✖    |   ✖    |   ✖    |   ✖   |
-|                                     | `Commercial Officer`           |  ✔   |   ✔   |   ✖    |   ✖    |   ✖    |   ✖   |
+|                                     | `Accounts Assistant`           |  ✔   |   ✔   |   ✖    |   ✖    |   ✖    |   ✖   |
 |                                     | `Admin`                        |  ✔   |   ✔   |   ✔    |   ✔    |   ✔    |   ✔   |
 |                                     | `System Manager`               |  ✔   |   ✔   |   ✔    |   ✔    |   ✔    |   ✔   |
 | **`tabMaintenance Visit`**          | `O&M Service Engineer`         |  ✔   |   ✔   |   ✔    |   ✔    |   ✖    |   ✖   |
 |                                     | `O&M Service Coordinator`      |  ✔   |   ✔   |   ✖    |   ✔    |   ✖    |   ✖   |
-|                                     | `Commercial Officer`           |  ✔   |   ✖   |   ✖    |   ✖    |   ✖    |   ✖   |
+|                                     | `Accounts Assistant`           |  ✔   |   ✖   |   ✖    |   ✖    |   ✖    |   ✖   |
 |                                     | `Admin`                        |  ✔   |   ✔   |   ✔    |   ✔    |   ✔    |   ✔   |
 |                                     | `System Manager`               |  ✔   |   ✔   |   ✔    |   ✔    |   ✔    |   ✔   |
 | **`tabSolar Site Service History`** | All O&M Roles & Sales          |  ✔   |   ✖   |   ✖    |   ✖    |   ✖    |   ✖   |

@@ -60,7 +60,7 @@ flowchart TD
 
 - **Track A (Direct Advance Receipt):** The standard commercial track. Ingests payment via ERPNext `Payment Entry` (`Receive`). Requires verified receipt of $\ge 50\%$ (or proposal advance amount) via bank transfer, cheque, or payment gateway.
 - **Track B (Institutional Bank Loan Sanction):** For projects financed under PM Surya Ghar or green energy banking schemes. Ingests bank loan sanction letter, bank loan account number, sanctioned amount, and proof of customer margin money payment via a dedicated submittable DocType: `Solar Loan Sanction`.
-- **Track C (Finance Officer Deferred Waiver):** For corporate, industrial, or institutional clients with established credit terms or formal purchase guarantees. Authorized exclusively by `Commercial Officer` or `Accounts Officer` with mandatory justification and collateral/PO attachment.
+- **Track C (Finance Deferred Waiver):** For corporate, industrial, or institutional clients with established credit terms or formal purchase guarantees. Authorized exclusively by `Accounts Manager` with mandatory justification and collateral/PO attachment.
 - **Track D (Executive Goodwill / VIP Customer Approval):** Direct executive authorization granted exclusively by the **Managing Director, CEO, or Project Supreme `Admin`**. Bypasses cash and bank loan advance requirements entirely, immediately unlocking downstream project mobilization while logging complete audit attribution.
 
 ### 3. ERPNext `Payment Entry` Extension & UTR Uniqueness Gate
@@ -113,7 +113,7 @@ To eliminate downstream execution leaks:
 
 To maintain velocity across the commercial-to-finance handoff:
 
-- **24-Hour Verification SLA:** When a proposal is marked finalized in Stage 04 (`custom_is_finalized = 1`), an SLA clock of **24 hours** activates for the `Accounts Assistant` / `Accounts Officer` to verify advance receipts.
+- **24-Hour Verification SLA:** When a proposal is marked finalized in Stage 04 (`custom_is_finalized = 1`), an SLA clock of **24 hours** activates for the `Accounts Assistant` / `Accounts Manager` to verify advance receipts.
 - **Overdue Transition & Delay Logging:** If 24 hours elapse without financial verification, the stage status transitions to `Overdue`. Clearance cannot subsequently be recorded without selecting a mandatory delay reason category and entering detailed remarks into `tabRemark-Delay Log`.
 
 ---

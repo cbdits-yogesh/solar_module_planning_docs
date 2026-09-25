@@ -138,16 +138,16 @@ The progress bar is not a static graphic; it is a live interactive workflow cont
    - Provides deep links to underlying Frappe Desk documents (`/app/site-survey/<id>`, `/app/sales-order/<id>`) guarded by native Frappe role permissions.
 
 2. **Role Action Buttons:**
-   Primary action buttons inside the drawer dynamically render strictly according to the session user's role:
-   - **`Lead Representative`:** "Schedule Survey", "Mark Disqualified".
-   - **`Survey Engineer`:** "Launch Mobile Audit", "Sync Offline Data".
-   - **`Design Engineer`:** "Launch PV Workbench", "Freeze BOM Baseline".
-   - **`Commercial Officer` / `Sales Representative`:** "Generate Proposal", "Submit Sales Order".
-   - **`Accounts Assistant`:** "Verify Advance Payment", "Clear Financial Gate".
-   - **`Store Manager` / `Store Assistant`:** "Allocate Stock", "Generate Delivery Note".
-   - **`Project Engineer`:** "Log DPR", "Complete Zone Task".
-   - **`Liaisoning Officer`:** "Upload DISCOM NOC", "Record Net-Meter Energization".
-   - **`Admin` (Project Supreme Command) & `Director`:** "Approve Delay Waiver", "Override Stage Gate", "Configure SLA Duration".
+   Primary action buttons inside the drawer dynamically render strictly according to the session user's role (with Managerial Authority Inheritance per ADR-020):
+   - **`Sales Representative` / `Sales Manager`:** "Schedule Survey", "Mark Disqualified", "Submit Sales Order".
+   - **`Survey Engineer` / `Survey Manager`:** "Launch Mobile Audit", "Sync Offline Data".
+   - **`Design Engineer` / `Design Manager`:** "Launch PV Workbench", "Freeze BOM Baseline".
+   - **`CRM Representative` / `CRM Manager`:** "Generate Proposal", "Submit Proposal for Approval".
+   - **`Accounts Assistant` / `Accounts Manager`:** "Verify Advance Payment", "Clear Financial Gate".
+   - **`Store Assistant` / `Store Manager`:** "Allocate Stock", "Generate Delivery Note".
+   - **`Site Supervisor` / `Project Engineer` / `Project Manager`:** "Log DPR", "Complete Zone Task".
+   - **`Liaisoning Representative` / `Liaisoning Manager`:** "Upload DISCOM NOC", "Record Net-Meter Energization".
+   - **`Admin` (Project Supreme Command):** "Approve Delay Waiver", "Override Stage Gate", "Configure SLA Duration", "Amend / Cancel / Cascading Purge".
 
 ---
 

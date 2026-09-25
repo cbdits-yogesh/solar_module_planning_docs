@@ -51,21 +51,22 @@ Enterprise systems involve distinct personas. This section establishes the compl
 - **Permission Hierarchy:** Matrix of Read, Write, Create, Submit, Cancel, Amend, and Export permissions per role.
 
 > [!IMPORTANT]
-> **Enterprise Persona & Role Naming Standard (Zero "User" Suffix Rule):**  
-> When defining enterprise roles, Frappe system roles, and operational personas for any lifecycle step or module (Lead, Sales, Survey, Design, Procurement, Stores, Accounts, Project Execution, O&M, etc.), **never use generic `User` suffixes** (such as `Lead User`, `Sales User`, `Survey User`, `Site User`, `Project User`, `Store User`).
+> **Enterprise Persona & Role Standard (Symmetric Two-Tier Architecture — ADR-020):**  
+> When defining enterprise roles, Frappe system roles, and operational personas across any lifecycle step (Sales, Survey, Design, CRM, Accounts, Project, Store, Liaisoning, Purchase, O&M), **never use generic `User` suffixes** (such as `Lead User`, `Sales User`, `Survey User`, `Site User`, `Project User`, `Store User`). Furthermore, eliminate deprecated roles (`Lead Representative`, `Accounts Officer`, `Commercial Officer`, `Quality Engineer`, `Vendor Rating Auditor`, `Liaisoning Officer`).
 >
-> Always employ precise functional enterprise descriptors:
+> All operational domains adhere to a **Symmetric Two-Tier Model** plus Site Supervision:
 >
-> - **`Representative`:** Frontline commercial or customer-facing personas (e.g., `Lead Representative`, `Sales Representative`, `Procurement Representative`).
-> - **`Engineer`:** Technical, surveying, design, or field execution specialists (e.g., `Survey Engineer`, `Solar Design Engineer`, `Project Engineer`, `Commissioning Engineer`, `O&M Engineer`).
-> - **`Assistant`:** Operational support and line execution personnel (e.g., `Survey Assistant`, `Store Assistant`, `Accounts Assistant`).
-> - **`Manager` / `Officer` / `Auditor`:** Governance, compliance, and approval authorities (e.g., `Area Sales Manager`, `Commercial Manager`, `Liaisoning Officer`, `Site Survey Auditor`, `Store Manager`).
+> - **`Representative` / `Engineer` / `Assistant` / `Supervisor` (Frontline):** Field and operational specialists (e.g., `Sales Representative`, `Survey Engineer`, `Design Engineer`, `CRM Representative`, `Accounts Assistant`, `Site Supervisor`, `Project Engineer`, `Store Assistant`, `Liaisoning Representative`, `Purchase Assistant`, `O&M Service Engineer`).
+> - **`Manager` (Supervisory / Governance):** Full managerial inheritance over frontline actions, review, SLA tracking, and approval sign-off (e.g., `Sales Manager`, `Survey Manager`, `Design Manager`, `CRM Manager`, `Accounts Manager`, `Project Manager`, `Store Manager`, `Liaisoning Manager`, `Purchase Manager`, `O&M Manager`).
+> - **`Admin` (Project Supreme Command):** Supreme operational authority, SLA/SCM/Notification settings management, exception waivers, and deletion audit governance (`tabSolar Deletion Audit Log`).
+> - **Operational Invariants:** Enforce **Managerial Authority Inheritance**, **Stage-Forward Lock** (no cancel/amend once downstream stage starts), **Junior Cancel/Amend Request Flow**, **Admin Deletion Safeguards** (dependency warnings, hard deletion blocks, atomic cascading purge), and **Stage-Gated RLS** (juniors access assigned previous read-only + assigned current; managers access all previous read-only + all current).
 
-| Persona / Business Actor | Frappe System Role     | HRMS Designation | Access Level      | Primary Responsibility             |
-| :----------------------- | :--------------------- | :--------------- | :---------------- | :--------------------------------- |
-| `[Field Auditor]`        | `Survey Engineer`      | `Site Auditor`   | Read/Write Own    | On-site data capture & uploads     |
-| `[Technical Lead]`       | `Engineering Approver` | `Lead Engineer`  | Read/Write/Submit | Validation, calculations, sign-off |
-| `[Department Manager]`   | `Operations Manager`   | `Regional Head`  | Full Regional     | Reassignment, SLA override, audit  |
+| Persona / Business Actor | Frappe System Role | HRMS Designation  | Access Level                 | Primary Responsibility                         |
+| :----------------------- | :----------------- | :---------------- | :--------------------------- | :--------------------------------------------- |
+| `[Field Frontline]`      | `Survey Engineer`  | `Site Surveyor`   | Assigned Current + Prev (RO) | On-site data capture & mobile audit uploads    |
+| `[Site Supervision]`     | `Site Supervisor`  | `Site Supervisor` | Assigned Current + Prev (RO) | On-site execution, DPR logs, material check    |
+| `[Technical Lead]`       | `Design Manager`   | `Design Manager`  | All Current + All Prev (RO)  | BOM explosion review, electrical calculations  |
+| `[Department Manager]`   | `Project Manager`  | `Project Manager` | Full Departmental Governance | WBS baseline, site custody, milestone approval |
 
 ---
 

@@ -79,9 +79,8 @@ In accordance with [`architect_docs/05_DESIGN_PATTERNS_DOMAIN_SERVICES_SOLID.md`
 
 In compliance with enterprise standards:
 
-- **`Lead Representative` / `Inside Sales Representative`:** Frontline lead ingestion, phone sanitization, and preliminary qualification.
-- **`Sales Representative` / `Sales Executive`:** Customer consultation, kW sizing, and survey scheduling.
-- **`Area Sales Manager`:** Territory assignment, duplicate override authorization, and SLA escalation oversight.
+- **`Sales Representative`:** Frontline lead ingestion, phone sanitization, preliminary qualification, kW sizing, and survey scheduling.
+- **`Sales Manager`:** Territory assignment, duplicate override authorization, SLA escalation oversight, and supervisory management of Sales Representatives.
 - **`Admin` (Project Supreme Command):** Supreme operational authority; manages `Solar SLA Settings`, `Solar Notification Settings`, and delay reason overrides. Restricted from source code and DocType builders.
 - **`System Manager` (Framework Supreme / Developer Apex):** Technical DevOps, Redis worker configuration, DocType schema builder, and bench administration.
 

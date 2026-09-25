@@ -53,13 +53,12 @@ Stage 01 is primary customer entry gateway for Solar EPC Project Execution Lifec
 
 Zero "User" Suffix Rule enforced:
 
-| Persona / Business Actor              | Frappe System Role     | HRMS Department        | HRMS Designation              | Operational Responsibilities                                                                              |
-| :------------------------------------ | :--------------------- | :--------------------- | :---------------------------- | :-------------------------------------------------------------------------------------------------------- |
-| **Inbound Telecaller / Inside Sales** | `Lead Representative`  | Sales & Marketing      | `Inside Sales Representative` | Ingests leads, cleanses mobile number, collects electricity bill amount, logs initial qualification.      |
-| **Field Sales Executive**             | `Sales Representative` | Sales & Marketing      | `Sales Executive`             | Conducts primary customer consultation, determines estimated solar kW, schedules site survey.             |
-| **Area Sales / BD Manager**           | `Area Sales Manager`   | Sales & Marketing      | `Area Sales Manager`          | Territory allocation, lead reassignment, overdue SLA delay review, conversion monitoring.                 |
-| **Site Survey Engineer**              | `Survey Engineer`      | Engineering Operations | `Site Survey Auditor`         | Receives survey assignment, reviews preliminary sizing data, conducts on-site technical survey.           |
-| **Solar EPC Director / Admin**        | `Admin`, `Director`    | Executive Management   | `Managing Director`           | Supreme operational command across all lifecycles; SLA configuration, notification toggles, audit trails. |
+| Persona / Business Actor       | Frappe System Role     | HRMS Department        | HRMS Designation       | Operational Responsibilities                                                                              |
+| :----------------------------- | :--------------------- | :--------------------- | :--------------------- | :-------------------------------------------------------------------------------------------------------- |
+| **Sales Representative**       | `Sales Representative` | Sales & Marketing      | `Sales Representative` | Ingests leads, cleanses mobile number, logs initial qualification, determines solar kW, schedules survey. |
+| **Sales Manager**              | `Sales Manager`        | Sales & Marketing      | `Sales Manager`        | Territory allocation, lead reassignment, overdue SLA delay review, supervisory management & inheritance.  |
+| **Site Survey Engineer**       | `Survey Engineer`      | Engineering Operations | `Site Survey Auditor`  | Receives survey assignment, reviews preliminary sizing data, conducts on-site technical survey.           |
+| **Solar EPC Director / Admin** | `Admin`, `Director`    | Executive Management   | `Managing Director`    | Supreme operational command across all lifecycles; SLA configuration, notification toggles, audit trails. |
 
 > [!IMPORTANT]
 > **Enterprise Role Hierarchy: Administrator $\rightarrow$ System Manager $\rightarrow$ Admin (Project Supreme):**
@@ -69,15 +68,15 @@ Zero "User" Suffix Rule enforced:
 
 ### 2.2 Permission Hierarchy Matrix
 
-| DocType / Action               | Lead Representative | Sales Representative | Area Sales Manager | Survey Engineer |     Admin\*      |
-| :----------------------------- | :-----------------: | :------------------: | :----------------: | :-------------: | :--------------: |
-| **Lead (Read)**                |   Own / Assigned    |   Own / Territory    |  Full Department   |  Assigned Only  |   All Records    |
-| **Lead (Create)**              |         Yes         |         Yes          |        Yes         |       No        |       Yes        |
-| **Lead (Write / Update)**      |   Own / Assigned    |    Own / Assigned    |  Full Department   |   Status Only   |   All Records    |
-| **Lead (Assign Survey)**       |         No          |         Yes          |        Yes         |       No        |       Yes        |
-| **Remark-Delay Log (Write)**   |         Own         |         Own          |  Full Department   |       Own       |   Full Access    |
-| **Solar SLA Settings (Write)** |         No          |          No          |         No         |       No        | Yes (Admin Only) |
-| **Export Leads**               |         No          |          No          |     Permitted      |       No        |    Permitted     |
+| DocType / Action               | Sales Representative |  Sales Manager  | Survey Engineer |     Admin\*      |
+| :----------------------------- | :------------------: | :-------------: | :-------------: | :--------------: |
+| **Lead (Read)**                |    Own / Assigned    | Full Department |  Assigned Only  |   All Records    |
+| **Lead (Create)**              |         Yes          |       Yes       |       No        |       Yes        |
+| **Lead (Write / Update)**      |    Own / Assigned    | Full Department |   Status Only   |   All Records    |
+| **Lead (Assign Survey)**       |         Yes          |       Yes       |       No        |       Yes        |
+| **Remark-Delay Log (Write)**   |         Own          | Full Department |       Own       |   Full Access    |
+| **Solar SLA Settings (Write)** |          No          |       No        |       No        | Yes (Admin Only) |
+| **Export Leads**               |          No          |    Permitted    |       No        |    Permitted     |
 
 _\*Note: Frappe `Administrator` and `System Manager` sit above `Admin` and inherit all permissions._
 
@@ -236,7 +235,7 @@ def create_solar_lead(
     email_id: str | None = None
 ) -> dict:
     """Whitelisted endpoint to ingest and sanitize new Solar EPC Leads."""
-    frappe.only_for(["Guest", "Lead Representative", "Sales Representative", "Admin", "System Manager"])
+    frappe.only_for(["Guest", "Sales Representative", "Sales Manager", "Admin", "System Manager"])
 
     clean_mobile = LeadValidationService.sanitize_mobile(mobile_no)
     existing_lead = LeadValidationService.check_duplicate(clean_mobile)

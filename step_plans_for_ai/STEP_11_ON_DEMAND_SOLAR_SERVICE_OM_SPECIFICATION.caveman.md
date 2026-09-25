@@ -144,7 +144,8 @@ Per [`ADR-011`](../docs/decisions/ADR-011-ON-DEMAND-SOLAR-SERVICE-WARRANTY-OM-LI
 | **Customer Care Representative**    | `Customer Care Representative`     | Omnichannel service intake, symptom clarification, customer communication.      |
 | **O&M Service Coordinator**         | `O&M Service Coordinator`          | Triage, warranty verification, dispatch scheduling, engineer allocation.        |
 | **O&M Service Engineer**            | `O&M Service Engineer`             | GPS check-in, electrical diagnostics, root cause, part replace, OTP collection. |
-| **Commercial Officer**              | `Commercial Officer`               | Out-of-warranty quotes, payment verification, OEM RMA recovery.                 |
+| **Accounts Assistant**              | `Accounts Assistant`               | Out-of-warranty quotes, payment verification, OEM RMA recovery.                 |
+| **O&M Manager**                     | `O&M Manager`                      | Operational oversight of O&M engineers, ticket allocation, SLA escalation.      |
 | **Admin (Project Supreme Command)** | `Admin`                            | SLA delay waivers, warranty dispute overrides, reallocations.                   |
 | **Administrator / System Manager**  | `Administrator` / `System Manager` | Technical plumbing, API routing, portal auth, queues, DocTypes.                 |
 
@@ -157,12 +158,12 @@ Per [`ADR-011`](../docs/decisions/ADR-011-ON-DEMAND-SOLAR-SERVICE-WARRANTY-OM-LI
 | **`tabSolar Service Request`**      | `Customer Care Representative` |  ✔   |   ✔   |   ✔    |   ✖    |   ✖    |   ✖   |
 |                                     | `O&M Service Coordinator`      |  ✔   |   ✔   |   ✔    |   ✔    |   ✖    |   ✖   |
 |                                     | `O&M Service Engineer`         |  ✔   |   ✖   |   ✖    |   ✖    |   ✖    |   ✖   |
-|                                     | `Commercial Officer`           |  ✔   |   ✔   |   ✖    |   ✖    |   ✖    |   ✖   |
+|                                     | `Accounts Assistant`           |  ✔   |   ✔   |   ✖    |   ✖    |   ✖    |   ✖   |
 |                                     | `Admin`                        |  ✔   |   ✔   |   ✔    |   ✔    |   ✔    |   ✔   |
 |                                     | `System Manager`               |  ✔   |   ✔   |   ✔    |   ✔    |   ✔    |   ✔   |
 | **`tabMaintenance Visit`**          | `O&M Service Engineer`         |  ✔   |   ✔   |   ✔    |   ✔    |   ✖    |   ✖   |
 |                                     | `O&M Service Coordinator`      |  ✔   |   ✔   |   ✖    |   ✔    |   ✖    |   ✖   |
-|                                     | `Commercial Officer`           |  ✔   |   ✖   |   ✖    |   ✖    |   ✖    |   ✖   |
+|                                     | `Accounts Assistant`           |  ✔   |   ✖   |   ✖    |   ✖    |   ✖    |   ✖   |
 |                                     | `Admin`                        |  ✔   |   ✔   |   ✔    |   ✔    |   ✔    |   ✔   |
 |                                     | `System Manager`               |  ✔   |   ✔   |   ✔    |   ✔    |   ✔    |   ✔   |
 | **`tabSolar Site Service History`** | All O&M Roles & Sales          |  ✔   |   ✖   |   ✖    |   ✖    |   ✖    |   ✖   |

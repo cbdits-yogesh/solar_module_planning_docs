@@ -94,7 +94,7 @@ To eliminate multi-department entry chaos while providing the enterprise flexibi
 2. **Supreme Administrative Governance:**  
    This configuration is manageable **strictly by `Admin`** (Project Supreme Command) or **`System Manager`** (Developer/Technical Supreme). Operational line personnel are barred from altering this setting.
 3. **Departmental Role Enforcement:**
-   - When set to **`Accounts`**: Only users holding `Accounts Assistant` or `Accounts Officer` roles (plus `Admin` / `System Manager`) can create, edit, or submit `Purchase Invoice`.
+   - When set to **`Accounts`**: Only users holding `Accounts Assistant` or `Accounts Manager` roles (plus `Admin` / `System Manager`) can create, edit, or submit `Purchase Invoice`.
    - When set to **`Store`**: Only users holding `Store Assistant` or `Store Manager` roles (plus `Admin` / `System Manager`) can create, edit, or submit `Purchase Invoice`.
    - When set to **`Purchase`**: Only users holding `Purchase Assistant` or `Purchase Manager` roles (plus `Admin` / `System Manager`) can create, edit, or submit `Purchase Invoice`.
 4. **Hard Server-Side Gate:**  

@@ -84,36 +84,38 @@ Triggered immediately when a prospective client accepts and finalizes a commerci
 
 ### 2.1 Enterprise User Roles Matrix
 
-In strict compliance with the **Zero "User" Suffix Rule** ([`step_plans/README.md`](./README.md#5-enterprise-persona--role-naming-standard-zero-user-suffix-rule)), all operational actors and system roles are designated using functional enterprise titles:
+In strict compliance with [`ADR-020`](../docs/decisions/ADR-020-ENTERPRISE-ROLE-PERMISSION-ARCHITECTURE.md) and the **Zero "User" Suffix Rule**, all financial governance roles are standardized:
 
-| Persona / Business Actor       | Frappe System Role   | HRMS Department           | HRMS Designation                           | Operational Responsibilities                                                                                            |
-| :----------------------------- | :------------------- | :------------------------ | :----------------------------------------- | :---------------------------------------------------------------------------------------------------------------------- |
-| **Frontline Accounts Officer** | `Accounts Assistant` | Accounts & Finance        | `Accounts Assistant` / `Junior Accountant` | Ingests bank statements, matches UTR / cheque receipts, drafts `Payment Entry`, verifies margin money.                  |
-| **Finance Authority**          | `Accounts Officer`   | Accounts & Finance        | `Finance Lead` / `Finance Manager`         | Authorizes advance payment verification, signs off on bank loan sanctions, validates corporate deferred credit waivers. |
-| **Commercial Operations Lead** | `Commercial Officer` | Commercial Operations     | `Commercial Manager`                       | Audits proposal payment schedules, coordinates with lending banks for sanction letters, requests deferred waivers.      |
-| **Regional Sales Head**        | `Area Sales Manager` | Sales Management          | `Area Sales Manager`                       | Escalates payment delays, tracks customer drop-offs, reviews unverified proposals exceeding SLA.                        |
-| **Executive Supreme Command**  | `Admin`, `Director`  | Executive Leadership      | `Managing Director` / `CEO`                | Supreme operational command; grants Goodwill / VIP advance waivers, configures `Solar Advance Settings` and SLA timers. |
-| **Technical DevOps Lead**      | `System Manager`     | Technology Infrastructure | `DevOps Architect`                         | Framework apex; manages DocType schemas, custom fields, Property Setters, Redis worker queues, and bench CLI tooling.   |
+| Persona / Business Actor         | Frappe System Role   | HRMS Department           | HRMS Designation                           | Operational Responsibilities                                                                                            |
+| :------------------------------- | :------------------- | :------------------------ | :----------------------------------------- | :---------------------------------------------------------------------------------------------------------------------- |
+| **Frontline Accounts Assistant** | `Accounts Assistant` | Accounts & Finance        | `Accounts Assistant` / `Junior Accountant` | Ingests bank statements, matches UTR / cheque receipts, drafts `Payment Entry`, verifies margin money.                  |
+| **Finance Authority / Manager**  | `Accounts Manager`   | Accounts & Finance        | `Accounts Manager` / `Finance Lead`        | Authorizes advance payment verification, signs off on bank loan sanctions, validates corporate deferred credit waivers. |
+| **CRM Department Manager**       | `CRM Manager`        | Commercial & CRM          | `Commercial & CRM Manager`                 | Audits proposal payment schedules, coordinates with lending banks for sanction letters, requests deferred waivers.      |
+| **Sales Department Manager**     | `Sales Manager`      | Sales Management          | `Sales Manager`                            | Escalates payment delays, tracks customer drop-offs, reviews unverified proposals exceeding SLA.                        |
+| **Executive Supreme Command**    | `Admin`              | Executive Leadership      | `Managing Director` / `CEO`                | Supreme operational command; grants Goodwill / VIP advance waivers, configures `Solar Advance Settings` and SLA timers. |
+| **Technical DevOps Lead**        | `System Manager`     | Technology Infrastructure | `DevOps Architect`                         | Framework apex; manages DocType schemas, custom fields, Property Setters, Redis worker queues, and bench CLI tooling.   |
 
 > [!IMPORTANT]
-> **Enterprise Authority Hierarchy: Administrator $\rightarrow$ System Manager $\rightarrow$ Admin (Project Supreme):**
+> **Enterprise Authority Hierarchy & ADR-020 Operational Governance:**
 >
 > - **`Administrator` & `System Manager` (Framework Supreme / Developer Realm):** Sit at the apex of system authority (supreme over `Admin`). Possess full access to everything `Admin` has, plus full technical rights over source code, DocType schema builder, Client/Server Scripts, bench tooling, and developer mode. Reserved strictly for technical developers and DevOps administrators.
-> - **`Admin` (Project / Solar EPC Level Supreme Command):** Introduced specifically for **project-level operational supremacy**. Holds unrestricted operational authority over all business documents across Flow 1 and Flow 2, as well as exclusive authority over operational governance settings (`Solar Advance Settings`, `Solar Proposal Settings`, `Solar SLA Settings`, `Solar Notification Settings`). Holds exclusive authority alongside the Owner/CEO to grant **Goodwill / VIP Customer Approvals**. **Restricted from source code, DocType schema customization, client/server scripts, and internal technical implementation access.**
+> - **`Admin` (Project / Solar EPC Level Supreme Command):** Introduced specifically for **project-level operational supremacy**. Holds unrestricted operational authority over all business documents across Flow 1 and Flow 2, as well as exclusive authority over operational governance settings (`Solar Advance Settings`, `Solar Proposal Settings`, `Solar SLA Settings`, `Solar Notification Settings`). Protected by downstream dependency warnings, hard deletion blocks, and atomic cascade purges (`tabSolar Deletion Audit Log`).
+> - **Managerial Authority Inheritance:** `Accounts Manager` strictly inherits all operational capabilities of `Accounts Assistant`.
+> - **Stage-Forward Lock:** Once `Sales Order` (Stage 06 baseline) is submitted, `Payment Entry` and Advance Clearance Gates are locked against cancel and amend.
 
 ### 2.2 Role Permission Matrix
 
-| DocType / Action                       | Accounts Assistant | Accounts Officer | Commercial Officer | Area Sales Manager |   Admin (Project Supreme)   |
-| :------------------------------------- | :----------------: | :--------------: | :----------------: | :----------------: | :-------------------------: |
-| **Quotation / Proposal (Read)**        |     Permitted      |    Permitted     |   Full Territory   |   Full Territory   |         All Records         |
-| **Payment Entry (Create/Write)**       |     Permitted      |    Permitted     |     Restricted     |     Restricted     |         All Records         |
-| **Payment Entry (Submit)**             |     Permitted      |    Permitted     |     Restricted     |     Restricted     |         All Records         |
-| **Solar Loan Sanction (Create/Write)** |     Permitted      |    Permitted     |     Permitted      |     Restricted     |         All Records         |
-| **Solar Loan Sanction (Submit)**       |     Restricted     |     **Yes**      |     Restricted     |     Restricted     |           **Yes**           |
-| **Execute Financial Clearance**        |     Restricted     |     **Yes**      |     Restricted     |     Restricted     |      **Yes (Supreme)**      |
-| **Corporate Credit Deferred Waiver**   |     Restricted     |     **Yes**      |      **Yes**       |     Restricted     |           **Yes**           |
-| **Goodwill / VIP Customer Bypass**     |   **Restricted**   |  **Restricted**  |   **Restricted**   |   **Restricted**   | **Yes (CEO/MD/Admin Only)** |
-| **SLA Delay Log Sign-Off**             |     Permitted      |       Yes        |        Yes         |        Yes         |             Yes             |
+| DocType / Action                       | Accounts Assistant | Accounts Manager |   CRM Manager   | Sales Manager  |   Admin (Project Supreme)   |
+| :------------------------------------- | :----------------: | :--------------: | :-------------: | :------------: | :-------------------------: |
+| **Quotation / Proposal (Read)**        |     Permitted      |    Permitted     | Full Department | Full Territory |         All Records         |
+| **Payment Entry (Create/Write)**       |     Permitted      |    Permitted     |   Restricted    |   Restricted   |         All Records         |
+| **Payment Entry (Submit)**             |   Yes (Pre-S06)    |  Yes (Pre-S06)   |   Restricted    |   Restricted   |         All Records         |
+| **Solar Loan Sanction (Create/Write)** |     Permitted      |    Permitted     |    Permitted    |   Restricted   |         All Records         |
+| **Solar Loan Sanction (Submit)**       |     Restricted     |     **Yes**      |   Restricted    |   Restricted   |           **Yes**           |
+| **Execute Financial Clearance**        |     Restricted     |     **Yes**      |   Restricted    |   Restricted   |      **Yes (Supreme)**      |
+| **Corporate Credit Deferred Waiver**   |     Restricted     |     **Yes**      |     **Yes**     |   Restricted   |           **Yes**           |
+| **Goodwill / VIP Customer Bypass**     |   **Restricted**   |  **Restricted**  | **Restricted**  | **Restricted** | **Yes (CEO/MD/Admin Only)** |
+| **SLA Delay Log Sign-Off**             |     Permitted      |       Yes        |       Yes       |      Yes       |             Yes             |
 
 ---
 
@@ -156,7 +158,7 @@ ERPNext core `Payment Entry` is extended to capture solar project context and UT
 | `custom_utr_cheque_no`          | UTR / Cheque / Ref Number   | `Data`          | -                |    Yes    |   1   | Bank transaction reference; **Unique constraint enforced** |
 | `custom_bank_name`              | Remitting / Depositing Bank | `Data`          | -                |    No     |   -   | Name of customer's remitting bank                          |
 | `custom_payment_proof`          | Payment Receipt / Slip      | `Attach`        | -                |    No     |   -   | Uploaded bank transfer receipt or scanned cheque           |
-| `custom_verified_by`            | Verified By                 | `Link`          | `User`           |    No     |   -   | Attributed `Accounts Assistant` or `Accounts Officer`      |
+| `custom_verified_by`            | Verified By                 | `Link`          | `User`           |    No     |   -   | Attributed `Accounts Assistant` or `Accounts Manager`      |
 | `custom_verification_timestamp` | Verification Timestamp      | `Datetime`      | -                |    No     |   -   | Audit timestamp of verification                            |
 
 #### 3.1.3 Extension to `tabCustomer`
@@ -1154,7 +1156,7 @@ class TestStage05AdvancePayment(IntegrationTestCase):
    - `Lead` status updates to `Converted`.
    - Stage 06 `Sales Order` creation is unlocked.
 
-#### SOP 2: Processing Bank Loan Sanction (Commercial Officer / Accounts Officer)
+#### SOP 2: Processing Bank Loan Sanction (Accounts Manager / CRM Manager)
 
 1. **Collect Sanction Documents:** Secure signed official Bank Loan Sanction Letter from the lending institution (e.g. SBI Surya Ghar portal).
 2. **Record Margin Money:** Verify client has paid required margin money ($\text{Total Project Cost} - \text{Sanction Amount}$) via `Payment Entry`.

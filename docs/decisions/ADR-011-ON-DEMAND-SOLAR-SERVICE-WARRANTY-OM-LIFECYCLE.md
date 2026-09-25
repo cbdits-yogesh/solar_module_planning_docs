@@ -187,7 +187,8 @@ In strict adherence to enterprise naming standards:
 - `Customer Care Representative`: Omnichannel intake, symptom logging, customer communication.
 - `O&M Service Coordinator`: Triage, warranty verification, engineer scheduling, parts staging.
 - `O&M Service Engineer`: Field troubleshooting, GPS check-in, diagnostics, part swapping, customer OTP.
-- `Commercial Officer`: Service quotations, out-of-warranty billing, OEM warranty recovery reconciliation.
+- `Accounts Assistant` / `Accounts Manager`: Service quotations, out-of-warranty billing, OEM warranty recovery reconciliation.
+- `O&M Manager`: Operational oversight of O&M service engineers, ticket allocations, and SLA adherence.
 - `Admin` (Project Supreme Command): SLA escalation overrides, warranty dispute waivers, technician assignment reallocations.
 - `Administrator` / `System Manager`: Technical dev ops, API routing, portal authentication, background queues.
 

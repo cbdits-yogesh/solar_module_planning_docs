@@ -92,32 +92,31 @@ Step 15 binding contract release gateway in Solar EPC Procurement Lifecycle (Flo
 
 Strict Zero "User" Suffix Rule applied:
 
-| Persona / Business Actor           | Frappe System Role   | HRMS Department        | HRMS Designation              | Operational Responsibilities                                                 |
-| :--------------------------------- | :------------------- | :--------------------- | :---------------------------- | :--------------------------------------------------------------------------- |
-| **Procurement Line Executive**     | `Purchase Assistant` | Purchase & SCM         | `Purchase Executive`          | Converts matrix to PO draft, attaches delivery terms, submits Tier 1.        |
-| **Head of Procurement**            | `Purchase Manager`   | Purchase & SCM         | `Purchase Manager`            | Authorizes Tier 2, reviews delivery terms, signs milestone schedules.        |
-| **Commercial Operations Head**     | `Commercial Officer` | Commercial Operations  | `Commercial Manager`          | Jointly authorizes Tier 3, checks credit exposure and LD clauses.            |
-| **Finance & Accounts Head**        | `Accounts Assistant` | Finance & Accounts     | `Accounts Officer`            | Validates cash-flow against schedule; executes advance disbursements.        |
-| **Site Technical Requisitioner**   | `Project Engineer`   | Engineering Operations | `Site Supervisor`             | Verifies site readiness, confirms target site warehouse for direct delivery. |
-| **Warehouse Logistics Head**       | `Store Manager`      | Store & Inventory      | `Warehouse Manager`           | Confirms central warehouse staging or approves direct-to-site routing.       |
-| **External Vendor Representative** | `Supplier`           | External Entity        | `Vendor Sales Representative` | Acknowledges PO dates, specs, terms via portal (`/solar/po-portal/:token`).  |
-| **Solar EPC Director / Admin**     | `Admin`              | Executive Management   | `Managing Director`           | Supreme command; exclusive Tier 4 sign-off (> ₹50L), manages SCM settings.   |
-| **Framework Supreme / Developer**  | `System Manager`     | Information Technology | `DevOps Engineer / Architect` | Bench CLI, custom fixtures, Redis queues. Supreme over `Admin`.              |
+| Persona / Business Actor           | Frappe System Role                     | HRMS Department        | HRMS Designation              | Operational Responsibilities                                                 |
+| :--------------------------------- | :------------------------------------- | :--------------------- | :---------------------------- | :--------------------------------------------------------------------------- |
+| **Procurement Line Executive**     | `Purchase Assistant`                   | Purchase & SCM         | `Purchase Executive`          | Converts matrix to PO draft, attaches delivery terms (cannot submit PO).     |
+| **Head of Procurement**            | `Purchase Manager`                     | Purchase & SCM         | `Purchase Manager`            | Exclusive Tier 1 submit (< ₹50k), Tier 2 approver if configured, schedules.  |
+| **Finance & Accounts Head**        | `Accounts Manager`                     | Finance & Accounts     | `Accounts Manager`            | Tier 2 approver if configured; validates cash-flow, executes disbursements.  |
+| **Site Technical Requisitioner**   | `Site Supervisor` / `Project Engineer` | Engineering Operations | `Site Supervisor`             | Verifies site readiness, confirms target site warehouse for direct delivery. |
+| **Warehouse Logistics Head**       | `Store Manager`                        | Store & Inventory      | `Warehouse Manager`           | Confirms central warehouse staging or approves direct-to-site routing.       |
+| **External Vendor Representative** | `Supplier`                             | External Entity        | `Vendor Sales Representative` | Acknowledges PO dates, specs, terms via portal (`/solar/po-portal/:token`).  |
+| **Solar EPC Director / Admin**     | `Admin`                                | Executive Management   | `Managing Director`           | Supreme command; exclusive Tier 3 & Tier 4 sign-off (> ₹5L), manages SCM.    |
+| **Framework Supreme / Developer**  | `System Manager`                       | Information Technology | `DevOps Engineer / Architect` | Bench CLI, custom fixtures, Redis queues. Supreme over `Admin`.              |
 
 ### 2.2 Permission Hierarchy Matrix
 
-| DocType / Action                   | Purchase Assistant | Purchase Manager  | Commercial Officer | Store Manager |     Admin\*      | External Supplier |
-| :--------------------------------- | :----------------: | :---------------: | :----------------: | :-----------: | :--------------: | :---------------: |
-| **Purchase Order (Read)**          |     All Active     |    All Active     |     All Active     |  All Active   |   All Records    |  Own Orders Only  |
-| **Purchase Order (Create/Edit)**   |    Yes (Draft)     |        Yes        |         No         |      No       |   All Records    |     No Access     |
-| **Purchase Order (Tier 1 Submit)** |  **Yes (<= ₹1L)**  |      **Yes**      |      **Yes**       |      No       |     **Yes**      |        No         |
-| **Purchase Order (Tier 2 Submit)** |         No         | **Yes (<= ₹10L)** |      **Yes**       |      No       |     **Yes**      |        No         |
-| **Purchase Order (Tier 3 Submit)** |         No         |     Co-Signer     | **Yes (<= ₹50L)**  |      No       |     **Yes**      |        No         |
-| **Purchase Order (Tier 4 Submit)** |         No         |        No         |         No         |      No       | **Yes (> ₹50L)** |        No         |
-| **Payment Schedule (Edit)**        |     Yes (Pre)      |        Yes        |        Yes         |      No       |       Yes        |     No Access     |
-| **Vendor Digital Ack (Portal)**    |         No         |        No         |         No         |      No       |        No        | **Portal Token**  |
-| **Remark-Delay Log (Write)**       |        Own         |        Own        |        Own         |      Own      |   Full Access    |     No Access     |
-| **Solar SCM Settings (Write)**     |         No         |        No         |         No         |      No       |  **Yes (Only)**  |     No Access     |
+| DocType / Action                   | Purchase Assistant |  Purchase Manager   |  Accounts Manager   | Store Manager |     Admin\*      | External Supplier |
+| :--------------------------------- | :----------------: | :-----------------: | :-----------------: | :-----------: | :--------------: | :---------------: |
+| **Purchase Order (Read)**          |     All Active     |     All Active      |     All Active      |  All Active   |   All Records    |  Own Orders Only  |
+| **Purchase Order (Create/Edit)**   |    Yes (Draft)     |         Yes         |         No          |      No       |   All Records    |     No Access     |
+| **Purchase Order (Tier 1 Submit)** |         No         |  **Yes (< ₹50k)**   |         No          |      No       |     **Yes**      |        No         |
+| **Purchase Order (Tier 2 Submit)** |         No         | **Config Approver** | **Config Approver** |      No       |     **Yes**      |        No         |
+| **Purchase Order (Tier 3 Submit)** |         No         |         No          |         No          |      No       | **Yes (> ₹5L)**  |        No         |
+| **Purchase Order (Tier 4 Submit)** |         No         |         No          |         No          |      No       | **Yes (> ₹50L)** |        No         |
+| **Payment Schedule (Edit)**        |     Yes (Pre)      |         Yes         |         Yes         |      No       |       Yes        |     No Access     |
+| **Vendor Digital Ack (Portal)**    |         No         |         No          |         No          |      No       |        No        | **Portal Token**  |
+| **Remark-Delay Log (Write)**       |        Own         |         Own         |         Own         |      Own      |   Full Access    |     No Access     |
+| **Solar SCM Settings (Write)**     |         No         |         No          |         No          |      No       |  **Yes (Only)**  |     No Access     |
 
 _\*Frappe `Administrator` and `System Manager` sit at system apex._
 
@@ -138,7 +137,7 @@ _\*Frappe `Administrator` and `System Manager` sit at system apex._
 | `custom_sales_order_ref`              | Sales Order Reference        | `Link`       | `Sales Order`                                                                                                                          |    No     | **Index: 1** | Commercial baseline anchor.                                                 |
 | `custom_delivery_location_type`       | Delivery Destination Type    | `Select`     | `Central Store Warehouse\nDirect Site Warehouse`                                                                                       |  **Yes**  |      -       | Determines physical delivery destination for Step 16 GRN.                   |
 | `custom_target_site_warehouse`        | Target Site Warehouse        | `Link`       | `Warehouse`                                                                                                                            |    No     |      -       | Site warehouse (`Site - <Code> - SEPC`) if Direct-to-Site.                  |
-| `custom_authorization_tier`           | Financial Authorization Tier | `Select`     | `Tier 1: Up to ₹1,00,000\nTier 2: Up to ₹10,00,000\nTier 3: Up to ₹50,00,000\nTier 4: Above ₹50,00,000`                                |  **Yes**  |      -       | Dynamic from Net Total; dictates required signatory role.                   |
+| `custom_authorization_tier`           | Financial Authorization Tier | `Select`     | `Tier 1: Up to ₹50,000\nTier 2: Up to ₹5,00,000\nTier 3: Up to ₹50,00,000\nTier 4: Above ₹50,00,000`                                   |  **Yes**  |      -       | Dynamic from Net Total; dictates required signatory role.                   |
 | `custom_authorized_by`                | Sign-off Approver            | `Link`       | `User`                                                                                                                                 |    No     |      -       | Approver user ID who authorized PO.                                         |
 | `custom_authorized_on`                | Sign-off Timestamp           | `Datetime`   | -                                                                                                                                      |    No     |      -       | Timestamp of managerial sign-off.                                           |
 | `custom_authorization_remarks`        | Authorization Remarks        | `Small Text` | -                                                                                                                                      |    No     |      -       | Approver sign-off commentary.                                               |
@@ -169,16 +168,17 @@ _\*Frappe `Administrator` and `System Manager` sit at system apex._
 
 ### 3.3 Governance Single DocType: `tabSolar SCM Settings`
 
-| Fieldname                         | Label                              | Fieldtype  | Default | Description & Operational Impact                                   |
-| :-------------------------------- | :--------------------------------- | :--------- | :-----: | :----------------------------------------------------------------- |
-| `tier_1_limit`                    | Tier 1 Financial Limit (INR)       | `Currency` | 100000  | `Purchase Assistant` limit.                                        |
-| `tier_2_limit`                    | Tier 2 Financial Limit (INR)       | `Currency` | 1000000 | `Purchase Manager` single sign-off limit.                          |
-| `tier_3_limit`                    | Tier 3 Financial Limit (INR)       | `Currency` | 5000000 | `Commercial Officer` joint sign-off limit. Above requires `Admin`. |
-| `enforce_project_bom_ceiling`     | Enforce Project BOM Ceiling Gate   | `Check`    |    0    | **Configurable Option:** 1 hard-blocks POs exceeding Proposal BOM. |
-| `bom_overage_tolerance_pct`       | Allowed BOM Overage Buffer (%)     | `Percent`  |  5.00   | Tolerance margin (%) permitted when ceiling is active.             |
-| `po_release_sla_hours`            | PO Release SLA Window (Hours)      | `Int`      |   24    | Turnaround SLA from Matrix submit to PO release.                   |
-| `vendor_acknowledgment_sla_hours` | Vendor Acknowledgment Window (Hrs) | `Int`      |   48    | Turnaround SLA from PO release to vendor digital sign-off.         |
-| `enable_whatsapp_vendor_dispatch` | Auto-Dispatch PO Link via WhatsApp | `Check`    |    1    | Sends PDF + portal token to vendor mobile on submit.               |
+| Fieldname                         | Label                              | Fieldtype  |      Default       | Description & Operational Impact                                              |
+| :-------------------------------- | :--------------------------------- | :--------- | :----------------: | :---------------------------------------------------------------------------- |
+| `tier_1_limit`                    | Tier 1 Financial Limit (INR)       | `Currency` |       50000        | Threshold for Tier 1 (< ₹50,000, `Purchase Manager` only).                    |
+| `tier_2_limit`                    | Tier 2 Financial Limit (INR)       | `Currency` |       500000       | Ceiling for Tier 2 (₹50k - ₹5L).                                              |
+| `tier_2_approver_role`            | Tier 2 Active Approver Role        | `Select`   | `Purchase Manager` | Configurable single role: `Purchase Manager`, `Accounts Manager`, or `Admin`. |
+| `tier_3_limit`                    | Tier 3 Financial Limit (INR)       | `Currency` |      5000000       | Ceiling for Tier 3 (> ₹5L to ₹50L, `Admin` only).                             |
+| `enforce_project_bom_ceiling`     | Enforce Project BOM Ceiling Gate   | `Check`    |         0          | **Configurable Option:** 1 hard-blocks POs exceeding Proposal BOM.            |
+| `bom_overage_tolerance_pct`       | Allowed BOM Overage Buffer (%)     | `Percent`  |        5.00        | Tolerance margin (%) permitted when ceiling is active.                        |
+| `po_release_sla_hours`            | PO Release SLA Window (Hours)      | `Int`      |         24         | Turnaround SLA from Matrix submit to PO release.                              |
+| `vendor_acknowledgment_sla_hours` | Vendor Acknowledgment Window (Hrs) | `Int`      |         48         | Turnaround SLA from PO release to vendor digital sign-off.                    |
+| `enable_whatsapp_vendor_dispatch` | Auto-Dispatch PO Link via WhatsApp | `Check`    |         1          | Sends PDF + portal token to vendor mobile on submit.                          |
 
 ---
 
@@ -193,10 +193,10 @@ stateDiagram-v2
 
     state In_Review {
         [*] --> Check_Tier
-        Check_Tier --> Tier_1_Signoff: Net Total <= ₹1L (Purchase Assistant)
-        Check_Tier --> Tier_2_Signoff: ₹1L < Net Total <= ₹10L (Purchase Manager)
-        Check_Tier --> Tier_3_Signoff: ₹10L < Net Total <= ₹50L (Commercial Officer)
-        Check_Tier --> Tier_4_Signoff: Net Total > ₹50L (Admin / Managing Director)
+        Check_Tier --> Tier_1_Signoff: Net Total < ₹50k (Purchase Manager)
+        Check_Tier --> Tier_2_Signoff: ₹50k <= Net Total <= ₹5L (Configured Approver)
+        Check_Tier --> Tier_3_Signoff: ₹5L < Net Total <= ₹50L (Admin Only)
+        Check_Tier --> Tier_4_Signoff: Net Total > ₹50L (Admin Only)
     }
 
     In_Review --> Authorized: Authorized Signatory Signs Off
@@ -228,10 +228,10 @@ stateDiagram-v2
   - Capital solar POs require submitted `Quotation Comparison Matrix` (`docstatus = 1`, `evaluation_status = 'Award Approved'`) or single-source justification ($\ge 30$ chars).
   - Item unit rate cannot exceed awarded landed rate ($\text{rate} \le \text{custom\_landed\_rate\_awarded}$).
 - **Gate 2: Multi-Tier Financial Authority Delegation:**
-  - Net total $\le \text{Tier 1}$: `Purchase Assistant`, `Purchase Manager`, `Commercial Officer`, `Admin`.
-  - Net total $\le \text{Tier 2}$: `Purchase Manager`, `Commercial Officer`, `Admin`.
-  - Net total $\le \text{Tier 3}$: `Commercial Officer`, `Admin`.
-  - Net total $> \text{Tier 3}$: Exclusively **`Admin`** / `Managing Director`.
+  - Net total $< \text{Tier 1}$ (< ₹50k): Exclusively `Purchase Manager` (frontline `Purchase Assistant` drafts only, cannot submit).
+  - Net total $\le \text{Tier 2}$ (₹50k - ₹5L): Designated single role in `Solar SCM Settings.tier_2_approver_role` (`Purchase Manager`, `Accounts Manager`, or `Admin`).
+  - Net total $\le \text{Tier 3}$ (> ₹5L - ₹50L): Exclusively **`Admin`** (Project Supreme Command).
+  - Net total $> \text{Tier 3}$ (> ₹50L): Exclusively **`Admin`** (Project Supreme Command).
 - **Gate 3: Solar Milestone Payment Schedule & Retention:**
   - Capital solar equipment requires $\ge 2$ milestone rows in `tabPayment Schedule`. Generic immediate terms prohibited.
   - Advance tranche matches `custom_advance_amount`. Retention tranche tied to COD/PBG.
@@ -388,15 +388,15 @@ class POAuthorizationMatrixService:
     @staticmethod
     def calculate_tier(net_total):
         settings = frappe.get_cached_doc("Solar SCM Settings")
-        t1 = flt(settings.tier_1_limit, 100000.0)
-        t2 = flt(settings.tier_2_limit, 1000000.0)
+        t1 = flt(settings.tier_1_limit, 50000.0)
+        t2 = flt(settings.tier_2_limit, 500000.0)
         t3 = flt(settings.tier_3_limit, 5000000.0)
 
         amount = flt(net_total)
         if amount <= t1:
-            return "Tier 1: Up to ₹1,00,000"
+            return "Tier 1: Up to ₹50,000"
         elif amount <= t2:
-            return "Tier 2: Up to ₹10,00,000"
+            return "Tier 2: Up to ₹5,00,000"
         elif amount <= t3:
             return "Tier 3: Up to ₹50,00,000"
         else:
@@ -410,12 +410,15 @@ class POAuthorizationMatrixService:
         if "System Manager" in user_roles or "Administrator" in user_roles:
             return
 
-        if tier == "Tier 1: Up to ₹1,00,000":
-            required = ["Purchase Assistant", "Purchase Manager", "Commercial Officer", "Admin"]
-        elif tier == "Tier 2: Up to ₹10,00,000":
-            required = ["Purchase Manager", "Commercial Officer", "Admin"]
+        settings = frappe.get_cached_doc("Solar SCM Settings")
+
+        if tier == "Tier 1: Up to ₹50,000":
+            required = ["Purchase Manager", "Admin"]
+        elif tier == "Tier 2: Up to ₹5,00,000":
+            tier_2_role = settings.tier_2_approver_role or "Purchase Manager"
+            required = [tier_2_role, "Admin"]
         elif tier == "Tier 3: Up to ₹50,00,000":
-            required = ["Commercial Officer", "Admin"]
+            required = ["Admin"]
         else:
             required = ["Admin"]
 
@@ -629,20 +632,20 @@ class TestStep15PurchaseOrder(FrappeTestCase):
 
 ### 9.1 End-User SOP
 
-- **Purchase Assistant:** Open approved matrix, click `[Generate Purchase Order]`, verify items, select Central Store vs Direct Site warehouse, configure milestone schedule, submit if $\le ₹1\text{L}$ or route to manager.
+- **Purchase Assistant:** Open approved matrix, click `[Generate Purchase Order]`, verify items, select Central Store vs Direct Site warehouse, configure milestone schedule, route to Purchase Manager for release (Purchase Assistant drafts only, cannot submit).
 - **Purchase Manager / Approvers:** Review linked matrix, verify advance %, sign off remarks, click `[Authorize & Submit PO]`.
 
 ### 9.2 Operator Error Resolution Table
 
-| Error Message Displayed                                                | Root Cause                                                     | Operator Resolution                                                                     |
-| :--------------------------------------------------------------------- | :------------------------------------------------------------- | :-------------------------------------------------------------------------------------- |
-| `A submitted Quotation Comparison Matrix is required...`               | PO drafted for capital solar equipment without matrix link.    | Link approved matrix or mark `Is Single Source` with $\ge 30$ char remark.              |
-| `Unit rate exceeds approved landed rate...`                            | Basic price entered higher than awarded landed rate.           | Reduce unit rate to match or remain below approved landed rate.                         |
-| `You are not authorized to release this Purchase Order...`             | Current user lacks required financial delegation role.         | Assign document to `Purchase Manager` (T2), `Commercial Officer` (T3), or `Admin` (T4). |
-| `Generic payment terms are prohibited...`                              | Single immediate payment term entered for capital solar goods. | Select structured milestone terms template.                                             |
-| `Cumulative ordered quantity exceeds approved Proposal BOM ceiling...` | Project-linked PO exceeds proposal quantity + tolerance.       | Reduce quantity or adjust tolerance in `Solar SCM Settings`.                            |
-| `Direct Site Warehouse routing requires a valid site warehouse...`     | Direct site selected but site warehouse empty.                 | Select active site warehouse (`Site - <Code> - SEPC`).                                  |
-| `SLA Status is Overdue. Delay justification required...`               | 24h release or 48h vendor ack SLA breached.                    | Enter reason and remarks in `Delay Audit Log` before saving.                            |
+| Error Message Displayed                                                | Root Cause                                                     | Operator Resolution                                                                       |
+| :--------------------------------------------------------------------- | :------------------------------------------------------------- | :---------------------------------------------------------------------------------------- |
+| `A submitted Quotation Comparison Matrix is required...`               | PO drafted for capital solar equipment without matrix link.    | Link approved matrix or mark `Is Single Source` with $\ge 30$ char remark.                |
+| `Unit rate exceeds approved landed rate...`                            | Basic price entered higher than awarded landed rate.           | Reduce unit rate to match or remain below approved landed rate.                           |
+| `You are not authorized to release this Purchase Order...`             | Current user lacks required financial delegation role.         | Assign document to `Purchase Manager` (T1), Configured Approver (T2), or `Admin` (T3/T4). |
+| `Generic payment terms are prohibited...`                              | Single immediate payment term entered for capital solar goods. | Select structured milestone terms template.                                               |
+| `Cumulative ordered quantity exceeds approved Proposal BOM ceiling...` | Project-linked PO exceeds proposal quantity + tolerance.       | Reduce quantity or adjust tolerance in `Solar SCM Settings`.                              |
+| `Direct Site Warehouse routing requires a valid site warehouse...`     | Direct site selected but site warehouse empty.                 | Select active site warehouse (`Site - <Code> - SEPC`).                                    |
+| `SLA Status is Overdue. Delay justification required...`               | 24h release or 48h vendor ack SLA breached.                    | Enter reason and remarks in `Delay Audit Log` before saving.                              |
 
 ### 9.3 L3 DevOps Runbook
 

@@ -25,17 +25,17 @@ _Source: Sadbhav Solar EPC Enterprise Architecture Suite_
 ### `MOD-04`: Dynamic Commercial Proposal & Subsidies (Stage 04)
 
 - **Objective:** Rapid quotation generation incorporating real-time component costs and government subsidies.
-- **SOP:** Sales/Commercial initiates `Proposal` from approved survey $\rightarrow$ System pulls component pricing and BOM quantities $\rightarrow$ Computes state/central subsidy deductions (PM Surya Ghar) $\rightarrow$ Margin floor validator confirms gross margin threshold $\rightarrow$ Client proposal PDF generated and dispatched.
+- **SOP:** CRM Representative initiates `Proposal` from approved survey $\rightarrow$ System pulls component pricing and BOM quantities $\rightarrow$ Computes state/central subsidy deductions (PM Surya Ghar) $\rightarrow$ Margin floor validator confirms gross margin threshold $\rightarrow$ Client proposal PDF generated and dispatched.
 
 ### `MOD-05`: Advance Verification, Financial Gate & Customer Inception (Stage 05)
 
 - **Objective:** Working capital protection, formal customer master instantiation, and strict financial gatekeeping.
-- **SOP:** Customer confirms proposal $\rightarrow$ Advance payment collected ($> 20\%$) or bank loan sanction secured $\rightarrow$ Accounts Officer verifies UTR/Cheque reference $\rightarrow$ **System automatically creates the official ERPNext `Customer` master and linked contacts** $\rightarrow$ Financial clearance gate unlocked $\rightarrow$ Releases Sales Order for submission.
+- **SOP:** Customer confirms proposal $\rightarrow$ Advance payment collected ($> 20\%$) or bank loan sanction secured $\rightarrow$ Accounts Assistant verifies UTR/Cheque reference and Accounts Manager authorizes advance clearance $\rightarrow$ **System automatically creates the official ERPNext `Customer` master and linked contacts** $\rightarrow$ Financial clearance gate unlocked $\rightarrow$ Releases Sales Order for submission.
 
 ### `MOD-06`: Sales Order Master Baseline Anchor & Downstream Kickoff (Stage 06)
 
 - **Objective:** Contractual baseline freeze and synchronized operational kickoff.
-- **SOP:** CRM Team submits `Sales Order` $\rightarrow$ System permanently locks commercial pricing and approved BOM $\rightarrow$ Programmatically spawns `Project` container with templated zone WBS tasks $\rightarrow$ Concurrently instantiates `Liaisoning And Synchronization` record for Phase 1 document preparation.
+- **SOP:** CRM / Sales Team submits `Sales Order` $\rightarrow$ System permanently locks commercial pricing and approved BOM $\rightarrow$ Programmatically spawns `Project` container with templated zone WBS tasks $\rightarrow$ Concurrently instantiates `Liaisoning And Synchronization` record for Phase 1 document preparation.
 
 ### `MOD-07`: Material Dispatch Logistics via Delivery Note (Stage 07)
 
@@ -56,7 +56,7 @@ _Source: Sadbhav Solar EPC Enterprise Architecture Suite_
 
 - **Objective:** Utility net-metering governance, statutory grid synchronization, and formal project closeout.
 - **SOP:**
-  - **Phase 1 (Post-SO):** Liaisoning Officer submits DISCOM application with consumer KYC, property documents, and drawings $\rightarrow$ Tracks feasibility study and obtains grid connectivity NOC.
+  - **Phase 1 (Post-SO):** Liaisoning Representative submits DISCOM application with consumer KYC, property documents, and drawings $\rightarrow$ Tracks feasibility study and obtains grid connectivity NOC.
   - **Phase 2 (Post-Installation):** Triggered immediately upon installation completion $\rightarrow$ **Starts 10-day statutory SLA countdown timer** $\rightarrow$ Coordinates CEIG electrical safety inspection $\rightarrow$ Conducts Joint Meter Inspection (JMI) $\rightarrow$ Bi-directional net-meter installed and grid energized $\rightarrow$ **Approval of this phase automatically transitions the `Project` status to "Completed", logs COD certificate, and unlocks O&M.**
 
 ### `MOD-11`: Digital Handover & Lifecycle O&M (Stage 11)

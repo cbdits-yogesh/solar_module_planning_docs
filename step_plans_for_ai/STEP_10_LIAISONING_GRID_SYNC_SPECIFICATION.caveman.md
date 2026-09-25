@@ -114,36 +114,38 @@ Per **Dual Progress Bar Lifecycle Architecture** ([`docs/decisions/ADR-007-DUAL-
 
 ### 2.1 Persona Matrix & Role Governance
 
-| Persona / Business Actor      | Approved Enterprise Standard     | Frappe System Role   | HRMS Designation               | Operational Authority & Primary Responsibility                                                                     |
-| :---------------------------- | :------------------------------- | :------------------- | :----------------------------- | :----------------------------------------------------------------------------------------------------------------- |
-| **Statutory Compliance Lead** | `Liaisoning Officer`             | `Liaisoning Officer` | `Statutory Liaisoning Officer` | Dossier management; utility filings; DISCOM coordination; CEIG and JMI attendance; net-meter docs.                 |
-| **Field Commissioning Lead**  | `Field Commissioning Specialist` | `Project Engineer`   | `Commissioning Engineer`       | On-site electrical support; anti-islanding test; initial meter readings; physical grid breaker sync.               |
-| **Quality & Safety Auditor**  | `Quality Engineer`               | `Quality Engineer`   | `QA/QC Manager`                | Pre-submission check of SLD, Megger/Earth logs, CEIG drawings, datasheets.                                         |
-| **Project Supreme Command**   | `Admin`                          | `Admin`              | `Director - EPC Operations`    | Operational supremacy across workflows; SLA overrides, holiday extensions, delay sign-offs. No code/schema access. |
-| **Framework Supreme Dev**     | `System Manager`                 | `System Manager`     | `Principal Architect / DevOps` | Apex technical authority over Frappe framework, Bench CLI, background workers, scripts, DocType schemas.           |
-| **Executive Leadership**      | `Director`                       | `Director`           | `Managing Director / COO`      | Strategic macro oversight; executive dashboards; escalation review of statutory disputes.                          |
+| Persona / Business Actor      | Approved Enterprise Standard     | Frappe System Role                     | HRMS Designation                      | Operational Authority & Primary Responsibility                                                                     |
+| :---------------------------- | :------------------------------- | :------------------------------------- | :------------------------------------ | :----------------------------------------------------------------------------------------------------------------- |
+| **Statutory Compliance Lead** | `Liaisoning Representative`      | `Liaisoning Representative`            | `Statutory Liaisoning Representative` | Dossier management; utility filings; DISCOM coordination; CEIG and JMI attendance; net-meter docs.                 |
+| **Statutory Compliance Head** | `Liaisoning Manager`             | `Liaisoning Manager`                   | `Statutory Liaisoning Manager`        | Supervisory authority; utility dispute escalation; final COD verification; managerial inheritance.                 |
+| **Field Commissioning Lead**  | `Field Commissioning Specialist` | `Project Engineer` / `Site Supervisor` | `Commissioning Engineer`              | On-site electrical support; anti-islanding test; initial meter readings; physical grid breaker sync.               |
+| **Project Delivery Manager**  | `Project Manager`                | `Project Manager`                      | `Project Manager`                     | Pre-submission check of SLD, Megger/Earth logs, CEIG drawings, datasheets.                                         |
+| **Project Supreme Command**   | `Admin`                          | `Admin`                                | `Director - EPC Operations`           | Operational supremacy across workflows; SLA overrides, holiday extensions, delay sign-offs. No code/schema access. |
+| **Framework Supreme Dev**     | `System Manager`                 | `System Manager`                       | `Principal Architect / DevOps`        | Apex technical authority over Frappe framework, Bench CLI, background workers, scripts, DocType schemas.           |
+| **Executive Leadership**      | `Director`                       | `Director`                             | `Managing Director / COO`             | Strategic macro oversight; executive dashboards; escalation review of statutory disputes.                          |
 
 ---
 
 ### 2.2 Frappe HRMS Organizational Attribution
 
-- **Department:** `Statutory Compliance & Liaisoning` (Liaisoning Officers) and `Engineering & Commissioning` (Field Specialists).
+- **Department:** `Statutory Compliance & Liaisoning` (Liaisoning Representatives & Managers) and `Engineering & Commissioning` (Field Specialists).
 - **Mobile Geolocation Verification:** Field personnel check in via `/solar` mobile interface on inspection site, logging GPS coordinates to `tabEmployee Checkin`.
-- **Assignment & Territory Rule:** Dossiers auto-assigned to `Liaisoning Officer` mapped to utility territory in Customer Master.
+- **Assignment & Territory Rule:** Dossiers auto-assigned to `Liaisoning Representative` mapped to utility territory in Customer Master.
 
 ---
 
 ### 2.3 Comprehensive Permission Matrix
 
-| Frappe System Role     | Level | Read | Write | Create | Submit | Cancel | Amend | Export | Permission Query Conditions                            |
-| :--------------------- | :---: | :--: | :---: | :----: | :----: | :----: | :---: | :----: | :----------------------------------------------------- |
-| `System Manager`       |   0   | Yes  |  Yes  |  Yes   |  Yes   |  Yes   |  Yes  |  Yes   | Full Framework Access (No row-level restriction)       |
-| `Admin`                |   0   | Yes  |  Yes  |  Yes   |  Yes   |  Yes   |  Yes  |  Yes   | Full Business Access (All territories and projects)    |
-| `Director`             |   0   | Yes  |  No   |   No   |   No   |   No   |  No   |  Yes   | Full Executive Read Access across all records          |
-| `Liaisoning Officer`   |   0   | Yes  |  Yes  |  Yes   |  Yes   |   No   |  Yes  |  Yes   | Restricted to assigned Utility Territories / Projects  |
-| `Project Engineer`     |   0   | Yes  |  Yes  |   No   |   No   |   No   |  No   |   No   | Restricted to assigned Projects (Commissioning fields) |
-| `Quality Engineer`     |   0   | Yes  |  Yes  |   No   |   No   |   No   |  No   |   No   | Restricted to Quality & CEIG verification fields       |
-| `Sales Representative` |   0   | Yes  |  No   |   No   |   No   |   No   |  No   |   No   | Read-only access to Phase 1 status of own Leads        |
+| Frappe System Role          | Level | Read | Write | Create | Submit | Cancel | Amend | Export | Permission Query Conditions                            |
+| :-------------------------- | :---: | :--: | :---: | :----: | :----: | :----: | :---: | :----: | :----------------------------------------------------- |
+| `System Manager`            |   0   | Yes  |  Yes  |  Yes   |  Yes   |  Yes   |  Yes  |  Yes   | Full Framework Access (No row-level restriction)       |
+| `Admin`                     |   0   | Yes  |  Yes  |  Yes   |  Yes   |  Yes   |  Yes  |  Yes   | Full Business Access (All territories and projects)    |
+| `Director`                  |   0   | Yes  |  No   |   No   |   No   |   No   |  No   |  Yes   | Full Executive Read Access across all records          |
+| `Liaisoning Manager`        |   0   | Yes  |  Yes  |  Yes   |  Yes   |   No   |  Yes  |  Yes   | Department-wide access across all utility territories  |
+| `Liaisoning Representative` |   0   | Yes  |  Yes  |  Yes   |  Yes   |   No   |  Yes  |  Yes   | Restricted to assigned Utility Territories / Projects  |
+| `Project Manager`           |   0   | Yes  |  Yes  |   No   |   No   |   No   |  No   |   No   | Quality & CEIG verification; project-wide oversight    |
+| `Project Engineer`          |   0   | Yes  |  Yes  |   No   |   No   |   No   |  No   |   No   | Restricted to assigned Projects (Commissioning fields) |
+| `Sales Representative`      |   0   | Yes  |  No   |   No   |   No   |   No   |  No   |   No   | Read-only access to Phase 1 status of own Leads        |
 
 ---
 
@@ -170,19 +172,19 @@ Per **Dual Progress Bar Lifecycle Architecture** ([`docs/decisions/ADR-007-DUAL-
 
 #### 3.2.1 `tabProject` Extensions
 
-| Fieldname                        | Label                           | Fieldtype  | Options / Target                                                                                        | Mandatory |  Index   | Description & Validation Rules                    |
-| :------------------------------- | :------------------------------ | :--------- | :------------------------------------------------------------------------------------------------------ | :-------: | :------: | :------------------------------------------------ |
-| `custom_liaisoning_reference`    | Statutory Dossier Ref           | `Link`     | `Liaisoning And Synchronization`                                                                        |    No     | Index: 1 | Direct foreign key to Stage 10 compliance record. |
-| `custom_phase_1_status`          | Phase 1 Statutory Status        | `Select`   | `Pending Filing\nSubmitted to DISCOM\nFeasibility Approved\nNOC Received`                               |    No     |    -     | Mirror pre-construction compliance.               |
-| `custom_phase_2_status`          | Phase 2 Grid Sync Status        | `Select`   | `Not Started\nTriggered Post-Installation\nCEIG Scheduled\nJMI In Progress\nGrid Synchronized\nOverdue` |    No     | Index: 1 | Mirror post-installation statutory flow.          |
-| `custom_statutory_deadline`      | Statutory Grid Sync Deadline    | `Datetime` | -                                                                                                       |    No     | Index: 1 | Target deadline by 10-day SLA engine.             |
-| `custom_statutory_delay_days`    | Statutory Delay (Days)          | `Float`    | -                                                                                                       |    No     |    -     | Delay days beyond 10-day baseline.                |
-| `custom_grid_sync_date`          | Grid Synchronization Date       | `Date`     | -                                                                                                       |    No     | Index: 1 | Date of grid energization.                        |
-| `custom_cod_date`                | Commercial Operation Date (COD) | `Date`     | -                                                                                                       |    No     | Index: 1 | Commissioning date triggering warranties & O&M.   |
-| `custom_net_meter_serial_no`     | Net Meter Serial No             | `Data`     | -                                                                                                       |    No     | Index: 1 | Serial number of utility bi-directional meter.    |
-| `custom_is_completed_flag`       | Project Formally Completed      | `Check`    | -                                                                                                       |    Yes    | Index: 1 | Default: 0. Set to 1 on Stage 10 submit.          |
-| `custom_completion_certified_by` | Completed Certified By          | `Link`     | `User`                                                                                                  |    No     |    -     | `Liaisoning Officer` who submitted sign-off.      |
-| `custom_completion_certified_on` | Completed Certified On          | `Datetime` | -                                                                                                       |    No     |    -     | Timestamp of terminal completion.                 |
+| Fieldname                        | Label                           | Fieldtype  | Options / Target                                                                                        | Mandatory |  Index   | Description & Validation Rules                                              |
+| :------------------------------- | :------------------------------ | :--------- | :------------------------------------------------------------------------------------------------------ | :-------: | :------: | :-------------------------------------------------------------------------- |
+| `custom_liaisoning_reference`    | Statutory Dossier Ref           | `Link`     | `Liaisoning And Synchronization`                                                                        |    No     | Index: 1 | Direct foreign key to Stage 10 compliance record.                           |
+| `custom_phase_1_status`          | Phase 1 Statutory Status        | `Select`   | `Pending Filing\nSubmitted to DISCOM\nFeasibility Approved\nNOC Received`                               |    No     |    -     | Mirror pre-construction compliance.                                         |
+| `custom_phase_2_status`          | Phase 2 Grid Sync Status        | `Select`   | `Not Started\nTriggered Post-Installation\nCEIG Scheduled\nJMI In Progress\nGrid Synchronized\nOverdue` |    No     | Index: 1 | Mirror post-installation statutory flow.                                    |
+| `custom_statutory_deadline`      | Statutory Grid Sync Deadline    | `Datetime` | -                                                                                                       |    No     | Index: 1 | Target deadline by 10-day SLA engine.                                       |
+| `custom_statutory_delay_days`    | Statutory Delay (Days)          | `Float`    | -                                                                                                       |    No     |    -     | Delay days beyond 10-day baseline.                                          |
+| `custom_grid_sync_date`          | Grid Synchronization Date       | `Date`     | -                                                                                                       |    No     | Index: 1 | Date of grid energization.                                                  |
+| `custom_cod_date`                | Commercial Operation Date (COD) | `Date`     | -                                                                                                       |    No     | Index: 1 | Commissioning date triggering warranties & O&M.                             |
+| `custom_net_meter_serial_no`     | Net Meter Serial No             | `Data`     | -                                                                                                       |    No     | Index: 1 | Serial number of utility bi-directional meter.                              |
+| `custom_is_completed_flag`       | Project Formally Completed      | `Check`    | -                                                                                                       |    Yes    | Index: 1 | Default: 0. Set to 1 on Stage 10 submit.                                    |
+| `custom_completion_certified_by` | Completed Certified By          | `Link`     | `User`                                                                                                  |    No     |    -     | `Liaisoning Representative` or `Liaisoning Manager` who submitted sign-off. |
+| `custom_completion_certified_on` | Completed Certified On          | `Datetime` | -                                                                                                       |    No     |    -     | Timestamp of terminal completion.                                           |
 
 #### 3.2.2 `tabCustomer` Extensions
 
@@ -376,7 +378,7 @@ stateDiagram-v2
      2. CEIG Charging Permission order attached with reference number and date.
    - If capacity below threshold, assert `statutory_exemption_affidavit` checked.
 4. **Gate 4: Joint Meter Inspection (JMI) & Bi-Directional Meter Gate:**
-   - Assert attachment of JMI Protocol Report signed jointly by DISCOM AEE/Testing Engineer, EPC Liaisoning Officer, and Consumer.
+   - Assert attachment of JMI Protocol Report signed jointly by DISCOM AEE/Testing Engineer, EPC Liaisoning Representative / Manager, and Consumer.
    - Enforce net-meter serial number, make, accuracy class, CT/PT ratios, and testing seal report.
    - Mandate initial readings: Active Import ($kWh$), Active Export ($kWh$), power factor.
 5. **Gate 5: Grid Synchronization, COD & Project Completion Anchor Gate:**
@@ -981,8 +983,8 @@ def check_liaisoning_sla():
 
 ### 6.1 Unified `/solar` Architecture & Role Routing
 
-- **Default SPA Route:** When `Liaisoning Officer` authenticates, lands on `/solar/liaisoning` by default.
-- **Desk Lockout Standard:** Direct navigation to `/app` or `/desk` intercepted and routed to `/solar`. Deep linking permitted for authorized roles (`Liaisoning Officer`, `Admin`, `System Manager`).
+- **Default SPA Route:** When `Liaisoning Representative` or `Liaisoning Manager` authenticates, lands on `/solar/liaisoning` by default.
+- **Desk Lockout Standard:** Direct navigation to `/app` or `/desk` intercepted and routed to `/solar`. Deep linking permitted for authorized roles (`Liaisoning Representative`, `Liaisoning Manager`, `Admin`, `System Manager`).
 
 ---
 
@@ -1426,7 +1428,7 @@ class TestLiaisoningAndSynchronization(IntegrationTestCase):
 
 ## 9. Operational SOP, Error Resolution & Runbook
 
-### 9.1 End-User SOP for Liaisoning Officer
+### 9.1 End-User SOP for Liaisoning Representative / Manager
 
 1. **Phase 1 Inception (Post-Sales Order):**
    - Access `/solar/liaisoning`. Locate dossier in **Phase 1: Draft**.

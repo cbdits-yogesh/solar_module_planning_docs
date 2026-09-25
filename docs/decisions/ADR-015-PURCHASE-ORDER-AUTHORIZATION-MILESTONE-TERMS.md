@@ -45,10 +45,10 @@ We establish an authoritative, comprehensive architectural standard for **Step 1
 │                                │                                                                 │
 │                                ▼                                                                 │
 │   [Verification Gate 2: Multi-Tier Financial Authority Delegation]                              │
-│   • Tier 1 (<= ₹1,00,000): Purchase Assistant / Purchase Manager                                │
-│   • Tier 2 (₹1,00,001 - ₹10,00,000): Purchase Manager                                            │
-│   • Tier 3 (₹10,00,001 - ₹50,00,000): Purchase Manager + Commercial Officer / Finance Lead       │
-│   • Tier 4 (> ₹50,00,000): Admin (Project Supreme Command) / Managing Director                   │
+│   • Tier 1 (< ₹50,000): Purchase Manager (Purchase Assistant drafts only)                       │
+│   • Tier 2 (₹50,000 - ₹5,00,000): Configurable (Purchase Manager / Accounts Manager / Admin)     │
+│   • Tier 3 (> ₹5,00,000 - ₹50,00,000): Admin (Project Supreme Command)                           │
+│   • Tier 4 (> ₹50,00,000): Admin (Project Supreme Command)                                       │
 │                                │                                                                 │
 │                                ▼                                                                 │
 │   [Verification Gate 3: Solar Milestone Payment Schedule & Retention Gate]                      │
@@ -102,14 +102,14 @@ To preserve 100% upgrade safety without altering core code, all enterprise attri
 
 ### 2. Multi-Tier Financial Authority Matrix Gate
 
-Submission of `Purchase Order` (`docstatus = 1`) enforces hard server-side financial authority checks:
+Submission of `Purchase Order` (`docstatus = 1`) enforces hard server-side financial authority checks aligned with ADR-020:
 
 $$\text{Net PO Total} = \sum (\text{Qty} \times \text{Rate}) + \text{Taxes} - \text{Discounts}$$
 
-- **Tier 1 ($\le ₹1,00,000$):** Can be submitted by `Purchase Assistant` or `Purchase Manager`.
-- **Tier 2 ($₹1,00,001 \text{ to } ₹10,00,000$):** Requires digital sign-off from `Purchase Manager`.
-- **Tier 3 ($₹10,00,001 \text{ to } ₹50,00,000$):** Requires joint authorization by `Purchase Manager` and `Commercial Officer` (or `Finance Lead`).
-- **Tier 4 ($> ₹50,00,000$):** Exclusive sign-off authority reserved for **`Admin`** (Project Supreme Command) or `Managing Director`.
+- **Tier 1 ($< ₹50,000$):** Can be submitted strictly by `Purchase Manager` (frontline `Purchase Assistant` drafts only, cannot submit).
+- **Tier 2 ($₹50,000 \text{ to } ₹5,00,000$):** Requires authorization by the single active approver role configured in `Solar SCM Settings.tier_2_approver_role` (`Purchase Manager`, `Accounts Manager`, or `Admin`).
+- **Tier 3 ($> ₹5,00,000 \text{ to } ₹50,00,000$):** Exclusive sign-off authority reserved for **`Admin`** (Project Supreme Command).
+- **Tier 4 ($> ₹50,00,000$):** High-value capex threshold reserved strictly for **`Admin`** (Project Supreme Command).
 
 Attempting to submit without meeting the designated role authorization raises an immediate `frappe.PermissionError` / `frappe.ValidationError`.
 
@@ -190,7 +190,7 @@ The PO explicitly fixes delivery destination to streamline downstream logistics:
 
 ## Compliance & Invariants
 
-1. **Enterprise Role Standard:** Strict adherence to the **Zero "User" Suffix Rule** ([`step_plans/README.md#5-enterprise-persona--role-naming-standard-zero-user-suffix-rule`](../../step_plans/README.md#5-enterprise-persona--role-naming-standard-zero-user-suffix-rule)): `Purchase Assistant`, `Purchase Manager`, `Commercial Officer`, `Store Manager`, `Project Engineer`, `Admin`.
+1. **Enterprise Role Standard:** Strict adherence to the **Zero "User" Suffix Rule** ([`step_plans/README.md#5-enterprise-persona--role-naming-standard-zero-user-suffix-rule`](../../step_plans/README.md#5-enterprise-persona--role-naming-standard-zero-user-suffix-rule)) and [`ADR-020`](ADR-020-ENTERPRISE-ROLE-PERMISSION-ARCHITECTURE.md): `Purchase Assistant`, `Purchase Manager`, `Accounts Assistant`, `Accounts Manager`, `Store Assistant`, `Store Manager`, `Site Supervisor`, `Project Engineer`, `Project Manager`, `Admin`.
 2. **Authority Standard:** Clean separation between `Admin` (Project Supreme Command) and `System Manager` (Framework Supreme / Developer).
 3. **Database Integrity:** 3NF relational schema with explicit database indexes on foreign keys (`custom_comparison_matrix_ref`, `custom_project_ref`, `custom_material_request_ref`).
 4. **Testing Protocol:** 100% automated test coverage inheriting from `IntegrationTestCase` with zero database commits (`frappe.db.commit()` prohibited).

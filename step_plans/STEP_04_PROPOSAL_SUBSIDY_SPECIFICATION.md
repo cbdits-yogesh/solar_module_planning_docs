@@ -69,38 +69,42 @@ In standard ERP systems, commercial quotations are treated as simple, static lin
 
 ### 2.1 Enterprise User Roles Matrix
 
-In strict compliance with the **Zero "User" Suffix Rule** ([`step_plans/README.md`](./README.md#5-enterprise-persona--role-naming-standard-zero-user-suffix-rule)), all operational actors and system roles are designated using functional enterprise titles:
+### 2.1 Enterprise User Roles Matrix
 
-| Persona / Business Actor       | Frappe System Role     | HRMS Department           | HRMS Designation            | Operational Responsibilities                                                                                                |
-| :----------------------------- | :--------------------- | :------------------------ | :-------------------------- | :-------------------------------------------------------------------------------------------------------------------------- |
-| **Frontline Sales Officer**    | `Sales Representative` | Sales & Marketing         | `Sales Executive`           | Ingests survey & design, selects proposal templates, configures commercial options, drafts proposals, delivers to client.   |
-| **Commercial Operations Lead** | `Commercial Officer`   | Commercial Operations     | `Commercial Manager`        | Audits commercial pricing, validates composite GST splits, reviews subsidy eligibility, verifies customer credit terms.     |
-| **Regional Sales Head**        | `Area Sales Manager`   | Sales Management          | `Area Sales Manager`        | Evaluates proposals failing the gross margin floor; holds exclusive operational authority to grant margin floor overrides.  |
-| **Finance & Accounts Officer** | `Accounts Assistant`   | Accounts & Finance        | `Accounts Officer`          | Reviews commercial milestone structures, manages formal advance payment clearance or finance advance waivers.               |
-| **Solar Design Specialist**    | `Design Engineer`      | Design & Engineering      | `Solar Design Engineer`     | Upstream contributor; provides frozen `Survey Engineering Design`, technical ratings, and dynamic BOM (`bom_hash`).         |
-| **Executive Supreme Command**  | `Admin`, `Director`    | Executive Leadership      | `Managing Director` / `CEO` | Supreme operational command; grants Goodwill / VIP advance waivers, manages `Solar Proposal Settings`, and reviews margins. |
-| **Technical DevOps Lead**      | `System Manager`       | Technology Infrastructure | `DevOps Architect`          | Framework apex; manages DocType schemas, custom fields, Property Setters, Redis worker queues, and bench CLI tooling.       |
+In strict compliance with [`ADR-020`](../docs/decisions/ADR-020-ENTERPRISE-ROLE-PERMISSION-ARCHITECTURE.md) and the **Zero "User" Suffix Rule**, proposal generation is decoupled from field sales to inside CRM/Costing governance, with all actors designated using functional enterprise titles:
+
+| Persona / Business Actor      | Frappe System Role   | HRMS Department           | HRMS Designation            | Operational Responsibilities                                                                                                   |
+| :---------------------------- | :------------------- | :------------------------ | :-------------------------- | :----------------------------------------------------------------------------------------------------------------------------- |
+| **CRM Proposal Specialist**   | `CRM Representative` | Commercial & CRM          | `CRM Costing Executive`     | Ingests survey & design, selects proposal templates, configures commercial options, drafts proposals, delivers to client.      |
+| **CRM & Commercial Lead**     | `CRM Manager`        | Commercial & CRM          | `Commercial & CRM Manager`  | Audits commercial pricing, validates composite GST splits, reviews subsidies, approves gross margin floor overrides.           |
+| **Sales Department Manager**  | `Sales Manager`      | Sales & Marketing         | `Sales Manager`             | Monitors customer proposal acceptance, aligns pipeline projections, coordinates customer negotiations.                         |
+| **Finance & Accounts Lead**   | `Accounts Manager`   | Accounts & Finance        | `Accounts Manager`          | Reviews commercial milestone structures, manages formal advance payment clearance or finance advance waivers.                  |
+| **Solar Design Specialist**   | `Design Engineer`    | Design & Engineering      | `Solar Design Engineer`     | Upstream contributor (Stage 03); provides frozen `Survey Engineering Design`, technical ratings, and dynamic BOM (`bom_hash`). |
+| **Executive Supreme Command** | `Admin`              | Executive Leadership      | `Managing Director` / `CEO` | Supreme operational command; grants Goodwill / VIP advance waivers, manages `Solar Proposal Settings`, and reviews margins.    |
+| **Technical DevOps Lead**     | `System Manager`     | Technology Infrastructure | `DevOps Architect`          | Framework apex; manages DocType schemas, custom fields, Property Setters, Redis worker queues, and bench CLI tooling.          |
 
 > [!IMPORTANT]
-> **Enterprise Authority Hierarchy: Administrator $\rightarrow$ System Manager $\rightarrow$ Admin (Project Supreme):**
+> **Enterprise Authority Hierarchy & ADR-020 Operational Governance:**
 >
-> - **`Administrator` & `System Manager` (Framework Supreme / Developer Realm):** Sit at the apex of system authority (supreme over `Admin`). Possess full access to everything `Admin` has, plus full technical rights over source code, DocType schema builder, Client/Server Scripts, bench tooling, and developer mode. Reserved strictly for technical developers and DevOps administrators.
-> - **`Admin` (Project / Solar EPC Level Supreme Command):** Introduced specifically for **project-level operational supremacy**. Has unrestricted operational authority over all business documents across Flow 1 and Flow 2, as well as exclusive authority over operational governance settings (`Solar Proposal Settings`, `Solar SLA Settings`, `Solar Notification Settings`, margin floor thresholds, and central/state subsidy slabs). Holds exclusive authority alongside the Owner/CEO to grant **Goodwill / VIP Customer Approvals**. **Restricted from source code, DocType schema customization, client/server scripts, and internal technical implementation access.**
+> - **Proposal Decoupling Rationale:** In commercial practice, proposals and subsidy calculations are frequently modeled by dedicated CRM/Costing teams. Decoupling Stage 04 to `CRM Representative` and `CRM Manager` eliminates operational bottlenecks; sales staff who also generate quotes in smaller setups are simply assigned the `CRM Representative` role in Frappe.
+> - **Managerial Authority Inheritance:** `CRM Manager` strictly inherits all operational capabilities of `CRM Representative`.
+> - **Stage-Forward Lock:** Once `Payment Entry` (Stage 05 advance clearance) is submitted or `Sales Order` (Stage 06) is created, the `Quotation` (Proposal) is permanently locked against cancel and amend.
+> - **Admin Deletion Safeguards:** Admin interventions are guarded by downstream dependency warnings, hard deletion blocks, and atomic cascade purges (`tabSolar Deletion Audit Log`).
 
 ### 2.2 Permission Hierarchy Matrix
 
-| DocType / Action                           | Sales Representative | Commercial Officer | Area Sales Manager | Accounts Assistant |      Admin\*      |
-| :----------------------------------------- | :------------------: | :----------------: | :----------------: | :----------------: | :---------------: |
-| **Proposal / Quotation (Read)**            |    Assigned Only     |   Full Territory   |   Full Territory   |     Permitted      |    All Records    |
-| **Proposal / Quotation (Create)**          |      Permitted       |     Permitted      |     Permitted      |         No         |        Yes        |
-| **Proposal / Quotation (Write/Edit)**      |   Own (Draft Only)   |   Full Territory   |   Full Territory   |         No         |    All Records    |
-| **Proposal / Quotation (Submit)**          |      Permitted       |        Yes         |        Yes         |         No         |        Yes        |
-| **Margin Floor Override Approval**         |      Restricted      |     Restricted     |      **Yes**       |     Restricted     | **Yes (Supreme)** |
-| **Proposal Finalization (`is_finalized`)** |      Permitted       |        Yes         |        Yes         |         No         |        Yes        |
-| **Goodwill / VIP Advance Waiver**          |      Restricted      |     Restricted     |     Restricted     |     Restricted     | **Yes (CEO/MD)**  |
-| **Solar Proposal Template (Manage)**       |      Read Only       |     Read Only      |     Permitted      |     Read Only      |        Yes        |
-| **Solar Proposal Settings (Manage)**       |          No          |         No         |         No         |         No         | Yes (Admin Only)  |
-| **Remark-Delay Log (Append)**              |      Own Record      |     Permitted      |     Permitted      |     Permitted      |    Full Access    |
+| DocType / Action                           | CRM Representative |   CRM Manager   |  Sales Manager  | Accounts Manager |      Admin\*      |
+| :----------------------------------------- | :----------------: | :-------------: | :-------------: | :--------------: | :---------------: |
+| **Proposal / Quotation (Read)**            |   Assigned Only    | Full Department | Full Territory  |    Permitted     |    All Records    |
+| **Proposal / Quotation (Create)**          |     Permitted      |    Permitted    |    Read Only    |        No        |        Yes        |
+| **Proposal / Quotation (Write/Edit)**      |  Own (Draft Only)  | Full Department |    Read Only    |        No        |    All Records    |
+| **Proposal / Quotation (Submit)**          |   Yes (Pre-S05)    |  Yes (Pre-S05)  |       No        |        No        |        Yes        |
+| **Margin Floor Override Approval**         |     Restricted     |     **Yes**     |   Restricted    |    Restricted    | **Yes (Supreme)** |
+| **Proposal Finalization (`is_finalized`)** |     Permitted      |       Yes       |    Permitted    |        No        |        Yes        |
+| **Goodwill / VIP Advance Waiver**          |     Restricted     |   Restricted    |   Restricted    |    Restricted    | **Yes (CEO/MD)**  |
+| **Solar Proposal Template (Manage)**       |     Read Only      |    Permitted    |    Read Only    |    Read Only     |        Yes        |
+| **Solar Proposal Settings (Manage)**       |         No         |       No        |       No        |        No        | Yes (Admin Only)  |
+| **Remark-Delay Log (Append)**              |     Own Record     | Full Department | Full Department |    Permitted     |    Full Access    |
 
 _\*Note: Frappe `Administrator` and `System Manager` sit above `Admin` and inherit all permissions._
 
@@ -654,8 +658,8 @@ def grant_advance_waiver(proposal_name: str, waiver_type: str, justification: st
         if not ("Admin" in user_roles or "Director" in user_roles or "System Manager" in user_roles):
             frappe.throw(_("Goodwill / VIP waivers can only be granted by Managing Director, CEO, or Admin."), frappe.PermissionError)
     elif waiver_type == "Finance Approved Waiver":
-        if not ("Accounts Assistant" in user_roles or "Commercial Officer" in user_roles or "Admin" in user_roles):
-            frappe.throw(_("Finance waivers require Accounts or Commercial authorization."), frappe.PermissionError)
+        if not ("Accounts Manager" in user_roles or "Admin" in user_roles or "System Manager" in user_roles):
+            frappe.throw(_("Finance waivers require Accounts Manager or Admin authorization."), frappe.PermissionError)
 
     doc = frappe.get_doc("Quotation", proposal_name)
     doc.custom_advance_waiver_type = waiver_type

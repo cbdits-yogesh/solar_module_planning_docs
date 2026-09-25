@@ -60,7 +60,7 @@ In compliance with CBIC tax circulars for turnkey solar contracts:
 - **Default 70:30 Bifurcation:** The proposal automatically bifurcates the total project cost into two primary line items:
   1. **Supply of Goods (70%):** Item `Solar Power Plant` attracting concessional GST (12% or 5%).
   2. **Supply of Services (30%):** Item `Installation & Commissioning` attracting standard service GST (18%).
-- **Client-Driven Flexibility:** The ratio is governed by `custom_goods_ratio_pct` and `custom_services_ratio_pct`. While defaulting to 70:30, `Sales Representative` or `Commercial Officer` can adjust the ratio (e.g. 100:0 for supply-only supply contracts, or custom splits) as mandated by specific client contracts.
+- **Client-Driven Flexibility:** The ratio is governed by `custom_goods_ratio_pct` and `custom_services_ratio_pct`. While defaulting to 70:30, `CRM Representative` or `CRM Manager` can adjust the ratio (e.g. 100:0 for supply-only supply contracts, or custom splits) as mandated by specific client contracts.
 
 ### 5. Dual Subsidy Engine: Pre-Defined Schemes & Admin-Configurable Slabs
 

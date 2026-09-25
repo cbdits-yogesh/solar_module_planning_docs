@@ -46,7 +46,7 @@ _Source: Sadbhav Solar EPC Enterprise Architecture Suite_
 
 ### `FR-005`: Order Confirmation, Advance Clearance & Customer Master Inception Gate (Stage 05)
 
-- **Primary Actors:** Finance & Accounts Officer, Commercial Manager.
+- **Primary Actors:** Accounts Assistant, Accounts Manager, CRM Manager.
 - **Functional Screen:** `Sales Order` (Financial Clearance Modal & `Payment Entry`).
 - **Core Controls & Validations:**
   - Financial Verification Gate: Blocks project execution until customer advance payment ($> 20\%$) or bank loan sanction disbursement letter is verified in the system.
@@ -142,7 +142,7 @@ _Source: Sadbhav Solar EPC Enterprise Architecture Suite_
 
 ### `FR-015`: Purchase Invoicing 3-Way Match & Joint Vendor Payment Tracking (Steps 06-07)
 
-- **Primary Actors:** Accounts Officer, Purchase Manager.
+- **Primary Actors:** Accounts Assistant, Accounts Manager, Purchase Manager.
 - **Functional Screens:** `Purchase Invoice` and **`Vendor Payment Tracking Workbench`**.
 - **Core Controls & Validations:**
   - 3-Way Matching: Validates that `Purchase Invoice` matches quantities and rates in `Purchase Order` and received quantities in `Purchase Receipt`.
@@ -150,7 +150,7 @@ _Source: Sadbhav Solar EPC Enterprise Architecture Suite_
 
 ### `FR-016`: Vendor Performance Rating Governance (Step 08)
 
-- **Primary Actors:** Purchase Manager, Quality Engineer.
+- **Primary Actors:** Purchase Manager, Store Manager, Project Manager.
 - **Functional Screen:** `Vendor Rating` DocType & Supplier Scorecard.
 - **Core Controls & Validations:**
   - Automatic Rating Engine: Evaluates vendors on 4 weighted criteria upon GRN/invoice completion:
