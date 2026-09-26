@@ -45,6 +45,14 @@ All step specifications documented in this directory operate under the **Unified
 
 ## 3. Master Lifecycle Planning Catalog
 
+### Foundation Layer: Enterprise Role, Permission & Security Substrate (Step 00)
+
+| Step # | Specification Document                                                                                                               | Scope & Objectives                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |         Status          |
+| :----: | :----------------------------------------------------------------------------------------------------------------------------------- | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :---------------------: |
+| **00** | [**`STEP_00_ROLE_PERMISSION_SECURITY_FOUNDATION_SPECIFICATION.md`**](./STEP_00_ROLE_PERMISSION_SECURITY_FOUNDATION_SPECIFICATION.md) | **Enterprise Role, Permission & Security Foundation:** Canonical 22 Roles (10 Frontline + 10 Supervisory + 2 Apex), 11 Department Role Profiles, Managerial Authority Inheritance (`RoleInheritanceService`), Stage-Forward Immutability Lock (`StageForwardLockService`), Junior Cancel/Amend Workflow (`Solar Cancellation Request`), Admin Deletion Guard (`AdminAuditService` -> `Solar Deletion Audit Log`), Atomic Cascading Purge (`CascadePurgeService`), Stage-Gated RLS (`StageGatedRLSService`), and Base Controller Mixin (`StageSecuredDocument`). | **Ready for Execution** |
+
+---
+
 ### Flow 1: Core Solar EPC Project Execution Lifecycle (11 Stages)
 
 | Stage # | Specification Document                                                                                                       | Stage Name & Scope                                                                                                                                                                                                                                                                                                                                 |         Status          |

@@ -469,6 +469,11 @@ Across all specifications:
     - Excised `Quality Engineer` / `Vendor Rating Auditor` across `STEP_16.caveman.md` and `STEP_19.caveman.md` (reallocated to `Store Manager` and `Project Engineer` / `Site Supervisor`).
     - Aligned Step 15 PO tier validation in Python services, error lookup tables, and end-user SOPs.
     - Verified 0 occurrences of deprecated roles across entire `step_plans_for_ai/` and `docs/decisions/`.
+- **Phase 6: Foundation Architecture Specification & Dedicated Planning (Completed & Reconciled):**
+  - Formulated dedicated Master Step Plan: [`step_plans/STEP_00_ROLE_PERMISSION_SECURITY_FOUNDATION_SPECIFICATION.md`](../../step_plans/STEP_00_ROLE_PERMISSION_SECURITY_FOUNDATION_SPECIFICATION.md) strictly adhering to the 9-Section Step Planning Blueprint.
+  - Formulated token-optimized AI specification: [`step_plans_for_ai/STEP_00_ROLE_PERMISSION_SECURITY_FOUNDATION_SPECIFICATION.caveman.md`](../../step_plans_for_ai/STEP_00_ROLE_PERMISSION_SECURITY_FOUNDATION_SPECIFICATION.caveman.md).
+  - Updated [`step_plans/README.md`](../../step_plans/README.md) to integrate Step 00 as the Foundation Substrate preceding Flow 1 and Flow 2.
+  - Approved dedicated implementation plan in `implementation_plan.md` defining the engineering path to develop the Role & Security substrate (`solar_module/security/`, fixtures, audit DocTypes, and `StageSecuredDocument` mixin) before individual stage implementation.
 
 ---
 
@@ -477,6 +482,9 @@ Across all specifications:
 ```
 ┌──────────────────────────────────────────────────────────────────────────────────────────────────┐
 │                                 SOLAR EPC LIFECYCLE ROADMAP                                      │
+├──────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ FOUNDATION SUBSTRATE: ENTERPRISE ROLE, PERMISSION & SECURITY CORE                                │
+│  [✔] Step 00: Role, Permission & Security Foundation Specification (ADR-020 Core Substrate)      │
 ├──────────────────────────────────────────────────────────────────────────────────────────────────┤
 │ FLOW 1: CORE SOLAR EPC PROJECT EXECUTION (11 STAGES)                                             │
 │  [✔] Stage 01: Lead Management, Deduplication & Routing                                          │
@@ -508,6 +516,7 @@ Across all specifications:
 │  [✔] Reconciled Master Architecture Docs, Blueprints & Planning Ref Docs                         │
 │  [✔] Reconciled Older ADRs (ADR-001 through ADR-019)                                             │
 │  [✔] Reconciled Token-Optimized AI Specifications (step_plans_for_ai/ & tracer_bullets/)          │
+│  [✔] Dedicated Step 00 Security Substrate Master Specification & Implementation Plan              │
 └──────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
@@ -516,6 +525,6 @@ Across all specifications:
 ## 6. Audit Sign-off
 
 - **Audited By:** Lead AI Software Architect & System Engineer
-- **Audit Timestamp:** 2026-09-25T13:30:00Z
-- **Reconciliation Integrity:** 100% (Complete enterprise role reconciliation under ADR-020. All 11 Stages of Flow 1 Core Solar EPC Project Execution and all 8 Steps of Flow 2 SCM Procurement Lifecycle are completely specified, cross-referenced with ADR-001 through ADR-020, master step plans, token-optimized AI caveman plans, and codebase touchpoints; Managerial Authority Inheritance, Admin Supreme Authority with Strict Deletion Audit, Downstream Dependency Warnings & Hard Blocking, Atomic Cascading Purge (`CascadePurgeService`), Stage-Forward Lock, Junior Cancel/Amend Request workflow, Refined PO Financial Delegation Tiers, and Stage-Gated RLS fully synchronized across the entire repository).
-- **Next Operational Action:** Implementation of core Frappe DocTypes, domain services, and Vue 3 frontend components across Flow 1 and Flow 2.
+- **Audit Timestamp:** 2026-09-26T05:40:00Z
+- **Reconciliation Integrity:** 100% (Complete enterprise role reconciliation under ADR-020. Dedicated Step 00 Master Plan and AI caveman specification created; all 11 Stages of Flow 1 Core Solar EPC Project Execution and all 8 Steps of Flow 2 SCM Procurement Lifecycle completely specified and cross-referenced with ADR-001 through ADR-020, master step plans, token-optimized AI caveman plans, and codebase touchpoints; Managerial Authority Inheritance, Admin Supreme Authority with Strict Deletion Audit, Downstream Dependency Warnings & Hard Blocking, Atomic Cascading Purge (`CascadePurgeService`), Stage-Forward Lock, Junior Cancel/Amend Request workflow, Refined PO Financial Delegation Tiers, and Stage-Gated RLS fully synchronized across the entire repository).
+- **Next Operational Action:** Implementation of Step 00 Core Security Substrate in `solar_module/security/`, database fixtures, and automated test suite, followed by Stage 01 DocType execution.
