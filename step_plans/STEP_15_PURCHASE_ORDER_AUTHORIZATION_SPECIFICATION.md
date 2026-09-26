@@ -99,7 +99,7 @@ Real-world solar EPC operations demand that the Purchase Order engine support fo
 
 ### 2.1 Enterprise User Roles Matrix
 
-In strict compliance with the **Zero "User" Suffix Rule** ([`step_plans/README.md#5-enterprise-persona--role-naming-standard-zero-user-suffix-rule`](./README.md#5-enterprise-persona--role-naming-standard-zero-user-suffix-rule)) and [`ADR-020`](../decisions/ADR-020-ENTERPRISE-ROLE-PERMISSION-ARCHITECTURE.md), all operational personas are designated by descriptive functional titles:
+In strict compliance with the **Zero "User" Suffix Rule** ([`step_plans/README.md#5-enterprise-persona--role-naming-standard-symmetric-two-tier-architecture--adr-000`](./README.md#5-enterprise-persona--role-naming-standard-symmetric-two-tier-architecture--adr-000)) and [`ADR-000`](../decisions/ADR-000-ENTERPRISE-ROLE-PERMISSION-ARCHITECTURE.md), all operational personas are designated by descriptive functional titles:
 
 | Persona / Business Actor           | Frappe System Role                     | HRMS Department        | HRMS Designation              | Operational Responsibilities                                                                                                        |
 | :--------------------------------- | :------------------------------------- | :--------------------- | :---------------------------- | :---------------------------------------------------------------------------------------------------------------------------------- |

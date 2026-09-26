@@ -93,7 +93,7 @@ Triggered immediately once Stage 05 achieves formal financial advance clearance 
 
 ### 2.1 Enterprise User Roles Matrix
 
-In strict compliance with [`ADR-020`](../docs/decisions/ADR-020-ENTERPRISE-ROLE-PERMISSION-ARCHITECTURE.md) and the **Zero "User" Suffix Rule**, all actors are designated using functional enterprise titles:
+In strict compliance with [`ADR-000`](../docs/decisions/ADR-000-ENTERPRISE-ROLE-PERMISSION-ARCHITECTURE.md) and the **Zero "User" Suffix Rule**, all actors are designated using functional enterprise titles:
 
 | Persona / Business Actor       | Frappe System Role          | HRMS Department           | HRMS Designation                                     | Operational Responsibilities                                                                                                              |
 | :----------------------------- | :-------------------------- | :------------------------ | :--------------------------------------------------- | :---------------------------------------------------------------------------------------------------------------------------------------- |
@@ -109,7 +109,7 @@ In strict compliance with [`ADR-020`](../docs/decisions/ADR-020-ENTERPRISE-ROLE-
 | **Technical DevOps Lead**      | `System Manager`            | Technology Infrastructure | `DevOps Architect`                                   | Framework apex; manages DocType schemas, custom fields, Property Setters, Redis worker queues, and bench CLI tooling.                     |
 
 > [!IMPORTANT]
-> **Enterprise Authority Hierarchy & ADR-020 Operational Governance:**
+> **Enterprise Authority Hierarchy & ADR-000 Operational Governance:**
 >
 > - **`Administrator` & `System Manager` (Framework Supreme / Developer Realm):** Sit at the apex of system authority (supreme over `Admin`). Possess full access to everything `Admin` has, plus full technical rights over source code, DocType schema builder, Client/Server Scripts, bench tooling, and developer mode. Reserved strictly for technical developers and DevOps administrators.
 > - **`Admin` (Project / Solar EPC Level Supreme Command):** Introduced specifically for **project-level operational supremacy**. Holds unrestricted operational authority over all business documents across Flow 1 and Flow 2, as well as exclusive authority over operational governance settings (`Solar Sales Order Settings`, `Solar Advance Settings`, `Solar SLA Settings`, `Solar Notification Settings`). Holds exclusive authority to authorize **Sales Order Baseline Amendments**. Protected by downstream dependency warnings, hard deletion blocks, and atomic cascade purges (`tabSolar Deletion Audit Log`).

@@ -102,7 +102,7 @@ To preserve 100% upgrade safety without altering core code, all enterprise attri
 
 ### 2. Multi-Tier Financial Authority Matrix Gate
 
-Submission of `Purchase Order` (`docstatus = 1`) enforces hard server-side financial authority checks aligned with ADR-020:
+Submission of `Purchase Order` (`docstatus = 1`) enforces hard server-side financial authority checks aligned with ADR-000:
 
 $$\text{Net PO Total} = \sum (\text{Qty} \times \text{Rate}) + \text{Taxes} - \text{Discounts}$$
 
@@ -190,7 +190,7 @@ The PO explicitly fixes delivery destination to streamline downstream logistics:
 
 ## Compliance & Invariants
 
-1. **Enterprise Role Standard:** Strict adherence to the **Zero "User" Suffix Rule** ([`step_plans/README.md#5-enterprise-persona--role-naming-standard-zero-user-suffix-rule`](../../step_plans/README.md#5-enterprise-persona--role-naming-standard-zero-user-suffix-rule)) and [`ADR-020`](ADR-020-ENTERPRISE-ROLE-PERMISSION-ARCHITECTURE.md): `Purchase Assistant`, `Purchase Manager`, `Accounts Assistant`, `Accounts Manager`, `Store Assistant`, `Store Manager`, `Site Supervisor`, `Project Engineer`, `Project Manager`, `Admin`.
+1. **Enterprise Role Standard:** Strict adherence to the **Zero "User" Suffix Rule** ([`step_plans/README.md#5-enterprise-persona--role-naming-standard-zero-user-suffix-rule`](../../step_plans/README.md#5-enterprise-persona--role-naming-standard-zero-user-suffix-rule)) and [`ADR-000`](ADR-000-ENTERPRISE-ROLE-PERMISSION-ARCHITECTURE.md): `Purchase Assistant`, `Purchase Manager`, `Accounts Assistant`, `Accounts Manager`, `Store Assistant`, `Store Manager`, `Site Supervisor`, `Project Engineer`, `Project Manager`, `Admin`.
 2. **Authority Standard:** Clean separation between `Admin` (Project Supreme Command) and `System Manager` (Framework Supreme / Developer).
 3. **Database Integrity:** 3NF relational schema with explicit database indexes on foreign keys (`custom_comparison_matrix_ref`, `custom_project_ref`, `custom_material_request_ref`).
 4. **Testing Protocol:** 100% automated test coverage inheriting from `IntegrationTestCase` with zero database commits (`frappe.db.commit()` prohibited).

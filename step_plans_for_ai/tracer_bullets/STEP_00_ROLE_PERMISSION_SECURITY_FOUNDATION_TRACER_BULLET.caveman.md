@@ -4,7 +4,7 @@
 
 **Document ID:** `TB-00-ROLE-SECURITY-CORE`  
 **Parent Master Specification:** [`step_plans_for_ai/STEP_00_ROLE_PERMISSION_SECURITY_FOUNDATION_SPECIFICATION.caveman.md`](../STEP_00_ROLE_PERMISSION_SECURITY_FOUNDATION_SPECIFICATION.caveman.md)  
-**Governing Architecture:** [`docs/decisions/ADR-020-ENTERPRISE-ROLE-PERMISSION-ARCHITECTURE.md`](../../docs/decisions/ADR-020-ENTERPRISE-ROLE-PERMISSION-ARCHITECTURE.md)  
+**Governing Architecture:** [`docs/decisions/ADR-000-ENTERPRISE-ROLE-PERMISSION-ARCHITECTURE.md`](../../docs/decisions/ADR-000-ENTERPRISE-ROLE-PERMISSION-ARCHITECTURE.md)  
 **Target Module:** `solar_module` / `manoj`  
 **Author:** Principal Enterprise Architect  
 **Status:** Ready for Immediate Execution
@@ -57,7 +57,7 @@
 
 ### 1.2 Tracer Bullet Functional Mission
 
-Prove the 5 foundational security and role invariants of ADR-020 across the live stack:
+Prove the 5 foundational security and role invariants of ADR-000 across the live stack:
 
 1. **Managerial Full-Authority Inheritance:** A Department Manager inherits 100% of Frontline subordinate roles dynamically via `RoleInheritanceService` without role duplication.
 2. **Stage-Forward Immutability Lock:** Submitted upstream documents cannot be cancelled or amended once downstream lifecycle documents exist.

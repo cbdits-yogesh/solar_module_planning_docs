@@ -100,9 +100,9 @@ When creating specifications for subsequent stages:
 
 ---
 
-## 5. Enterprise Persona & Role Naming Standard (Symmetric Two-Tier Architecture — ADR-020)
+## 5. Enterprise Persona & Role Naming Standard (Symmetric Two-Tier Architecture — ADR-000)
 
-In strict accordance with [`ADR-020`](../docs/decisions/ADR-020-ENTERPRISE-ROLE-PERMISSION-ARCHITECTURE.md) and the **Zero "User" Suffix Rule**, all personas, Frappe system roles, and operational designations are standardized around a **Symmetric Two-Tier Departmental Hierarchy** (Frontline Operational Role + Supervisory Managerial Role), with complete elimination of redundant and deprecated roles.
+In strict accordance with [`ADR-000`](../docs/decisions/ADR-000-ENTERPRISE-ROLE-PERMISSION-ARCHITECTURE.md) and the **Zero "User" Suffix Rule**, all personas, Frappe system roles, and operational designations are standardized around a **Symmetric Two-Tier Departmental Hierarchy** (Frontline Operational Role + Supervisory Managerial Role), with complete elimination of redundant and deprecated roles.
 
 ### Mandatory Role Naming Nomenclature & Departmental Mapping:
 
@@ -123,7 +123,7 @@ All subsequent step specifications (`STEP_01` through `STEP_19`) strictly adhere
 
 ---
 
-## 6. Enterprise Authority Hierarchy & Operational Safeguards (ADR-020)
+## 6. Enterprise Authority Hierarchy & Operational Safeguards (ADR-000)
 
 To guarantee clean separation between enterprise business governance and technical software plumbing while preserving Frappe Framework's native architecture:
 

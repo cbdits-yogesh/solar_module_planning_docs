@@ -51,7 +51,7 @@ Enterprise systems involve distinct personas. This section establishes the compl
 - **Permission Hierarchy:** Matrix of Read, Write, Create, Submit, Cancel, Amend, and Export permissions per role.
 
 > [!IMPORTANT]
-> **Enterprise Persona & Role Standard (Symmetric Two-Tier Architecture — ADR-020):**  
+> **Enterprise Persona & Role Standard (Symmetric Two-Tier Architecture — ADR-000):**  
 > When defining enterprise roles, Frappe system roles, and operational personas across any lifecycle step (Sales, Survey, Design, CRM, Accounts, Project, Store, Liaisoning, Purchase, O&M), **never use generic `User` suffixes** (such as `Lead User`, `Sales User`, `Survey User`, `Site User`, `Project User`, `Store User`). Furthermore, eliminate deprecated roles (`Lead Representative`, `Accounts Officer`, `Commercial Officer`, `Quality Engineer`, `Vendor Rating Auditor`, `Liaisoning Officer`).
 >
 > All operational domains adhere to a **Symmetric Two-Tier Model** plus Site Supervision:

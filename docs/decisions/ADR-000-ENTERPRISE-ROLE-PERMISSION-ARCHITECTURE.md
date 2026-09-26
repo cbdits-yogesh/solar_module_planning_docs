@@ -1,4 +1,4 @@
-# ADR-020: Enterprise Symmetric Role Hierarchy, Permission Matrix, Stage-Forward Lock & Admin Safeguards Architecture
+# ADR-000: Enterprise Symmetric Role Hierarchy, Permission Matrix, Stage-Forward Lock & Admin Safeguards Architecture
 
 ## Status
 
@@ -36,7 +36,7 @@ As the platform expanded across 19 discrete lifecycle stages, several architectu
 
 ## Decision
 
-We establish an authoritative, comprehensive architectural standard for the **Enterprise Symmetric Role Hierarchy, Permission Matrix, Stage-Forward Lock & Admin Safeguards Architecture** (`ADR-020`).
+We establish an authoritative, comprehensive architectural standard for the **Enterprise Symmetric Role Hierarchy, Permission Matrix, Stage-Forward Lock & Admin Safeguards Architecture** (`ADR-000`).
 
 ### 1. The Symmetric Two-Tier Departmental Role Model
 

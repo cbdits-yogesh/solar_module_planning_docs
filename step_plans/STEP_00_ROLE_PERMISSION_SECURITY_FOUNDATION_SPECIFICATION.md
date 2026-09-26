@@ -4,7 +4,7 @@
 
 **Document ID:** `STEP-00-ROLE-SECURITY-CORE`  
 **Lifecycle Flow:** Foundation Layer: Enterprise Role, Permission & Security Substrate (Preceding Flow 1 and Flow 2)  
-**Governing Architecture:** [`docs/decisions/ADR-020-ENTERPRISE-ROLE-PERMISSION-ARCHITECTURE.md`](../docs/decisions/ADR-020-ENTERPRISE-ROLE-PERMISSION-ARCHITECTURE.md)  
+**Governing Architecture:** [`docs/decisions/ADR-000-ENTERPRISE-ROLE-PERMISSION-ARCHITECTURE.md`](../docs/decisions/ADR-000-ENTERPRISE-ROLE-PERMISSION-ARCHITECTURE.md)  
 **Blueprint Reference:** [`architect_docs/02_STEP_PLANNING_SPECIFICATION_BLUEPRINT.md`](../architect_docs/02_STEP_PLANNING_SPECIFICATION_BLUEPRINT.md)  
 **PRD / FRS Traceability:** [`planning_ref_docs/01_PROJECT_FOUNDATION_MODEL.md`](../planning_ref_docs/01_PROJECT_FOUNDATION_MODEL.md), [`planning_ref_docs/06_FUNCTIONAL_REQUIREMENTS_SPECIFICATION.md`](../planning_ref_docs/06_FUNCTIONAL_REQUIREMENTS_SPECIFICATION.md) (`FR-000: Enterprise Security & RBAC`), [`planning_ref_docs/10_UI_UX_SPECIFICATION.md`](../planning_ref_docs/10_UI_UX_SPECIFICATION.md)  
 **Target Module:** `solar_module` / `manoj`  
@@ -66,7 +66,7 @@ Step 00 (**Enterprise Role, Permission & Security Foundation**) sits at the abso
 
 ### 2.1 The Canonical 22 Roles & Two-Tier Departmental Matrix
 
-In strict compliance with **ADR-020** and the **Zero "User" Suffix Rule**, all business roles operate on a symmetric two-tier model:
+In strict compliance with **ADR-000** and the **Zero "User" Suffix Rule**, all business roles operate on a symmetric two-tier model:
 
 - **Tier 1 (Frontline / Specialist):** Direct field and desk operations (creation, editing, drafting, physical execution).
 - **Tier 2 (Supervisory / Managerial):** Quality audit, commercial allocation, exception review, and managerial authority inheritance.
@@ -189,11 +189,11 @@ stateDiagram-v2
     Expired --> [*]: Stale Request Cleared
 ```
 
-### 4.2 Five Immutable Enterprise Security Invariants (ADR-020)
+### 4.2 Five Immutable Enterprise Security Invariants (ADR-000)
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────────────────────┐
-│                            FIVE IMMUTABLE SECURITY GATES (ADR-020)                          │
+│                            FIVE IMMUTABLE SECURITY GATES (ADR-000)                          │
 ├─────────────────────────────────────────────────────────────────────────────────────────────┤
 │ 1. MANAGERIAL INHERITANCE: Manager role inherits 100% of Frontline operations               │
 │ 2. STAGE-FORWARD LOCK: Upstream documents are locked once downstream progress exists         │

@@ -59,7 +59,7 @@ Stage 01 (**Lead Onboarding & Qualification**) is the primary customer entry gat
 | **Solar EPC Director / Admin** | `Admin`                | Executive Management   | `Managing Director`   | Supreme operational command across all lifecycles; SLA configuration, notification toggles, audit trails.  |
 
 > [!IMPORTANT]
-> **Enterprise Role Hierarchy & ADR-020 Governance:**
+> **Enterprise Role Hierarchy & ADR-000 Governance:**
 >
 > - **`Administrator` & `System Manager` (Framework Supreme & Developer Realm):** Frappe's native `Administrator` and `System Manager` sit at the apex of the system hierarchy (supreme over `Admin`). As intended by Frappe Framework, `System Manager` possesses full access to everything `Admin` has, plus full technical rights over source code, DocType schema builder, Client/Server Scripts, bench tooling, and developer mode. Reserved for technical developers, bench engineers, and DevOps administrators.
 > - **`Admin` (Project / Solar EPC Level Supreme Command):** Introduced specifically for **project-level operational supremacy**. Has unrestricted operational access to everything that any or all business roles have across Flow 1 and Flow 2, as well as full authority over operational governance settings (`Solar SLA Settings`, `Solar Notification Settings`, delay approvals, and manager overrides). Protected by downstream dependency warnings, hard deletion blocks, and atomic cascade purges (`tabSolar Deletion Audit Log`).

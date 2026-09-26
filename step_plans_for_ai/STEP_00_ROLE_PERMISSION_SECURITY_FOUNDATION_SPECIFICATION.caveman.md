@@ -4,7 +4,7 @@
 
 **Document ID:** `STEP-00-ROLE-SECURITY-CORE`  
 **Lifecycle Flow:** Foundation Layer: Enterprise Role, Permission & Security Substrate (Preceding Flow 1 and Flow 2)  
-**Governing Architecture:** [`docs/decisions/ADR-020-ENTERPRISE-ROLE-PERMISSION-ARCHITECTURE.md`](../docs/decisions/ADR-020-ENTERPRISE-ROLE-PERMISSION-ARCHITECTURE.md)  
+**Governing Architecture:** [`docs/decisions/ADR-000-ENTERPRISE-ROLE-PERMISSION-ARCHITECTURE.md`](../docs/decisions/ADR-000-ENTERPRISE-ROLE-PERMISSION-ARCHITECTURE.md)  
 **Target Module:** `solar_module` / `manoj`  
 **Status:** Approved / Ready for Implementation
 
@@ -160,7 +160,7 @@ stateDiagram-v2
     Executed --> [*]: Immutability Restored
 ```
 
-### 4.2 Five Security Invariants (ADR-020)
+### 4.2 Five Security Invariants (ADR-000)
 
 1. **Managerial Authority Inheritance:** Department Manager inherits 100% of Frontline operations.
 2. **Stage-Forward Lock:** Submitted upstream documents locked if active downstream records exist.

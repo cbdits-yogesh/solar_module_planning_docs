@@ -138,7 +138,7 @@ The progress bar is not a static graphic; it is a live interactive workflow cont
    - Provides deep links to underlying Frappe Desk documents (`/app/site-survey/<id>`, `/app/sales-order/<id>`) guarded by native Frappe role permissions.
 
 2. **Role Action Buttons:**
-   Primary action buttons inside the drawer dynamically render strictly according to the session user's role (with Managerial Authority Inheritance per ADR-020):
+   Primary action buttons inside the drawer dynamically render strictly according to the session user's role (with Managerial Authority Inheritance per ADR-000):
    - **`Sales Representative` / `Sales Manager`:** "Schedule Survey", "Mark Disqualified", "Submit Sales Order".
    - **`Survey Engineer` / `Survey Manager`:** "Launch Mobile Audit", "Sync Offline Data".
    - **`Design Engineer` / `Design Manager`:** "Launch PV Workbench", "Freeze BOM Baseline".

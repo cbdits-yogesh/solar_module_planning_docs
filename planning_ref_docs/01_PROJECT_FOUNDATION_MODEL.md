@@ -122,11 +122,11 @@ flowchart TD
 
 ---
 
-## 6. Enterprise Roles Matrix (Symmetric Two-Tier Architecture — ADR-020)
+## 6. Enterprise Roles Matrix (Symmetric Two-Tier Architecture — ADR-000)
 
 > [!IMPORTANT]
-> **Enterprise Role Nomenclature Standard (Zero "User" Suffix Rule & ADR-020):**  
-> Across the entire platform architecture, system roles, and step specifications, generic `User` suffixes (such as `Lead User`, `Sales User`, `Survey User`, `Site User`, `Project User`, `Store User`) are strictly prohibited. In accordance with [`ADR-020`](../docs/decisions/ADR-020-ENTERPRISE-ROLE-PERMISSION-ARCHITECTURE.md), all operational actors and Frappe system roles are organized into a **Symmetric Two-Tier Departmental Hierarchy** (Frontline Role + Managerial Role) with Managerial Authority Inheritance, eliminating deprecated roles (`Lead Representative`, `Accounts Officer`, `Commercial Officer`, `Quality Engineer`, `Vendor Rating Auditor`, `Liaisoning Officer`).
+> **Enterprise Role Nomenclature Standard (Zero "User" Suffix Rule & ADR-000):**  
+> Across the entire platform architecture, system roles, and step specifications, generic `User` suffixes (such as `Lead User`, `Sales User`, `Survey User`, `Site User`, `Project User`, `Store User`) are strictly prohibited. In accordance with [`ADR-000`](../docs/decisions/ADR-000-ENTERPRISE-ROLE-PERMISSION-ARCHITECTURE.md), all operational actors and Frappe system roles are organized into a **Symmetric Two-Tier Departmental Hierarchy** (Frontline Role + Managerial Role) with Managerial Authority Inheritance, eliminating deprecated roles (`Lead Representative`, `Accounts Officer`, `Commercial Officer`, `Quality Engineer`, `Vendor Rating Auditor`, `Liaisoning Officer`).
 
 1. **Admin (Project Supreme Command):** Supreme operational authority across all business transactions across Flow 1 and Flow 2. Exclusive business authority to configure `Solar SLA Settings`, `Solar Notification Settings`, and `Solar SCM Settings`, approve delay overrides, and execute audited cascading purges (`tabSolar Deletion Audit Log`). Restricted from code, DocType schema customization, client/server scripts, or internal technical implementation. _(Note: Frappe Framework's native `System Manager` and `Administrator` sit above `Admin`, possessing all developer/code rights and inheriting whatever access `Admin` possesses)._
 2. **Sales Department:**

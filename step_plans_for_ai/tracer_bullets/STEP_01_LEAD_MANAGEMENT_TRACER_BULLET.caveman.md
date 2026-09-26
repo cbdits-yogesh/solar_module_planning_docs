@@ -4,7 +4,7 @@
 
 **Document ID:** `TB-01-LEAD`  
 **Parent Master Specification:** [`step_plans_for_ai/STEP_01_LEAD_MANAGEMENT_SPECIFICATION.caveman.md`](../STEP_01_LEAD_MANAGEMENT_SPECIFICATION.caveman.md)  
-**Governing Architecture:** [`docs/decisions/ADR-001-LEAD-MANAGEMENT-DEDUPLICATION-ROUTING.md`](../../docs/decisions/ADR-001-LEAD-MANAGEMENT-DEDUPLICATION-ROUTING.md) & [`docs/decisions/ADR-020-ENTERPRISE-ROLE-PERMISSION-ARCHITECTURE.md`](../../docs/decisions/ADR-020-ENTERPRISE-ROLE-PERMISSION-ARCHITECTURE.md)  
+**Governing Architecture:** [`docs/decisions/ADR-001-LEAD-MANAGEMENT-DEDUPLICATION-ROUTING.md`](../../docs/decisions/ADR-001-LEAD-MANAGEMENT-DEDUPLICATION-ROUTING.md) & [`docs/decisions/ADR-000-ENTERPRISE-ROLE-PERMISSION-ARCHITECTURE.md`](../../docs/decisions/ADR-000-ENTERPRISE-ROLE-PERMISSION-ARCHITECTURE.md)  
 **Security Foundation Substrate:** [`step_plans_for_ai/tracer_bullets/STEP_00_ROLE_PERMISSION_SECURITY_FOUNDATION_TRACER_BULLET.caveman.md`](STEP_00_ROLE_PERMISSION_SECURITY_FOUNDATION_TRACER_BULLET.caveman.md)  
 **PRD / FRS Traceability:** `planning_ref_docs/01_PROJECT_FOUNDATION_MODEL.md` (`BC-01`), `planning_ref_docs/05_BUSINESS_REQUIREMENTS_DOCUMENT.md` (`BR-001`), `planning_ref_docs/06_FUNCTIONAL_REQUIREMENTS_SPECIFICATION.md` (`FR-001`)  
 **Target Module:** `solar_module` / `manoj`  
@@ -38,7 +38,7 @@
 │   - LeadValidationService (Regex sanitization, dedup check, sizing gate)    │
 │   - LeadSLAService (2h response countdown, overdue detection, delay check) │
 │   - SiteSurveyBridgeService (Survey Engineer role check, draft instantiator)│
-│   - StageSecuredDocument & StageForwardLockService (ADR-020 lock integration)│
+│   - StageSecuredDocument & StageForwardLockService (ADR-000 lock integration)│
 │   │                                                                         │
 │   ▼                                                                         │
 │ Layer 3: Controller & Whitelisted API Gateway                                │
@@ -52,7 +52,7 @@
 │   - codes/client_script/lead.js (Clean standard Frappe clutter buttons)     │
 │   - Real-time mobile input formatting & async duplicate warning alert       │
 │   - [Assign Site Survey] Dialog with filtered Survey Engineer picker        │
-│   - Junior Cancel suppression -> ADR-020 [Request Cancel/Amend] modal       │
+│   - Junior Cancel suppression -> ADR-000 [Request Cancel/Amend] modal       │
 │   │                                                                         │
 │   ▼                                                                         │
 │ Layer 5: Automated Verification Suite (Integration Test)                     │
@@ -72,7 +72,7 @@ Prove the 8 fundamental business, technical, and security invariants of Stage 01
 3. **2-Hour Inbound Response SLA Clock:** Response SLA deadline is initialized to $T + 2\text{ hours}$ upon lead creation; background daemons flag overdue leads and enforce delay justification in `tabRemark-Delay Log`.
 4. **Technical Sizing Feasibility Gate:** Survey scheduling is hard-blocked until preliminary technical metrics are collected: $\text{solar\_capacity} > 0.0\text{ kW}$, 6-digit `custom_pincode`, and physical address.
 5. **Certified Surveyor Assignment & Hand-off:** Surveyor must hold the `Survey Engineer` (or `Survey Assistant`) role; assignment automatically sets `stage_status = 'Site Survey'` and instantiates the downstream `tabSite Survey` draft container.
-6. **ADR-020 Security Substrate Integration:** `Lead` controller inherits from `StageSecuredDocument`, enforcing `StageForwardLockService` immutability when downstream `Site Survey` records exist.
+6. **ADR-000 Security Substrate Integration:** `Lead` controller inherits from `StageSecuredDocument`, enforcing `StageForwardLockService` immutability when downstream `Site Survey` records exist.
 7. **Junior Cancel/Amend Workflow:** Frontline `Sales Representative` users cannot unilaterally cancel submitted or active leads; cancellations route through `Solar Cancellation Request` for `Sales Manager` sign-off.
 8. **Admin Deletion Safeguard & Audit Snapshot:** Direct deletion of upstream `Lead` records is blocked if active `Site Survey` records exist; permitted deletions require $\ge 20$ chars justification and record a complete JSON snapshot in `tabSolar Deletion Audit Log`.
 
@@ -349,7 +349,7 @@ class SiteSurveyBridgeService:
 
 ### 4.1 Base Controller: `LeadController` (`solar_module/overrides/lead.py`)
 
-Inherits from `StageSecuredDocument` to inherit ADR-020 immutability and deletion audit logging automatically.
+Inherits from `StageSecuredDocument` to inherit ADR-000 immutability and deletion audit logging automatically.
 
 ```python
 import frappe
@@ -581,7 +581,7 @@ frappe.ui.form.on("Lead", {
         .addClass("btn-warning");
     }
 
-    // 3. ADR-020 Junior Cancel Suppression
+    // 3. ADR-000 Junior Cancel Suppression
     const isManagerOrAdmin = frappe.user_roles.some(
       (r) =>
         r.endsWith("Manager") ||
@@ -955,7 +955,7 @@ class TestLeadTracerBullet(IntegrationTestCase):
         self.assertTrue(len(lead.remark_delay_log) > 0)
 
     def test_07_stage_forward_lock_blocks_cancel(self):
-        """Assert ADR-020 StageForwardLockService blocks Lead cancellation once Site Survey exists."""
+        """Assert ADR-000 StageForwardLockService blocks Lead cancellation once Site Survey exists."""
         lead = frappe.get_doc({
             "doctype": "Lead",
             "first_name": "Lock Test Solar",

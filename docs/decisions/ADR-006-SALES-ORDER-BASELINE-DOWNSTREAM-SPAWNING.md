@@ -119,7 +119,7 @@ To align commercial cash flows with project delivery milestones:
 
 ### 6. Strict Role Governance & Zero "User" Suffix Enforcement
 
-In full accordance with [`step_plans/README.md`](../../step_plans/README.md#5-enterprise-persona--role-naming-standard-zero-user-suffix-rule) and [`ADR-020`](ADR-020-ENTERPRISE-ROLE-PERMISSION-ARCHITECTURE.md):
+In full accordance with [`step_plans/README.md`](../../step_plans/README.md#5-enterprise-persona--role-naming-standard-zero-user-suffix-rule) and [`ADR-000`](ADR-000-ENTERPRISE-ROLE-PERMISSION-ARCHITECTURE.md):
 
 - **Enterprise Roles:**
   - `Sales Representative` / `Sales Manager`: Client commercial relationship and sales operations authority; validates baseline, terms, contract document.

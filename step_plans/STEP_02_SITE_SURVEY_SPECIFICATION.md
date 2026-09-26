@@ -55,7 +55,7 @@ Because solar installations routinely take place across remote agricultural terr
 
 ### 2.1 Enterprise User Roles Matrix
 
-In strict compliance with [`ADR-020`](../docs/decisions/ADR-020-ENTERPRISE-ROLE-PERMISSION-ARCHITECTURE.md) and the **Zero "User" Suffix Rule**, all actors are designated using functional enterprise titles:
+In strict compliance with [`ADR-000`](../docs/decisions/ADR-000-ENTERPRISE-ROLE-PERMISSION-ARCHITECTURE.md) and the **Zero "User" Suffix Rule**, all actors are designated using functional enterprise titles:
 
 | Persona / Business Actor       | Frappe System Role | HRMS Department           | HRMS Designation            | Operational Responsibilities                                                                                          |
 | :----------------------------- | :----------------- | :------------------------ | :-------------------------- | :-------------------------------------------------------------------------------------------------------------------- |
@@ -67,7 +67,7 @@ In strict compliance with [`ADR-020`](../docs/decisions/ADR-020-ENTERPRISE-ROLE-
 | **Technical DevOps Lead**      | `System Manager`   | Technology Infrastructure | `DevOps Architect`          | Framework apex; manages DocType schemas, Redis queues, background worker daemons, and bench CLI tooling.              |
 
 > [!IMPORTANT]
-> **Enterprise Authority Hierarchy & ADR-020 Operational Governance:**
+> **Enterprise Authority Hierarchy & ADR-000 Operational Governance:**
 >
 > - **`Administrator` & `System Manager` (Framework Supreme / Developer Realm):** Frappe's native `Administrator` and `System Manager` sit at the apex of system authority (supreme over `Admin`). As intended by Frappe Framework, `System Manager` possesses full access to everything `Admin` has, plus full technical rights over source code, DocType schema builder, Client/Server Scripts, bench tooling, and developer mode. Reserved for technical developers, bench engineers, and DevOps administrators.
 > - **`Admin` (Project / Solar EPC Level Supreme Command):** Introduced specifically for **project-level operational supremacy**. Has unrestricted operational access to everything that any or all business roles have across Flow 1 and Flow 2, as well as full authority over operational governance settings (`Solar SLA Settings`, `Solar Notification Settings`, delay approvals, and manager overrides). Protected by downstream dependency warnings, hard deletion blocks, and atomic cascade purges (`tabSolar Deletion Audit Log`).
