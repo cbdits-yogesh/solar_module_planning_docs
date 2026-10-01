@@ -77,7 +77,7 @@ To protect corporate profitability:
 - **Live BOM Cost Aggregation:** Compares total quoted revenue (excluding GST) against the live estimated BOM cost pulled from `Survey Engineering Design`.
 - **Gross Margin Formula:** $\text{Gross Margin \%} = \frac{\text{Quoted Amount} - \text{Estimated BOM Cost}}{\text{Quoted Amount}} \times 100\%$.
 - **Admin Governance:** The minimum allowable gross margin floor (default 18.0%) is configured by `Admin` in `Solar Proposal Settings`.
-- **Approval Gate:** If the calculated margin falls below the floor, the proposal is automatically locked into `Pending Margin Approval`. It cannot be dispatched to the customer or finalized until an `Area Sales Manager` or `Admin` records an explicit digital sign-off (`custom_margin_approved_by` and justification remarks).
+- **Approval Gate:** If the calculated margin falls below the floor, the proposal is automatically locked into `Pending Margin Approval`. It cannot be dispatched to the customer or finalized until a `CRM Manager` or `Admin` records an explicit digital sign-off (`custom_margin_approved_by` and justification remarks).
 
 ### 7. Enforced Advance Verification & Goodwill / VIP Bypass Gate
 

@@ -9,12 +9,12 @@ _Source: Sadbhav Solar EPC Enterprise Architecture Suite_
 
 ### `FR-001`: Lead Onboarding & Deduplication Pipeline (Stage 01)
 
-- **Primary Actors:** Sales Executive, BD Manager.
+- **Primary Actors:** Sales Representative, BD Manager.
 - **Functional Screens:** `/solar/leads` and Frappe Desk `Lead` / `CRM Lead`.
 - **Core Controls & Validations:**
   - Mandatory Fields: `first_name`, `mobile_no`, `custom_lead_organization_name`, `status`, `custom_territory`.
   - Server-Side Deduplication: Intercepts mobile numbers and emails across both `Lead` and `CRM Lead`. Prevents duplicate prospect creation.
-  - Assignment & SLA Clock: Auto-assigns lead to regional sales executive; triggers 2h initial contact SLA timer.
+  - Assignment & SLA Clock: Auto-assigns lead to regional sales representative; triggers 2h initial contact SLA timer.
   - Lifecycle Stepper: 11-stage progress bar showing timestamps, active badges, and linked document drawer.
 
 ### `FR-002`: Technical Audit & Mandatory Document Checklist (Stage 02)
@@ -37,7 +37,7 @@ _Source: Sadbhav Solar EPC Enterprise Architecture Suite_
 
 ### `FR-004`: Dynamic Commercial Proposal & Subsidy Engine (Stage 04)
 
-- **Primary Actors:** Sales Executive, Commercial Manager.
+- **Primary Actors:** Sales Representative, Commercial Manager.
 - **Functional Screens:** `Proposal` and `Quotation` DocTypes.
 - **Core Controls & Validations:**
   - Dynamic Pricing: Automatically pulls pricing from frozen BOM quantities and current Item master rates.

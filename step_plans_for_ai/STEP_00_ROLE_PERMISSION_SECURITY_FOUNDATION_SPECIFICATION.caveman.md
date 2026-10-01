@@ -58,7 +58,7 @@ Zero "User" Suffix Rule strictly enforced:
 
 | Operational Domain       | Frontline Role (Tier 1)               | Supervisory Role (Tier 2)      | HRMS Department        | HRMS Designation Baseline       | Primary Step Scope         |
 | :----------------------- | :------------------------------------ | :----------------------------- | :--------------------- | :------------------------------ | :------------------------- |
-| **Sales & Marketing**    | `Sales Representative`                | `Sales Manager`                | Sales & Marketing      | Sales Executive / Manager       | Stage 01                   |
+| **Sales & Marketing**    | `Sales Representative`                | `Sales Manager`                | Sales & Marketing      | Sales Representative / Manager  | Stage 01                   |
 | **Technical Survey**     | `Survey Engineer`                     | `Survey Manager`               | Engineering Operations | Survey Specialist / Manager     | Stage 02                   |
 | **Engineering Design**   | `Design Engineer`                     | `Design Manager`               | Engineering Operations | Solar Design Engineer / Head    | Stage 03                   |
 | **CRM & Proposals**      | `CRM Representative`                  | `CRM Manager`                  | CRM & Commercial       | Commercial Proposal Exec / Lead | Stage 04                   |
@@ -72,29 +72,43 @@ Zero "User" Suffix Rule strictly enforced:
 
 ### 2.2 Departmental Role Profiles (`tabRole Profile`)
 
-| Role Profile Name         | Assigned System Roles                              | Intended Personnel                      |
-| :------------------------ | :------------------------------------------------- | :-------------------------------------- |
-| `Solar Sales Executive`   | `Sales Representative`, `Desk User`                | Frontline telecallers, field sales reps |
-| `Solar Sales Head`        | `Sales Manager`, `Desk User`                       | Regional sales managers, VP Sales       |
-| `Solar Survey Specialist` | `Survey Engineer`, `Desk User`                     | Mobile field surveyors, site auditors   |
-| `Solar Survey Head`       | `Survey Manager`, `Desk User`                      | Chief Survey Officer, Survey Lead       |
-| `Solar Design Engineer`   | `Design Engineer`, `Desk User`                     | CAD engineers, PVsyst specialists       |
-| `Solar Design Head`       | `Design Manager`, `Desk User`                      | Head of Engineering Design              |
-| `Solar CRM Proposal Exec` | `CRM Representative`, `Desk User`                  | Quotation analysts, pricing estimators  |
-| `Solar CRM Head`          | `CRM Manager`, `Desk User`                         | Commercial Director, CRM Manager        |
-| `Solar Accounts Exec`     | `Accounts Assistant`, `Desk User`                  | Accounts payables/receivables staff     |
-| `Solar Accounts Head`     | `Accounts Manager`, `Desk User`                    | Chief Financial Officer, Controller     |
-| `Solar Site Supervisor`   | `Site Supervisor`, `Project Engineer`, `Desk User` | On-site project field engineers         |
-| `Solar Project Manager`   | `Project Manager`, `Desk User`                     | Senior project managers, EPC heads      |
-| `Solar Store Assistant`   | `Store Assistant`, `Desk User`                     | Central warehouse dock operators        |
-| `Solar Store Head`        | `Store Manager`, `Desk User`                       | Inventory controller, Logistics head    |
-| `Solar Liaisoning Exec`   | `Liaisoning Representative`, `Desk User`           | DISCOM liaisoning agents                |
-| `Solar Liaisoning Head`   | `Liaisoning Manager`, `Desk User`                  | Head of Regulatory Affairs              |
-| `Solar Purchase Buyer`    | `Purchase Assistant`, `Desk User`                  | SCM procurement executives              |
-| `Solar SCM Head`          | `Purchase Manager`, `Desk User`                    | Head of Procurement, SCM Director       |
-| `Solar O&M Engineer`      | `O&M Service Engineer`, `Desk User`                | Solar field service technicians         |
-| `Solar O&M Head`          | `O&M Manager`, `Desk User`                         | Service Operations Manager              |
-| `Solar Executive Command` | `Admin`, `Desk User`                               | Managing Director, Executive Board      |
+| Role Profile Name            | Assigned System Roles                              | Intended Personnel                      |
+| :--------------------------- | :------------------------------------------------- | :-------------------------------------- |
+| `Solar Sales Representative` | `Sales Representative`, `Desk User`                | Frontline telecallers, field sales reps |
+| `Solar Sales Head`           | `Sales Manager`, `Desk User`                       | Regional sales managers, VP Sales       |
+| `Solar Survey Specialist`    | `Survey Engineer`, `Desk User`                     | Mobile field surveyors, site auditors   |
+| `Solar Survey Head`          | `Survey Manager`, `Desk User`                      | Chief Survey Officer, Survey Lead       |
+| `Solar Design Engineer`      | `Design Engineer`, `Desk User`                     | CAD engineers, PVsyst specialists       |
+| `Solar Design Head`          | `Design Manager`, `Desk User`                      | Head of Engineering Design              |
+| `Solar CRM Proposal Exec`    | `CRM Representative`, `Desk User`                  | Quotation analysts, pricing estimators  |
+| `Solar CRM Head`             | `CRM Manager`, `Desk User`                         | Commercial Director, CRM Manager        |
+| `Solar Accounts Exec`        | `Accounts Assistant`, `Desk User`                  | Accounts payables/receivables staff     |
+| `Solar Accounts Head`        | `Accounts Manager`, `Desk User`                    | Chief Financial Officer, Controller     |
+| `Solar Site Supervisor`      | `Site Supervisor`, `Project Engineer`, `Desk User` | On-site project field engineers         |
+| `Solar Project Manager`      | `Project Manager`, `Desk User`                     | Senior project managers, EPC heads      |
+| `Solar Store Assistant`      | `Store Assistant`, `Desk User`                     | Central warehouse dock operators        |
+| `Solar Store Head`           | `Store Manager`, `Desk User`                       | Inventory controller, Logistics head    |
+| `Solar Liaisoning Exec`      | `Liaisoning Representative`, `Desk User`           | DISCOM liaisoning agents                |
+| `Solar Liaisoning Head`      | `Liaisoning Manager`, `Desk User`                  | Head of Regulatory Affairs              |
+| `Solar Purchase Buyer`       | `Purchase Assistant`, `Desk User`                  | SCM procurement executives              |
+| `Solar SCM Head`             | `Purchase Manager`, `Desk User`                    | Head of Procurement, SCM Director       |
+| `Solar O&M Engineer`         | `O&M Service Engineer`, `Desk User`                | Solar field service technicians         |
+| `Solar O&M Head`             | `O&M Manager`, `Desk User`                         | Service Operations Manager              |
+| `Solar Executive Command`    | `Admin`, `Desk User`                               | Managing Director, Executive Board      |
+
+### 2.3 Standard Enterprise Baseline Users (`tabUser` Fixtures)
+
+- Sales: `sales_rep@sadbhav.com` (`Solar Sales Representative`), `sales_manager@sadbhav.com` (`Solar Sales Head`)
+- Survey: `survey_engineer@sadbhav.com` (`Solar Survey Specialist`), `survey_manager@sadbhav.com` (`Solar Survey Head`)
+- Design: `design_engineer@sadbhav.com` (`Solar Design Engineer`), `design_manager@sadbhav.com` (`Solar Design Head`)
+- CRM: `crm_rep@sadbhav.com` (`Solar CRM Proposal Exec`), `crm_manager@sadbhav.com` (`Solar CRM Head`)
+- Accounts: `accounts_assistant@sadbhav.com` (`Solar Accounts Exec`), `accounts_manager@sadbhav.com` (`Solar Accounts Head`)
+- Site / Ops: `project_engineer@sadbhav.com` (`Solar Site Supervisor`), `project_manager@sadbhav.com` (`Solar Project Manager`)
+- Store: `store_assistant@sadbhav.com` (`Solar Store Assistant`), `store_manager@sadbhav.com` (`Solar Store Head`)
+- Liaisoning: `liaisoning_rep@sadbhav.com` (`Solar Liaisoning Exec`), `liaisoning_manager@sadbhav.com` (`Solar Liaisoning Head`)
+- SCM: `purchase_assistant@sadbhav.com` (`Solar Purchase Buyer`), `purchase_manager@sadbhav.com` (`Solar SCM Head`)
+- O&M: `om_engineer@sadbhav.com` (`Solar O&M Engineer`), `om_manager@sadbhav.com` (`Solar O&M Head`)
+- Supreme: `admin@sadbhav.com` (`Solar Executive Command`)
 
 ---
 

@@ -54,7 +54,7 @@ To preserve the integrity of ERPNext core financial and inventory ledgers:
 
 To guarantee swift customer response and eliminate operational bottlenecks:
 
-- **Tier 1 (Initial Contact SLA):** 2-hour response window for frontline sales executives upon lead ingestion during operational hours.
+- **Tier 1 (Initial Contact SLA):** 2-hour response window for frontline sales representatives upon lead ingestion during operational hours.
 - **Tier 2 (Survey Scheduling SLA):** 24-hour turnaround window to qualify prospects and schedule a site survey.
 - **Asynchronous Daemon (`solar_module.tasks.recompute_lead_sla`):** A background worker executing every 15 minutes checks active leads against `sla_due_date = creation_timestamp + SLA_Hours`. If breached, the engine updates `stage_status = 'Overdue'`, sets `complete_status = 'Delayed'`, and dispatches high-priority escalation cards to Raven chat and WhatsApp.
 - **Mandatory Delay Reason Gate:** Once marked `Overdue`, any subsequent state transition or update is hard-blocked unless a justified delay reason is appended to `tabRemark-Delay Log` (`delay_reason` enum + detailed remark text).
@@ -120,6 +120,6 @@ In compliance with enterprise standards:
 
 ### Negative / Trade-Offs
 
-- Requires sales executives to enter complete sizing information (bill amount, capacity, pincode) before survey scheduling.
+- Requires sales representatives to enter complete sizing information (bill amount, capacity, pincode) before survey scheduling.
 - Duplicate inquiries for genuine multi-property clients require manager intervention (`duplicate_mobile = 1`).
 - Requires maintaining scheduled background worker tasks for 15-minute SLA evaluations.

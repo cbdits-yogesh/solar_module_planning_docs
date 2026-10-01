@@ -34,13 +34,13 @@ Stage 01 (**Lead Onboarding & Qualification**) is the primary customer entry gat
 ### 1.2 Core Business Objectives & Target KPIs
 
 1. **Zero Duplicate Ingestion (100% Deduplication):** Enforce strict server-side phone number normalization (stripping spaces, country prefixes, and non-numeric characters to 10 standard digits) and cross-table duplicate checking across `tabLead`, `tabCRM Lead`, `tabCustomer`, and `tabContact`.
-2. **Sub-2-Hour Response SLA:** First contact between frontline sales executives and inbound prospects must occur within 2 hours of ingestion during business hours.
+2. **Sub-2-Hour Response SLA:** First contact between frontline sales representatives and inbound prospects must occur within 2 hours of ingestion during business hours.
 3. **High Qualification Accuracy ($\ge 85\%$):** Ensure solar plant sizing feasibility (sanctioned connected load vs. requested kW capacity) is logged before field deployment.
 4. **Sub-24-Hour Survey Scheduling:** Qualified leads must be assigned to an authorized `Survey Engineer` (or `Survey Assistant`) with verified location coordinates within 24 hours of qualification.
 
 ### 1.3 Failure Modes Eliminated
 
-- **Sales Rep Collision & Dispute:** Multiple sales executives calling the same client due to unstandardized mobile numbers (+91, 0, spaces).
+- **Sales Rep Collision & Dispute:** Multiple sales representatives calling the same client due to unstandardized mobile numbers (+91, 0, spaces).
 - **Abandoned Inbound Leads:** Inquiries lost in email inboxes or unmonitored WhatsApp numbers with no SLA accountability.
 - **Unqualified Field Trips:** Survey engineers dispatched to sites without verifying roof ownership, sanctioned load, or average monthly power bills.
 - **Lost Operational Audit Trail:** No structured documentation explaining why a lead was stalled or delayed beyond standard turnaround times.
@@ -51,10 +51,10 @@ Stage 01 (**Lead Onboarding & Qualification**) is the primary customer entry gat
 
 ### 2.1 Enterprise User Roles Matrix
 
-| Persona / Business Actor       | Frappe System Role     | HRMS Department        | HRMS Designation      | Operational Responsibilities                                                                               |
-| :----------------------------- | :--------------------- | :--------------------- | :-------------------- | :--------------------------------------------------------------------------------------------------------- |
-| **Sales Representative**       | `Sales Representative` | Sales & Marketing      | `Sales Executive`     | Ingests leads, cleanses mobile number, collects electricity bill amount, logs qualification & survey date. |
-| **Sales Department Manager**   | `Sales Manager`        | Sales & Marketing      | `Sales Manager`       | Territory allocation, lead assignment, overdue SLA review, pipeline governance, conversion monitoring.     |
+| Persona / Business Actor       | Frappe System Role     | HRMS Department        | HRMS Designation       | Operational Responsibilities                                                                               |
+| :----------------------------- | :--------------------- | :--------------------- | :--------------------- | :--------------------------------------------------------------------------------------------------------- |
+| **Sales Representative**       | `Sales Representative` | Sales & Marketing      | `Sales Representative` | Ingests leads, cleanses mobile number, collects electricity bill amount, logs qualification & survey date. |
+| **Sales Department Manager**   | `Sales Manager`        | Sales & Marketing      | `Sales Manager`        | Territory allocation, lead assignment, overdue SLA review, pipeline governance, conversion monitoring.     |
 | **Site Survey Engineer**       | `Survey Engineer`      | Engineering Operations | `Site Survey Auditor` | Receives survey assignment, reviews preliminary sizing data, and conducts on-site technical survey.        |
 | **Solar EPC Director / Admin** | `Admin`                | Executive Management   | `Managing Director`   | Supreme operational command across all lifecycles; SLA configuration, notification toggles, audit trails.  |
 
@@ -329,7 +329,7 @@ Under the enterprise routing governance, all users land by default on `/solar`. 
 
 ```
 ┌──────────────────────────────────────────────────────────────────────────────────────────────────┐
-│ SADBHAV SOLAR EPC COMMAND CENTER (`/solar`)               Logged in: Sales Exec (Ahmedabad)      │
+│ SADBHAV SOLAR EPC COMMAND CENTER (`/solar`)               Logged in: Sales Rep (Ahmedabad)       │
 ├──────────────────────────────────────────────────────────────────────────────────────────────────┤
 │ [Active KPI Cards]                                                                               │
 │ ┌────────────────┐ ┌────────────────┐ ┌────────────────┐ ┌─────────────────────────────────────┐ │
@@ -418,12 +418,12 @@ flowchart LR
 ### 7.3 Frappe HRMS Integration
 
 - **Employee Attribution:** Every assigned user in `surveyed_by` and `owner` maps to their respective `tabEmployee` record.
-- **Territory & Attendance Verification:** Cross-checks that the assigned sales executive has an active `Employee Checkin` for the day before auto-assigning high-priority leads.
+- **Territory & Attendance Verification:** Cross-checks that the assigned sales representative has an active `Employee Checkin` for the day before auto-assigning high-priority leads.
 
 ### 7.4 External Communications & Statutory Portals
 
 - **Raven Message Notification Broker:** When a new lead is inserted, dispatches a rich HTML notification card to the internal chat channel (`Raven-lead-notification`) detailing customer name, solar capacity, location, and direct link.
-- **WhatsApp Business API (WABA):** Dispatches an instant automated template message to the client acknowledging their inquiry with a branded brochure and assigning their dedicated sales executive.
+- **WhatsApp Business API (WABA):** Dispatches an instant automated template message to the client acknowledging their inquiry with a branded brochure and assigning their dedicated sales representative.
 - **PM Surya Ghar National Portal API:** Webhook receiver ingesting consumer application registrations, rooftop photos, and consumer electricity connection numbers.
 
 ---
@@ -579,11 +579,11 @@ class TestSolarLeadLifecycle(IntegrationTestCase):
 
 ## 9. Operational SOP, Error Resolution & Runbook
 
-### 9.1 Frontline Sales Executive SOP: Lead Ingestion to Survey Handoff
+### 9.1 Frontline Sales Representative SOP: Lead Ingestion to Survey Handoff
 
 ```
 ┌──────────────────────────────────────────────────────────────────────────────────────────────────┐
-│                     SALES EXECUTIVE STANDARD OPERATING PROCEDURE (SOP)                           │
+│                  SALES REPRESENTATIVE STANDARD OPERATING PROCEDURE (SOP)                         │
 └───────────────────────────────────┬──────────────────────────────────────────────────────────────┘
                                     │
     [Step 1: Open /solar] ─────────▶│ Access `/solar` landing wrapper. Review 'New Inbound Leads'.

@@ -10,7 +10,7 @@ Accepted
 
 ## Context
 
-In the Sadbhav Solar EPC Enterprise ERP platform (`solar_module`), managing end-to-end solar EPC project lifecycles across Flow 1 (Core Project Execution, Stages 01–11) and Flow 2 (SCM, Store, Purchase & Vendor Procurement, Steps 12–19) involves a highly distributed workforce comprising field sales executives, site surveyors, PV design engineers, CRM estimators, project site engineers, warehouse keepers, liaisoning officers, procurement specialists, and financial accountants.
+In the Sadbhav Solar EPC Enterprise ERP platform (`solar_module`), managing end-to-end solar EPC project lifecycles across Flow 1 (Core Project Execution, Stages 01–11) and Flow 2 (SCM, Store, Purchase & Vendor Procurement, Steps 12–19) involves a highly distributed workforce comprising field sales representatives, site surveyors, PV design engineers, CRM estimators, project site engineers, warehouse keepers, liaisoning officers, procurement specialists, and financial accountants.
 
 As the platform expanded across 19 discrete lifecycle stages, several architectural and operational vulnerabilities emerged:
 

@@ -26,7 +26,7 @@ Key design parameters:
 3. **Two-Tier Pre-Fill:** Auto-pull Stage 02 (`Site Survey` address, GPS, load, DISCOM, roof type) + Stage 03 (`Survey Engineering Design` kW capacity, module/inverter models, cable math, BOM verified via `bom_hash`).
 4. **Configurable 70:30 Solar GST Split:** Statutory CBIC solar split: **70% Goods** (`Solar Power Plant` @ 12% or 5% GST) + **30% Services** (`Installation & Commissioning` @ 18% GST). Ratio editable per proposal if client contract require supply-only or custom split.
 5. **Dual Subsidy Engine:** Pre-defined subsidy selector (`Solar Subsidy Scheme`) + Admin-managed Central (PM Surya Ghar CFA) & State slabs in `Solar Proposal Settings`.
-6. **Admin Margin Floor Gate:** Compare live BOM cost to quoted price. Margin < Admin floor (default 18%) trigger mandatory `Area Sales Manager` / `Admin` approval.
+6. **Admin Margin Floor Gate:** Compare live BOM cost to quoted price. Margin < Admin floor (default 18%) trigger mandatory `CRM Manager` / `Admin` approval.
 7. **Advance Verification & Goodwill VIP Gate:** Standard advance $\ge 50\%$, or Finance Officer waiver, or **Goodwill / VIP Approval** by CEO / MD / Admin (no finance clearance needed).
 8. **Prospect Quarantine:** Prospect stay in `tabLead` throughout Stage 04. No `Customer` record created until Stage 05 advance clearance.
 
@@ -139,7 +139,7 @@ Option B: Extend standard `tabQuotation` with `custom_*` fields, alias UI to **`
 | `custom_estimated_bom_cost`        | Total Estimated BOM Cost (₹)   | `Currency`   | `Company:currency`                                                                                |  **Yes**  |      -       | Aggregated live material cost of BOM from Stage 03 SED.                             |
 | `custom_gross_margin_pct`          | Calculated Gross Margin (%)    | `Percent`    | -                                                                                                 |  **Yes**  | **Index: 1** | `((net_total - custom_estimated_bom_cost) / net_total) * 100`. Precision: 2.        |
 | `custom_margin_status`             | Gross Margin Evaluation        | `Select`     | `Within Margin\nMargin Floor Exception\nMargin Override Approved`                                 |  **Yes**  | **Index: 1** | Evaluated vs Admin floor. Default: `Within Margin`.                                 |
-| `custom_margin_approved_by`        | Margin Override Approver       | `Link`       | `User`                                                                                            |    No     |      -       | Digital signature of `Area Sales Manager` or `Admin` authorizing override.          |
+| `custom_margin_approved_by`        | Margin Override Approver       | `Link`       | `User`                                                                                            |    No     |      -       | Digital signature of `CRM Manager` or `Admin` authorizing override.          |
 | `custom_margin_override_remark`    | Margin Override Justification  | `Small Text` | -                                                                                                 |    No     |      -       | Mandatory justification text for commercial margin exception.                       |
 | `custom_advance_requirement_pct`   | Required Advance (%)           | `Percent`    | -                                                                                                 |  **Yes**  |      -       | Standard: 50.0%. Admin-configurable.                                                |
 | `custom_advance_waiver_type`       | Advance Payment Clearance Gate | `Select`     | `Standard (≥50% Required)\nFinance Approved Waiver\nGoodwill / VIP Approved`                      |  **Yes**  |      -       | Governs Stage 05 gate. Default: `Standard (≥50% Required)`.                         |
@@ -230,7 +230,7 @@ stateDiagram-v2
     [*] --> Draft: Proposal Created (Pre-filled from S02/S03)
     Draft --> Under_Review: Calculate Commercials & GST Split
     Under_Review --> Pending_Margin_Approval: Margin < Admin Margin Floor
-    Pending_Margin_Approval --> Approved: Area Sales Manager / Admin Sign-Off
+    Pending_Margin_Approval --> Approved: CRM Manager / Admin Sign-Off
     Under_Review --> Approved: Margin ≥ Admin Margin Floor
     Approved --> Dispatched: Deliver Branded PDF to Client
     Dispatched --> Finalized: Customer Accepts (Exclusive Lock, Supersedes Peers)
@@ -268,7 +268,7 @@ stateDiagram-v2
 │ Gate 4: Admin-Controlled Gross Margin Floor Governance Gate                                      │
 │ - `custom_gross_margin_pct` evaluated against `default_gross_margin_floor_pct`                    │
 │ - If margin < floor, status = `Pending Margin Approval`                                          │
-│ - Dispatch / Finalize blocked until `Area Sales Manager` or `Admin` populates                    │
+│ - Dispatch / Finalize blocked until `CRM Manager` or `Admin` populates                    │
 │   `custom_margin_approved_by` and `custom_margin_override_remark`                                │
 ├──────────────────────────────────────────────────────────────────────────────────────────────────┤
 │ Gate 5: Exclusive Proposal Finalization Gate                                                     │
@@ -292,7 +292,7 @@ stateDiagram-v2
 3. **Escalation Daemon:** Background job runs every 15 min. If `now_datetime() > exp_complete_date`:
    - `stage_status = 'Overdue'`
    - `complete_status = 'Delayed'`
-   - Dispatches Raven alert to Area Sales Manager & Admin.
+   - Dispatches Raven alert to CRM Manager & Admin.
 4. **Delay Reason Requirement:** Save / Submit / Dispatch blocked when `Overdue` unless entry added to `tabRemark-Delay Log`.
 
 ---
@@ -486,7 +486,7 @@ class ProposalFinalizationService:
 
         if doc.custom_margin_status == "Margin Floor Exception":
             frappe.throw(
-                _("Proposal {0} cannot be finalized because Gross Margin ({1}%) is below floor and requires Area Sales Manager approval.")
+                _("Proposal {0} cannot be finalized because Gross Margin ({1}%) is below floor and requires CRM Manager approval.")
                 .format(doc.name, doc.custom_gross_margin_pct),
                 frappe.ValidationError
             )
@@ -567,8 +567,8 @@ def calculate_commercials(proposal_name: str, base_cost: float, goods_ratio: flo
 @frappe.whitelist(methods=["POST"])
 def authorize_margin_override(proposal_name: str, justification: str) -> dict:
     user_roles = frappe.get_roles()
-    if not ("Area Sales Manager" in user_roles or "Admin" in user_roles or "System Manager" in user_roles):
-        frappe.throw(_("Not permitted. Only Area Sales Manager or Admin can authorize margin overrides."), frappe.PermissionError)
+    if not ("CRM Manager" in user_roles or "Admin" in user_roles or "System Manager" in user_roles):
+        frappe.throw(_("Not permitted. Only CRM Manager or Admin can authorize margin overrides."), frappe.PermissionError)
 
     doc = frappe.get_doc("Quotation", proposal_name)
     doc.check_permission("write")
@@ -658,9 +658,25 @@ Subclass `frappe.testing.IntegrationTestCase`. Auto-rollback via `frappe.db.roll
 class TestSolarProposalEngine(IntegrationTestCase):
     def setUp(self):
         super().setUp()
+        self._ensure_crm_users_and_roles()
         self.lead = create_test_lead()
         self.survey = create_test_survey(self.lead.name)
         self.sed = create_test_sed(self.survey.name)
+
+    def _ensure_crm_users_and_roles(self):
+        crm_users = {
+            "crm_rep@sadbhav.com": ["CRM Representative"],
+            "crm_manager@sadbhav.com": ["CRM Manager"],
+            "admin@sadbhav.com": ["Admin"]
+        }
+        for email, roles in crm_users.items():
+            if not frappe.db.exists("User", email):
+                u = frappe.new_doc("User")
+                u.email = email
+                u.first_name = email.split("@")[0].replace("_", " ").title()
+                u.insert(ignore_permissions=True)
+            u = frappe.get_doc("User", email)
+            u.add_roles(*roles)
 
     def test_01_prefill_from_survey_and_design(self):
         """Verify proposal auto-populates site parameters and live BOM cost from SED."""
@@ -716,12 +732,12 @@ class TestSolarProposalEngine(IntegrationTestCase):
         self.assertRaises(frappe.ValidationError, ProposalFinalizationService.finalize_proposal, proposal.name)
 
     def test_06_margin_override_authorization(self):
-        """Verify Area Sales Manager can authorize sub-floor margin override."""
+        """Verify CRM Manager can authorize sub-floor margin override."""
         proposal = create_test_proposal(self.survey.name, self.sed.name)
         proposal.custom_margin_status = "Margin Floor Exception"
         proposal.save()
 
-        frappe.set_user("asm@sadbhav.com")
+        frappe.set_user("crm_manager@sadbhav.com")
         authorize_margin_override(proposal.name, "Approved strategic volume discount.")
 
         proposal.reload()
@@ -779,11 +795,11 @@ class TestSolarProposalEngine(IntegrationTestCase):
 
 ### 9.1 End-User Standard Operating Procedure (SOP)
 
-#### Persona: `Sales Representative`
+#### Persona: `CRM Representative`
 
 1. **Initiate Proposal:** Open `/solar/proposals` $\rightarrow$ select `Site Survey` $\rightarrow$ select approved `Survey Engineering Design` (auto-pulls capacity, equipment, BOM cost).
 2. **Set Commercials:** Select `Solar Proposal Template` or enter pricing. Verify 70:30 GST ratio. Select subsidy scheme from dropdown.
-3. **Verify Margin:** Check Gross Margin meter. If $\ge 18.0\%$, submit. If $< 18.0\%$, add note and submit for **Area Sales Manager Review**.
+3. **Verify Margin:** Check Gross Margin meter. If $\ge 18.0\%$, submit. If $< 18.0\%$, add note and submit for **CRM Manager Review**.
 4. **Multi-Proposal (Optional):** Create Option B/C for higher capacity or alternative module/inverter brand.
 5. **Dispatch:** Click **`Generate Branded PDF`** $\rightarrow$ send via WhatsApp / Email.
 6. **Finalize:** Customer confirms selection $\rightarrow$ click **`Finalize Proposal`** (locks proposal, marks peers `Superseded`).
@@ -795,10 +811,10 @@ class TestSolarProposalEngine(IntegrationTestCase):
 | Error Message Displayed                     | Root Cause                                     | Operator Resolution                                                           |
 | :------------------------------------------ | :--------------------------------------------- | :---------------------------------------------------------------------------- |
 | `SED must be Submitted and Frozen`          | Linked Engineering Design is Draft or Revision | Contact `Design Engineer` / `Design Manager` to submit Stage 03 SED.          |
-| `Margin Floor Exception: Approval Required` | Quoted price yields gross margin below 18.0%   | Submit proposal to `Area Sales Manager` for margin override.                  |
+| `Margin Floor Exception: Approval Required` | Quoted price yields gross margin below 18.0%   | Submit proposal to `CRM Manager` for margin override.                         |
 | `Goods and Services ratio must sum to 100%` | Goods % and Services % do not total 100.0%     | Adjust percentages so Goods + Services = 100.0%.                              |
 | `SLA Expired: Delay Reason Required`        | 24-hour proposal window exceeded               | Append categorized delay entry in `tabRemark-Delay Log`.                      |
-| `Another Proposal is Already Finalized`     | Sibling proposal for survey already finalized  | Reopen existing finalized proposal or consult `Area Sales Manager` to revert. |
+| `Another Proposal is Already Finalized`     | Sibling proposal for survey already finalized  | Reopen existing finalized proposal or consult `CRM Manager` to revert.        |
 | `Goodwill VIP Waiver Permission Denied`     | Non-executive attempted Goodwill waiver        | Goodwill waivers reserved strictly for MD, CEO, or Project Admin.             |
 
 ---

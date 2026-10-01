@@ -330,7 +330,7 @@ Universal landing on `/solar`. Vue 3 SPA adapts to user role:
 
 ```
 ┌──────────────────────────────────────────────────────────────────────────────────────────────────┐
-│ SADBHAV SOLAR EPC COMMAND CENTER (`/solar`)               Logged in: Sales Exec (Ahmedabad)      │
+│ SADBHAV SOLAR EPC COMMAND CENTER (`/solar`)               Logged in: Sales Rep (Ahmedabad)       │
 ├──────────────────────────────────────────────────────────────────────────────────────────────────┤
 │ [Active KPI Cards]                                                                               │
 │ ┌────────────────┐ ┌────────────────┐ ┌────────────────┐ ┌─────────────────────────────────────┐ │
@@ -580,11 +580,11 @@ class TestSolarLeadLifecycle(IntegrationTestCase):
 
 ## 9. Operational SOP, Error Resolution & Runbook
 
-### 9.1 Frontline Sales Executive SOP: Lead Ingestion to Survey Handoff
+### 9.1 Frontline Sales Representative SOP: Lead Ingestion to Survey Handoff
 
 ```
 ┌──────────────────────────────────────────────────────────────────────────────────────────────────┐
-│                     SALES EXECUTIVE STANDARD OPERATING PROCEDURE (SOP)                           │
+│                  SALES REPRESENTATIVE STANDARD OPERATING PROCEDURE (SOP)                         │
 └───────────────────────────────────┬──────────────────────────────────────────────────────────────┘
                                     │
     [Step 1: Open /solar] ─────────▶│ Access `/solar` landing wrapper. Review 'New Inbound Leads'.

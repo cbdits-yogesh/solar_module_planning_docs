@@ -48,7 +48,7 @@ In traditional solar contracting, commercial proposals and material procurement 
 - **Under-Budgeted Balance of System (BOS):** Field technicians discovering at Stage 08 that DC cable lengths or earthing strips were underestimated by 40%, forcing emergency off-contract site purchases that erode gross margins.
 - **Inverter MPPT Voltage Clipping:** String lengths designed without extreme temperature coefficient adjustments ($\beta_{Voc}, \alpha_{Isc}$), leading to inverter overvoltage tripping in peak winter or undervoltage clipping in peak summer.
 - **DISCOM Drawing Rejections at Stage 10:** Grid connection applications rejected by the power distribution utility due to missing or non-standard Single Line Diagrams (SLD), delaying net-meter synchronization by weeks.
-- **Uncontrolled BOM Mutations:** Sales executives silently editing equipment specifications in quotations after engineering review without technical re-validation.
+- **Uncontrolled BOM Mutations:** Sales representatives silently editing equipment specifications in quotations after engineering review without technical re-validation.
 
 ---
 

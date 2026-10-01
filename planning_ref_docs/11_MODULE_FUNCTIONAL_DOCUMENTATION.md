@@ -10,7 +10,7 @@ _Source: Sadbhav Solar EPC Enterprise Architecture Suite_
 ### `MOD-01`: CRM & Lead Management (Stage 01)
 
 - **Objective:** Systematic prospect capture, qualification, deduplication, and immediate regional assignment.
-- **SOP:** Lead ingested from web/walk-in $\rightarrow$ Server-side validator checks phone/email uniqueness $\rightarrow$ Lead auto-assigned to regional sales executive $\rightarrow$ Initial contact logged within 2 hours $\rightarrow$ Site Survey requested upon qualification.
+- **SOP:** Lead ingested from web/walk-in $\rightarrow$ Server-side validator checks phone/email uniqueness $\rightarrow$ Lead auto-assigned to regional sales representative $\rightarrow$ Initial contact logged within 2 hours $\rightarrow$ Site Survey requested upon qualification.
 
 ### `MOD-02`: Technical Site Survey & Audit (Stage 02)
 

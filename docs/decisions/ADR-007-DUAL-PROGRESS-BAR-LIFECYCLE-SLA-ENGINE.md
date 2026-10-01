@@ -22,7 +22,7 @@ In the Sadbhav Solar EPC Enterprise ERP platform (`solar_module`), managing comp
 
 Under legacy workflows and standard ERP implementations:
 
-- **Disjointed Progress Visibility:** Sales executives had zero visibility into whether site execution commenced or why DISCOM filings stalled; site engineers had no visibility into commercial milestones or customer commitments.
+- **Disjointed Progress Visibility:** Sales representatives had zero visibility into whether site execution commenced or why DISCOM filings stalled; site engineers had no visibility into commercial milestones or customer commitments.
 - **Ambiguous Stage Statuses:** Stakeholders could not differentiate between a stage that was merely waiting for preceding tasks (_Idle_), actively underway within schedule (_Ongoing_), behind schedule (_Overdue_), completed on time (_Completed_), or completed after significant delay (_Completed with Delay_).
 - **Missing SLA Accountability:** Turnaround times (TAT) were untracked. Breaches went unnoticed until customer complaints or statutory deadlines expired.
 - **Uncontrolled or Disconnected Actions:** Operators either lacked interactive shortcuts to execute their assigned tasks or possessed unmanaged permissions to skip critical verification gates.

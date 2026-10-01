@@ -577,8 +577,10 @@ class TestRoleSecurityTracerBullet(IntegrationTestCase):
         super().setUp()
         self.junior_email = "junior_sales@sadbhav.local"
         self.manager_email = "sales_mgr@sadbhav.local"
+        self.crm_rep_email = "crm_rep@sadbhav.local"
+        self.crm_mgr_email = "crm_mgr@sadbhav.local"
 
-        # Create Junior User
+        # Create Junior User (Sales)
         if not frappe.db.exists("User", self.junior_email):
             u = frappe.get_doc({
                 "doctype": "User",
@@ -588,7 +590,7 @@ class TestRoleSecurityTracerBullet(IntegrationTestCase):
             }).insert(ignore_permissions=True)
             u.add_roles("Sales Representative")
 
-        # Create Manager User
+        # Create Manager User (Sales)
         if not frappe.db.exists("User", self.manager_email):
             m = frappe.get_doc({
                 "doctype": "User",
@@ -598,17 +600,46 @@ class TestRoleSecurityTracerBullet(IntegrationTestCase):
             }).insert(ignore_permissions=True)
             m.add_roles("Sales Manager")
 
+        # Create CRM Representative User
+        if not frappe.db.exists("User", self.crm_rep_email):
+            cr = frappe.get_doc({
+                "doctype": "User",
+                "email": self.crm_rep_email,
+                "first_name": "CRM Representative",
+                "send_welcome_email": 0
+            }).insert(ignore_permissions=True)
+            cr.add_roles("CRM Representative")
+
+        # Create CRM Manager User
+        if not frappe.db.exists("User", self.crm_mgr_email):
+            cm = frappe.get_doc({
+                "doctype": "User",
+                "email": self.crm_mgr_email,
+                "first_name": "CRM Manager",
+                "send_welcome_email": 0
+            }).insert(ignore_permissions=True)
+            cm.add_roles("CRM Manager")
+
     def tearDown(self):
         frappe.db.rollback()
         super().tearDown()
 
     def test_manager_inherits_frontline_permissions(self):
         """Assert Manager inherits subordinate Frontline operational roles dynamically."""
-        effective_roles = RoleInheritanceService.get_effective_roles(self.manager_email)
-        self.assertIn("Sales Representative", effective_roles, "Sales Manager did not inherit Sales Representative role.")
+        # Sales Manager inherits Sales Representative
+        effective_roles_sales = RoleInheritanceService.get_effective_roles(self.manager_email)
+        self.assertIn("Sales Representative", effective_roles_sales, "Sales Manager did not inherit Sales Representative role.")
         self.assertTrue(
             RoleInheritanceService.user_has_role(self.manager_email, "Sales Representative"),
-            "user_has_role check failed for managerial inheritance."
+            "user_has_role check failed for managerial inheritance (Sales)."
+        )
+
+        # CRM Manager inherits CRM Representative
+        effective_roles_crm = RoleInheritanceService.get_effective_roles(self.crm_mgr_email)
+        self.assertIn("CRM Representative", effective_roles_crm, "CRM Manager did not inherit CRM Representative role.")
+        self.assertTrue(
+            RoleInheritanceService.user_has_role(self.crm_mgr_email, "CRM Representative"),
+            "user_has_role check failed for managerial inheritance (CRM)."
         )
 
     def test_stage_forward_lock_blocks_cancel(self):

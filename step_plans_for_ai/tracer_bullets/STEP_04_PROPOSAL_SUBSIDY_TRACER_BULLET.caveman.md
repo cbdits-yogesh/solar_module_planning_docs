@@ -54,7 +54,7 @@
 │   - StageSecuredDocument & StageForwardLockService integration (ADR-000)     │
 │   - create_proposal RPC (Pre-populates from Survey & SED)                    │
 │   - calculate_commercials RPC (Executes 70:30 GST split & recalculates)     │
-│   - authorize_margin_override RPC (Area Sales Manager / Admin sign-off)      │
+│   - authorize_margin_override RPC (CRM Manager / Admin sign-off)      │
 │   - finalize_proposal RPC (Atomic finalization & peer superseding)           │
 │   - grant_advance_waiver RPC (Finance Manager or CEO/MD Goodwill VIP waiver) │
 │   │                                                                         │
@@ -83,7 +83,7 @@ Prove the 8 fundamental business, technical, and security invariants of Stage 04
 2. **Cryptographic BOM Cost Ingestion (`bom_hash`):** Validates that incoming BOM line items match the SED cryptographic SHA-256 `bom_hash`, importing live material valuation to calculate `custom_estimated_bom_cost`.
 3. **Statutory 70:30 Composite Solar GST Sizing:** Binds supply into exactly two statutory lines: 70% Goods (`Solar Power Plant` @ 12% GST) and 30% Services (`Installation & Commissioning` @ 18% GST). Allows custom ratio overrides only when percentages sum to exactly 100.0%.
 4. **Dual Subsidy & Payback Calculation Engine:** Evaluates PM Surya Ghar Central Financial Assistance (CFA) brackets (₹30,000/kW up to 2 kW, ₹78,000 max cap at $\ge 3$ kW) and State DISCOM top-ups from `Solar Proposal Settings`, calculating net customer payable and simple payback years.
-5. **Admin Gross Margin Floor Governance Gate:** Computes gross margin percentage against live BOM costs. If margin is below Admin floor (default 18.0%), marks status `Pending Margin Approval` and blocks dispatch/finalization until signed off by `Area Sales Manager` or `Admin`.
+5. **Admin Gross Margin Floor Governance Gate:** Computes gross margin percentage against live BOM costs. If margin is below Admin floor (default 18.0%), marks status `Pending Margin Approval` and blocks dispatch/finalization until signed off by `CRM Manager` or `Admin`.
 6. **Exclusive Multi-Proposal Finalization Lock:** Supports multiple alternative proposals (e.g. 5 kW vs 8 kW vs 10 kW) for the same deal/survey, but strictly permits **only one** to achieve `Finalized`. Atomically transitions all active peer proposals to `Superseded`.
 7. **Advance Verification & Goodwill VIP Gate:** Establishes the commercial gateway to Stage 05 requiring either $\ge 50\%$ advance payment, an authorized Finance Manager waiver, or an executive **Goodwill / VIP Waiver** authorized strictly by MD / CEO / Admin.
 8. **Prospect Quarantine & ADR-000 Security Substrate:** Enforces `quotation_to == 'Lead'`. No `Customer` record is created at Stage 04. Inherits `StageSecuredDocument` to suppress junior user cancellations and enforce stage-forward locking once downstream payment transactions exist.
@@ -122,7 +122,7 @@ The Tracer Bullet extends ERPNext's standard `tabQuotation` with domain-specific
 | `custom_estimated_bom_cost`        | Total Estimated BOM Cost (₹)   | `Currency`   | `Company:currency`                                                                                |  **Yes**  |      -       | Aggregated live material cost of BOM from Stage 03 SED.                             |
 | `custom_gross_margin_pct`          | Calculated Gross Margin (%)    | `Percent`    | -                                                                                                 |  **Yes**  | **Index: 1** | `((net_total - custom_estimated_bom_cost) / net_total) * 100`. Precision: 2.        |
 | `custom_margin_status`             | Gross Margin Evaluation        | `Select`     | `Within Margin\nMargin Floor Exception\nMargin Override Approved`                                 |  **Yes**  | **Index: 1** | Evaluated vs Admin floor. Default: `Within Margin`.                                 |
-| `custom_margin_approved_by`        | Margin Override Approver       | `Link`       | `User`                                                                                            |    No     |      -       | Digital signature of `Area Sales Manager` or `Admin` authorizing override.          |
+| `custom_margin_approved_by`        | Margin Override Approver       | `Link`       | `User`                                                                                            |    No     |      -       | Digital signature of `CRM Manager` or `Admin` authorizing override.          |
 | `custom_margin_override_remark`    | Margin Override Justification  | `Small Text` | -                                                                                                 |    No     |      -       | Mandatory justification text for commercial margin exception.                       |
 | `custom_advance_requirement_pct`   | Required Advance (%)           | `Percent`    | -                                                                                                 |  **Yes**  |      -       | Standard: 50.0%. Admin-configurable.                                                |
 | `custom_advance_waiver_type`       | Advance Payment Clearance Gate | `Select`     | `Standard (≥50% Required)\nFinance Approved Waiver\nGoodwill / VIP Approved`                      |  **Yes**  |      -       | Governs Stage 05 gate. Default: `Standard (≥50% Required)`.                         |
@@ -444,7 +444,7 @@ class ProposalFinalizationService:
 
         if doc.custom_margin_status == "Margin Floor Exception":
             frappe.throw(
-                _("Proposal {0} cannot be finalized because Gross Margin ({1}%) is below the corporate floor ({2}%) and requires Area Sales Manager authorization.")
+                _("Proposal {0} cannot be finalized because Gross Margin ({1}%) is below the corporate floor ({2}%) and requires CRM Manager authorization.")
                 .format(doc.name, doc.custom_gross_margin_pct, frappe.get_cached_value("Solar Proposal Settings", None, "default_gross_margin_floor_pct")),
                 frappe.ValidationError
             )
@@ -665,10 +665,10 @@ def calculate_commercials(proposal_name: str, base_cost: float, goods_ratio: flo
 
 @frappe.whitelist(methods=["POST"])
 def authorize_margin_override(proposal_name: str, justification: str) -> dict:
-    """Authorizes sub-floor margin override. Restricted to Area Sales Manager and Admin."""
+    """Authorizes sub-floor margin override. Restricted to CRM Manager and Admin."""
     user_roles = frappe.get_roles()
-    if not ("Area Sales Manager" in user_roles or "Admin" in user_roles or "System Manager" in user_roles):
-        frappe.throw(_("Not permitted. Only Area Sales Manager or Admin can authorize margin overrides."), frappe.PermissionError)
+    if not ("CRM Manager" in user_roles or "Admin" in user_roles or "System Manager" in user_roles):
+        frappe.throw(_("Not permitted. Only CRM Manager or Admin can authorize margin overrides."), frappe.PermissionError)
 
     doc = frappe.get_doc("Quotation", proposal_name)
     doc.check_permission("write")
@@ -723,7 +723,7 @@ frappe.ui.form.on("Quotation", {
     if (frm.doc.custom_margin_status === "Margin Floor Exception") {
       frm.dashboard.set_headline_alert(
         __(
-          "Gross Margin ({0}%) is below corporate floor! Area Sales Manager authorization required.",
+          "Gross Margin ({0}%) is below corporate floor! CRM Manager authorization required.",
           [frm.doc.custom_gross_margin_pct],
         ),
         "red",
@@ -767,7 +767,7 @@ frappe.ui.form.on("Quotation", {
     // Action: Authorize Margin Override
     if (
       frm.doc.custom_margin_status === "Margin Floor Exception" &&
-      frappe.user.has_role(["Area Sales Manager", "Admin", "System Manager"])
+      frappe.user.has_role(["CRM Manager", "Admin", "System Manager"])
     ) {
       frm.add_custom_button(
         __("Authorize Margin Override"),
@@ -902,10 +902,26 @@ from solar_module.api.proposal import (
 class TestSolarProposalTracerBullet(IntegrationTestCase):
     def setUp(self):
         super().setUp()
+        self._ensure_crm_test_users()
         self.lead = self._create_test_lead()
         self.survey = self._create_test_survey(self.lead.name)
         self.sed = self._create_test_sed(self.survey.name)
         self._setup_proposal_settings()
+
+    def _ensure_crm_test_users(self):
+        users = {
+            "crm_rep@sadbhav.com": ["CRM Representative"],
+            "crm_mgr@sadbhav.com": ["CRM Manager"],
+            "admin@sadbhav.com": ["Admin"]
+        }
+        for email, roles in users.items():
+            if not frappe.db.exists("User", email):
+                u = frappe.new_doc("User")
+                u.email = email
+                u.first_name = email.split("@")[0].replace("_", " ").title()
+                u.insert(ignore_permissions=True)
+            u = frappe.get_doc("User", email)
+            u.add_roles(*roles)
 
     def tearDown(self):
         # Strict Zero-Commit Rule: roll back all database mutations
@@ -1046,18 +1062,18 @@ class TestSolarProposalTracerBullet(IntegrationTestCase):
         with self.assertRaises(frappe.ValidationError):
             ProposalFinalizationService.finalize_proposal(prop.name)
 
-    def test_06_area_sales_manager_margin_override(self):
+    def test_06_crm_manager_margin_override(self):
         """Invariant 5: Authorized role can override sub-floor margin exception."""
         prop = self._new_test_proposal()
         prop.custom_margin_status = "Margin Floor Exception"
         prop.save()
 
-        frappe.set_user("Administrator")
+        frappe.set_user("crm_mgr@sadbhav.com")
         authorize_margin_override(prop.name, "Approved for competitive strategic account.")
 
         prop.reload()
         self.assertEqual(prop.custom_margin_status, "Margin Override Approved")
-        self.assertEqual(prop.custom_margin_approved_by, "Administrator")
+        self.assertEqual(prop.custom_margin_approved_by, "crm_mgr@sadbhav.com")
 
     def test_07_multi_proposal_exclusive_finalization(self):
         """Invariant 6: Finalizing one proposal supersedes all active sibling proposals."""
@@ -1145,7 +1161,7 @@ HAVING finalized_count > 1; -- Must return 0 rows
 - [x] Predecessor Site Survey and Frozen SED links verified with zero Lead quarantine leaks.
 - [x] 70:30 Composite Solar GST bifurcation correctly assigns items and tax templates.
 - [x] PM Surya Ghar CFA subsidy math accurately evaluates capacity brackets and caps.
-- [x] Gross margin floor gate halts low-margin quotes without Area Sales Manager approval.
+- [x] Gross margin floor gate halts low-margin quotes without CRM Manager approval.
 - [x] Multi-proposal exclusive finalization lock reliably supersedes active sibling proposals.
 - [x] Goodwill VIP waiver permitted strictly for Executive Leadership (`Admin`/`Director`).
 - [x] 24-hour turnaround SLA enforced with mandatory categorized delay audit log.
